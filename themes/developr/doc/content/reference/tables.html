@@ -1,0 +1,1067 @@
+<hgroup id="main-title" class="thin">
+	<h1>Tables</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<p>The template includes two table styles:</p>
+
+	<h3 class="thin">Default look</h3>
+
+	<div class="columns">
+
+		<div class="six-columns twelve-columns-tablet">
+
+			<h5 class="green">Styled table</h5>
+
+			<table class="table margin-bottom">
+
+				<thead>
+					<tr>
+						<th scope="col">Text</th>
+						<th scope="col">Text</th>
+						<th scope="col">Text</th>
+					</tr>
+				</thead>
+
+				<tfoot>
+					<tr>
+						<td colspan="3">Table footer</td>
+					</tr>
+				</tfoot>
+
+				<tbody>
+					<tr>
+						<th scope="row">Text</thd>
+						<td>Text</td>
+						<td>Text</td>
+					</tr>
+					<tr>
+						<th scope="row">Text</th>
+						<td>Text</td>
+						<td>Text</td>
+					</tr>
+					<tr>
+						<th scope="row">Text</th>
+						<td>Text</td>
+						<td>Text</td>
+					</tr>
+					<tr>
+						<th scope="row">Text</th>
+						<td>Text</td>
+						<td>Text</td>
+					</tr>
+				</tbody>
+
+			</table>
+
+			<pre class="prettyprint">
+&lt;table class="table"&gt;
+
+	&lt;thead&gt;
+		&lt;tr&gt;
+			&lt;th scope="col"&gt;Text&lt;/th&gt;
+			&lt;th scope="col"&gt;Text&lt;/th&gt;
+			&lt;th scope="col"&gt;Text&lt;/th&gt;
+		&lt;/tr&gt;
+	&lt;/thead&gt;
+
+	&lt;tfoot&gt;
+		&lt;tr&gt;
+			&lt;td colspan="3"&gt;Table footer&lt;/td&gt;
+		&lt;/tr&gt;
+	&lt;/tfoot&gt;
+
+	&lt;tbody&gt;
+		&lt;tr&gt;
+			&lt;th scope="row"&gt;Text&lt;/th&gt;
+			&lt;td&gt;Text&lt;/td&gt;
+			&lt;td&gt;Text&lt;/td&gt;
+		&lt;/tr&gt;
+		...
+	&lt;/tbody&gt;
+
+&lt;/table&gt;
+</pre>
+
+		</div>
+
+		<div class="six-columns twelve-columns-tablet">
+
+			<h5 class="green">Simple table</h5>
+
+			<table class="simple-table margin-bottom">
+
+				<thead>
+					<tr>
+						<th scope="col">Text</th>
+						<th scope="col">Text</th>
+						<th scope="col">Text</th>
+					</tr>
+				</thead>
+
+				<tfoot>
+					<tr>
+						<td colspan="3">Table footer</td>
+					</tr>
+				</tfoot>
+
+				<tbody>
+					<tr>
+						<th scope="row">text</th>
+						<td>Text</td>
+						<td>Text</td>
+					</tr>
+					<tr>
+						<th scope="row">text</th>
+						<td>Text</td>
+						<td>Text</td>
+					</tr>
+					<tr>
+						<th scope="row">text</th>
+						<td>Text</td>
+						<td>Text</td>
+					</tr>
+					<tr>
+						<th scope="row">text</th>
+						<td>Text</td>
+						<td>Text</td>
+					</tr>
+				</tbody>
+
+			</table>
+
+			<pre class="prettyprint">
+&lt;table class="simple-table"&gt;
+
+	&lt;thead&gt;
+		&lt;tr&gt;
+			&lt;th scope="col"&gt;Text&lt;/th&gt;
+			&lt;th scope="col"&gt;Text&lt;/th&gt;
+			&lt;th scope="col"&gt;Text&lt;/th&gt;
+		&lt;/tr&gt;
+	&lt;/thead&gt;
+
+	&lt;tfoot&gt;
+		&lt;tr&gt;
+			&lt;td colspan="3"&gt;Table footer&lt;/td&gt;
+		&lt;/tr&gt;
+	&lt;/tfoot&gt;
+
+	&lt;tbody&gt;
+		&lt;tr&gt;
+			&lt;th scope="row"&gt;Text&lt;/th&gt;
+			&lt;td&gt;Text&lt;/td&gt;
+			&lt;td&gt;Text&lt;/td&gt;
+		&lt;/tr&gt;
+		...
+	&lt;/tbody&gt;
+
+&lt;/table&gt;
+</pre>
+
+		</div>
+
+	</div>
+
+	<p>Some classes are available to tweak them a little:</p>
+	<dl class="definition inline">
+		<dt>checkbox-cell</dt>
+		<dd>This class will set the cell width to the same size as a checkbox, so it will be square</dd>
+		<dt>low-padding</dt>
+		<dd>This class will reduce the cell padding, for instance to use a compact button</dd>
+		<dt>no-padding</dt>
+		<dd>This class will remove the cell padding</dd>
+		<dt>align-center</dt>
+		<dd>Center text</dd>
+		<dt>align-right</dt>
+		<dd>Align text to the right</dd>
+	</dl>
+
+	<div class="columns">
+
+		<div class="six-columns twelve-columns-tablet">
+
+			<h5 class="green">Styled table</h5>
+
+			<table class="table margin-bottom">
+
+				<thead>
+					<tr>
+						<th scope="col"><input type="checkbox" name="check-all" id="check-all" value="1"></th>
+						<th scope="col">Text</th>
+						<th scope="col" class="align-center">Text</th>
+						<th scope="col" class="align-right">Text</th>
+					</tr>
+				</thead>
+
+				<tfoot>
+					<tr>
+						<td colspan="4">Table footer</td>
+					</tr>
+				</tfoot>
+
+				<tbody>
+					<tr>
+						<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+						<td>Text</td>
+						<td class="align-center">Text</td>
+						<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+					</tr>
+					<tr>
+						<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+						<td>Text</td>
+						<td class="align-center">Text</td>
+						<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+					</tr>
+					<tr>
+						<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+						<td>Text</td>
+						<td class="align-center">Text</td>
+						<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+					</tr>
+					<tr>
+						<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+						<td>Text</td>
+						<td class="align-center">Text</td>
+						<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+					</tr>
+				</tbody>
+
+			</table>
+
+			<pre class="prettyprint">
+&lt;table class="table"&gt;
+
+	&lt;thead&gt;
+		&lt;tr&gt;
+			&lt;th scope="col"&gt;&lt;input type="checkbox" name="check-all" id="check-all" value="1"&gt;&lt;/th&gt;
+			&lt;th scope="col"&gt;Text&lt;/th&gt;
+			&lt;th scope="col" class="align-center"&gt;Text&lt;/th&gt;
+			&lt;th scope="col" class="align-right"&gt;Text&lt;/th&gt;
+		&lt;/tr&gt;
+	&lt;/thead&gt;
+
+	&lt;tfoot&gt;
+		&lt;tr&gt;
+			&lt;td colspan="4"&gt;Table footer&lt;/td&gt;
+		&lt;/tr&gt;
+	&lt;/tfoot&gt;
+
+	&lt;tbody&gt;
+		&lt;tr&gt;
+			&lt;th scope="row" class="checkbox-cell"&gt;&lt;input type="checkbox" name="checked[]" value="1"&gt;&lt;/th&gt;
+			&lt;td&gt;Text&lt;/td&gt;
+			&lt;td class="align-center"&gt;Text&lt;/td&gt;
+			&lt;td class="align-right low-padding"&gt;&lt;a href="#" class="button compact"&gt;Edit&lt;/a&gt;&lt;/td&gt;
+		&lt;/tr&gt;
+		...
+	&lt;/tbody&gt;
+
+&lt;/table&gt;
+</pre>
+
+		</div>
+
+		<div class="six-columns twelve-columns-tablet">
+
+			<h5 class="green">Simple table</h5>
+
+			<table class="simple-table margin-bottom">
+
+				<thead>
+					<tr>
+						<th scope="col"><input type="checkbox" name="check-all" id="check-all" value="1"></th>
+						<th scope="col">Text</th>
+						<th scope="col" class="align-center">Text</th>
+						<th scope="col" class="align-right">Text</th>
+					</tr>
+				</thead>
+
+				<tfoot>
+					<tr>
+						<td colspan="4">Table footer</td>
+					</tr>
+				</tfoot>
+
+				<tbody>
+					<tr>
+						<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+						<td>Text</td>
+						<td class="align-center">Text</td>
+						<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+					</tr>
+					<tr>
+						<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+						<td>Text</td>
+						<td class="align-center">Text</td>
+						<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+					</tr>
+					<tr>
+						<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+						<td>Text</td>
+						<td class="align-center">Text</td>
+						<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+					</tr>
+					<tr>
+						<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+						<td>Text</td>
+						<td class="align-center">Text</td>
+						<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+					</tr>
+				</tbody>
+
+			</table>
+
+			<pre class="prettyprint">
+&lt;table class="simple-table"&gt;
+
+	&lt;thead&gt;
+		&lt;tr&gt;
+			&lt;th scope="col"&gt;&lt;input type="checkbox" name="check-all" id="check-all" value="1"&gt;&lt;/th&gt;
+			&lt;th scope="col"&gt;Text&lt;/th&gt;
+			&lt;th scope="col" class="align-center"&gt;Text&lt;/th&gt;
+			&lt;th scope="col" class="align-right"&gt;Text&lt;/th&gt;
+		&lt;/tr&gt;
+	&lt;/thead&gt;
+
+	&lt;tfoot&gt;
+		&lt;tr&gt;
+			&lt;td colspan="4"&gt;Table footer&lt;/td&gt;
+		&lt;/tr&gt;
+	&lt;/tfoot&gt;
+
+	&lt;tbody&gt;
+		&lt;tr&gt;
+			&lt;th scope="row" class="checkbox-cell"&gt;&lt;input type="checkbox" name="checked[]" value="1"&gt;&lt;/th&gt;
+			&lt;td&gt;Text&lt;/td&gt;
+			&lt;td class="align-center"&gt;Text&lt;/td&gt;
+			&lt;td class="align-right low-padding"&gt;&lt;a href="#" class="button compact"&gt;Edit&lt;/a&gt;&lt;/td&gt;
+		&lt;/tr&gt;
+		...
+	&lt;/tbody&gt;
+
+&lt;/table&gt;
+</pre>
+		</div>
+
+	</div>
+
+	<h3 class="thin">Extra styles</h3>
+
+	<p>There is an alternate row style for displaying special informations:</p>
+
+	<table class="table margin-bottom">
+
+		<thead>
+			<tr>
+				<th scope="col"><input type="checkbox" name="check-all" id="check-all" value="1"></th>
+				<th scope="col">Text</th>
+				<th scope="col" class="align-center">Text</th>
+				<th scope="col" class="align-right" width="25%">Text</th>
+			</tr>
+		</thead>
+
+		<tfoot>
+			<tr>
+				<td colspan="4">Table footer</td>
+			</tr>
+		</tfoot>
+
+		<tbody>
+			<tr>
+				<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+				<td>Text</td>
+				<td class="align-center">Text</td>
+				<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+			</tr>
+			<tr>
+				<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+				<td>Text</td>
+				<td class="align-center">Text</td>
+				<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+			</tr>
+			<tr class="row-drop">
+				<td colspan="4">
+
+					<div class="float-right">
+
+						<button type="submit" class="button glossy mid-margin-right">
+							<span class="button-icon"><span class="icon-tick"></span></span>
+							Save
+						</button>
+
+						<button type="submit" class="button glossy">
+							<span class="button-icon red-gradient"><span class="icon-cross"></span></span>
+							Cancel
+						</button>
+
+					</div>
+
+					<strong>Name:</strong> John Doe<br>
+					<strong>Account:</strong> admin<br>
+					<strong>Last connect:</strong> 05-07-2011<br>
+					<strong>Email:</strong> john@doe.com
+				</td>
+			</tr>
+			<tr>
+				<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+				<td>Text</td>
+				<td class="align-center">Text</td>
+				<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+			</tr>
+			<tr>
+				<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+				<td>Text</td>
+				<td class="align-center">Text</td>
+				<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+			</tr>
+		</tbody>
+
+	</table>
+
+	<pre class="prettyprint">
+&lt;tr class="row-drop"&gt;
+	&lt;td&gt;
+		...
+	&lt;/td&gt;
+	...
+&lt;/tr&gt;
+</pre>
+
+	<p>The template also includes a header and a footer for tables:</p>
+
+	<div class="table-header">
+		Header content
+	</div>
+	<table class="table">
+
+		<thead>
+			<tr>
+				<th scope="col"><input type="checkbox" name="check-all" id="check-all" value="1"></th>
+				<th scope="col">Text</th>
+				<th scope="col" class="align-center">Text</th>
+				<th scope="col" class="align-right">Text</th>
+			</tr>
+		</thead>
+
+		<tfoot>
+			<tr>
+				<td colspan="4">Table footer</td>
+			</tr>
+		</tfoot>
+
+		<tbody>
+			<tr>
+				<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+				<td>Text</td>
+				<td class="align-center">Text</td>
+				<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+			</tr>
+			<tr>
+				<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+				<td>Text</td>
+				<td class="align-center">Text</td>
+				<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+			</tr>
+			<tr>
+				<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+				<td>Text</td>
+				<td class="align-center">Text</td>
+				<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+			</tr>
+			<tr>
+				<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+				<td>Text</td>
+				<td class="align-center">Text</td>
+				<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+			</tr>
+		</tbody>
+
+	</table>
+
+	<div method="post" action="" class="table-footer large-margin-bottom">
+		Footer content
+	</div>
+
+	<pre class="prettyprint">
+&lt;div class="table-header"&gt;
+	Header content
+&lt;/div&gt;
+
+&lt;table class="table"&gt;
+
+	...
+
+&lt;/table&gt;
+
+&lt;div class="table-footer"&gt;
+	Footer content
+&lt;/div&gt;
+</pre>
+
+	<p>For best results with buttons and form elements, use the <strong>button-height</strong> class. Here is a complete example:</p>
+
+	<div class="table-header button-height">
+		<div class="float-right">
+			Search&nbsp;<input type="text" name="table_search" id="table_search" value="" class="input mid-margin-left">
+		</div>
+
+		Show&nbsp;<select name="range" class="select blue-gradient glossy">
+			<option value="1">10</option>
+			<option value="2">20</option>
+			<option value="3" selected="selected">40</option>
+			<option value="4">100</option>
+		</select> entries
+	</div>
+	<table class="table responsive-table">
+
+		<thead>
+			<tr>
+				<th scope="col"><input type="checkbox" name="check-all" id="check-all" value="1"></th>
+				<th scope="col">Text</th>
+				<th scope="col" class="align-center">Text</th>
+				<th scope="col" class="align-right">Text</th>
+			</tr>
+		</thead>
+
+		<tfoot>
+			<tr>
+				<td colspan="4">Table footer</td>
+			</tr>
+		</tfoot>
+
+		<tbody>
+			<tr>
+				<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+				<td>Text</td>
+				<td class="align-center">Text</td>
+				<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+			</tr>
+			<tr>
+				<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+				<td>Text</td>
+				<td class="align-center">Text</td>
+				<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+			</tr>
+			<tr>
+				<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+				<td>Text</td>
+				<td class="align-center">Text</td>
+				<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+			</tr>
+			<tr>
+				<th scope="row" class="checkbox-cell"><input type="checkbox" name="checked[]" value="1"></th>
+				<td>Text</td>
+				<td class="align-center">Text</td>
+				<td class="align-right low-padding"><a href="#" class="button compact">Edit</a></td>
+			</tr>
+		</tbody>
+
+	</table>
+
+	<form method="post" action="" class="table-footer button-height large-margin-bottom">
+		<div class="float-right">
+			<div class="button-group">
+				<a href="#" title="First page" class="button blue-gradient glossy"><span class="icon-previous"></span></a>
+				<a href="#" title="Previous page" class="button blue-gradient glossy"><span class="icon-backward"></span></a>
+			</div>
+
+			<div class="button-group">
+				<a href="#" title="Page 1" class="button blue-gradient glossy">1</a>
+				<a href="#" title="Page 2" class="button blue-gradient glossy active">2</a>
+				<a href="#" title="Page 3" class="button blue-gradient glossy">3</a>
+				<a href="#" title="Page 4" class="button blue-gradient glossy">4</a>
+			</div>
+
+			<div class="button-group">
+				<a href="#" title="Next page" class="button blue-gradient glossy"><span class="icon-forward"></span></a>
+				<a href="#" title="Last page" class="button blue-gradient glossy"><span class="icon-next"></span></a>
+			</div>
+		</div>
+
+		With selected:
+		<select name="select90" class="select blue-gradient glossy mid-margin-left">
+			<option value="0">Delete</option>
+			<option value="1">Duplicate</option>
+			<option value="2">Put offline</option>
+			<option value="3">Put online</option>
+			<option value="4">Move to trash</option>
+		</select>
+		<button type="submit" class="button blue-gradient glossy">Go</button>
+	</form>
+
+	<pre class="prettyprint">
+&lt;div class="table-header blue-gradient button-height"&gt;
+	&lt;div class="float-right"&gt;
+		Search&amp;nbsp;&lt;input type="text" name="table_search" id="table_search" value="" class="input mid-margin-left"&gt;
+	&lt;/div&gt;
+
+	Show&amp;nbsp;&lt;select name="range" class="select blue-gradient glossy"&gt;
+		&lt;option value="1"&gt;10&lt;/option&gt;
+		&lt;option value="2"&gt;20&lt;/option&gt;
+		&lt;option value="3" selected="selected"&gt;40&lt;/option&gt;
+		&lt;option value="4"&gt;100&lt;/option&gt;
+	&lt;/select&gt; entries
+&lt;/div&gt;
+
+&lt;table class="table"&gt;
+
+	...
+
+&lt;/table&gt;
+
+&lt;form method="post" action="" class="table-footer blue-gradient button-height large-margin-bottom"&gt;
+	&lt;div class="float-right"&gt;
+		&lt;div class="button-group"&gt;
+			&lt;a href="#" title="First page" class="button blue-gradient glossy"&gt;&lt;span class="icon-previous"&gt;&lt;/span&gt;&lt;/a&gt;
+			&lt;a href="#" title="Previous page" class="button blue-gradient glossy"&gt;&lt;span class="icon-backward"&gt;&lt;/span&gt;&lt;/a&gt;
+		&lt;/div&gt;
+
+		&lt;div class="button-group"&gt;
+			&lt;a href="#" title="Page 1" class="button blue-gradient glossy"&gt;1&lt;/a&gt;
+			&lt;a href="#" title="Page 2" class="button blue-gradient glossy active"&gt;2&lt;/a&gt;
+			&lt;a href="#" title="Page 3" class="button blue-gradient glossy"&gt;3&lt;/a&gt;
+			&lt;a href="#" title="Page 4" class="button blue-gradient glossy"&gt;4&lt;/a&gt;
+		&lt;/div&gt;
+
+		&lt;div class="button-group"&gt;
+			&lt;a href="#" title="Next page" class="button blue-gradient glossy"&gt;&lt;span class="icon-forward"&gt;&lt;/span&gt;&lt;/a&gt;
+			&lt;a href="#" title="Last page" class="button blue-gradient glossy"&gt;&lt;span class="icon-next"&gt;&lt;/span&gt;&lt;/a&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;
+
+	With selected:
+	&lt;select name="select90" class="select blue-gradient glossy mid-margin-left"&gt;
+		&lt;option value="0"&gt;Delete&lt;/option&gt;
+		&lt;option value="1"&gt;Duplicate&lt;/option&gt;
+		&lt;option value="2"&gt;Put offline&lt;/option&gt;
+		&lt;option value="3"&gt;Put online&lt;/option&gt;
+		&lt;option value="4"&gt;Move to trash&lt;/option&gt;
+	&lt;/select&gt;
+	&lt;button type="submit" class="button blue-gradient glossy"&gt;Go&lt;/button&gt;
+&lt;/form&gt;
+</pre>
+
+	<h3 class="thin">Responsive tables</h3>
+
+	<p>Tables with multiple columns hardly fit on smaller screens without breaking the whole layout, so the template provide styles to hide less important columns when resizing down. To hide a column, apply one of these classes to all headers and cells of a given column, depending on what responsive size you want the column to hide:</p>
+
+	<dl class="definition inline">
+		<dt>hide-on-mobile-portrait</dt>
+		<dd>Cell hidden on mobile screen, orientation portrait</dd>
+
+		<dt>hide-on-mobile-landscape</dt>
+		<dd>Cell hidden on mobile screen, orientation landscape, and smaller</dd>
+
+		<dt>hide-on-mobile</dt>
+		<dd>Cell hidden on mobile screen, both orientations, and smaller</dd>
+
+		<dt>hide-on-tablet-portrait</dt>
+		<dd>Cell hidden on tablet screen, orientation portrait, and smaller</dd>
+
+		<dt>hide-on-tablet-landscape</dt>
+		<dd>Cell hidden on tablet screen, orientation landscape, and smaller</dd>
+
+		<dt>hide-on-tablet</dt>
+		<dd>Cell hidden on tablet screen, both orientations, and smaller</dd>
+	</dl>
+
+	<p class="left-icon icon-info-round"><b>Note:</b> These classes will give random results on merged cells, for obvious reasons.</p>
+
+	<p>Here is an example, hiding the middle column on mobile screens:</p>
+
+	<pre class="prettyprint">
+&lt;table class="table"&gt;
+
+	&lt;thead&gt;
+		&lt;tr&gt;
+			&lt;th scope="col"&gt;Header&lt;/th&gt;
+			&lt;th scope="col" class="hide-on-mobile"&gt;Header&lt;/th&gt;
+			&lt;th scope="col"&gt;Header&lt;/th&gt;
+		&lt;/tr&gt;
+	&lt;/thead&gt;
+
+	&lt;tbody&gt;
+		&lt;tr&gt;
+			&lt;td&gt;Text&lt;/td&gt;
+			&lt;td class="hide-on-mobile"&gt;Text&lt;/td&gt;
+			&lt;td&gt;Text&lt;/td&gt;
+		&lt;/tr&gt;
+		...
+	&lt;/tbody&gt;
+
+&lt;/table&gt;
+</pre>
+
+	<h5 class="green">Responsive plugin</h5>
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin file <b>js/developr.table.js</b>
+	</div>
+
+	<p>Settings styles can be cumbersome on larger tables with many lines, so the template provides a plugin that will do this for you: just add the class <b>responsive-table</b> on your table and set responsive classes only on headers:</p>
+
+	<pre class="prettyprint">
+&lt;table class="table responsive-table"&gt;
+
+	&lt;thead&gt;
+		&lt;tr&gt;
+			&lt;th scope="col"&gt;Header&lt;/th&gt;
+			&lt;th scope="col" class="hide-on-mobile"&gt;Header&lt;/th&gt;
+			&lt;th scope="col"&gt;Header&lt;/th&gt;
+		&lt;/tr&gt;
+	&lt;/thead&gt;
+
+	&lt;tbody&gt;
+		...
+	&lt;/tbody&gt;
+
+&lt;/table&gt;
+</pre>
+
+	<p>The plugin will the automatically copy responsive classes to the corresponding columns cells.</p>
+
+	<p class="left-icon icon-info-round">If you change the table content or the responsive classes, you may call the plugin method to format cells again:</p>
+
+	<pre class="prettyprint">
+$(selector).responsiveTable();
+</pre>
+
+	<p>Using this, you may for instance provide an option panel to the user so they can choose which columns to show.</p>
+
+	<h3 class="thin">Simple sorting</h3>
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin file <b>js/lib/jquery.tablesorter.min.js</b>
+	</div>
+
+	<p>Here is a basic table sorting using the external plugin <b>jQuery TableSorter</b>:</p>
+
+	<table class="table responsive-table margin-bottom" id="tablesorter">
+
+		<thead>
+			<tr>
+				<th scope="col">First Name</th>
+				<th scope="col" width="25%">Last Name</th>
+				<th scope="col" width="10%">Age</th>
+				<th scope="col" width="10%">Total</th>
+				<th scope="col" width="10%">Discount</th>
+				<th scope="col" width="10%">Difference</th>
+				<th scope="col" width="10%">Date</th>
+			</tr>
+		</thead>
+
+		<tfoot>
+			<tr>
+				<td colspan="7">Table footer</td>
+			</tr>
+		</tfoot>
+
+		<tbody>
+			<tr>
+				<td>Peter</td>
+				<td>Parker</td>
+				<td>28</td>
+				<td>$9.99</td>
+				<td>20.9%</td>
+				<td>+12.1</td>
+				<td>Jul 6, 2006 8:14 AM</td>
+			</tr>
+			<tr>
+				<td>John</td>
+				<td>Hood</td>
+				<td>33</td>
+				<td>$19.99</td>
+				<td>25%</td>
+				<td>+12</td>
+				<td>Dec 10, 2002 5:14 AM</td>
+			</tr>
+			<tr>
+				<td>Clark</td>
+				<td>Kent</td>
+				<td>18</td>
+				<td>$15.89</td>
+				<td>44%</td>
+				<td>-26</td>
+				<td>Jan 12, 2003 11:14 AM</td>
+			</tr>
+			<tr>
+				<td>Bruce</td>
+				<td>Almighty</td>
+				<td>45</td>
+				<td>$153.19</td>
+				<td>44.7%</td>
+				<td>+77</td>
+				<td>Jan 18, 2001 9:12 AM</td>
+			</tr>
+			<tr>
+				<td>Bruce</td>
+				<td>Evans</td>
+				<td>22</td>
+				<td>$13.19</td>
+				<td>11%</td>
+				<td>-100.9</td>
+				<td>Jan 18, 2007 9:12 AM</td>
+			</tr>
+			<tr>
+				<td>Bruce</td>
+				<td>Evans</td>
+				<td>22</td>
+				<td>$13.19</td>
+				<td>11%</td>
+				<td>0</td>
+				<td>Jan 18, 2007 9:12 AM</td>
+			</tr>
+		</tbody>
+
+	</table>
+
+	<pre class="prettyprint">
+// Table sort - simple
+$(selector).tablesorter();
+</pre>
+
+	<p class="left-icon icon-info-round">To prevent columns width to change when sorting, give them a size (use percentage for wider columns, so they will still fit on smaller screens).</p>
+
+	<p>For more details on how to use and configure the plugin, go to <a href="http://tablesorter.com/docs/">http://tablesorter.com/docs/</a></p>
+
+	<h3 class="thin">Advanced sorting</h3>
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin files <b>js/lib/DataTables/jquery.dataTables.min.js</b> and <b>js/lib/DataTables/jquery.dataTables.css</b> (or <b>js/lib/DataTables/jquery.dataTables-simple.css</b> for the alternate light styling)
+	</div>
+
+	<p class="left-icon icon-info-round">You can use an alternate simpler style for Datatables using <b>js/lib/DataTables/jquery.dataTables-simple.css</b> instead of <b>js/lib/DataTables/jquery.dataTables.css</b>.</p>
+
+	<p>If you need more sorting options, like pagination, real-time search, AJAX load and many more, you may use the plugin DataTables. The template provides a custom styling that mimics the defaults styles:</p>
+
+	<table class="table responsive-table" id="datatables">
+
+		<thead>
+			<tr>
+				<th scope="col">First Name</th>
+				<th scope="col" width="25%">Last Name</th>
+				<th scope="col" width="10%">Age</th>
+				<th scope="col" width="10%">Total</th>
+				<th scope="col" width="10%">Discount</th>
+				<th scope="col" width="10%">Difference</th>
+				<th scope="col" width="10%">Date</th>
+			</tr>
+		</thead>
+
+		<tfoot>
+			<tr>
+				<td colspan="7">Table footer</td>
+			</tr>
+		</tfoot>
+
+		<tbody>
+			<tr>
+				<td>Peter</td>
+				<td>Parker</td>
+				<td>28</td>
+				<td>$9.99</td>
+				<td>20.9%</td>
+				<td>+12.1</td>
+				<td>Jul 6, 2006 8:14 AM</td>
+			</tr>
+			<tr>
+				<td>John</td>
+				<td>Hood</td>
+				<td>33</td>
+				<td>$19.99</td>
+				<td>25%</td>
+				<td>+12</td>
+				<td>Dec 10, 2002 5:14 AM</td>
+			</tr>
+			<tr>
+				<td>Clark</td>
+				<td>Kent</td>
+				<td>18</td>
+				<td>$15.89</td>
+				<td>44%</td>
+				<td>-26</td>
+				<td>Jan 12, 2003 11:14 AM</td>
+			</tr>
+			<tr>
+				<td>Bruce</td>
+				<td>Almighty</td>
+				<td>45</td>
+				<td>$153.19</td>
+				<td>44.7%</td>
+				<td>+77</td>
+				<td>Jan 18, 2001 9:12 AM</td>
+			</tr>
+			<tr>
+				<td>Bruce</td>
+				<td>Evans</td>
+				<td>22</td>
+				<td>$13.19</td>
+				<td>11%</td>
+				<td>-100.9</td>
+				<td>Jan 18, 2007 9:12 AM</td>
+			</tr>
+			<tr>
+				<td>Bruce</td>
+				<td>Evans</td>
+				<td>22</td>
+				<td>$13.19</td>
+				<td>11%</td>
+				<td>0</td>
+				<td>Jan 18, 2007 9:12 AM</td>
+			</tr>
+			<tr>
+				<td>Peter</td>
+				<td>Parker</td>
+				<td>28</td>
+				<td>$9.99</td>
+				<td>20.9%</td>
+				<td>+12.1</td>
+				<td>Jul 6, 2006 8:14 AM</td>
+			</tr>
+			<tr>
+				<td>John</td>
+				<td>Hood</td>
+				<td>33</td>
+				<td>$19.99</td>
+				<td>25%</td>
+				<td>+12</td>
+				<td>Dec 10, 2002 5:14 AM</td>
+			</tr>
+			<tr>
+				<td>Clark</td>
+				<td>Kent</td>
+				<td>18</td>
+				<td>$15.89</td>
+				<td>44%</td>
+				<td>-26</td>
+				<td>Jan 12, 2003 11:14 AM</td>
+			</tr>
+			<tr>
+				<td>Bruce</td>
+				<td>Almighty</td>
+				<td>45</td>
+				<td>$153.19</td>
+				<td>44.7%</td>
+				<td>+77</td>
+				<td>Jan 18, 2001 9:12 AM</td>
+			</tr>
+			<tr>
+				<td>Bruce</td>
+				<td>Evans</td>
+				<td>22</td>
+				<td>$13.19</td>
+				<td>11%</td>
+				<td>-100.9</td>
+				<td>Jan 18, 2007 9:12 AM</td>
+			</tr>
+			<tr>
+				<td>Bruce</td>
+				<td>Evans</td>
+				<td>22</td>
+				<td>$13.19</td>
+				<td>11%</td>
+				<td>0</td>
+				<td>Jan 18, 2007 9:12 AM</td>
+			</tr>
+			<tr>
+				<td>Peter</td>
+				<td>Parker</td>
+				<td>28</td>
+				<td>$9.99</td>
+				<td>20.9%</td>
+				<td>+12.1</td>
+				<td>Jul 6, 2006 8:14 AM</td>
+			</tr>
+			<tr>
+				<td>John</td>
+				<td>Hood</td>
+				<td>33</td>
+				<td>$19.99</td>
+				<td>25%</td>
+				<td>+12</td>
+				<td>Dec 10, 2002 5:14 AM</td>
+			</tr>
+			<tr>
+				<td>Clark</td>
+				<td>Kent</td>
+				<td>18</td>
+				<td>$15.89</td>
+				<td>44%</td>
+				<td>-26</td>
+				<td>Jan 12, 2003 11:14 AM</td>
+			</tr>
+			<tr>
+				<td>Bruce</td>
+				<td>Almighty</td>
+				<td>45</td>
+				<td>$153.19</td>
+				<td>44.7%</td>
+				<td>+77</td>
+				<td>Jan 18, 2001 9:12 AM</td>
+			</tr>
+			<tr>
+				<td>Bruce</td>
+				<td>Evans</td>
+				<td>22</td>
+				<td>$13.19</td>
+				<td>11%</td>
+				<td>-100.9</td>
+				<td>Jan 18, 2007 9:12 AM</td>
+			</tr>
+			<tr>
+				<td>Bruce</td>
+				<td>Evans</td>
+				<td>22</td>
+				<td>$13.19</td>
+				<td>11%</td>
+				<td>0</td>
+				<td>Jan 18, 2007 9:12 AM</td>
+			</tr>
+		</tbody>
+
+	</table>
+
+	<pre class="prettyprint margin-top">
+// Table sort - datatables
+$(selector).dataTable();
+</pre>
+
+	<p>If you want to have the same exact layout as the default styles (as above), you need to pass two extra options:</p>
+
+	<pre class="prettyprint margin-top">
+var table = $(selector),
+	tableStyled = false;
+
+table.dataTable({
+	'sDom': '<"dataTables_header"lfr>t<"dataTables_footer"ip>',
+	'fnDrawCallback': function( oSettings )
+	{
+		// Only run once
+		if (!tableStyled)
+		{
+			table.closest('.dataTables_wrapper').find('.dataTables_length select').addClass('select blue-gradient glossy').styleSelect();
+			tableStyled = true;
+		}
+	}
+});
+</pre>
+
+	<p>For more details on how to use and configure the plugin, go to <a href="http://datatables.net">http://datatables.net</a></p>
+
+</div>
+<script>
+
+	// Table sort - simple
+	$('#tablesorter').tablesorter();
+
+	// Table sort - datatables
+	$('#datatables').dataTable({
+		'sDom': '<"dataTables_header"lfr>t<"dataTables_footer"ip>'
+	});
+
+</script>

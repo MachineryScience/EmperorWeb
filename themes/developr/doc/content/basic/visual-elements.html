@@ -1,0 +1,312 @@
+<hgroup id="main-title" class="thin">
+	<h1>Visual elements</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<h3 class="thin">Block arrow</h3>
+
+	<div class="columns">
+
+		<div class="six-columns twelve-columns-mobile">
+
+			<p>This style will add a small arrow on the side of any block element, with automatic color inheritance. Here are some examples:</p>
+
+			<p class="message align-center red-gradient mid-margin-bottom">
+				<span class="block-arrow top"><span></span></span>
+				Arrow top
+			</p>
+
+			<p class="message align-center orange-gradient mid-margin-bottom">
+				<span class="block-arrow left"><span></span></span>
+				Arrow left
+			</p>
+
+			<p class="message align-center green-gradient mid-margin-bottom">
+				<span class="block-arrow right"><span></span></span>
+				Arrow right
+			</p>
+
+			<p class="message align-center blue-gradient">
+				<span class="block-arrow"><span></span></span>
+				Arrow bottom
+			</p>
+
+		</div>
+
+		<div class="six-columns twelve-columns-mobile">
+
+			<p>There are 4 position classes available: <b>top</b>, <b>right</b>, <b>bottom</b> and <b>left</b>. If no position class is set, the arrow is set at bottom. Here is the markup for a top arrow:</p>
+
+			<pre class="prettyprint">
+&lt;span class="block-arrow top"&gt;
+	&lt;span&gt;&lt;/span&gt;
+&lt;/span&gt;
+</pre>
+
+			<div class="big-left-icon icon-info-round">
+				<h4 class="no-margin-bottom">Quick tip</h4>
+				This style require that the parent element has <b>position:relative</b> or <b>position:absolute</b>. If the parent has no position set, add the class <b>relative</b>.
+			</div>
+
+		</div>
+
+	</div>
+
+	<h3 class="thin">Count and close</h3>
+
+	<div class="columns">
+
+		<div class="six-columns twelve-columns-mobile">
+
+			<p>This style is designed to display a small count bubble on top of any element:</p>
+
+			<p class="message align-center">
+				<span class="count">3</span>
+				&lt;span class="count"&gt;3&lt;/span&gt;
+			</p>
+
+			<p class="message align-center">
+				<span class="count simpler">3</span>
+				&lt;span class="count simpler"&gt;3&lt;/span&gt;
+			</p>
+
+			<p>The count style is not stuck to the right because it was originally created for button groups:</p>
+
+			<p class="button-height">
+				<span class="button-group">
+					<a href="#" class="button"><span class="count">2</span>Default</a>
+					<a href="#" class="button"><span class="count orange-gradient">2</span>Orange</a>
+					<a href="#" class="button"><span class="count green-gradient">2</span>Green</a>
+					<a href="#" class="button"><span class="count blue-gradient">2</span>Blue</a>
+				</span>
+			</p>
+
+			<p>If required, it may be aligned on the right, on the left or even inset:</p>
+
+			<p class="message align-center">
+				<span class="count right">3</span>
+				&lt;span class="count right"&gt;3&lt;/span&gt;
+			</p>
+
+			<p class="message align-center">
+				<span class="count left">3</span>
+				&lt;span class="count left"&gt;3&lt;/span&gt;
+			</p>
+
+			<p class="message align-center">
+				<span class="count inset">3</span>
+				&lt;span class="count inset"&gt;3&lt;/span&gt;
+			</p>
+
+			<p class="message align-center">
+				<span class="count inset left">3</span>
+				&lt;span class="count inset left"&gt;3&lt;/span&gt;
+			</p>
+
+		</div>
+
+		<div class="six-columns twelve-columns-mobile">
+
+			<p>This style adds a close button on top of any element, and clicking on it automatically removes the parent element with a fade out effect:</p>
+
+			<p class="message align-center">
+				<span class="close">✕</span>
+				&lt;span class="close"&gt;✕&lt;/span&gt;
+			</p>
+
+			<p class="message align-center">
+				<span class="close simpler">✕</span>
+				&lt;span class="close simpler"&gt;✕&lt;/span&gt;
+			</p>
+
+			<p>The close style works fine with the utility class <b>show-on-parent-hover</b>, which reveals it only when the mouse hover the parent element (but remain visibile on touch devices):</p>
+
+			<p class="message align-center">
+				<span class="close show-on-parent-hover">✕</span>
+				&lt;span class="close show-on-parent-hover"&gt;✕&lt;/span&gt;
+			</p>
+
+			<p>If required, it may be aligned on the left or be inset:</p>
+
+			<p class="message align-center">
+				<span class="close left">✕</span>
+				&lt;span class="close left"&gt;✕&lt;/span&gt;
+			</p>
+
+			<p class="message align-center">
+				<span class="close inset">✕</span>
+				&lt;span class="close inset"&gt;✕&lt;/span&gt;
+			</p>
+
+			<p class="message align-center">
+				<span class="close inset left">✕</span>
+				&lt;span class="close inset left"&gt;✕&lt;/span&gt;
+			</p>
+
+		</div>
+
+	</div>
+
+	<h3 class="thin">Ribbons</h3>
+
+	<div class="columns">
+
+		<div class="six-columns twelve-columns-mobile">
+
+			<p class="wrapped relative" style="height: 65px">
+				<span class="ribbon"><span class="ribbon-inner">Hey!</span></span>
+				Default ribbon
+			</p>
+
+			<p class="wrapped relative" style="height: 65px">
+				<span class="ribbon"><span class="ribbon-inner red-gradient glossy">Hey!</span></span>
+				Color classes <b>red-gradient</b> and <b>glossy</b> (apply to ribbon-inner)
+			</p>
+
+			<p class="wrapped relative" style="height: 45px">
+				<span class="ribbon tiny"><span class="ribbon-inner blue-gradient">Hey!</span></span>
+				Size classe <b>tiny</b> (apply to ribbon)
+			</p>
+
+		</div>
+
+		<div class="six-columns twelve-columns-mobile">
+
+			<p>Here is the default markup to create a ribbon:</p>
+
+			<pre class="prettyprint">
+&lt;span class="ribbon"&gt;
+	&lt;span class="ribbon-inner"&gt;Text&lt;/span&gt;
+&lt;/span&gt;
+</pre>
+
+			<div class="big-left-icon icon-info-round margin-bottom">
+				<h4 class="no-margin-bottom">Quick tip</h4>
+				This style require that the parent element has <b>position:relative</b> or <b>position:absolute</b>. If the parent has no position set, add the class <b>relative</b>.
+			</div>
+
+			<p>Here is a customized markup:</p>
+
+			<pre class="prettyprint">
+&lt;span class="ribbon tiny"&gt;
+	&lt;span class="ribbon-inner red-gradient glossy"&gt;Text&lt;/span&gt;
+&lt;/span&gt;
+</pre>
+
+		</div>
+
+	</div>
+
+	<h3 class="thin">Ajax loaders</h3>
+
+	<p class="left-icon icon-info-round">When using an ajax loader on a dark background, add the class <b>on-dark</b> for a better result.</p>
+
+	<div class="columns">
+
+		<div class="four-columns twelve-columns-mobile">
+
+			<h4 class="green underline">Standard size</h4>
+
+			<p>
+				<span class="loader"></span>
+				<span class="loader waiting"></span>
+				<span class="loader working"></span>
+				<span class="loader refreshing"></span>
+			</p>
+
+			<pre class="prettyprint">
+&lt;span class="loader"&gt;&lt;/span&gt;
+&lt;span class="loader waiting"&gt;&lt;/span&gt;
+&lt;span class="loader working"&gt;&lt;/span&gt;
+&lt;span class="loader refreshing"&gt;&lt;/span&gt;
+</pre>
+
+		</div>
+
+		<div class="four-columns twelve-columns-mobile">
+
+			<h4 class="green underline">Big</h4>
+
+			<p class="button-height">
+				<span class="loader big"></span>
+				<span class="loader big waiting"></span>
+				<span class="loader big working"></span>
+				<span class="loader big refreshing"></span>
+			</p>
+
+			<pre class="prettyprint">
+&lt;span class="loader big"&gt;&lt;/span&gt;
+&lt;span class="loader big waiting"&gt;&lt;/span&gt;
+&lt;span class="loader big working"&gt;&lt;/span&gt;
+&lt;span class="loader big refreshing"&gt;&lt;/span&gt;
+</pre>
+
+		</div>
+
+		<div class="four-columns twelve-columns-mobile">
+
+			<h4 class="green underline">Huge</h4>
+
+			<p style="line-height: 64px">
+				<span class="loader huge"></span>
+				<span class="loader huge waiting"></span>
+				<span class="loader huge working"></span>
+				<span class="loader huge refreshing"></span>
+			</p>
+
+			<pre class="prettyprint">
+&lt;span class="loader huge"&gt;&lt;/span&gt;
+&lt;span class="loader huge waiting"&gt;&lt;/span&gt;
+&lt;span class="loader huge working"&gt;&lt;/span&gt;
+&lt;span class="loader huge refreshing"&gt;&lt;/span&gt;
+</pre>
+
+		</div>
+
+	</div>
+
+	<h3 class="thin">Other elements</h3>
+
+	<h5 class="green">Meter bars</h5>
+
+	<p>This is a real simple style to create meter bars like phone signal level or volume:
+		<span class="meter orange-gradient"></span>
+		<span class="meter orange-gradient"></span>
+		<span class="meter"></span>
+		<span class="meter"></span>
+	</p>
+
+	<pre class="prettyprint">
+&lt;span class="meter orange-gradient"&gt;&lt;/span&gt;
+&lt;span class="meter orange-gradient"&gt;&lt;/span&gt;
+&lt;span class="meter"&gt;&lt;/span&gt;
+&lt;span class="meter"&gt;&lt;/span&gt;
+</pre>
+
+	<p>Play with colors to create infinite styles:</p>
+
+	<ul class="blocks-list">
+		<li>
+			<span class="meter blue-gradient"></span>
+			<span class="meter blue-gradient"></span>
+			<span class="meter"></span>
+			<span class="meter"></span>
+			<span class="meter"></span>
+			<span class="meter"></span>
+		</li>
+		<li>
+			<span class="meter blue-gradient"></span>
+			<span class="meter blue-gradient"></span>
+			<span class="meter green-gradient"></span>
+			<span class="meter green-gradient"></span>
+			<span class="meter orange-gradient"></span>
+			<span class="meter orange-gradient"></span>
+			<span class="meter orange-gradient"></span>
+			<span class="meter orange-gradient"></span>
+			<span class="meter red-gradient"></span>
+			<span class="meter red-gradient"></span>
+		</li>
+	</ul>
+
+</div>

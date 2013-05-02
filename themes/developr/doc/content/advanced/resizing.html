@@ -1,0 +1,59 @@
+<hgroup id="main-title" class="thin">
+	<h1>Resizing events</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<h3 class="thin">Window resize event</h3>
+
+	<p>Listening to window.resize events can be cumbersome, because it is trigerred many times when resizing the window, which results in a huge work load for the website. Some older browsers even trigger this event multiple times for each resizing...</p>
+
+	<p>To make working with this event easier, the template does all the work of listening and smoothing the event, and send 2 custom events:</p>
+
+	<dl class="definition inline">
+		<dt>normalized-preresize</dt>
+		<dd>This is mostly an internal event, designed for respond.js. It fires before the template does all the work required in case of window resizing.</dd>
+
+		<dt>normalized-resize</dt>
+		<dd>This is the event you should use when listening to window.resize. It is sent once every 40ms each time the window is resized, and only once media queries have been applied.</dd>
+	</dl>
+
+	<p>These events are also trigerred when the user tilts a mobile device (event 'orientationchange').</p>
+
+	<p>To use them, listen on the window element:</p>
+
+<pre class="prettyprint">
+$(window).on('normalized-resize', function(event) { ... });
+</pre>
+
+	<h3 class="thin">Element resize event</h3>
+
+	<p>Aside from window resizing, the template also provides a way to watch an element and send custom events when its size changes. Several element size events are available:</p>
+
+	<dl class="definition inline">
+		<dt>sizechange</dt>
+		<dd>This event is fired each time one or both dimensions of an element change</dd>
+
+		<dt>widthchange</dt>
+		<dd>This event is fired each time the width of an element changes</dd>
+
+		<dt>heightchange</dt>
+		<dd>This event is fired each time the height of an element changes</dd>
+
+		<dt>scrollsizechange</dt>
+		<dd>This event is fired each time one or both scroll sizes of an element change (listen to <b>scrollWidth</b> and <b>scrollHeight</b>)</dd>
+	</dl>
+
+	<p>To use them, you may either use jQuery bind methods:</p>
+
+<pre class="prettyprint">
+$(selector).on('sizechange', function(event) { ... });
+</pre>
+
+	<p>Or use the helper methods (there is one for each event type):</p>
+
+<pre class="prettyprint">
+$(selector).sizechange(function(event) { ... });
+</pre>
+
+</div>

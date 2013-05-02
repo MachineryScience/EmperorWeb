@@ -1,0 +1,142 @@
+<hgroup id="main-title" class="thin">
+	<h1>Automatic template setup</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<h3 class="thin">What is it?</h3>
+
+	<p>The template includes a innovative plugin to automatically detect when content is inserted or removed (using jQuery's methods), and apply all template effects - for instance, style select and switches, enable custom scroll... What does it mean? Smaller and cleaner code, and no need to setup extra callback functions for each and every AJAX loaded or dynamically inserted content.</p>
+
+	<p>Give it a try below: click the button to load some AJAX content in the box below - there is no callback set, but the required plugins are fired automatically:</p>
+
+	<div class="carbon with-padding margin-bottom">
+		<div class="boxed white-bg">
+			<div class="align-center" style="line-height: 60px">
+				<button class="button blue-gradient glossy" onclick="$(this).parent().parent().load('content/basic/auto-setup-demo.html');">Click me to load some content</button>
+			</div>
+		</div>
+	</div>
+
+	<h3 class="thin">How to use it</h3>
+
+	<p>The automatic setup it called at startup and everytime the DOM is modified with jQuery, which means that even external plugins will benefit from it. It also provides a cleaning method to clear markup before removing it, for instance all open tooltips will be removed - those who have used such plugins know what I am talking about...</p>
+
+	<p>Most of the time you don't even have to bother about it, but there may be some cases where you want to call it manually. Here is how:</p>
+
+	<h6>Apply template setup:</h6>
+	<pre class="prettyprint">
+/**
+ * Call every template setup function over a jQuery object (for instance : $('body').applySetup())
+ *
+ * @param boolean self whether the current element should be affected or not (default: true)
+ * @param boolean children whether the element's children should be affected or not (default: true)
+ */
+$(selector).applySetup(self, children);
+</pre>
+
+	<h6>Clear template setup:</h6>
+	<pre class="prettyprint">
+/**
+ * Call every clear function over a jQuery object (for instance : $('body').applyClear())
+ *
+ * @param boolean self whether the current element should be affected or not (default: true)
+ * @param boolean children whether the element's children should be affected or not (default: true)
+ */
+$(selector).applyClear(self, children);
+</pre>
+
+	<p>There are also two sets of custom methods, one for the global template setup and on for element-level setup:</p>
+
+	<h3 class="thin">Global API</h3>
+
+	<p>Need some extra work done by the automatic setup? No problem, there's an app... ew, a function for this: for instance, let's say you have a WYSIWYG plugin that should be applied to every textarea with a specific class in your app:</p>
+
+	<pre class="prettyprint">
+/**
+ * Add a new global setup function. The function should accept 2 arguments:
+ * - self (whether the current element should be affected or not)
+ * - children (whether the element's children should be affected or not)
+ * The function should also return the jQuery selection, incremented from any added element in the root set
+ * (Note: the function may use the custom method findIn() with the same arguments)
+ *
+ * @param function func the function to be called on a jQuery object
+ * @param boolean priority set to true to call the function before all others (optional, default false)
+ * @return void
+ */
+$.template.addSetupFunction(function(self, children)
+{
+	// Here comes your custom code
+	this.findIn(self, children, 'textarea.wysiwyg').initEditor();
+
+	return this;
+
+}, priority);
+</pre>
+
+	<p>Once this function is set, it will run everywhere in your app, even on your AJAX content. Pretty neat, huh? Now you can move on and forget it.</p>
+
+	<p>Same thing for clear function:</p>
+
+	<pre class="prettyprint">
+/**
+ * Add a new global clear function. The function should accept 2 arguments:
+ * - self (whether the target element should be affected or not)
+ * - children (whether the element's children should be affected or not)
+ * The function should also return the jQuery selection, incremented from any added element in the root set
+ * (Note: the function may use the custom method findIn() with the same arguments)
+ *
+ * @param function func the function to be called on a jQuery object
+ * @param boolean priority set to true to call the function before all others (optional, default false)
+ * @return void
+ */
+$.template.addClearFunction(function(self, children) {}, priority);
+</pre>
+
+	<p>As mentioned in the comments, you may use the custom selector findIn() to select elements according to the setup/clear arguments:</p>
+
+	<pre class="prettyprint">
+var elements = this.findIn(self, children, selector);
+</pre>
+
+	<p>Of course, it may be disabled and enabled at runtime when performing heavy DOM operations:</p>
+
+	<pre class="prettyprint">
+// Stop DOM watching (the function returns a boolean telling if DOM watching was on)
+var isWatching = $.template.disableDOMWatch();
+
+... DOM operations code here ...
+
+// Re-enable DOM watching if required
+if (isWatching)
+{
+	$.template.enableDOMWatch();
+}
+</pre>
+
+	<h3 class="thin">Element API</h3>
+
+	<p>Sometimes you may need to add a clear function who should run for one set of elements but not the whole document:</p>
+
+	<pre class="prettyprint">
+/**
+ * Add a clear function on an element, with same format as $.template.addClearFunction()
+ *
+ * @param function func the function to be added
+ * @param boolean priority set to true to call the function before all others (optional)
+ */
+$(selector).addClearFunction(func, priority);
+</pre>
+
+	<p>Changed your mind? No problem, you may remove the function too:</p>
+
+	<pre class="prettyprint">
+/**
+ * Remove a clear function from the element
+ *
+ * @param function func the function to be cleared
+ */
+$(selector).removeClearFunction(func);
+</pre>
+
+</div>

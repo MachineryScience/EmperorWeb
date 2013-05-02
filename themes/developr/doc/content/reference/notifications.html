@@ -1,0 +1,570 @@
+<hgroup id="main-title" class="thin">
+	<h1>Notifications</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin file <b>js/developr.notify.js</b>
+	</div>
+
+	<p>The template includes a complete and powerful notification functionality, with several options to customize the look and feel, and the ability to use browser's desktop notifications when available. Try the notification builder below or use the options reference to use it:</p>
+
+	<h3 class="thin">Notification builder</h3>
+
+	<form method="post" action="" id="notifications-form" class="columns button-height">
+
+		<div class="six-columns twelve-columns-tablet">
+
+			<p class="inline-label">
+				<span class="label">Title</span>
+				<input type="text" name="title" id="title" class="input full-width" value="Notification title">
+			</p>
+
+			<p class="inline-label">
+				<span class="label">Message</span>
+				<input type="text" name="message" id="message" class="input full-width" value="This is a demo notification">
+			</p>
+
+			<p class="inline-label">
+				<span class="label">Icon</span>
+
+				<input type="checkbox" name="icon" id="icon" value="1" class="switch mid-margin-right" data-text-on="YES" data-text-off="NO">
+				<span class="button-group">
+					<label for="icon-position-outside" class="button green-active">
+						<input type="radio" name="icon-position" id="icon-position-outside" value="1" checked>
+						Outside
+					</label>
+					<label for="icon-position-inside" class="button green-active">
+						<input type="radio" name="icon-position" id="icon-position-inside" value="0">
+						Inside
+					</label>
+				</span>
+			</p>
+
+			<p class="inline-label">
+				<label for="system" class="label">Notification API</label>
+				<input type="checkbox" name="system" id="system" value="1" class="switch wider mid-margin-right" data-text-on="ENABLED" data-text-off="DISABLED">
+				<span class="grey">(Chrome only currently)</span>
+			</p>
+
+		</div>
+
+		<div class="six-columns twelve-columns-tablet">
+
+			<p class="inline-label">
+				<span class="label">Position</span>
+
+				<span class="button-group">
+					<label for="position-top" class="button green-active">
+						<input type="radio" name="position-vertical" id="position-top" value="top" checked>
+						Top
+					</label>
+					<label for="position-bottom" class="button green-active">
+						<input type="radio" name="position-vertical" id="position-bottom" value="bottom">
+						Bottom
+					</label>
+				</span>
+
+				<span class="button-group">
+					<label for="position-left" class="button green-active">
+						<input type="radio" name="position-horizontal" id="position-left" value="left">
+						Left
+					</label>
+					<label for="position-center" class="button green-active">
+						<input type="radio" name="position-horizontal" id="position-center" value="center">
+						Center
+					</label>
+					<label for="position-right" class="button green-active">
+						<input type="radio" name="position-horizontal" id="position-right" value="right" checked>
+						Right
+					</label>
+				</span>
+			</p>
+
+			<p class="inline-label">
+				<span class="label">Close button</span>
+
+				<span class="button-group">
+					<label for="close-none" class="button green-active">
+						<input type="radio" name="close" id="close-none" value="none">
+						None
+					</label>
+					<label for="close-always" class="button green-active">
+						<input type="radio" name="close" id="close-always" value="always">
+						Visible
+					</label>
+					<label for="close-hover" class="button green-active">
+						<input type="radio" name="close" id="close-hover" value="hover" checked>
+						On hover
+					</label>
+				</span>
+			</p>
+
+			<p class="inline-label">
+				<label for="auto-close" class="label">Auto-close</label>
+				<input type="checkbox" name="auto-close" id="auto-close" value="1" class="switch mid-margin-right" checked data-text-on="YES" data-text-off="NO">
+				<span class="grey">(after 8 seconds)</span>
+			</p>
+
+			<p class="inline-label">
+				<label for="group-similar" class="label">Group similar</label>
+				<input type="checkbox" name="group-similar" id="group-similar" value="1" class="switch" checked data-text-on="YES" data-text-off="NO">
+			</p>
+
+			<p class="inline-label">
+				<button type="submit" class="button blue-gradient">Show notification</button>
+			</p>
+
+		</div>
+
+	</form>
+
+	<h3 class="thin">Methods</h3>
+
+	<dl class="definition">
+		<dt>notify(title, message, options, rotate)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Display a notification. If the page is not yet ready, delay the notification until it is ready.</p>
+			<h6>Parameters</h6>
+			<p>@var string title the title - can be omitted<br>
+			@var string message a text or html message to display<br>
+			@var object options an object with any options for the message - optional (see defaults for more details)<br>
+			@var boolean rotate force deletion of older element before inserting new one - optional (internal mostly, but can be used if relevant)</p>
+			<h6>Return</h6>
+			<p>@return void</p>
+		</dd>
+
+		<dt>notify.hasNotificationAPI()</dt>
+		<dd class="boxed margin-bottom">
+			<p>Check if the Notification API is available</p>
+			<h6>Return</h6>
+			<p>@return boolean true if available, else false</p>
+		</dd>
+
+		<dt>notify.isNotificationPermissionSet()</dt>
+		<dd class="boxed margin-bottom">
+			<p>Check if the Notification API permission is set</p>
+			<h6>Return</h6>
+			<p>@return boolean true if available, else false</p>
+		</dd>
+
+		<dt>notify.hasNotificationPermission()</dt>
+		<dd class="boxed margin-bottom">
+			<p>Check if the Notification API permission is granted</p>
+			<h6>Return</h6>
+			<p>@return boolean true if available, else false</p>
+		</dd>
+
+		<dt>notify.showNotificationPermission(target, callback)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Display a message asking the user to grant permission to use the notification API<br>
+			Note: require the developr.message lib is required if target is not defined</p>
+			<h6>Parameters</h6>
+			@param jQuery|string target the element which will be clicked to trigger the notification, or a string for a message that will be created on top of #main<br>
+			@param function callback a function to be called when the permission is set, granted or not (optional)</p>
+			<h6>Return</h6>
+			<p>@return void</p>
+		</dd>
+	</dl>
+
+	<h3 class="thin">Options reference</h3>
+
+	<div class="wrapped margin-bottom left-icon icon-info-round">
+		The defaults may be modified at runtime in <b>notify.defaults</b>
+	</div>
+
+	<dl class="definition">
+
+		<dt>system</dt>
+		<dd class="boxed margin-bottom">
+			Use system notification if available, else fallback on standard notifications<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+
+		<dt>vPos</dt>
+		<dd class="boxed margin-bottom">
+			Vertical position ('top' or 'bottom')<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> 'top'
+		</dd>
+
+		<dt>hPos</dt>
+		<dd class="boxed margin-bottom">
+			Horizontal position ('left', 'center' or 'right')<br>
+			Note: ignored in mobile screens (the notification takes the full screen width)<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> 'right' ('left' for RTL)
+		</dd>
+
+		<dt>classes</dt>
+		<dd class="boxed margin-bottom">
+			Extra classes (colors...)<br>
+			<span class="icon-marker black">Type:</span> array<br>
+			<span class="icon-star black">Default:</span> []
+		</dd>
+
+		<dt>link</dt>
+		<dd class="boxed margin-bottom">
+			Link on the notification<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> ''
+		</dd>
+
+		<dt>title</dt>
+		<dd class="boxed margin-bottom">
+			Title on hover<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> ''
+		</dd>
+
+		<dt>icon</dt>
+		<dd class="boxed margin-bottom">
+			Icon path<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> ''
+		</dd>
+
+		<dt>iconOutside</dt>
+		<dd class="boxed margin-bottom">
+			Icon should show out of the notification block? (ignored for mobile layouts)<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>closeButton</dt>
+		<dd class="boxed margin-bottom">
+			Add a close button to the notification<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>showCloseOnHover</dt>
+		<dd class="boxed margin-bottom">
+			Show the close button only on hover<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>autoClose</dt>
+		<dd class="boxed margin-bottom">
+			Notice will close after (closeDelay) ms<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>closeDelay</dt>
+		<dd class="boxed margin-bottom">
+			Delay before notification closes<br>
+			<span class="icon-marker black">Type:</span> int<br>
+			<span class="icon-star black">Default:</span> 8000
+		</dd>
+
+		<dt>delay</dt>
+		<dd class="boxed margin-bottom">
+			Delay before showing the notification<br>
+			<span class="icon-marker black">Type:</span> int<br>
+			<span class="icon-star black">Default:</span> 0
+		</dd>
+
+		<dt>groupSimilar</dt>
+		<dd class="boxed margin-bottom">
+			Group similar notifications in a stack<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>stickGrouped</dt>
+		<dd class="boxed margin-bottom">
+			Prevent autoClose on grouped notifications<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+
+		<dt>textOneSimilar</dt>
+		<dd class="boxed margin-bottom">
+			Text when one similar notification is found<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> 'One similar notification'
+		</dd>
+
+		<dt>textSeveralSimilars</dt>
+		<dd class="boxed margin-bottom">
+			Text when several similar notifications are found<br>
+			Note: use %d in your string to get the final count<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> '%d similar notifications'
+		</dd>
+
+		<dt>limit</dt>
+		<dd class="boxed margin-bottom">
+			Maximum number of notifications displayed at the same time in one stack<br>
+			Note: use 0 for no limit, but use with caution!<br>
+			<span class="icon-marker black">Type:</span> int<br>
+			<span class="icon-star black">Default:</span> 7
+		</dd>
+
+		<dt>rotate</dt>
+		<dd class="boxed margin-bottom">
+			Force rotation (remove older messages) when reaching limit<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+
+		<dt>textOneMore</dt>
+		<dd class="boxed margin-bottom">
+			Text when one similar notification is found<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> 'One more notification'
+		</dd>
+
+		<dt>textSeveralMore</dt>
+		<dd class="boxed margin-bottom">
+			Text when several similar notifications are found<br>
+			Note: use %d in your string to get the final count<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> '%d more notifications'
+		</dd>
+
+		<dt>releaseLimit</dt>
+		<dd class="boxed margin-bottom">
+			Number of notifications released when clicking on an similiar/archive block<br>
+			Note: use 0 for no limit, but use with caution!<br>
+			<span class="icon-marker black">Type:</span> int<br>
+			<span class="icon-star black">Default:</span> 5
+		</dd>
+
+		<dt>top</dt>
+		<dd class="boxed margin-bottom">
+			Options for top notifications<br>
+			<span class="icon-marker black">Type:</span> object<br>
+			<span class="icon-star black">Default:</span> {}
+		</dd>
+
+		<dt>bottom</dt>
+		<dd class="boxed margin-bottom">
+			Options for bottom notifications<br>
+			<span class="icon-marker black">Type:</span> object<br>
+			<span class="icon-star black">Default:</span> {}
+		</dd>
+
+		<dt>left</dt>
+		<dd class="boxed margin-bottom">
+			Options for left notifications<br>
+			<span class="icon-marker black">Type:</span> object<br>
+			<span class="icon-star black">Default:</span> {}
+		</dd>
+
+		<dt>center</dt>
+		<dd class="boxed margin-bottom">
+			Options for center notifications<br>
+			<span class="icon-marker black">Type:</span> object<br>
+			<span class="icon-star black">Default:</span> {}
+		</dd>
+
+		<dt>right</dt>
+		<dd class="boxed margin-bottom">
+			Options for right notifications<br>
+			<span class="icon-marker black">Type:</span> object<br>
+			<span class="icon-star black">Default:</span> {}
+		</dd>
+
+		<dt>topleft</dt>
+		<dd class="boxed margin-bottom">
+			Options for top left notifications<br>
+			<span class="icon-marker black">Type:</span> object<br>
+			<span class="icon-star black">Default:</span> {}
+		</dd>
+
+		<dt>topcenter</dt>
+		<dd class="boxed margin-bottom">
+			Options for top center notifications<br>
+			<span class="icon-marker black">Type:</span> object<br>
+			<span class="icon-star black">Default:</span> {}
+		</dd>
+
+		<dt>topright</dt>
+		<dd class="boxed margin-bottom">
+			Options for top right notifications<br>
+			<span class="icon-marker black">Type:</span> object<br>
+			<span class="icon-star black">Default:</span> {}
+		</dd>
+
+		<dt>bottomleft</dt>
+		<dd class="boxed margin-bottom">
+			Options for bottom left notifications<br>
+			<span class="icon-marker black">Type:</span> object<br>
+			<span class="icon-star black">Default:</span> {}
+		</dd>
+
+		<dt>bottomcenter</dt>
+		<dd class="boxed margin-bottom">
+			Options for bottom center notifications<br>
+			<span class="icon-marker black">Type:</span> object<br>
+			<span class="icon-star black">Default:</span> {}
+		</dd>
+
+		<dt>bottomright</dt>
+		<dd class="boxed margin-bottom">
+			Options for bottom right notifications<br>
+			<span class="icon-marker black">Type:</span> object<br>
+			<span class="icon-star black">Default:</span> {}
+		</dd>
+
+		<dt>onDisplay</dt>
+		<dd class="boxed margin-bottom">
+			Callback when the notification is shown<br>
+			<span class="icon-marker black">Type:</span> function<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>onClick</dt>
+		<dd class="boxed margin-bottom">
+			Callback when the notification is clicked<br>
+			<span class="icon-marker black">Type:</span> function<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>onClose</dt>
+		<dd class="boxed margin-bottom">
+			Callback when the notification is closed<br>
+			<span class="icon-marker black">Type:</span> function<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>onError</dt>
+		<dd class="boxed margin-bottom">
+			Callback (if using the Notification API system only) if the notification triggers an error.<br>
+			By default, the lib will fallback on a standard notification, the callback may return false to prevent this.<br>
+			<span class="icon-marker black">Type:</span> function<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+	</dl>
+
+</div>
+
+<script>
+
+	// Set notifications if needed
+	$('#system').change(function(event)
+	{
+		if (this.checked)
+		{
+			if (notify.hasNotificationAPI())
+			{
+				if (!notify.isNotificationPermissionSet())
+				{
+					notify.showNotificationPermission('Your browser supports desktop notification, click here to enable them.', function()
+					{
+						// Confirmation message
+						if (notify.hasNotificationPermission())
+						{
+							notify('Notifications API enabled!', 'You can now see notifications even when the application is in background', {
+								icon: 'img/demo/icon.png',
+								system: true
+							});
+						}
+						else
+						{
+							notify('Notifications API disabled!', 'Desktop notifications will not be used.', {
+								icon: 'img/demo/icon.png'
+							});
+						}
+					});
+				}
+			}
+			else
+			{
+				$.modal.alert('Your browser does not support the notification API');
+			}
+		}
+	});
+
+	// Messages form
+	$('#notifications-form').submit(function(event)
+	{
+		var positionHorizontal, positionVertical,
+			closeButton, showCloseOnHover,
+			options, finalOptions = {},
+			hasOptions = false, displayOptions = [],
+			thevar, optionsString;
+
+		event.preventDefault();
+
+		// Positions
+		if ($('#position-top').prop('checked'))
+		{
+			positionVertical = 'top';
+		}
+		else
+		{
+			positionVertical = 'bottom';
+		}
+		if ($('#position-left').prop('checked'))
+		{
+			positionHorizontal = 'left';
+		}
+		else if ($('#position-center').prop('checked'))
+		{
+			positionHorizontal = 'center';
+		}
+		else
+		{
+			positionHorizontal = 'right';
+		}
+
+		// Close button
+		if ($('#close-none').prop('checked'))
+		{
+			closeButton = false;
+			showCloseOnHover = false;
+		}
+		else if ($('#close-always').prop('checked'))
+		{
+			closeButton = true;
+			showCloseOnHover = false;
+		}
+		else
+		{
+			closeButton = true;
+			showCloseOnHover = true;
+		}
+
+		// Gather options
+		options = {
+			system:				$('#system').prop('checked'),
+			vPos:				positionVertical,
+			hPos:				positionHorizontal,
+			autoClose:			$('#auto-close').prop('checked'),
+			icon:				$('#icon').prop('checked') ? 'img/demo/icon.png' : '',
+			iconOutside:		$('#icon-position-outside').prop('checked'),
+			closeButton:		closeButton,
+			showCloseOnHover:	showCloseOnHover,
+			groupSimilar:		$('#group-similar').prop('checked')
+		};
+
+		// Filter default values
+		for (thevar in options)
+		{
+			if (options[thevar] !== notify.defaults[thevar])
+			{
+				finalOptions[thevar] = options[thevar];
+				displayOptions.push(thevar+': '+((typeof options[thevar] === 'string') ? "'"+options[thevar]+"'" : options[thevar]));
+				hasOptions = true;
+			}
+		}
+
+		// Display notification
+		notify($('#title').val(), $('#message').val(), finalOptions);
+
+		// Display code
+		$('#code-display').remove();
+		optionsString = hasOptions ? ', {'+"\n\t"+displayOptions.join(','+"\n\t")+"\n"+'}' : '';
+		$('<pre class="prettyprint" id="code-display">'+"\n"+'notify(\''+$('#title').val()+'\', \''+$('#message').val()+'\''+optionsString+');'+"\n"+'</pre>').insertAfter($(this));
+		prettyPrint();
+	});
+
+</script>

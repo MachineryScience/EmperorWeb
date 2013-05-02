@@ -1,0 +1,85 @@
+<hgroup id="main-title" class="thin">
+	<h1>Plugins basics</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<p>This page will give you some general informations on how to use the template plugins.</p>
+
+	<h3 class="thin">Inline options</h3>
+
+	<p>Several plugins allow inline configuration using <b>HTML5 data-* attributes</b>. These work fine, even on older browsers, and remove the need of a custom script for each element. Here is how to use them: for instance, let's say you want to pass this object of options to the plugin:</p>
+
+	<pre class="prettyprint">
+{
+	option1: 'value',
+	option2: true,
+	option3: 24,
+	option4: ['text1', 'text2', 'text3']
+}
+</pre>
+
+	<p>First, write it inline, putting quotes around options' names:</p>
+
+	<pre class="prettyprint">
+{ 'option1': 'value', 'option2': true, 'option3': 24, 'option4': ['text1', 'text2', 'text3'] }
+</pre>
+
+	<p>Then replace all single quotes by double quotes and insert it in the data-* attribute:</p>
+
+	<pre class="prettyprint">
+&lt;div data-plugin-options='{"option1":"value","option2":true,"option3":24,"option4":["text1","text2","text3"]}'&gt;
+</pre>
+
+	<div class="wrapped margin-bottom left-icon icon-info-round">
+		Note that the data-* attribute use single quotes as delimiter in this case, not double quotes
+	</div>
+
+	<p>Of course, the name of the data attributes depends on the plugin - you can find the name to use in each plugin's documentation page.</p>
+
+	<p>An alternative way to add this data attribute is to do it with jQuery:</p>
+
+<pre class="prettyprint">
+$(selector).data('plugin-options', {
+
+	option1: 'value',
+	option2: true,
+	option3: 24,
+	option4: ['text1', 'text2', 'text3'],
+
+	onShow: function()
+	{
+		...
+	},
+
+	onRemove: function()
+	{
+		...
+	}
+
+});
+</pre>
+
+	<p>This requires less code if many elements should have these options, gives a convinient way to set functions, and the code is easier to read.</p>
+
+	<h3 class="thin">Changing defaults</h3>
+
+	<p>Most plugins expose their default configurations in a public object, so it is easy to change these values at runtine. For instance, if you need to change some options for the modal plugin:</p>
+
+<pre class="prettyprint">
+$.modal.defaults.resizable = false;
+</pre>
+
+	<p>Now all calls to the plugins will use this default value.</p>
+
+	<p>If you need to change many values, here is a clean way to do it using <a href="http://api.jquery.com/jQuery.extend/">jQuery's extend method</a>:</p>
+
+<pre class="prettyprint">
+$.extend($.modal.defaults, {
+	resizable: false,
+	beforeContent: '&lt;div class="wrapped"&gt;',
+	afterContent: '&lt;/div&gt;'
+});
+</pre>
+
+</div>

@@ -1,0 +1,53 @@
+.one-column-fixed {
+    width: 8.3%;
+}
+.two-column-fixed {
+    width: 16.6%;
+}
+
+.three-column-fixed {
+    width: 25%;
+}
+
+.four-column-fixed {
+    width: 33.3%;
+}
+
+.five-column-fixed {
+    width: 41.6%;
+}
+
+.six-column-fixed {
+    width: 50%;
+}
+
+.seven-column-fixed {
+    width: 58.3%;
+}
+
+.eight-column-fixed {
+    width: 66.6%;
+}
+
+.nine-column-fixed {
+    width: 75%;
+}
+
+.ten-column-fixed {
+    width: 83.3%;
+}
+
+.eleven-column-fixed {
+    width: 91.6%;
+}
+
+.twelve-column-fixed {
+    width: 100%;
+}
+
+.wrap-prevent {
+    xxxoverflow-x:  hidden;
+    xxxwhite-space: nowrap;
+    xxxmin-width: 10px;
+    margin-right: -20px;
+}

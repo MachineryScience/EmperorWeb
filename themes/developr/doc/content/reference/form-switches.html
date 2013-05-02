@@ -1,0 +1,150 @@
+<hgroup id="main-title" class="thin">
+	<h1>Switches</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h3>
+		This feature requires the plugin files <b>js/developr.input.js</b> and <b>css/styles/switches.css</b>
+	</div>
+
+	<p>The template includes a complete set of switches sizes, all focusable and controlable by keyboard. Using switches is quite easy: add the class <b>switch</b> to a radio or an input, it will be styled automatically:</p>
+
+	<p class="button-height">
+		<input type="checkbox" name="switch" id="switch" class="switch mid-margin-right" value="1"> <label for="switch">Switch</label>
+	</p>
+
+	<pre class="prettyprint">
+&lt;input type="checkbox" class="switch"&gt;
+</pre>
+
+	<p>Note that all additional classes will also be added to the switch element (margins, colors...)</p>
+
+	<h3 class="thin">Reversed style</h3>
+
+	<p>If you prefer the switches to work as on iOS, add the class <b>reversed-switches</b> to any of its ancestors:</p>
+
+	<p class="button-height reversed-switches">
+		<input type="checkbox" name="switch-reversed" id="switch-reversed" class="switch mid-margin-right" value="1"> <label for="switch-reversed">Switch</label>
+	</p>
+
+	<pre class="prettyprint">
+&lt;p class="reversed-switches"&gt;
+	&lt;input type="checkbox" class="switch"&gt;
+&lt;/p&gt;
+</pre>
+
+	<p>If you want to reverse all switches, just add the class to the <b>body</b> element.</p>
+
+	<h3 class="thin">Customizing</h3>
+
+	<p>The switches can be easily customized:</p>
+
+	<h5 class="green">Texts</h5>
+
+	<p class="button-height">
+		<input type="checkbox" name="switch-custom-1" id="switch-custom-1" class="switch mid-margin-right" value="1" checked data-text-on="YES" data-text-off="NO">
+		<label for="switch-custom-1">Custom texts</label>
+	</p>
+
+	<pre class="prettyprint">
+// Using separate attributes
+&lt;input type="checkbox" class="switch" checked data-text-on="YES" data-text-off="NO"&gt;
+
+// Using option attribute
+&lt;input type="checkbox" class="switch" checked data-checkable-options='{"textOn":"YES","textOff":"NO"}'&gt;
+</pre>
+
+	<h5 class="green">Active color</h5>
+
+	<p class="button-height">
+		<input type="checkbox" name="switch-custom-4" id="switch-custom-4" class="switch red-active mid-margin-right" value="1" checked>
+		<label for="switch-custom-4">Red active</label><br>
+		<input type="checkbox" name="switch-custom-5" id="switch-custom-5" class="switch blue-active mid-margin-right" value="1" checked>
+		<label for="switch-custom-5">Blue active</label>
+	</p>
+
+	<pre class="prettyprint">
+// Use any class from the colors sets
+&lt;input type="checkbox" class="switch red-active"&gt;
+&lt;input type="checkbox" class="switch blue-active"&gt;
+</pre>
+
+	<h5 class="green">Size</h5>
+
+	<p class="button-height">
+		<input type="checkbox" name="switch-custom-2" id="switch-custom-2" class="switch wide mid-margin-right" value="1" checked data-text-on="TRUE" data-text-off="FALSE">
+		<label for="switch-custom-2">Wide switch</label><br>
+		<input type="checkbox" name="switch-custom-3" id="switch-custom-3" class="switch wider mid-margin-right" value="1" checked data-text-on="ENABLED" data-text-off="DISABLED">
+		<label for="switch-custom-3">Wider switch</label>
+	</p>
+
+	<pre class="prettyprint">
+// Wide switch
+&lt;input type="checkbox" class="switch wide"&gt;
+
+// Wider switch
+&lt;input type="checkbox" class="switch wider"&gt;
+</pre>
+
+	<h5 class="green">Height</h5>
+
+	<p class="button-height">
+		<input type="checkbox" name="switch-medium-1" id="switch-medium-1" class="switch medium mid-margin-right" value="1"> <label for="switch-medium-1">Medium size</label><br>
+		<input type="checkbox" name="switch-medium-2" id="switch-medium-2" class="switch medium wide mid-margin-right" value="1" checked data-text-on="TRUE" data-text-off="FALSE"> <label for="switch-medium-2">Medium size - wide</label><br>
+		<input type="checkbox" name="switch-medium-3" id="switch-medium-3" class="switch medium wider mid-margin-right" value="1" checked data-text-on="ENABLED" data-text-off="DISABLED"> <label for="switch-medium-3">Medium size - wider</label>
+	</p>
+
+	<pre class="prettyprint">
+// Medium switches, different sizes
+&lt;input type="checkbox" class="switch medium"&gt;
+&lt;input type="checkbox" class="switch medium wide"&gt;
+&lt;input type="checkbox" class="switch medium wider"&gt;
+</pre>
+
+	<p class="button-height">
+		<input type="checkbox" name="switch-tiny" id="switch-tiny" class="switch tiny mid-margin-right" value="1"> <label for="switch-tiny">Tiny size</label><br>
+		<input type="checkbox" name="switch-mini" id="switch-mini" class="switch mini mid-margin-right" value="1"> <label for="switch-mini">Mini size</label>
+	</p>
+
+	<pre class="prettyprint">
+// Tiny switch
+&lt;input type="checkbox" class="switch tiny"&gt;
+
+// Switch mini
+&lt;input type="checkbox" class="switch mini"&gt;
+</pre>
+
+	<h3 class="thin">Disabled state</h3>
+
+	<p>As any input, switches may be disabled: disabled the original radio/checkbox or add the class disabled.</p>
+
+	<p class="button-height" id="disabled-switches">
+		<input type="checkbox" name="switch-disabled" id="switch-disabled" class="switch mid-margin-right" value="1" disabled>
+		<input type="checkbox" name="switch-medium" id="switch-medium" class="switch medium mid-margin-right" value="1" disabled>
+		<input type="checkbox" name="switch-tiny" id="switch-tiny" class="switch tiny mid-margin-right" value="1" disabled>
+		<input type="checkbox" name="switch-mini" id="switch-mini" class="switch mini mid-margin-right" value="1" disabled>
+	</p>
+
+	<pre class="prettyprint">
+// Really disabled
+&lt;input type="checkbox" class="switch" disabled&gt;
+
+// Looking like it is disabled
+&lt;input type="checkbox" class="switch disabled"&gt;
+</pre>
+
+	<p>Note that if you need to disable/enabled switches at runtime, you must use the template methods:</p>
+
+	<pre class="prettyprint">
+// Enable switch
+$(selector).enableInput();
+
+// Disable switch
+$(selector).disableInput();
+</pre>
+
+	<p class="left-icon icon-info-round">you may target either the original input or the switch</p>
+
+</div>

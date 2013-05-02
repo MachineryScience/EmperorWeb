@@ -1,0 +1,171 @@
+<hgroup id="main-title" class="thin">
+	<h1>Template resources</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<p>The template use several internal functions to determine how to work with the browser, and these are available for your scripts.</p>
+
+	<h3 class="thin">Browser type</h3>
+
+	<p>The template does a bit of browser sniffing, and though this is not completely reliable, it helps sometimes.</p>
+
+	<dl class="definition inline">
+		<dt>$.template.ie7</dt>
+		<dd>True if Internet Explorer 7</dd>
+
+		<dt>$.template.ie8</dt>
+		<dd>True if Internet Explorer 8</dd>
+
+		<dt>$.template.iPhone</dt>
+		<dd>True if iPhone</dd>
+
+		<dt>$.template.iPod</dt>
+		<dd>True if iPod</dd>
+
+		<dt>$.template.iPad</dt>
+		<dd>True if iPad</dd>
+
+		<dt>$.template.iOs</dt>
+		<dd>True if iOs (any of iPhone, iPod or iPad)</dd>
+
+		<dt>$.template.android</dt>
+		<dd>True if Android</dd>
+
+		<dt>$.template.touchOs</dt>
+		<dd>True if OS designed for touch screens (iOs or Android)</dd>
+	</dl>
+
+	<h3 class="thin">Viewport size</h3>
+
+	<p>The template uses a lot the viewport sizes, so they are retrieved and stored once here to speed up the whole scripts.</p>
+
+	<dl class="definition inline">
+		<dt>$.template.viewportWidth</dt>
+		<dd>Width of the available space</dd>
+
+		<dt>$.template.viewportHeight</dt>
+		<dd>Width of the available height (return the real value for iPhones, including the browser's chrome)</dd>
+	</dl>
+
+	<h3 class="thin">Fixed elements</h3>
+
+	<p>The template provides a fallback for <b>position:fixed</b>, as it is used for the navigation menu but wasn't supported either by iOs before version 5 nor by older versions of Android.</p>
+
+	<p>The fallback works by adding elements with javascript:</p>
+
+	<pre class="prettyprint">
+$(selector).enableFixedFallback();
+</pre>
+
+	<p>You can also disable it:</p>
+
+	<pre class="prettyprint">
+$(selector).disableFixedFallback();
+</pre>
+
+	<h3 class="thin">Generic functions</h3>
+
+	<dl class="definition">
+		<dt>$(selector).parseCSSValue(prop, def)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Parse a css numeric value</p>
+			<h6>Parameters</h6>
+			<p>@param jQuery element the element whose property to parse<br>
+			@param string prop the name of the property<br>
+			@param int def the default value if parsing fails (default: 0)</p>
+			<h6>Return</h6>
+			<p>@return the parsed css value, or def</p>
+		</dd>
+
+		<dt>$(selector).hasInlineCSS(prop)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Test if an element has an inline CSS property set</p>
+			<h6>Parameters</h6>
+			<p>@param string prop the name of the property</p>
+			<h6>Return</h6>
+			<p>@return boolean true if set, else false</p>
+		</dd>
+
+		<dt>$(selector).getStyleString()</dt>
+		<dd class="boxed margin-bottom">
+			<p>Return the element inline style string<br>
+			Note: for IE, the node.style.cssText is not raw, but as parsed by the browser (http://javascript.gakaa.com/style-csstext.aspx)</p>
+			<h6>Return</h6>
+			<p>@return string the style string</p>
+			<h6>Reference</h6>
+			<p>@url http://stackoverflow.com/questions/4233273/howto-get-cross-browser-literal-style-string-with-javascript</p>
+		</dd>
+
+		<dt>$(selector).filterFollowing(selector, fromLast)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Get immediate siblings matching a selector at the beginning of a selection:<br>
+			The filter stops as soon as non-matching node is found</p>
+			<h6>Parameters</h6>
+			<p>@param string selector any jQuery selector string<br>
+			@param boolean fromLast use true to filter from the last element (default: false)<br>
+			@return the matching immediate siblings</p>
+		</dd>
+
+		<dt>$(selector).prevImmediates(selector)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Get immediate previous siblings matching a selector<br>
+			Different from prevAll() as it stops as soon as non-matching node is found</p>
+			<h6>Parameters</h6>
+			<p>@param string selector any jQuery selector string</p>
+			<h6>Return</h6>
+			<p>@return the matching immediate previous siblings</p>
+		</dd>
+
+		<dt>$(selector).nextImmediates(selector)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Get immediate next siblings matching a selector<br>
+			Different from nextAll() as it stops as soon as non-matching node is found</p>
+			<h6>Parameters</h6>
+			<p>@param string selector any jQuery selector string</p>
+			<h6>Return</h6>
+			<p>@return the matching immediate next siblings</p>
+		</dd>
+
+		<dt>$(selector).childrenImmediates(selector, fromLast)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Get immediate children siblings matching a selector<br>
+			Different from nextAll() as it stops as soon as non-matching node is found</p>
+			<h6>Parameters</h6>
+			<p>@param string selector any jQuery selector string<br>
+			@param boolean fromLast use true to filter from the last element (default: false)</p>
+			<h6>Return</h6>
+			<p>@return the matching immediate next siblings</p>
+		</dd>
+	</dl>
+
+	<h3 class="thin">Custom animations</h3>
+
+	<dl class="definition">
+		<dt>$(selector).foldAndRemove(duration, callback)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Remove an element with folding effect</p>
+			<h6>Parameters</h6>
+			<p>@param string|int duration a string (fast, normal or slow) or a number of millisecond. Default: 'normal'. - optional<br>
+			@param function callback any function to call at the end of the effect. Default: none. - optional</p>
+		</dd>
+
+		<dt>$(selector).fadeAndRemove(duration, callback)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Remove an element with fading then folding effect</p>
+			<h6>Parameters</h6>
+			<p>@param string|int duration a string (fast, normal or slow) or a number of millisecond. Default: 'normal'. - optional<br>
+			@param function callback any function to call at the end of the effect. Default: none. - optional</p>
+		</dd>
+
+		<dt>$(selector).shake(force, callback)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Shake an element<br>
+			The jQuery UI's bounce effect messes with margins so let's build ours</p>
+			<h6>Parameters</h6>
+			<p>@param int force size (in pixels) of the movement (default: 15)<br>
+			@param function callback any function to call at the end of the effect. Default: none. - optional</p>
+		</dd>
+	</dl>
+
+</div>

@@ -1,0 +1,209 @@
+<hgroup id="main-title" class="thin">
+	<h1>Columns</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<h3 class="thin">Fluid columns grid</h3>
+
+	<p>The template includes a complete CSS grid set, with 12 fluid columns and a simple syntax:</p>
+
+	<pre class="prettyprint">
+&lt;div class="columns"&gt;
+
+	&lt;!-- First row --&gt;
+	&lt;div class="three-columns"&gt;3 cols&lt;/div&gt;
+	&lt;div class="nine-columns"&gt;9 cols&lt;/div&gt;
+
+	&lt;!-- Second row --&gt;
+	&lt;div class="new-row twelve-columns"&gt;12 cols&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+	<p>The available size classes are:</p>
+
+	<ul class="bullet-list">
+		<li>one-column</li>
+		<li>two-columns</li>
+		<li>three-columns</li>
+		<li>four-columns</li>
+		<li>five-columns</li>
+		<li>six-columns</li>
+		<li>seven-columns</li>
+		<li>eight-columns</li>
+		<li>nine-columns</li>
+		<li>ten-columns</li>
+		<li>eleven-columns</li>
+		<li>twelve-columns</li>
+	</ul>
+
+	<p>There is one extra class: <b>new-row</b>. This class is usefull to clear floats on a new grid line and avoid a higher block from pushing the following columns out of place.</p>
+
+	<h3 class="thin">Responsive columns</h3>
+
+	<p>Using fluid columns on a responsive design can lead to <i>really</i>, <i>really</i> tiny columns on mobile screens, thus making them useless. The good news is there is also a set of classes to define columns size for each responsive width, so you can finely craft how your columns and content will look for each size.</p>
+
+	<div class="wrapped big-left-icon icon-info-round margin-bottom">
+		<h4 class="no-margin-bottom">How does it works?</h4>
+		On contrary of the whole template mobile-first logic, the columns are primarily designed for large screens. So start building your columns using the default grid above, and define how they resize down for every responsive layout.
+	</div>
+
+	<p>To use columns sizes specific to a responsive size, add the following suffixes to the above class names:</p>
+
+	<dl class="definition inline">
+		<dt>*-tablet</dt>
+		<dd>Tablet and small screen</dd>
+
+		<dt>*-mobile</dt>
+		<dd>Mobile (both portrait and lanscape)</dd>
+
+		<dt>*-mobile-landscape</dt>
+		<dd>Mobile - landscape</dd>
+
+		<dt>*-mobile-portrait</dt>
+		<dd>Mobile - portrait</dd>
+	</dl>
+
+	<p>Note that each responsive size class defines the column size for its related screen size and the lower ones (unless there is a defined size for these). Here are some examples to help you understand how it works:</p>
+
+	<table class="table margin-bottom" cellspacing="0">
+		<thead>
+			<tr>
+				<th scope="col">Classes applied to a column</th>
+				<th scope="col">Wide screen</th>
+				<th scope="col">Tablet</th>
+				<th scope="col">Mobile - landscape</th>
+				<th scope="col">Mobile - portrait</th>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr>
+				<th scope="row">four-columns / six-columns-tablet / twelve-columns-mobile</th>
+				<td class="green-bg">4 columns</td>
+				<td class="orange-bg">6 columns</td>
+				<td class="red-bg" colspan="2">12 columns</td>
+			</tr>
+			<tr>
+				<th scope="row">two-columns / four-columns-mobile-landscape / six-columns-mobile-portrait</th>
+				<td class="green-bg" colspan="2">2 columns</td>
+				<td class="orange-bg">4 columns</td>
+				<td class="red-bg">6 columns</td>
+			</tr>
+			<tr>
+				<th scope="row">six-columns / twelve-columns-mobile</th>
+				<td class="green-bg" colspan="2">6 columns</td>
+				<td class="orange-bg" colspan="2">12 columns</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<p class="left-icon icon-info-round">The new-row class also uses suffixes, you need to them it for every responsive size defined.</p>
+
+	<p>For instance, look at these columns below on a wide screen, then resize your browser window to see how they break into multiple rows and resize to always fit the available space while preserving the aspect ratio:</p>
+
+	<div class="columns">
+
+		<div class="one-column two-columns-tablet three-columns-mobile-landscape six-columns-mobile-portrait"><div class="with-mid-padding blue-bg" style="height: 150px">
+			1 col
+		</div></div>
+
+		<div class="one-column two-columns-tablet three-columns-mobile-landscape six-columns-mobile-portrait"><div class="with-mid-padding blue-bg" style="height: 150px">
+			1 col
+		</div></div>
+
+		<div class="new-row-mobile-portrait two-columns three-columns-tablet six-columns-mobile-landscape twelve-columns-mobile-portrait"><div class="with-mid-padding blue-bg" style="height: 150px">
+			2 cols
+		</div></div>
+
+		<div class="new-row-mobile three-columns five-columns-tablet twelve-columns-mobile"><div class="with-mid-padding blue-bg" style="height: 150px">
+			3 cols
+		</div></div>
+
+		<div class="new-row-tablet new-row-mobile five-columns twelve-columns-tablet"><div class="with-mid-padding blue-bg" style="height: 150px">
+			5 cols
+		</div></div>
+
+	</div>
+
+	<pre class="prettyprint">
+&lt;div class="columns"&gt;
+
+	&lt;div class="one-column two-columns-tablet three-columns-mobile-landscape six-columns-mobile-portrait"&gt;1 col&lt;/div&gt;
+	&lt;div class="one-column two-columns-tablet three-columns-mobile-landscape six-columns-mobile-portrait"&gt;1 col&lt;/div&gt;
+	&lt;div class="new-row-mobile-portrait two-columns three-columns-tablet six-columns-mobile-landscape twelve-columns-mobile-portrait"&gt;2 cols&lt;/div&gt;
+	&lt;div class="new-row-mobile three-columns five-columns-tablet twelve-columns-mobile"&gt;3 cols&lt;/div&gt;
+	&lt;div class="new-row-tablet new-row-mobile five-columns twelve-columns-tablet"&gt;5 cols&lt;/div&gt;
+
+&lt;/div&gt;
+</pre>
+
+	<h3 class="thin">Fixed columns</h3>
+
+	<p>Two <b>fixed-size columns</b> styles are available, and are responsive too: on smaller screens, the fixed-size column is stacked on top of the fluid one - try resizing your browser to see it in action!</p>
+
+	<div class="columns">
+
+		<div class="six-columns twelve-columns-tablet">
+
+			<div class="left-column-200px margin-bottom">
+
+				<div class="left-column"><div class="with-padding green-bg" style="height: 150px">
+					Fixed-size column
+				</div></div>
+
+				<div class="right-column"><div class="with-padding green-bg" style="height: 150px">
+					Fluid column
+				</div></div>
+
+			</div>
+
+			<pre class="prettyprint">
+&lt;div class="left-column-200px margin-bottom"&gt;
+
+	&lt;div class="left-column"&gt;
+		Fixed-size column
+	&lt;/div&gt;
+
+	&lt;div class="right-column"&gt;
+		Fluid column
+	&lt;/div&gt;
+
+&lt;/div&gt;
+</pre>
+
+		</div>
+
+		<div class="six-columns twelve-columns-tablet">
+
+			<div class="right-column-200px margin-bottom">
+
+				<div class="right-column"><div class="with-padding green-bg" style="height: 150px">
+					Fixed-size column
+				</div></div>
+
+				<div class="left-column"><div class="with-padding green-bg" style="height: 150px">
+					Fluid column
+				</div></div>
+
+			</div>
+
+			<pre class="prettyprint">
+&lt;div class="right-column-200px"&gt;
+
+	&lt;div class="right-column"&gt;
+		Fixed-size column
+	&lt;/div&gt;
+
+	&lt;div class="left-column"&gt;
+		Fluid column
+	&lt;/div&gt;
+
+&lt;/div&gt;
+</pre>
+
+		</div>
+
+	</div>
+
+</div>

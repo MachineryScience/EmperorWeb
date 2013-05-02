@@ -1,0 +1,386 @@
+<hgroup id="main-title" class="thin">
+	<h1>Tooltips</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<p>The template includes a complete and powerful tooltip functionality, which can be used just by adding a class or through an API. This plugin also provides a contextual <b>menu</b> method.</p>
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin file <b>js/developr.tooltip.js</b>
+	</div>
+
+	<h3 class="thin">Basic use</h3>
+
+	<p>The basic use of the tooltip plugin is to replace the browser's built-in tooltips. To use it, just define a title for your element and add one of those classes either to the element or to its parent:</p>
+
+	<div class="columns">
+
+		<div class="six-columns twelve-columns-mobile">
+
+			<h4>On an element</h4>
+
+			<p class="message align-center with-tooltip" title="This is a tooltip">
+				Hover me!
+			</p>
+
+			<pre class="prettyprint">
+&lt;p class="with-tooltip" title="This is a tooltip"&gt;
+	Hover me!
+&lt;/p&gt;
+</pre>
+
+			<p>Example using inline options:</p>
+
+			<p class="message align-center with-tooltip" title="This is a tooltip" data-tooltip-options='{"classes":["anthracite-gradient"],"position":"bottom"}'>
+				Hover me!
+			</p>
+
+			<pre class="prettyprint">
+&lt;p class="with-tooltip" title="This is a tooltip" data-tooltip-options='{"classes":["anthracite-gradient"],"position":"bottom"}'&gt;
+	Hover me!
+&lt;/p&gt;
+</pre>
+
+		</div>
+
+		<div class="six-columns twelve-columns-mobile">
+
+			<h4>On element's children</h4>
+
+			<ul class="unstyled-list margin-bottom children-tooltip">
+				<li class="message mid-margin-bottom" title="Tooltip for element 1">Element 1</li>
+				<li class="message mid-margin-bottom" title="Tooltip for element 2">Element 2</li>
+				<li class="message mid-margin-bottom" title="Tooltip for element 3">Element 3</li>
+				<li class="message" title="Tooltip for element 4">Element 4</li>
+			</ul>
+
+			<pre class="prettyprint">
+&lt;ul class="children-tooltip"&gt;
+	&lt;li title="Tooltip for element 1"&gt;Element 1&lt;/li&gt;
+	&lt;li title="Tooltip for element 2"&gt;Element 2&lt;/li&gt;
+	&lt;li title="Tooltip for element 3"&gt;Element 3&lt;/li&gt;
+	&lt;li title="Tooltip for element 4"&gt;Element 4&lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+
+		</div>
+
+	</div>
+
+	<p class="left-icon icon-info-round">
+		If the element with the tooltip does not have a title but contains only one child, the plugin will check the child element for a title then - useful for elements with a link inside!
+	</p>
+
+	<h3 class="thin">Script use</h3>
+
+	<p>It is easy to show a tooltip on any element with a simple call:</p>
+
+	<pre class="prettyprint">
+$(selector).tooltip('Tooltip message', { /* Options */ });
+</pre>
+
+	<p>The content may be raw <b>text</b>, <b>html</b>, a <b>jQuery selection</b> or a <b>function</b> to run on the element and which should return the content. A wide range of options are available to customize the look and behavior of the tooltip. See methods/options references below for more details.</p>
+
+	<p>Once a tooltip is open, you can change its content just by calling the same method again. No need to specify options again, they will be pulled from the previous tooltip. If you specify options, they will erase the previous options.</p>
+
+	<pre class="prettyprint">
+// Open tooltip
+$(selector).tooltip('Tooltip message', { /* Options */ });
+
+// Change content
+$(selector).tooltip('New message');
+</pre>
+
+	<p>To remove a tooltip, just call:</p>
+
+	<pre class="prettyprint">
+$(selector).removeTooltip();
+</pre>
+
+	<p>Note that if the tooltip content was pulled from the DOM, it will be restored when removing the tooltip, thus allowing multiple calls.</p>
+
+	<h3 class="thin">Ajax content loading</h3>
+
+	<p>The tooltip content may be loaded using ajax: simply provide an url or a <a href="http://api.jquery.com/category/deferred-object/">promise object</a> returned by an $.ajax() call:<p>
+
+	<h6>Inline options</h6>
+	<pre class="prettyprint">
+&lt;button class="button with-tooltip" title="Loading..." data-tooltip-options='{"ajax":"content-url.html"}'&gt;
+	Text
+&lt;/button&gt;
+</pre>
+
+	<h6>API, using url</h6>
+	<pre class="prettyprint">
+$(selector).tooltip('Loading...', {
+	ajax: 'content-url.html',
+	ajaxOptions: {
+		type: 'POST'
+	},
+	ajaxErrorMessage: 'Unable to load tooltip'
+});
+</pre>
+
+	<h6>API, using promise object</h6>
+	<pre class="prettyprint">
+$(selector).tooltip('Loading...', {
+	ajax: $.ajax('content-url.html', {
+		type: 'POST'
+	}),
+	ajaxErrorMessage: 'Unable to load tooltip'
+});
+</pre>
+
+	<p class="left-icon icon-info-round">
+		The <strong>ajaxOptions</strong> and <strong>ajaxErrorMessage</strong> options are optional, see reference for more details
+	</p>
+
+	<h3 class="thin">Tooltip menu</h3>
+
+	<p>The tooltip plugin provides a menu functionality: when the user clicks the desired element, a tooltip is displayed with any custom content (it may be a menu or anything else), and it closes when the user clicks anywhere else.<p>
+
+	<button id="menu-tooltip" type="button" class="button full-width">Click me!</button>
+	<div id="menu-content-block">
+		<select class="select multiple white-gradient easy-multiple-selection check-list" multiple>
+			<option value="1">Option 1</option>
+			<option value="2">Option 2</option>
+			<option value="3" selected="selected">Selected option</option>
+			<option value="4">Option 3</option>
+		</select>
+	</div>
+
+	<h6>Markup</h6>
+	<pre class="prettyprint">
+&lt;button id="menu-tooltip" type="button" class="button full-width"&gt;Click me!&lt;/button&gt;
+&lt;div id="menu-content-block"&gt;
+	&lt;select class="select multiple white-gradient easy-multiple-selection check-list" multiple&gt;
+		&lt;option value="1"&gt;Option 1&lt;/option&gt;
+		&lt;option value="2"&gt;Option 2&lt;/option&gt;
+		&lt;option value="3" selected="selected"&gt;Selected option&lt;/option&gt;
+		&lt;option value="4"&gt;Option 3&lt;/option&gt;
+	&lt;/select&gt;
+&lt;/div&gt;
+</pre>
+
+	<h6>Javascript</h6>
+	<pre class="prettyprint">
+$('#menu-tooltip').menuTooltip($('#menu-content-block').hide(), {
+	classes: ['anthracite-gradient', 'with-small-padding']
+});
+</pre>
+
+	<p>In this example, the content is pulled from the DOM just by giving the corresponding jQuery selection to the function. It is detached from its original location, shown as it was hidden, and when the menu closes, it is re-inserted into its original location and hidden back. No complex callbacks, everything is built-in - but of course, the tooltips callbacks can be used if needed.</p>
+
+	<p>As for tooltips, the content may be <b>text</b>, <b>html</b>, a <b>jQuery selection</b> or a <b>function</b> to run on the element.</p>
+
+	<h4>Menu content loading via ajax</h4>
+
+	<p>As for tooltips, menus can load load some content using ajax, simply provide an url or a promise object:</p>
+
+	<pre class="prettyprint">
+$(selector).menuTooltip('Loading menu...', {
+	ajax: 'menu-content.html'
+});
+</pre>
+
+	<h3 class="thin">Methods</h3>
+
+	<dl class="definition">
+
+		<dt>$(selector).tooltip(content, options)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Display a tooltip over an element. If the page is not yet ready, delay the tooltip until it is ready.</p>
+			<h6>Parameters</h6>
+			<p>@var string|function|jQuery content a text or html content to display, or a function to run on the element to get the content (can be omitted, auto-detect if not defined or empty)<br>
+			@var object options an object with any options for the tooltip - optional (see defaults for more details). If not set, the function will try to retrieve any option of an existing or delayed tooltip on the same element, so when changing the content of a tooltip just call the function without options</p>
+		</dd>
+
+		<dt>$(selector).removeTooltip(force, skipAnimation)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Remove tooltip</p>
+			<h6>Parameters</h6>
+			<p>@param boolean force use true to close tooltips even when the onClose/onAbort callback functions return false (optional, default: false)<br>
+			@param boolean skipAnimation use true to disable the close animation (optional, default: false)</p>
+		</dd>
+
+		<dt>$(selector).menuTooltip(content, options, eventName)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Open a tooltip menu on click on any element</p>
+			<h6>Parameters</h6>
+			<p>@var string|function|jQuery content a text or html content to display, or a function to run on the element to get the content<br>
+			@var object options an object with any options for the tooltip - optional (see defaults for more details)<br>
+			@var string eventName the event on which to open the menu - optional (default: 'click')</p>
+		</dd>
+	</dl>
+
+	<h3 class="thin">Options reference</h3>
+
+	<p class="wrapped left-icon icon-info-round">
+		The defaults may be modified at runtime in <b>$.fn.tooltip.defaults</b>, and options may be passed inline using the <b>data-tooltip-options</b> attribute
+	</p>
+
+	<dl class="definition">
+		<dt>position</dt>
+		<dd class="boxed margin-bottom">
+			Position: 'top', 'right', 'bottom' or 'left'<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> 'top'
+		</dd>
+
+		<dt>spacing</dt>
+		<dd class="boxed margin-bottom">
+			Space between tooltip and the target element<br>
+			<span class="icon-marker black">Type:</span> int<br>
+			<span class="icon-star black">Default:</span> 10
+		</dd>
+
+		<dt>classes</dt>
+		<dd class="boxed margin-bottom">
+			Extra classes (colors...)<br>
+			<span class="icon-marker black">Type:</span> array<br>
+			<span class="icon-star black">Default:</span> []
+		</dd>
+
+		<dt>noPointerEvents</dt>
+		<dd class="boxed margin-bottom">
+			Prevent the tooltip from interacting with mouse<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>lock</dt>
+		<dd class="boxed margin-bottom">
+			When true, prevent any other tooltip to show on the same target<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+
+		<dt>exclusive</dt>
+		<dd class="boxed margin-bottom">
+			When true, will close any other open exclusive tooltip before showing<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+
+		<dt>animate</dt>
+		<dd class="boxed margin-bottom">
+			Animate show/hide<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>animateMove</dt>
+		<dd class="boxed margin-bottom">
+			Animate movement (positive value will move outwards)<br>
+			<span class="icon-marker black">Type:</span> int<br>
+			<span class="icon-star black">Default:</span> 10
+		</dd>
+
+		<dt>animateSpeed</dt>
+		<dd class="boxed margin-bottom">
+			Animate speed (time (ms) value or jQuery spped string)<br>
+			<span class="icon-marker black">Type:</span> int|string<br>
+			<span class="icon-star black">Default:</span> 'fast'
+		</dd>
+
+		<dt>delay</dt>
+		<dd class="boxed margin-bottom">
+			Delay before showing the tooltip<br>
+			<span class="icon-marker black">Type:</span> int<br>
+			<span class="icon-star black">Default:</span> 0
+		</dd>
+
+		<dt>ajax</dt>
+		<dd class="boxed margin-bottom">
+			Ajax content loading: url to load or Promise object returned by an $.ajax() call<br>
+			<span class="icon-marker black">Type:</span> string|object<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>ajaxOptions</dt>
+		<dd class="boxed margin-bottom">
+			Options for the ajax call (same as $.ajax())<br>
+			<span class="icon-marker black">Type:</span> object<br>
+			<span class="icon-star black">Default:</span> {}
+		</dd>
+
+		<dt>ajaxErrorMessage</dt>
+		<dd class="boxed margin-bottom">
+			Message to display in tooltip if ajax request fails (text or html)<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> 'Error while loading data'
+		</dd>
+
+		<dt>screenPadding</dt>
+		<dd class="boxed margin-bottom">
+			Minimum distance from screen border<br>
+			<span class="icon-marker black">Type:</span> int<br>
+			<span class="icon-star black">Default:</span> 10
+		</dd>
+
+		<dt>arrowMargin</dt>
+		<dd class="boxed margin-bottom">
+			Minimum spacing of tooltip arrow from border when tooltip is moved to fit in screen<br>
+			<span class="icon-marker black">Type:</span> int<br>
+			<span class="icon-star black">Default:</span> 10
+		</dd>
+
+		<dt>removeOnMouseleave</dt>
+		<dd class="boxed margin-bottom">
+			Hide the tooltip when the mouse hovers out of the target element<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+
+		<dt>removeOnBlur</dt>
+		<dd class="boxed margin-bottom">
+			Hide the tooltip when the user clicks anywhere else in the page<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+
+		<dt>removeOnClick</dt>
+		<dd class="boxed margin-bottom">
+			Hide the tooltip when the user clicks on the tooltip (only works if noPointerEvents is false)<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+
+		<dt>onShow</dt>
+		<dd class="boxed margin-bottom">
+			Callback on tooltip opening: function(target)<br>
+			Scope: the tooltip<br>
+			<span class="icon-marker black">Type:</span> function<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>onRemove</dt>
+		<dd class="boxed margin-bottom">
+			Callback on tooltip remove: function(target)<br>
+			Note: the function may return false to prevent close.<br>
+			Scope: the tooltip<br>
+			<span class="icon-marker black">Type:</span> function<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>onAbort</dt>
+		<dd class="boxed margin-bottom">
+			Callback on delayed tooltip abort: function(target)<br>
+			Note: the function may return false to prevent abort.<br>
+			Scope: the target<br>
+			<span class="icon-marker black">Type:</span> function<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+	</dl>
+
+</div>
+<script>
+
+	// Tooltip menu
+	$('#menu-tooltip').menuTooltip($('#menu-content-block').hide(), {
+		classes: ['anthracite-gradient', 'with-small-padding']
+	});
+
+</script>

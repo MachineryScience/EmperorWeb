@@ -1,0 +1,353 @@
+<hgroup id="main-title" class="thin">
+	<h1>Buttons</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<h3 class="thin">Basic buttons</h3>
+
+	<p>The template provides an uniform styling on buttons and links, with several sizes:</p>
+
+	<h5 class="green">class="button tiny"</h5>
+	<p class="button-height">
+		<button type="button" class="button tiny">Button</button>
+		<a href="javascript:void(0)" class="button tiny">Link</a>
+	</p>
+
+	<h5 class="green">class="button compact"</h5>
+	<p class="button-height">
+		<button type="button" class="button compact">Button</button>
+		<a href="javascript:void(0)" class="button compact">Link</a>
+	</p>
+
+	<h5 class="green">class="button"</h5>
+	<p class="button-height">
+		<button type="button" class="button">Button</button>
+		<a href="javascript:void(0)" class="button">Link</a>
+	</p>
+
+	<h5 class="green">class="button big"</h5>
+	<p class="button-height">
+		<button type="button" class="button big">Button</button>
+		<a href="javascript:void(0)" class="button big">Link</a>
+	</p>
+
+	<h5 class="green">class="button huge"</h5>
+	<p class="button-height">
+		<button type="button" class="button huge">Button</button>
+		<a href="javascript:void(0)" class="button huge">Link</a>
+	</p>
+
+	<h5 class="green">class="button huge full-width"</h5>
+	<p class="button-height">
+		<a href="javascript:void(0)" class="button huge full-width">Link</a>
+	</p>
+
+	<div class="wrapped margin-bottom big-left-icon icon-info-round">
+		<h4 class="no-margin-bottom">Quick tip</h4>
+		There is a special class to set the line-height so buttons line up perfectly and span across multiple lines without messing: <b>button-height</b>. Use it on paragraphs or divs for a clean look!
+	</div>
+
+	<p>Of course, the buttons can benefit from the template's color sets:</p>
+
+	<h5 class="green">Gradients</h5>
+	<p class="button-height">
+		<a href="javascript:void(0)" class="button black-gradient">Black</a>
+		<a href="javascript:void(0)" class="button anthracite-gradient">Anthracite</a>
+		<a href="javascript:void(0)" class="button grey-gradient">Grey</a>
+		<a href="javascript:void(0)" class="button white-gradient">White</a>
+		<a href="javascript:void(0)" class="button red-gradient">Red</a>
+		<a href="javascript:void(0)" class="button orange-gradient">Orange</a>
+		<a href="javascript:void(0)" class="button green-gradient">Green</a>
+		<a href="javascript:void(0)" class="button blue-gradient">Blue</a>
+	</p>
+
+	<h5 class="green">Glossy gradients</h5>
+	<p class="button-height">
+		<a href="javascript:void(0)" class="button black-gradient glossy">Black</a>
+		<a href="javascript:void(0)" class="button anthracite-gradient glossy">Anthracite</a>
+		<a href="javascript:void(0)" class="button grey-gradient glossy">Grey</a>
+		<a href="javascript:void(0)" class="button white-gradient glossy">White</a>
+		<a href="javascript:void(0)" class="button red-gradient glossy">Red</a>
+		<a href="javascript:void(0)" class="button orange-gradient glossy">Orange</a>
+		<a href="javascript:void(0)" class="button green-gradient glossy">Green</a>
+		<a href="javascript:void(0)" class="button blue-gradient glossy">Blue</a>
+	</p>
+
+	<h5 class="green">Icons</h5>
+	<p>Buttons can take icons, as everything else:</p>
+
+	<p class="button-height">
+		<a href="javascript:void(0)" class="button icon-star">Create</a>
+		<a href="javascript:void(0)" class="button icon-download">Save</a>
+		<a href="javascript:void(0)" class="button icon-new-tab">Duplicate</a>
+		<a href="javascript:void(0)" class="button icon-trash">Delete</a>
+	</p>
+
+	<pre class="prettyprint">
+&lt;a href="#" class="button icon-star"&gt;Create&lt;/a&gt;
+</pre>
+
+	<h3 class="thin">States</h3>
+
+	<p>The buttons can have several states: <b>disabled</b> and <b>active</b>. Disabled gives the same style as buttons with the disabled attribute set, and active is the same style as when the user presses a button:</p>
+
+	<h5 class="green">Disabled</h5>
+	<p class="button-height">
+		<button type="button" class="button disabled">Button with class disabled</button>
+		<button type="button" class="button" disabled>Button with attribute disabled</button>
+		<a href="javascript:void(0)" class="button disabled">Link</a>
+	</p>
+
+	<p>Note that adding the class disabled only affects the look of the button, it does not prevent the action. If you want the template to do so, this can be done using event delegation:</p>
+
+	<pre class="prettyprint">
+$(document).on('click', '.disabled', function(event)
+{
+event.preventDefault();
+});
+</pre>
+
+	<p>Disabled elements preserve the original color:</p>
+	<p class="button-height">
+		<a href="javascript:void(0)" class="button black-gradient disabled">Black</a>
+		<a href="javascript:void(0)" class="button anthracite-gradient disabled">Anthracite</a>
+		<a href="javascript:void(0)" class="button grey-gradient disabled">Grey</a>
+		<a href="javascript:void(0)" class="button white-gradient disabled">White</a>
+		<a href="javascript:void(0)" class="button red-gradient disabled">Red</a>
+		<a href="javascript:void(0)" class="button orange-gradient disabled">Orange</a>
+		<a href="javascript:void(0)" class="button green-gradient disabled">Green</a>
+		<a href="javascript:void(0)" class="button blue-gradient disabled">Blue</a>
+	</p>
+
+	<h5 class="green">Active</h5>
+	<p class="button-height">
+		<button type="button" class="button active">Button</button>
+		<a href="javascript:void(0)" class="button active">Link</a>
+	</p>
+
+	<p>The active color may be different from the original button's color, using one of the dedicated classes (try clicking the buttons):</p>
+	<p class="button-height">
+		<a href="javascript:void(0)" class="button black-active">class="black-active"</a>
+		<a href="javascript:void(0)" class="button anthracite-active">class="anthracite-active"</a>
+		<a href="javascript:void(0)" class="button grey-active">class="grey-active"</a>
+		<a href="javascript:void(0)" class="button white-active">class="white-active"</a>
+		<a href="javascript:void(0)" class="button red-active">class="red-active"</a>
+		<a href="javascript:void(0)" class="button orange-active">class="orange-active"</a>
+		<a href="javascript:void(0)" class="button green-active">class="green-active"</a>
+		<a href="javascript:void(0)" class="button blue-active">class="blue-active"</a>
+	</p>
+
+	<h3 class="thin">Button icon segment</h3>
+
+	<p>This is a special style for button icons, it may take some text too:</p>
+
+	<p class="button-height">
+		<a href="javascript:void(0)" class="button">
+			<span class="button-icon"><span class="icon-star"></span></span>
+			Create
+		</a>
+		<a href="javascript:void(0)" class="button">
+			<span class="button-icon"><span class="icon-download"></span></span>
+			Save
+		</a>
+		<a href="javascript:void(0)" class="button margin-right">
+			<span class="button-icon">25</span>
+			New messages
+		</a>
+		<a href="javascript:void(0)" class="button">
+			Delete
+			<span class="button-icon right-side"><span class="icon-trash"></span></span>
+		</a>
+	</p>
+
+	<p>It may be colored and glossy:</p>
+
+	<p class="button-height">
+		<a href="javascript:void(0)" class="button">
+			<span class="button-icon anthracite-gradient"><span class="icon-star"></span></span>
+			Create
+		</a>
+		<a href="javascript:void(0)" class="button">
+			<span class="button-icon green-gradient"><span class="icon-download"></span></span>
+			Save
+		</a>
+		<a href="javascript:void(0)" class="button margin-right">
+			<span class="button-icon blue-gradient glossy">25</span>
+			New messages
+		</a>
+		<a href="javascript:void(0)" class="button">
+			Delete
+			<span class="button-icon red-gradient right-side"><span class="icon-trash"></span></span>
+		</a>
+	</p>
+
+	<pre class="prettyprint">
+&lt;!-- Green with icon --&gt;
+&lt;a href="javascript:void(0)" class="button"&gt;
+	&lt;span class="button-icon green-gradient"&gt;&lt;span class="icon-download"&gt;&lt;/span&gt;&lt;/span&gt;
+	Save
+&lt;/a&gt;
+&lt;!-- Glossy blue with text --&gt;
+&lt;a href="javascript:void(0)" class="button margin-right"&gt;
+	&lt;span class="button-icon blue-gradient glossy"&gt;25&lt;/span&gt;
+	New messages
+&lt;/a&gt;
+&lt;!-- Right side --&gt;
+&lt;a href="javascript:void(0)" class="button margin-right"&gt;
+	Delete
+	&lt;span class="button-icon right-side"&gt;&lt;span class="icon-trash"&gt;&lt;/span&gt;&lt;/span&gt;
+&lt;/a&gt;
+</pre>
+
+	<h3 class="thin">Groups</h3>
+
+	<p>Buttons can be grouped:</p>
+
+	<p class="button-height">
+		<span class="button-group">
+			<a href="javascript:void(0)" class="button">Create</a>
+			<a href="javascript:void(0)" class="button">Save</a>
+			<a href="javascript:void(0)" class="button">Duplicate</a>
+			<a href="javascript:void(0)" class="button">Delete</a>
+		</span>
+	</p>
+
+	<pre class="prettyprint">
+&lt;span class="button-group"&gt;
+	&lt;a href="#" class="button"&gt;Create&lt;/a&gt;
+	&lt;a href="#" class="button"&gt;Save&lt;/a&gt;
+	&lt;a href="#" class="button"&gt;Duplicate&lt;/a&gt;
+	&lt;a href="#" class="button"&gt;Delete&lt;/a&gt;
+&lt;/span&gt;
+</pre>
+
+	<p>They can also act as radios of checkboxes (requires the input plugin)</p>
+
+	<form method="post" action="" class="button-height margin-bottom">
+		<span class="button-group">
+			<label for="radio-buttons-1" class="button green-active">
+				<input type="radio" name="radio-buttons" id="radio-buttons-1" value="1">
+				Radio 1
+			</label>
+			<label for="radio-buttons-2" class="button green-active">
+				<input type="radio" name="radio-buttons" id="radio-buttons-2" value="2">
+				Radio 2
+			</label>
+			<label for="radio-buttons-3" class="button green-active">
+				<input type="radio" name="radio-buttons" id="radio-buttons-3" value="3" checked>
+				Radio 3
+			</label>
+		</span>
+
+		<span class="button-group">
+			<label for="checkbox-buttons-1" class="button green-active">
+				<input type="checkbox" name="checkbox-buttons" id="checkbox-buttons-1" value="1">
+				Checkbox 1
+			</label>
+			<label for="checkbox-buttons-2" class="button green-active">
+				<input type="checkbox" name="checkbox-buttons" id="checkbox-buttons-2" value="2" checked>
+				Checkbox 2
+			</label>
+			<label for="checkbox-buttons-3" class="button green-active">
+				<input type="checkbox" name="checkbox-buttons" id="checkbox-buttons-3" value="3">
+				Checkbox 3
+			</label>
+		</span>
+	</form>
+
+	<pre class="prettyprint">
+&lt;span class="button-group"&gt;
+	&lt;label for="radio-buttons-1" class="button green-active"&gt;
+		&lt;input type="radio" name="radio-buttons" id="radio-buttons-1" value="1"&gt;
+		Radio 1
+	&lt;/label&gt;
+	&lt;label for="radio-buttons-2" class="button green-active"&gt;
+		&lt;input type="radio" name="radio-buttons" id="radio-buttons-2" value="2"&gt;
+		Radio 2
+	&lt;/label&gt;
+	&lt;label for="radio-buttons-3" class="button green-active"&gt;
+		&lt;input type="radio" name="radio-buttons" id="radio-buttons-3" value="3" checked&gt;
+		Radio 3
+	&lt;/label&gt;
+&lt;/span&gt;
+
+&lt;span class="button-group"&gt;
+	&lt;label for="checkbox-buttons-1" class="button green-active"&gt;
+		&lt;input type="checkbox" name="checkbox-buttons" id="checkbox-buttons-1" value="1"&gt;
+		Checkbox 1
+	&lt;/label&gt;
+	&lt;label for="checkbox-buttons-2" class="button green-active"&gt;
+		&lt;input type="checkbox" name="checkbox-buttons" id="checkbox-buttons-2" value="2" checked&gt;
+		Checkbox 2
+	&lt;/label&gt;
+	&lt;label for="checkbox-buttons-3" class="button green-active"&gt;
+		&lt;input type="checkbox" name="checkbox-buttons" id="checkbox-buttons-3" value="3"&gt;
+		Checkbox 3
+	&lt;/label&gt;
+&lt;/span&gt;
+</pre>
+
+	<h3 class="thin">Button icon segment</h3>
+
+	<p>This is a special style for button icons, it may take some text too:</p>
+
+	<p class="button-height">
+		<a href="javascript:void(0)" class="button">
+			<span class="button-icon"><span class="icon-star"></span></span>
+			Create
+		</a>
+		<a href="javascript:void(0)" class="button">
+			<span class="button-icon"><span class="icon-download"></span></span>
+			Save
+		</a>
+		<a href="javascript:void(0)" class="button margin-right">
+			<span class="button-icon">25</span>
+			New messages
+		</a>
+		<a href="javascript:void(0)" class="button">
+			Delete
+			<span class="button-icon right-side"><span class="icon-trash"></span></span>
+		</a>
+	</p>
+
+	<p>They may be colored and glossy:</p>
+
+	<p class="button-height">
+		<a href="javascript:void(0)" class="button">
+			<span class="button-icon anthracite-gradient"><span class="icon-star"></span></span>
+			Create
+		</a>
+		<a href="javascript:void(0)" class="button">
+			<span class="button-icon green-gradient"><span class="icon-download"></span></span>
+			Save
+		</a>
+		<a href="javascript:void(0)" class="button margin-right">
+			<span class="button-icon blue-gradient glossy">25</span>
+			New messages
+		</a>
+		<a href="javascript:void(0)" class="button">
+			Delete
+			<span class="button-icon red-gradient right-side"><span class="icon-trash"></span></span>
+		</a>
+	</p>
+
+	<h5 class="green">Left side button icon</h5>
+	<pre class="prettyprint">
+&lt;a href="#" class="button"&gt;
+	&lt;span class="button-icon"&gt;&lt;span class="icon-star"&gt;&lt;/span&gt;&lt;/span&gt;
+	Create
+&lt;/a&gt;
+</pre>
+
+	<h5 class="green">Right side button icon, with custom color and glossy</h5>
+	<pre class="prettyprint">
+&lt;a href="#" class="button"&gt;
+	&lt;span class="button-icon right-side green-gradient glossy"&gt;&lt;span class="icon-star"&gt;&lt;/span&gt;&lt;/span&gt;
+	Create
+&lt;/a&gt;
+</pre>
+
+	<p class="wrapped left-icon icon-info-round">For RTL version, the segment will be on the right, use <b>left-side</b> for reversed mode.</p>
+
+</div>

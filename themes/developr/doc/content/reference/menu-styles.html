@@ -1,0 +1,250 @@
+<hgroup id="main-title" class="thin">
+	<h1>Menu styles</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<p>The template includes several styles to build the navigation menu - or anything else. They can be used several ways:</p>
+
+	<dl class="definition">
+		<dt>On the root element</dt>
+		<dd>
+			<pre class="prettyprint">
+&lt;ul class="big-menu"&gt;
+	&lt;li&gt;&lt;a href="#"&gt;Link&lt;/a&gt;&lt;/li&gt;
+	&lt;li&gt;&lt;a href="#"&gt;Link&lt;/a&gt;&lt;/li&gt;
+	&lt;li&gt;&lt;a href="#"&gt;Link&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+		</dd>
+
+		<dt>For each list element</dt>
+		<dd>
+			<pre class="prettyprint">
+&lt;ul&gt;
+	&lt;li class="title-menu"&gt;Title&lt;/li&gt;
+	&lt;li class="big-menu"&gt;&lt;a href="#"&gt;Link&lt;/a&gt;&lt;/li&gt;
+	&lt;li class="big-menu"&gt;&lt;a href="#"&gt;Link&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+		</dd>
+
+		<dt>Both styles</dt>
+		<dd>
+			<pre class="prettyprint">
+&lt;ul class="big-menu"&gt;
+	&lt;li class="title-menu"&gt;Title&lt;/li&gt;
+	&lt;li&gt;&lt;a href="#"&gt;Link&lt;/a&gt;&lt;/li&gt;
+	&lt;li&gt;&lt;a href="#"&gt;Link&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+		</dd>
+	</dl>
+
+	<h3 class="thin">Available styles</h3>
+
+	<h5 class="green">Big</h5>
+
+	<ul class="big-menu margin-bottom">
+		<li>
+			Disabled element
+		</li>
+		<li>
+			<a href="#">Link</a>
+		</li>
+		<li>
+			<a href="#" class="current">Current</a>
+		</li>
+		<li class="with-right-arrow">
+			<a href="#">Link with arrow</a>
+		</li>
+		<li class="with-right-arrow">
+			<!-- the link may be replaced by a span -->
+			<span>
+				<span class="list-count">3</span>
+				With count
+			</span>
+		</li>
+		<li class="with-right-arrow arrow-down">
+			<a href="#">Link with down arrow</a>
+		</li>
+		<li class="with-right-arrow arrow-up">
+			<a href="#">Link with up arrow</a>
+		</li>
+	</ul>
+
+	<pre class="prettyprint">
+&lt;ul class="big-menu"&gt;
+	&lt;li&gt;
+		Disabled element
+	&lt;/li&gt;
+	&lt;li&gt;
+		&lt;a href="#"&gt;Link&lt;/a&gt;
+	&lt;/li&gt;
+	&lt;li&gt;
+		&lt;a href="#" class="current"&gt;Current&lt;/a&gt;
+	&lt;/li&gt;
+	&lt;li class="with-right-arrow"&gt;
+		&lt;a href="#"&gt;Link with arrow&lt;/a&gt;
+	&lt;/li&gt;
+	&lt;li class="with-right-arrow"&gt;
+		&lt;!-- the link may be replaced by a span --&gt;
+		&lt;span&gt;
+			&lt;span class="list-count"&gt;3&lt;/span&gt;
+			With count
+		&lt;/span&gt;
+	&lt;/li&gt;
+	&lt;li class="with-right-arrow arrow-down"&gt;
+		&lt;a href="#"&gt;Link with down arrow&lt;/a&gt;
+	&lt;/li&gt;
+	&lt;li class="with-right-arrow arrow-up"&gt;
+		&lt;a href="#"&gt;Link with up arrow&lt;/a&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+
+	<p class="wrapped left-icon icon-info-round">For RTL version, use <b>with-left-arrow</b> to display the arrow.</p>
+
+	<h5 class="green">Title</h5>
+
+	<ul class="title-menu margin-bottom">
+		<li>
+			Title element
+		</li>
+		<li>
+			<a href="#">Title with link</a>
+		</li>
+	</ul>
+
+	<pre class="prettyprint">
+&lt;ul class="title-menu"&gt;
+	&lt;li&gt;
+		Title element
+	&lt;/li&gt;
+	&lt;li&gt;
+		&lt;a href="#"&gt;Title with link&lt;/a&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+
+	<h5 class="green">Calendar</h5>
+
+	<ul class="calendar-menu margin-bottom">
+		<li>
+			<a href="#" title="See event">
+				<time datetime="2011-02-24"><b>24</b> Feb</time>
+				<small class="green">10:30</small>
+				Event's description
+			</a>
+		</li>
+		<li>
+			<time datetime="2011-02-24"><b>24</b> Feb</time>
+			<small class="green">10:30</small>
+			Read-only event
+		</li>
+	</ul>
+
+	<pre class="prettyprint">
+&lt;ul class="calendar-menu"&gt;
+	&lt;li&gt;
+		&lt;a href="#" title="See event"&gt;
+			&lt;time datetime="2011-02-24"&gt;&lt;b&gt;24&lt;/b&gt; Feb&lt;/time&gt;
+			&lt;small class="green"&gt;10:30&lt;/small&gt;
+			Event's description
+		&lt;/a&gt;
+	&lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+
+	<h5 class="green">Messages</h5>
+
+	<ul class="message-menu margin-bottom">
+		<li>
+			<ul class="message-status">
+				<li class="starred"><a href="#" title="Starred">Starred</a></li>
+				<li class="new-message"><a href="#" title="Mark as read">New</a></li>
+			</ul>
+			<ul class="message-info">
+				<li class="blue">17:12</li>
+				<li class="attach"><a href="#" title="Download attachment">Attachment</a></li>
+			</ul>
+			<a href="#" title="Read message">
+				<strong class="blue">John Doe</strong><br>
+				<strong>Clickable elements</strong>
+			</a>
+		</li>
+		<li>
+			<a href="#" title="Read message">
+				<ul class="message-status">
+					<li class="unstarred">Not starred</li>
+					<li class="new-message">New</li>
+				</ul>
+				<ul class="message-info">
+					<li class="blue">15:47</li>
+				</ul>
+				<strong class="blue">May Starck</strong><br>
+				<strong>Whole message in a link</strong>
+			</a>
+		</li>
+		<li>
+			<ul class="message-status">
+				<li class="unstarred">Not starred</li>
+			</ul>
+			<ul class="message-info">
+				<li class="blue">15:12</li>
+			</ul>
+			<strong class="blue">May Starck</strong><br>
+			Read-only message
+		</li>
+	</ul>
+
+	<pre class="prettyprint">
+&lt;ul class="message-menu bevel-on-light-subs dark-text-bevel-subs"&gt;
+
+	&lt;!-- Message with clickable elements --&gt;
+	&lt;li class="white-gradient"&gt;
+		&lt;ul class="message-status"&gt;
+			&lt;li class="starred"&gt;&lt;a href="#" title="Starred"&gt;Starred&lt;/a&gt;&lt;/li&gt;
+			&lt;li class="new-message"&gt;&lt;a href="#" title="Mark as read"&gt;New&lt;/a&gt;&lt;/li&gt;
+		&lt;/ul&gt;
+		&lt;ul class="message-info"&gt;
+			&lt;li class="blue"&gt;17:12&lt;/li&gt;
+			&lt;li class="attach"&gt;&lt;a href="#" title="Download attachment"&gt;Attachment&lt;/a&gt;&lt;/li&gt;
+		&lt;/ul&gt;
+		&lt;a href="#" title="Read message"&gt;
+			&lt;strong class="blue"&gt;John Doe&lt;/strong&gt;&lt;br&gt;
+			&lt;strong&gt;Clickable elements&lt;/strong&gt;
+		&lt;/a&gt;
+	&lt;/li&gt;
+
+	&lt;!-- Whole message as a link --&gt;
+	&lt;li class="white-gradient"&gt;
+		&lt;a href="#" title="Read message"&gt;
+			&lt;ul class="message-status"&gt;
+				&lt;li class="unstarred"&gt;Not starred&lt;/li&gt;
+				&lt;li class="new-message"&gt;New&lt;/li&gt;
+			&lt;/ul&gt;
+			&lt;ul class="message-info"&gt;
+				&lt;li class="blue"&gt;15:47&lt;/li&gt;
+			&lt;/ul&gt;
+			&lt;strong class="blue"&gt;May Starck&lt;/strong&gt;&lt;br&gt;
+			&lt;strong&gt;Whole message in a link&lt;/strong&gt;
+		&lt;/a&gt;
+	&lt;/li&gt;
+
+	&lt;!-- Simple read message --&gt;
+	&lt;li class="white-gradient"&gt;
+		&lt;ul class="message-status"&gt;
+			&lt;li class="unstarred"&gt;Not starred&lt;/li&gt;
+		&lt;/ul&gt;
+		&lt;ul class="message-info"&gt;
+			&lt;li class="blue"&gt;15:12&lt;/li&gt;
+		&lt;/ul&gt;
+		&lt;strong class="blue"&gt;May Starck&lt;/strong&gt;&lt;br&gt;
+		Read message
+	&lt;/li&gt;
+
+&lt;/ul&gt;
+</pre>
+
+</div>

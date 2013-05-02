@@ -1,0 +1,29 @@
+
+
+        <fieldset class="fieldset silver-bg">
+            <legend class="legend">{{nls.DROTitle}}</legend>
+            <div data-bind="foreach:linuxCNCServer.RmtDRO" class="twelve-columns">
+
+                <div data-bind="if: (1 << $index()) & $root.linuxCNCServer.vars.axis_mask.data()" >
+
+                    <p class="button-height inline-tiny-label small-margin-top small-margin-bottom" >
+
+                        <label data-bind="attr:{for: (($index()).toString()+'droax') }, text: ($root.linuxCNCServer.axisNames)[$index()]+':', click: $root.onDROFocus " class="label big-text one-column"></label>
+
+                        <input type="text" class="input big-text five-columns four-columns-mobile black" style="text-align: right; font-weight:bold;" data-bind="event: {change: function(data,event){ $root.onDROValChange(data,event,$index())} }, value: new ko.computed( function(){return $root.linuxCNCServer.RmtDRO()[$index()].toFixed(4)} ), attr:{id: (($index()).toString()+'droax') } ">
+
+                        <button class="button two-columns align-center" data-bind="click: function(){$root.onZeroDRO($index())}, attr:{id: ('bzdro'+($index()).toString())}" >{{nls.Zero}}</button>
+
+                        <!--Homing Button-->
+                            <button class="button two-columns align-center" data-bind="click: function(){$root.onHome($index())}, attr:{id: ('bhdro'+($index()).toString())}" >{{nls.Home}}
+                                <span class="orange-gradient inset" data-bind="visible: (!$root.linuxCNCServer.vars.homed.data()[$index()]), css: {count: ! $root.linuxCNCServer.vars.homed.data()[$index()] }">!</span>
+                            </button>
+
+                    </p>
+
+                </div>
+            </div>
+
+
+        </fieldset>
+

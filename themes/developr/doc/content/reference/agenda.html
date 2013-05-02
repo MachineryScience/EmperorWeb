@@ -1,0 +1,1117 @@
+<hgroup id="main-title" class="thin">
+	<h1>Agenda</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin file <b>css/styles/agenda.css</b>
+	</div>
+
+	<h3 class="thin">Markup</h3>
+
+	<div class="columns">
+
+		<div class="six-columns twelve-columns-mobile">
+
+			<h5 class="green">Background markup</h5>
+
+			<div class="agenda margin-bottom">
+
+				<!-- Time markers -->
+				<ul class="agenda-time">
+					<li class="from-7 to-8"><span>7 AM</span></li>
+					<li class="from-8 to-9"><span>8 AM</span></li>
+					<li class="from-9 to-10"><span>9 AM</span></li>
+					<li class="from-10 to-11"><span>10 AM</span></li>
+					<li class="from-11 to-12"><span>11 AM</span></li>
+					<li class="from-12 to-13"><span>12 AM</span></li>
+					<li class="from-13 to-14"><span>1 PM</span></li>
+					<li class="from-14 to-15"><span>2 PM</span></li>
+					<li class="from-15 to-16"><span>3 PM</span></li>
+					<li class="from-16 to-17"><span>4 PM</span></li>
+					<li class="from-17 to-18"><span>5 PM</span></li>
+					<li class="from-18 to-19"><span>6 PM</span></li>
+					<li class="from-19 to-20"><span>7 PM</span></li>
+					<li class="at-20"><span>8 PM</span></li>
+				</ul>
+
+				<!-- Events list -->
+				<div class="agenda-events"></div>
+
+			</div>
+
+			<pre class="prettyprint">
+&lt;div class="agenda"&gt;
+
+	&lt;!-- Time markers --&gt;
+	&lt;ul class="agenda-time"&gt;
+		&lt;li class="from-7 to-8"&gt;&lt;span&gt;7 AM&lt;/span&gt;&lt;/li&gt;
+		&lt;li class="from-8 to-9"&gt;&lt;span&gt;8 AM&lt;/span&gt;&lt;/li&gt;
+		&lt;li class="from-9 to-10"&gt;&lt;span&gt;9 AM&lt;/span&gt;&lt;/li&gt;
+		&lt;li class="from-10 to-11"&gt;&lt;span&gt;10 AM&lt;/span&gt;&lt;/li&gt;
+		&lt;li class="from-11 to-12"&gt;&lt;span&gt;11 AM&lt;/span&gt;&lt;/li&gt;
+		&lt;li class="from-12 to-13"&gt;&lt;span&gt;12 AM&lt;/span&gt;&lt;/li&gt;
+		&lt;li class="from-13 to-14"&gt;&lt;span&gt;1 PM&lt;/span&gt;&lt;/li&gt;
+		&lt;li class="from-14 to-15"&gt;&lt;span&gt;2 PM&lt;/span&gt;&lt;/li&gt;
+		&lt;li class="from-15 to-16"&gt;&lt;span&gt;3 PM&lt;/span&gt;&lt;/li&gt;
+		&lt;li class="from-16 to-17"&gt;&lt;span&gt;4 PM&lt;/span&gt;&lt;/li&gt;
+		&lt;li class="from-17 to-18"&gt;&lt;span&gt;5 PM&lt;/span&gt;&lt;/li&gt;
+		&lt;li class="from-18 to-19"&gt;&lt;span&gt;6 PM&lt;/span&gt;&lt;/li&gt;
+		&lt;li class="from-19 to-20"&gt;&lt;span&gt;7 PM&lt;/span&gt;&lt;/li&gt;
+		&lt;li class="at-20"&gt;&lt;span&gt;8 PM&lt;/span&gt;&lt;/li&gt;
+	&lt;/ul&gt;
+
+	&lt;!-- Events list --&gt;
+	&lt;div class="agenda-events"&gt;
+
+		&lt;!-- Events go here --&gt;
+
+	&lt;/div&gt;
+
+&lt;/div&gt;
+</pre>
+
+			<h5 class="green">Fluid height</h5>
+
+			<p>Agenda markup is fluid in width but also in height: just set a height to resize it:</p>
+
+			<div class="agenda margin-bottom" style="height:200px">
+
+				<!-- Time markers -->
+				<ul class="agenda-time">
+					<li class="from-7 to-8"><span>7 AM</span></li>
+					<li class="from-8 to-9"></li>
+					<li class="from-9 to-10"><span>9 AM</span></li>
+					<li class="from-10 to-11"></li>
+					<li class="from-11 to-12"><span>11 AM</span></li>
+					<li class="from-12 to-13"></li>
+					<li class="from-13 to-14"><span>1 PM</span></li>
+					<li class="from-14 to-15"></li>
+					<li class="from-15 to-16"><span>3 PM</span></li>
+					<li class="from-16 to-17"></li>
+					<li class="from-17 to-18"><span>5 PM</span></li>
+					<li class="from-18 to-19"></li>
+					<li class="from-19 to-20"><span>7 PM</span></li>
+					<li class="at-20"></li>
+				</ul>
+
+				<!-- Events list -->
+				<div class="agenda-events"></div>
+
+			</div>
+
+			<p class="left-icon icon-info-round">Some time lines markers (the <b>span</b> part) have been removed to preserve readability.</p>
+
+			<pre class="prettyprint">
+&lt;div class="agenda" style="height:200px"&gt;
+
+	...
+
+&lt;/div&gt;
+</pre>
+
+			<h5 class="green">Extra elements</h5>
+
+			<div class="agenda with-header margin-bottom" style="height:200px">
+
+				<ul class="agenda-time">
+					<li class="from-7 to-8"><span>7 AM</span></li>
+					<li class="from-8 to-9"></li>
+					<li class="from-9 to-10"><span>9 AM</span></li>
+					<li class="from-10 to-11"></li>
+
+					<!-- Colored time line -->
+					<li class="from-11 to-12"><span class="blue">11 AM</span></li>
+					<li class="from-12 to-13"></li>
+					<li class="from-13 to-14"><span>1 PM</span></li>
+					<li class="from-14 to-15"></li>
+					<li class="from-15 to-16"><span>3 PM</span></li>
+					<li class="from-16 to-17"></li>
+					<li class="from-17 to-18"><span>5 PM</span></li>
+					<li class="from-18 to-19"></li>
+					<li class="from-19 to-20"><span>7 PM</span></li>
+					<li class="at-20"></li>
+				</ul>
+
+				<div class="agenda-header">
+					<a href="#" title="Previous day" class="agenda-previous"><span class="icon-left-round"></span></a>
+					<a href="#" title="Next day" class="agenda-next disabled"><span class="icon-right-round"></span></a>
+					Monday
+				</div>
+
+				<div class="agenda-events">
+
+					<!-- Striped zone -->
+					<div class="dark-stripes from-8 to-14"></div>
+
+					<!-- Current time line -->
+					<div class="agenda-now" style="top:63.75%"><span>03:23</span></div>
+
+				</div>
+
+			</div>
+
+			<pre class="prettyprint">
+&lt;!-- The class with-header is required to use the header style --&gt;
+&lt;div class="agenda with-header"&gt;
+
+	&lt;ul class="agenda-time"&gt;
+		...
+		&lt;!-- Colored time line --&gt;
+		&lt;li class="from-11 to-12"&gt;&lt;span class="blue"&gt;11 AM&lt;/span&gt;&lt;/li&gt;
+		...
+	&lt;/ul&gt;
+
+	&lt;div class="agenda-header"&gt;
+		&lt;!-- Previous arrow --&gt;
+		&lt;a href="#" title="Previous day" class="agenda-previous"&gt;&lt;span class="icon-left-round"&gt;&lt;/span&gt;&lt;/a&gt;
+
+		&lt;!-- Next arrow, disabled --&gt;
+		&lt;a href="#" title="Next day" class="agenda-next disabled"&gt;&lt;span class="icon-right-round"&gt;&lt;/span&gt;&lt;/a&gt;
+
+		&lt;!-- Title --&gt;
+		Monday
+	&lt;/div&gt;
+
+	&lt;div class="agenda-events"&gt;
+
+		&lt;!-- Striped zone --&gt;
+		&lt;div class="dark-stripes from-12 to-14"&gt;&lt;/div&gt;
+
+		&lt;!-- Current time line --&gt;
+		&lt;div class="agenda-now" style="top:63.75%"&gt;&lt;span&gt;03:23&lt;/span&gt;&lt;/div&gt;
+
+	&lt;/div&gt;
+
+&lt;/div&gt;
+</pre>
+
+			<div class="wrapped big-left-icon icon-info-round">
+				<h4 class="no-margin-bottom">Quick tip</h4>
+				If you use span for disabled previous/next arrows, they will look disabled too, no need to add the class <b>disabled</b>
+			</div>
+
+		</div>
+
+		<div class="six-columns twelve-columns-mobile">
+
+			<div class="boxed margin-bottom">
+
+				<h5 class="black">Positioning events and time lines</h5>
+
+				<p>The agenda style provides an easy way to set events and time lines positions, using a set of predefined classes:</p>
+
+				<h6>Set start time</h6>
+				<p>Use the classes <b>from-7</b>, <b>from-7-30</b>, <b>from-8</b>, <b>from-8-30</b>... and so on to <b>from-20</b>.
+
+				<h6>Set end time</h6>
+				<p>Use the classes <b>to-7</b>, <b>to-7-30</b>, <b>to-8</b>, <b>to-8-30</b>... and so on to <b>to-20</b>.
+
+				<h6>Collapsed events</h6>
+				<p>For ponctual elements (such as lines), use the classes <b>at-7</b>, <b>at-7-30</b>, <b>at-8</b>, <b>at-8-30</b>... and so on to <b>at-20</b>.
+
+				<h6>Out-of-range events</h6>
+				<p>For events starting or ending out of the time range, use the classes <b>from-before</b> and <b>to-after</b>.
+
+				<h5 class="black">Change time range</h5>
+
+				<p>The default time range goes from 7:00 to 20:00. To change this, edit the time positioning classes as follow:</p>
+
+				<ol>
+					<li>Get the number of hours in the desired range, for instance 7 -> 20 = 13</li>
+					<li>Calculate the interval for each hour : 100/13 = 7.692</li>
+					<li>Start at the first hour with top: 0</li>
+					<li>Then increase top position for each hour by the calculated interval</li>
+					<li>Half hours are set using adding half the interval</li>
+				</ol>
+
+				<p>Do the same but in reverse for the to-* values, start from 100, then decrease.</p>
+
+			</div>
+
+			<h5 class="green">Full-width events</h5>
+
+			<div class="agenda margin-bottom" style="height:200px">
+
+				<!-- Time markers -->
+				<ul class="agenda-time">
+					<li class="from-7 to-8"><span>7 AM</span></li>
+					<li class="from-8 to-9"></li>
+					<li class="from-9 to-10"><span>9 AM</span></li>
+					<li class="from-10 to-11"></li>
+					<li class="from-11 to-12"><span>11 AM</span></li>
+					<li class="from-12 to-13"></li>
+					<li class="from-13 to-14"><span>1 PM</span></li>
+					<li class="from-14 to-15"></li>
+					<li class="from-15 to-16"><span>3 PM</span></li>
+					<li class="from-16 to-17"></li>
+					<li class="from-17 to-18"><span>5 PM</span></li>
+					<li class="from-18 to-19"></li>
+					<li class="from-19 to-20"><span>7 PM</span></li>
+					<li class="at-20"></li>
+				</ul>
+
+				<!-- Events list -->
+				<div class="agenda-events">
+
+					<!-- Event with link -->
+					<a href="#" class="agenda-event from-7 to-12">
+						<time>7 AM - 12 AM</time>
+						Event description
+					</a>
+
+					<!-- Static event, custom color -->
+					<span class="agenda-event from-15 to-20 anthracite-gradient">
+						<time>3 PM - 8 PM</time>
+						Event description
+					</span>
+
+				</div>
+
+			</div>
+
+			<pre class="prettyprint">
+&lt;!-- Event with link --&gt;
+&lt;a href="#" class="agenda-event from-7 to-12"&gt;
+	&lt;time&gt;7 AM - 12 AM&lt;/time&gt;
+	Event description
+&lt;/a&gt;
+
+&lt;!-- Static event, custom color --&gt;
+&lt;span class="agenda-event from-15 to-20 anthracite-gradient"&gt;
+	&lt;time&gt;3 PM - 8 PM&lt;/time&gt;
+	Event description
+&lt;/span&gt;
+</pre>
+
+			<h5 class="green">Side-by-side events</h5>
+
+			<div class="agenda margin-bottom" style="height:200px">
+
+				<!-- Time markers -->
+				<ul class="agenda-time">
+					<li class="from-7 to-8"><span>7 AM</span></li>
+					<li class="from-8 to-9"></li>
+					<li class="from-9 to-10"><span>9 AM</span></li>
+					<li class="from-10 to-11"></li>
+					<li class="from-11 to-12"><span>11 AM</span></li>
+					<li class="from-12 to-13"></li>
+					<li class="from-13 to-14"><span>1 PM</span></li>
+					<li class="from-14 to-15"></li>
+					<li class="from-15 to-16"><span>3 PM</span></li>
+					<li class="from-16 to-17"></li>
+					<li class="from-17 to-18"><span>5 PM</span></li>
+					<li class="from-18 to-19"></li>
+					<li class="from-19 to-20"><span>7 PM</span></li>
+					<li class="at-20"></li>
+				</ul>
+
+				<!-- Events list -->
+				<div class="agenda-events">
+
+					<!-- Left event -->
+					<span class="agenda-event from-8 to-14-30 event-1-on-2">
+						<time>8 AM - 2:30 AM</time>
+						Event description
+					</span>
+
+					<!-- Right event -->
+					<span class="agenda-event from-12 to-19 event-2-on-2 anthracite-gradient">
+						<time>12 AM - 7 PM</time>
+						Event description
+					</span>
+
+				</div>
+
+			</div>
+
+			<pre class="prettyprint">
+&lt;!-- Left event --&gt;
+&lt;span class="agenda-event from-8 to-14-30 event-1-on-2"&gt;
+	&lt;time&gt;8 AM - 2:30 AM&lt;/time&gt;
+	Event description
+&lt;/span&gt;
+
+&lt;!-- Right event --&gt;
+&lt;span class="agenda-event from-12 to-19 event-2-on-2"&gt;
+	&lt;time&gt;12 AM - 7 PM&lt;/time&gt;
+	Event description
+&lt;/span&gt;
+</pre>
+
+			<div class="agenda margin-bottom" style="height:200px">
+
+				<!-- Time markers -->
+				<ul class="agenda-time">
+					<li class="from-7 to-8"><span>7 AM</span></li>
+					<li class="from-8 to-9"></li>
+					<li class="from-9 to-10"><span>9 AM</span></li>
+					<li class="from-10 to-11"></li>
+					<li class="from-11 to-12"><span>11 AM</span></li>
+					<li class="from-12 to-13"></li>
+					<li class="from-13 to-14"><span>1 PM</span></li>
+					<li class="from-14 to-15"></li>
+					<li class="from-15 to-16"><span>3 PM</span></li>
+					<li class="from-16 to-17"></li>
+					<li class="from-17 to-18"><span>5 PM</span></li>
+					<li class="from-18 to-19"></li>
+					<li class="from-19 to-20"><span>7 PM</span></li>
+					<li class="at-20"></li>
+				</ul>
+
+				<!-- Events list -->
+				<div class="agenda-events">
+
+					<!-- Left event -->
+					<span class="agenda-event from-8 to-13-30 event-1-on-3">
+						<time>8 AM - 1:30 PM</time>
+						Event description
+					</span>
+
+					<!-- Middle event -->
+					<span class="agenda-event from-10-30 to-17-30 event-2-on-3 anthracite-gradient">
+						<time>10:30 AM - 5:30 PM</time>
+						Event description
+					</span>
+
+					<!-- Right event -->
+					<span class="agenda-event from-14 to-19-30 event-3-on-3 blue-gradient">
+						<time>2 PM - 7:30 PM</time>
+						Event description
+					</span>
+
+				</div>
+
+			</div>
+
+			<pre class="prettyprint">
+&lt;!-- Left event --&gt;
+&lt;span class="agenda-event from-8 to-13-30 event-1-on-3"&gt;
+	&lt;time&gt;8 AM - 1:30 PM&lt;/time&gt;
+	Event description
+&lt;/span&gt;
+
+&lt;!-- Middle event --&gt;
+&lt;span class="agenda-event from-10-30 to-17-30 event-2-on-3"&gt;
+	&lt;time&gt;10:30 AM - 5:30 PM&lt;/time&gt;
+	Event description
+&lt;/span&gt;
+
+&lt;!-- Right event --&gt;
+&lt;span class="agenda-event from-14 to-19-30 event-3-on-3"&gt;
+	&lt;time&gt;2 PM - 7:30 PM&lt;/time&gt;
+	Event description
+&lt;/span&gt;
+</pre>
+
+		</div>
+
+	</div>
+
+	<h3 class="thin">Multi-columns agenda</h3>
+
+	<p>The background markup for multi-columns agendas is the same, but with multiple <b>agenda-events</b> blocks in a <b>agenda-wrapper</b> wrapper:</p>
+
+	<div class="agenda with-header margin-bottom">
+
+		<!-- Time markers -->
+		<ul class="agenda-time">
+			<li class="from-7 to-8"><span>7 AM</span></li>
+			<li class="from-8 to-9"><span>8 AM</span></li>
+			<li class="from-9 to-10"><span>9 AM</span></li>
+			<li class="from-10 to-11"><span>10 AM</span></li>
+			<li class="from-11 to-12"><span>11 AM</span></li>
+			<li class="from-12 to-13 blue"><span>NOON</span></li>
+			<li class="from-13 to-14"><span>1 PM</span></li>
+			<li class="from-14 to-15"><span>2 PM</span></li>
+			<li class="from-15 to-16"><span>3 PM</span></li>
+			<li class="from-16 to-17"><span>4 PM</span></li>
+			<li class="from-17 to-18"><span>5 PM</span></li>
+			<li class="from-18 to-19"><span>6 PM</span></li>
+			<li class="from-19 to-20"><span>7 PM</span></li>
+			<li class="at-20"><span>8 PM</span></li>
+		</ul>
+
+		<!-- Columns wrapper -->
+		<div class="agenda-wrapper">
+
+			<!-- Events list -->
+			<div class="agenda-events agenda-day1">
+
+				<div class="agenda-header">
+					Sunday
+				</div>
+
+				<span class="agenda-event anthracite-gradient from-16 to-17-30">
+					<time>4 PM - 5:30 PM</time>
+					Event description
+				</span>
+
+			</div>
+
+			<!-- Events list -->
+			<div class="agenda-events agenda-day2">
+
+				<div class="agenda-header">
+					Monday
+				</div>
+
+				<div class="dark-stripes from-12 to-14"></div>
+
+				<a href="#" class="agenda-event from-8 to-11">
+					<time>8 AM - 11 AM</time>
+					Event description
+				</a>
+
+				<span class="agenda-event from-16-30 to-17-30">
+					<time>4:30 PM - 5:30 PM</time>
+					Event description
+				</span>
+
+				<div class="agenda-now" style="top:63.75%"><span>03:23</span></div>
+
+			</div>
+
+			<!-- Events list -->
+			<div class="agenda-events agenda-day3">
+
+				<div class="agenda-header">
+					Tuesday
+				</div>
+
+				<div class="dark-stripes from-12 to-18"></div>
+
+				<a href="#" class="agenda-event from-7 to-9">
+					<time>7 AM - 9 AM</time>
+					Event description
+					<span class="ribbon tiny"><span class="ribbon-inner orange-gradient">Priv</span></span>
+				</a>
+
+				<span class="agenda-event from-10 to-11-30 event-1-on-2">
+					<time>10 AM - 11:30 AM</time>
+					Event description
+				</span>
+
+				<span class="agenda-event from-11 to-13 event-2-on-2 anthracite-gradient">
+					<time>11 AM - 1 PM</time>
+					Event description
+				</span>
+
+			</div>
+
+			<!-- Events list -->
+			<div class="agenda-events agenda-day4">
+
+				<div class="agenda-header">
+					Wednesday
+				</div>
+
+				<div class="dark-stripes from-12 to-14"></div>
+
+				<a href="#" class="agenda-event from-9 to-10">
+					<time>9 AM - 10 AM</time>
+					Event description
+				</a>
+
+				<span class="agenda-event from-16 to-17-30 event-1-on-2">
+					<time>4 PM - 5:30 PM</time>
+					Event description
+				</span>
+
+				<span class="agenda-event from-17 to-19-30 event-2-on-2 blue-gradient">
+					<time>5 PM - 7:30 PM</time>
+					Event description
+				</span>
+
+			</div>
+
+			<!-- Events list -->
+			<div class="agenda-events agenda-day5">
+
+				<div class="agenda-header">
+					Thursday
+				</div>
+
+				<div class="dark-stripes from-12 to-14"></div>
+
+				<a href="#" class="agenda-event from-8 to-9">
+					<time>8 AM - 9 AM</time>
+					Event description
+				</a>
+
+				<span class="agenda-event from-11 to-13 anthracite-gradient">
+					<time>11 AM - 1 PM</time>
+					Event description
+				</span>
+
+				<span class="agenda-event from-17 to-19-30 blue-gradient">
+					<time>5 PM - 7:30 PM</time>
+					Event description
+				</span>
+
+			</div>
+
+			<!-- Events list -->
+			<div class="agenda-events agenda-day6">
+
+				<div class="agenda-header">
+					Friday
+				</div>
+
+				<div class="dark-stripes from-12 to-14"></div>
+
+				<span class="agenda-event from-10 to-13 anthracite-gradient">
+					<time>10 AM - 1 PM</time>
+					Event description
+				</span>
+
+				<span class="agenda-event from-16 to-18-30">
+					<time>4 PM - 6:30 PM</time>
+					Event description
+				</span>
+
+			</div>
+
+			<!-- Events list -->
+			<div class="agenda-events agenda-day7">
+
+				<div class="agenda-header">
+					Saturday
+				</div>
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<pre class="prettyprint">
+&lt;div class="agenda with-header"&gt;
+
+	&lt;!-- Time markers --&gt;
+	&lt;ul class="agenda-time"&gt;
+		...
+	&lt;/ul&gt;
+
+	&lt;!-- Columns wrapper --&gt;
+	&lt;div class="agenda-wrapper"&gt;
+
+		&lt;!-- Events lists --&gt;
+		&lt;div class="agenda-events agenda-day1"&gt;...&lt;/div&gt;
+		&lt;div class="agenda-events agenda-day2"&gt;...&lt;/div&gt;
+		&lt;div class="agenda-events agenda-day3"&gt;...&lt;/div&gt;
+		&lt;div class="agenda-events agenda-day4"&gt;...&lt;/div&gt;
+		&lt;div class="agenda-events agenda-day5"&gt;...&lt;/div&gt;
+		&lt;div class="agenda-events agenda-day6"&gt;...&lt;/div&gt;
+		&lt;div class="agenda-events agenda-day7"&gt;...&lt;/div&gt;
+
+	&lt;/div&gt;
+
+&lt;/div&gt;
+</pre>
+
+	<p>By default, the multi-column agenda has 7 columns, if you need a different number you may create a special class - for instance if you need 4 columns:</p>
+
+	<pre class="prettyprint">
+/* Special class to use 4 columns: .agenda-4-cols */
+.agenda-4-cols > .agenda-day1	{	left: 0;	right: 75%;	}
+.agenda-4-cols > .agenda-day2	{	left: 25%;	right: 50%;	}
+.agenda-4-cols > .agenda-day3	{	left: 50%;	right: 25%;	}
+.agenda-4-cols > .agenda-day4	{	left: 75%;	right: 0;	}
+</pre>
+
+	<p>The just add this new class to the wrapper block, and you are done!</p>
+
+	<h3 class"thin">Auto-scrolling agenda</h3>
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin file <b>js/developr.agenda.js</b>
+	</div>
+
+	<p>Multi-columns agenda look good on wide screens, but are impossible to read on smaller screen. Therefore, the template includes an auto-scroll plugin, which will detect the available width and display the right number of columns to preserve readability. On smaller screens, there will be only one column visible at the time, for instance. The plugin also takes care of adding scroll arrows, and provides methods to scroll columns by code.</p>
+
+	<div class="columns">
+
+		<div class="six-columns twelve-columns-mobile">
+
+			<p class="wrapped">Here is an example: the agenda contains a full week, try resizing the window to see how the columns are hidden/shown by the plugin to match available space:</p>
+
+			<div class="agenda with-header auto-scroll margin-bottom">
+
+				<!-- Time markers -->
+				<ul class="agenda-time">
+					<li class="from-7 to-8"><span>7 AM</span></li>
+					<li class="from-8 to-9"><span>8 AM</span></li>
+					<li class="from-9 to-10"><span>9 AM</span></li>
+					<li class="from-10 to-11"><span>10 AM</span></li>
+					<li class="from-11 to-12"><span>11 AM</span></li>
+					<li class="from-12 to-13 blue"><span>NOON</span></li>
+					<li class="from-13 to-14"><span>1 PM</span></li>
+					<li class="from-14 to-15"><span>2 PM</span></li>
+					<li class="from-15 to-16"><span>3 PM</span></li>
+					<li class="from-16 to-17"><span>4 PM</span></li>
+					<li class="from-17 to-18"><span>5 PM</span></li>
+					<li class="from-18 to-19"><span>6 PM</span></li>
+					<li class="from-19 to-20"><span>7 PM</span></li>
+					<li class="at-20"><span>8 PM</span></li>
+				</ul>
+
+				<!-- Columns wrapper -->
+				<div class="agenda-wrapper">
+
+					<!-- Events list -->
+					<div class="agenda-events agenda-day1">
+
+						<div class="agenda-header">
+							Sunday
+						</div>
+
+						<span class="agenda-event anthracite-gradient from-16 to-17-30">
+							<time>4 PM - 5:30 PM</time>
+							Event description
+						</span>
+
+					</div>
+
+					<!-- Events list -->
+					<div class="agenda-events agenda-day2">
+
+						<div class="agenda-header">
+							Monday
+						</div>
+
+						<div class="dark-stripes from-12 to-14"></div>
+
+						<a href="#" class="agenda-event from-8 to-11">
+							<time>8 AM - 11 AM</time>
+							Event description
+						</a>
+
+						<span class="agenda-event from-16-30 to-17-30">
+							<time>4:30 PM - 5:30 PM</time>
+							Event description
+						</span>
+
+						<div class="agenda-now" style="top:63.75%"><span>03:23</span></div>
+
+					</div>
+
+					<!-- Events list -->
+					<div class="agenda-events agenda-day3">
+
+						<div class="agenda-header">
+							Tuesday
+						</div>
+
+						<div class="dark-stripes from-12 to-18"></div>
+
+						<a href="#" class="agenda-event from-7 to-9">
+							<time>7 AM - 9 AM</time>
+							Event description
+							<span class="ribbon tiny"><span class="ribbon-inner orange-gradient">Priv</span></span>
+						</a>
+
+						<span class="agenda-event from-10 to-11-30 event-1-on-2">
+							<time>10 AM - 11:30 AM</time>
+							Event description
+						</span>
+
+						<span class="agenda-event from-11 to-13 event-2-on-2 anthracite-gradient">
+							<time>11 AM - 1 PM</time>
+							Event description
+						</span>
+
+					</div>
+
+					<!-- Events list -->
+					<div class="agenda-events agenda-day4">
+
+						<div class="agenda-header">
+							Wednesday
+						</div>
+
+						<div class="dark-stripes from-12 to-14"></div>
+
+						<a href="#" class="agenda-event from-9 to-10">
+							<time>9 AM - 10 AM</time>
+							Event description
+						</a>
+
+						<span class="agenda-event from-16 to-17-30 event-1-on-2">
+							<time>4 PM - 5:30 PM</time>
+							Event description
+						</span>
+
+						<span class="agenda-event from-17 to-19-30 event-2-on-2 blue-gradient">
+							<time>5 PM - 7:30 PM</time>
+							Event description
+						</span>
+
+					</div>
+
+					<!-- Events list -->
+					<div class="agenda-events agenda-day5">
+
+						<div class="agenda-header">
+							Thursday
+						</div>
+
+						<div class="dark-stripes from-12 to-14"></div>
+
+						<a href="#" class="agenda-event from-8 to-9">
+							<time>8 AM - 9 AM</time>
+							Event description
+						</a>
+
+						<span class="agenda-event from-11 to-13 anthracite-gradient">
+							<time>11 AM - 1 PM</time>
+							Event description
+						</span>
+
+						<span class="agenda-event from-17 to-19-30 blue-gradient">
+							<time>5 PM - 7:30 PM</time>
+							Event description
+						</span>
+
+					</div>
+
+					<!-- Events list -->
+					<div class="agenda-events agenda-day6">
+
+						<div class="agenda-header">
+							Friday
+						</div>
+
+						<div class="dark-stripes from-12 to-14"></div>
+
+						<span class="agenda-event from-10 to-13 anthracite-gradient">
+							<time>10 AM - 1 PM</time>
+							Event description
+						</span>
+
+						<span class="agenda-event from-16 to-18-30">
+							<time>4 PM - 6:30 PM</time>
+							Event description
+						</span>
+
+					</div>
+
+					<!-- Events list -->
+					<div class="agenda-events agenda-day7">
+
+						<div class="agenda-header">
+							Saturday
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+			<p>To use it, just add the class <b>auto-scroll</b> to your agenda:</p>
+
+			<pre class="prettyprint">
+&lt;div class="agenda with-header auto-scroll"&gt;
+
+	...
+
+&lt;/div&gt;
+</pre>
+
+		</div>
+
+		<div class="six-columns twelve-columns-mobile">
+
+			<p class="wrapped">It is also possible to define manually the number of visible columns, whatever the available space. For instance, to show only one column:</p>
+
+			<div class="agenda with-header auto-scroll margin-bottom" data-agenda-options='{"auto":false,"first":1}'>
+
+				<!-- Time markers -->
+				<ul class="agenda-time">
+					<li class="from-7 to-8"><span>7 AM</span></li>
+					<li class="from-8 to-9"><span>8 AM</span></li>
+					<li class="from-9 to-10"><span>9 AM</span></li>
+					<li class="from-10 to-11"><span>10 AM</span></li>
+					<li class="from-11 to-12"><span>11 AM</span></li>
+					<li class="from-12 to-13 blue"><span>NOON</span></li>
+					<li class="from-13 to-14"><span>1 PM</span></li>
+					<li class="from-14 to-15"><span>2 PM</span></li>
+					<li class="from-15 to-16"><span>3 PM</span></li>
+					<li class="from-16 to-17"><span>4 PM</span></li>
+					<li class="from-17 to-18"><span>5 PM</span></li>
+					<li class="from-18 to-19"><span>6 PM</span></li>
+					<li class="from-19 to-20"><span>7 PM</span></li>
+					<li class="at-20"><span>8 PM</span></li>
+				</ul>
+
+				<!-- Columns wrapper -->
+				<div class="agenda-wrapper">
+
+					<!-- Events list -->
+					<div class="agenda-events agenda-day1">
+
+						<div class="agenda-header">
+							Sunday
+						</div>
+
+						<span class="agenda-event anthracite-gradient from-16 to-17-30">
+							<time>4 PM - 5:30 PM</time>
+							Event description
+						</span>
+
+					</div>
+
+					<!-- Events list -->
+					<div class="agenda-events agenda-day2">
+
+						<div class="agenda-header">
+							Monday
+						</div>
+
+						<div class="dark-stripes from-12 to-14"></div>
+
+						<a href="#" class="agenda-event from-8 to-11">
+							<time>8 AM - 11 AM</time>
+							Event description
+						</a>
+
+						<span class="agenda-event from-16-30 to-17-30">
+							<time>4:30 PM - 5:30 PM</time>
+							Event description
+						</span>
+
+						<div class="agenda-now" style="top:63.75%"><span>03:23</span></div>
+
+					</div>
+
+					<!-- Events list -->
+					<div class="agenda-events agenda-day3">
+
+						<div class="agenda-header">
+							Tuesday
+						</div>
+
+						<div class="dark-stripes from-12 to-18"></div>
+
+						<a href="#" class="agenda-event from-7 to-9">
+							<time>7 AM - 9 AM</time>
+							Event description
+							<span class="ribbon tiny"><span class="ribbon-inner orange-gradient">Priv</span></span>
+						</a>
+
+						<span class="agenda-event from-10 to-11-30 event-1-on-2">
+							<time>10 AM - 11:30 AM</time>
+							Event description
+						</span>
+
+						<span class="agenda-event from-11 to-13 event-2-on-2 anthracite-gradient">
+							<time>11 AM - 1 PM</time>
+							Event description
+						</span>
+
+					</div>
+
+					<!-- Events list -->
+					<div class="agenda-events agenda-day4">
+
+						<div class="agenda-header">
+							Wednesday
+						</div>
+
+						<div class="dark-stripes from-12 to-14"></div>
+
+						<a href="#" class="agenda-event from-9 to-10">
+							<time>9 AM - 10 AM</time>
+							Event description
+						</a>
+
+						<span class="agenda-event from-16 to-17-30 event-1-on-2">
+							<time>4 PM - 5:30 PM</time>
+							Event description
+						</span>
+
+						<span class="agenda-event from-17 to-19-30 event-2-on-2 blue-gradient">
+							<time>5 PM - 7:30 PM</time>
+							Event description
+						</span>
+
+					</div>
+
+					<!-- Events list -->
+					<div class="agenda-events agenda-day5">
+
+						<div class="agenda-header">
+							Thursday
+						</div>
+
+						<div class="dark-stripes from-12 to-14"></div>
+
+						<a href="#" class="agenda-event from-8 to-9">
+							<time>8 AM - 9 AM</time>
+							Event description
+						</a>
+
+						<span class="agenda-event from-11 to-13 anthracite-gradient">
+							<time>11 AM - 1 PM</time>
+							Event description
+						</span>
+
+						<span class="agenda-event from-17 to-19-30 blue-gradient">
+							<time>5 PM - 7:30 PM</time>
+							Event description
+						</span>
+
+					</div>
+
+					<!-- Events list -->
+					<div class="agenda-events agenda-day6">
+
+						<div class="agenda-header">
+							Friday
+						</div>
+
+						<div class="dark-stripes from-12 to-14"></div>
+
+						<span class="agenda-event from-10 to-13 anthracite-gradient">
+							<time>10 AM - 1 PM</time>
+							Event description
+						</span>
+
+						<span class="agenda-event from-16 to-18-30">
+							<time>4 PM - 6:30 PM</time>
+							Event description
+						</span>
+
+					</div>
+
+					<!-- Events list -->
+					<div class="agenda-events agenda-day7">
+
+						<div class="agenda-header">
+							Saturday
+						</div>
+
+					</div>
+
+				</div>
+
+			</div>
+
+			<p>This example uses some of the options detailled below:</p>
+
+			<pre class="prettyprint">
+&lt;div class="agenda with-header auto-scroll" data-agenda-options='{"auto":false,"first":1}'&gt;
+
+	...
+
+&lt;/div&gt;
+</pre>
+
+		</div>
+
+	</div>
+
+	<div class="wrapped big-left-icon icon-gear margin-bottom">
+		<h4 class="no-margin-bottom">Quick tip</h4>
+		You may add <b>agenda-previous</b> and <b>agenda-next</b> arrows to first and last days by yourself, the plugin won't overwrite them, and you can use them for custom actions - for instance, load next week.
+	</div>
+
+	<h3 class="thin">Methods</h3>
+
+	<dl class="definition">
+		<dt>$(selector).scrollAgenda(options)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Enable agenda scrolling</p>
+			<h6>Parameters</h6>
+			<p>@param object options - optional (see defaults for a complete list)</p>
+		</dd>
+
+		<dt>$(selector).scrollAgendaFirstColumn(firstCol, animate)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Set the first visible column</p>
+			<h6>Parameters</h6>
+			<p>@param int|string|jQuery firstCol either an index (starting from 0), an CSS selector or a jQuery object<br>
+			@param boolean|null animate true to animate the movement, false to disable animation, null to use settings value (optional, default: null)</p>
+		</dd>
+
+		<dt>$(selector).scrollAgendaToPrevious()</dt>
+		<dd class="boxed margin-bottom">
+			<p>Scroll an agenda to previous column</p>
+		</dd>
+
+		<dt>$(selector).scrollAgendaToNext()</dt>
+		<dd class="boxed margin-bottom">
+			<p>Scroll an agenda to next column</p>
+		</dd>
+	</dl>
+
+	<h3 class="thin">Options reference</h3>
+
+	<div class="wrapped margin-bottom left-icon icon-info-round">
+		The defaults may be modified at runtime in <b>$.fn.scrollAgenda.defaults</b>, and options may be passed inline using the <b>data-agenda-options</b> attribute
+	</div>
+
+	<dl class="definition">
+		<dt>auto</dt>
+		<dd class="boxed margin-bottom">
+			Should the plugin automatically determine the number of visible columns?<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+		<dt>columns</dt>
+		<dd class="boxed margin-bottom">
+			Number of visible columns if auto is false<br>
+			<span class="icon-marker black">Type:</span> int<br>
+			<span class="icon-star black">Default:</span> 1
+		</dd>
+		<dt>minWidth</dt>
+		<dd class="boxed margin-bottom">
+			Minimum columns width for auto detection<br>
+			<span class="icon-marker black">Type:</span> int<br>
+			<span class="icon-star black">Default:</span> 200
+		</dd>
+		<dt>animate</dt>
+		<dd class="boxed margin-bottom">
+			Animate column movement<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+		<dt>first</dt>
+		<dd class="boxed margin-bottom">
+			First visible column - starts at 0 (only used at startup)<br>
+			<span class="icon-marker black">Type:</span> int<br>
+			<span class="icon-star black">Default:</span> 0
+		</dd>
+		<dt>prevTitle</dt>
+		<dd class="boxed margin-bottom">
+			Previous arrow title<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> 'Previous'
+		</dd>
+		<dt>nextTitle</dt>
+		<dd class="boxed margin-bottom">
+			Next arrow title<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> 'Next'
+		</dd>
+		<dt>onSizeChange</dt>
+		<dd class="boxed margin-bottom">
+			Callback fired each time the number of visible columns change (including at startup)<br>
+			The function gets one parameter, the new number of visible columns<br>
+			<span class="icon-marker black">Type:</span> function<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+		<dt>onRangeChange</dt>
+		<dd class="boxed margin-bottom">
+			Callback fired each time the visible range changes<br>
+			The function gets 2 parameters: first and last visible columns' index (start at 0)<br>
+			<span class="icon-marker black">Type:</span> function<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+	</dl>
+
+</div>

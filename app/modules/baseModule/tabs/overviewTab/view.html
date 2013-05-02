@@ -1,0 +1,30 @@
+<!-- Main title -->
+<hgroup id="main-title" class="thin button-height box-shadow">
+    <h1 class="button-height">{{nls.tab_title}}</h1>
+
+    <div class="tool">
+        <span class="estop-button-group">
+            <button for="estop_button" class="button huge thin" data-bind="click: linuxCNCServer.toggleEstop, css: {'red-gradient': !(linuxCNCServer.vars.estop.data()) }">{{nls.estop}}</button>
+        </span>
+        <button class="button huge thin" data-bind="click:linuxCNCServer.abort()">{{nls.abort}}</button>
+    </div>
+</hgroup>
+
+<!-- The padding wrapper may be omitted -->
+<div class="with-padding ">&nbsp;
+
+    <div class="columns">
+
+        <div class="six-columns twelve-columns-mobile">
+            <article id="DRO_PANEL"></article>
+        </div>
+
+        <div class="six-columns twelve-columns-mobile">
+            <article id="BACKPLOT_PANEL"></article>
+        </div>
+
+    </div>
+</div>
+
+
+

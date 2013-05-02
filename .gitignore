@@ -1,0 +1,10 @@
+.settings/*
+.project
+.usertools/optimizer/build
+tools/optimizer/build
+tools/documentation/docs
+.idea/*
+*.swp
+.DS_Store
+.git/*
+.sonar/

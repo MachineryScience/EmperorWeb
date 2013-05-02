@@ -1,0 +1,89 @@
+<hgroup id="main-title" class="thin">
+	<h1>Textareas</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<h3 class="thin">Default textareas</h3>
+
+	<textarea class="input margin-bottom">Default textarea</textarea>
+
+	<pre class="prettyprint">
+&lt;textarea class="input"&gt;Default textarea&lt;/textarea&gt;
+</pre>
+
+	<textarea class="input full-width margin-bottom">Full-width textarea</textarea>
+
+	<pre class="prettyprint">
+&lt;textarea class="input full-width"&gt;Default textarea&lt;/textarea&gt;
+</pre>
+
+	<h3 class="thin">Autoexpanding textareas</h3>
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin file <b>js/developr.auto-resizing.js</b>
+	</div>
+
+	<p>To enable auto-resizing on a textarea, just add the class <b>autoexpanding</b>:</p>
+
+	<textarea name="autoexpanding" id="autoexpanding" class="input full-width autoexpanding margin-bottom">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+
+Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</textarea>
+
+	<pre class="prettyprint">
+&lt;textarea class="input full-width autoexpanding"&gt;...&lt;/textarea&gt;
+</pre>
+
+	<h3 class="thin">WYSIWYG editor</h3>
+
+	<p>The template embeds a simple but complete WYSIWYG editor, CLEditor:</p>
+
+	<div class="margin-bottom">
+		<textarea id="cleditor">This is a rich-text editor: select <b>some text</b> and click buttons!</textarea>
+	</div>
+
+	<p>Basic use:</p>
+
+	<h6>Markup</h6>
+	<pre class="prettyprint">
+&lt;textarea id="cleditor"&gt;...&lt;/textarea&gt;
+</pre>
+
+	<h6>Javascript</h6>
+	<pre class="prettyprint">
+// Init
+var editorTextarea = $('#cleditor'),
+	editorWrapper = editorTextarea.parent(),
+	editor = editorTextarea.cleditor({
+		width:	'100%',
+		height:	350
+	})[0];
+
+// Update size when resizing
+editorWrapper.sizechange(function()
+{
+	editor.refresh();
+});
+</pre>
+
+	<p>To learn more on how to use this plugin, go to <a href="http://premiumsoftware.net/cleditor/">http://premiumsoftware.net/cleditor/</a></p>
+
+</div>
+<script>
+
+	// CLEditor
+	var editorTextarea = $('#cleditor'),
+		editorWrapper = editorTextarea.parent(),
+		editor = editorTextarea.cleditor({
+			width:	'100%',
+			height:	350
+		})[0];
+
+	// Update size when resizing
+	editorWrapper.sizechange(function()
+	{
+		editor.refresh();
+	});
+
+</script>

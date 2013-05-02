@@ -1,0 +1,211 @@
+<hgroup id="main-title" class="thin">
+	<h1>Navigable menus</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<p>The template provides a plugin to display multi-level menus like touch devices, with sliding parts. It can also load content via AJAX, automatically</p>
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin file <b>js/developr.navigable.js</b>
+	</div>
+
+	<h3 class="thin">How to use it</h3>
+
+	<p>To enable this feature, simply wrap the desired menu into an element with the class <b>navigable</b>:</p>
+
+	<pre class="prettyprint">
+&lt;section class="navigable"&gt;
+	... menu ...
+&lt;/section&gt;
+</pre>
+
+	<p>This example shows a <b>section</b>, but you can use a <b>div</b> as well. The navigable wrapper may be used anywhere, including inside another menu.</p>
+
+	<p>Sub-levels should be embedded within their parent element:</p>
+
+	<pre class="prettyprint">
+&lt;section class="navigable"&gt;
+	&lt;ul class="big-menu"&gt;
+		&lt;li class="with-right-arrow"&gt;
+			&lt;span&gt;&lt;span class="list-count"&gt;3&lt;/span&gt;Root element&lt;/span&gt;
+			&lt;ul class="big-menu"&gt;
+				&lt;li&gt;&lt;a href="#"&gt;Children element&lt;/a&gt;&lt;/li&gt;
+				&lt;li&gt;&lt;a href="#"&gt;Children element&lt;/a&gt;&lt;/li&gt;
+				&lt;li&gt;&lt;a href="#"&gt;Children element&lt;/a&gt;&lt;/li&gt;
+				&lt;li class="with-right-arrow"&gt;
+					&lt;span&gt;Children with subs&lt;/span&gt;
+					&lt;ul class="big-menu"&gt;
+						&lt;li&gt;&lt;a href="#"&gt;Children element&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href="#"&gt;Children element&lt;/a&gt;&lt;/li&gt;
+						&lt;li&gt;&lt;a href="#"&gt;Children element&lt;/a&gt;&lt;/li&gt;
+					&lt;/ul&gt;
+				&lt;/li&gt;
+			&lt;/ul&gt;
+		&lt;/li&gt;
+		...
+	&lt;/ul&gt;
+&lt;/section&gt;
+</pre>
+
+	<p>Here is an example result:</p>
+
+	<section class="navigable">
+		<ul class="big-menu">
+			<li class="with-right-arrow">
+				<span><span class="list-count">3</span>Group</span>
+				<ul class="big-menu">
+					<li><a href="#">Link</a></li>
+					<li><a href="#">Link</a></li>
+					<li class="with-right-arrow">
+						<span>Group</span>
+						<ul class="big-menu">
+							<li><a href="#">Link</a></li>
+							<li><a href="#">Link</a></li>
+							<li><a href="#">Link</a></li>
+						</ul>
+					</li>
+				</ul>
+			</li>
+			<li class="with-right-arrow">
+				<span>
+					<span class="list-count">5</span>
+					Messages
+				</span>
+				<ul class="message-menu">
+					<li>
+						<span class="message-status">
+							<span class="unstarred">Not starred</span>
+						</span>
+						<span class="message-info">
+							<span class="blue">08:17</span>
+						</span>
+						<strong class="blue">May Starck</strong><br>
+						Read message
+					</li>
+					<li>
+						<span class="message-status">
+							<span class="unstarred">Not starred</span>
+						</span>
+						<span class="message-info">
+							<span class="blue">Yesterday</span>
+						</span>
+						<strong class="blue">May Starck</strong><br>
+						Read message
+					</li>
+					<li>
+						<span class="message-status">
+							<span class="starred">Starred</span>
+						</span>
+						<span class="message-info">
+							<span class="blue">2 days ago</span>
+						</span>
+						<strong class="blue">May Starck</strong><br>
+						Read message
+					</li>
+					<li>
+						<span class="message-status">
+							<span class="unstarred">Not starred</span>
+						</span>
+						<span class="message-info">
+							<span class="blue">2 days ago</span>
+						</span>
+						<strong class="blue">May Starck</strong><br>
+						Read message
+					</li>
+					<li>
+						<span class="message-status">
+							<span class="unstarred">Not starred</span>
+						</span>
+						<span class="message-info">
+							<span class="blue">3 days ago</span>
+						</span>
+						<strong class="blue">May Starck</strong><br>
+						Read message
+					</li>
+				</ul>
+			</li>
+			<li><a href="javascript:$.modal.alert('This is a standard link');">Link</a></li>
+		</ul>
+	</section>
+
+	<h5 class="green">Back button text</h5>
+
+	<p>Since v1.4, the back button will display the text of the parent element. If you want to set a custom text instead, you may do one of the following:</p>
+
+	<pre class="prettyprint">
+// Change default (affect all menus)
+$.template.navigable.backText = 'Back';
+</pre>
+
+	<pre class="prettyprint">
+&lt;!-- Set an inline option --&gt;
+&lt;section class="navigable" data-navigable-options='{"backText":"Back"}'&gt;
+</pre>
+
+	<h5 class="green">Open a menu element at startup</h5>
+
+	<p>If you want to menu to be open at startup to show a specific element (for instance, the current page), add the class <b>navigable-current</b> to this element:</p>
+
+	<pre class="prettyprint">
+&lt;section class="navigable"&gt;
+	...
+	&lt;li&gt;&lt;a href="#" class="navigable-current"&gt;Current element&lt;/a&gt;&lt;/li&gt;
+	...
+&lt;/section&gt;
+</pre>
+
+	<p class="left-icon icon-info-round">You can also add the class <strong>current</strong> to the element to add the corresponding visual styling.</p>
+
+	<h5 class="green">Reset menu to main level</h5>
+
+	<p>From version 1.4, you can now reset the menu to its main level by calling this on the menu:</p>
+
+	<pre class="prettyprint">
+$('.navigable').navigableReset();
+</pre>
+
+	<h3 class="thin">AJAX content loading</h3>
+
+	<p>To speed up loading, you may want to include only root elements, and load their content via AJAX. This is really simple with this plugin, just set the menu as a link with the content URL as href and add the class <b>navigable-ajax</b> - for instance:</p>
+
+	<pre class="prettyprint">
+&lt;section class="navigable"&gt;
+	&lt;ul class="big-menu"&gt;
+		&lt;li class="with-right-arrow"&gt;
+			&lt;a href="path-to-content" class="navigable-ajax"&gt;With ajax sub-menu&lt;/a&gt;
+		&lt;/li&gt;
+		...
+	&lt;/ul&gt;
+&lt;/section&gt;
+</pre>
+
+	<p>Note that instead of a link, you may use a span with a special data attribute:</p>
+
+	<pre class="prettyprint">
+&lt;section class="navigable"&gt;
+	&lt;ul class="big-menu"&gt;
+		&lt;li class="with-right-arrow"&gt;
+			&lt;span data-navigable-url="path-to-content" class="navigable-ajax"&gt;With ajax sub-menu&lt;/span&gt;
+		&lt;/li&gt;
+		...
+	&lt;/ul&gt;
+&lt;/section&gt;
+</pre>
+
+	<p>Here is a demo:</p>
+
+	<section class="navigable margin-bottom">
+		<ul class="big-menu">
+			<li class="with-right-arrow">
+				<a href="content/reference/menu-navigable-ajax.html" class="navigable-ajax">Load sub-menu</a>
+			</li>
+		</ul>
+	</section>
+
+	<p>The plugin will display a loading animation, and when the content is loaded, append it to the clicked element as a sub-menu. Note that the loaded content should be an already formatted output, the plugin won't perform any transformation on it.</p>
+
+	<p>If loading fails, a message is displayed using the notification plugin (if available).</p>
+
+</div>

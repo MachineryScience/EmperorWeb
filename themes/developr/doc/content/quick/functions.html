@@ -1,0 +1,132 @@
+<hgroup id="main-title" class="thin">
+	<h1>Functions overview</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<p>The template javascript libs are organized in 2 folders:</p>
+	<ul class="bullet-list">
+		<li>The template libs, in <b>js/</b></li>
+		<li>The external libs, in <b>js/libs/</b></li>
+	</ul>
+
+	<h3 class="thin">Template libs</h3>
+
+	<dl class="definition inline">
+		<dt>setup.js</dt>
+		<dd>This file handles the whole template setup (see below)</dd>
+
+		<dt>developr.accordions.js</dt>
+		<dd>Library for accordions</dd>
+
+		<dt>developr.auto-resizing.js</dt>
+		<dd>Auto-resizing textareas</dd>
+
+		<dt>developr.confirm.js</dt>
+		<dd>Confirmation tooltip - require developr.tooltips.js</dd>
+
+		<dt>developr.input.js</dt>
+		<dd>Form inputs styling</dd>
+
+		<dt>developr.message.js</dt>
+		<dd>Messages blocks generation and control</dd>
+
+		<dt>developr.modal.js</dt>
+		<dd>Modal window library</dd>
+
+		<dt>developr.navigable.js</dt>
+		<dd>Navigable menus in the main menu</dd>
+
+		<dt>developr.notify.js</dt>
+		<dd>Notification library</dd>
+
+		<dt>developr.scroll.js</dt>
+		<dd>Custom scroll library</dd>
+
+		<dt>developr.progress-slider.js</dt>
+		<dd>Slider and progress generation and control</dd>
+
+		<dt>developr.tabs.js</dt>
+		<dd>Tabs plugin</dd>
+
+		<dt>developr.tooltips.js</dt>
+		<dd>Tooltips library</dd>
+	</dl>
+
+	<h3 class="thin small-margin-bottom">setup.js</h3>
+	<p class="intro">This is the main javascript file, it handles the whole setup of the template and provides APIs for other bundled plugins.</p>
+
+	<dl class="definition inline">
+		<dt>Template interface</dt>
+		<dd>The template defines an interface on $.template with several informations and methods (see <b>Advanced</b> section for details)</dd>
+
+		<dt>Features detection</dt>
+		<dd>Detects required features, and load polyfills when required (using Modernizr)</dd>
+
+		<dt>Touch optimization</dt>
+		<dd>Provides a method to detect touchend events when no scrolling has occured (only on touch devices, see <b>Advanced</b> section for details)</dd>
+
+		<dt>Position: fixed polyfill</dt>
+		<dd>Support for devices with no position:fixed support (mostly old iOS/Android)</dd>
+
+		<dt>Generic functions</dt>
+		<dd>A bunch of generic methods, always useful</dd>
+
+		<dt>Custom events</dt>
+		<dd>Detect and trigger custom events for screen and elements resizing</dd>
+
+		<dt>DOM watching functions</dt>
+		<dd>Detect any DOM change made by jQuery and apply template setup or clear function to the target (see <b>How the template works/Automatic setup</b> for details)</dd>
+
+		<dt>Viewport resizing handling</dt>
+		<dd>Send normalized resize event when screen is resized and corresponding mediaqueries are ready</dd>
+
+		<dt>Template init</dt>
+		<dd>Main initialisation function. Called automatically on document.load but may be fired manually to speed up display.</dd>
+
+		<dt>Template elements</dt>
+		<dd>Defines behavior of template elements using event delegation</dd>
+
+		<dt>Tracked elements</dt>
+		<dd>Custom function for absolute positioned elements tracking an element in th DOM flow (see <b>Advanced</b> section for details)</dd>
+
+		<dt>Custom animations</dt>
+		<dd>A couple special animations (mostly shorthands)</dd>
+
+		<dt>Browser chrome hidding</dt>
+		<dd>Automatic document scrolling to hide browser's chrome on mobile devices</dd>
+
+		<dt>Dependencies</dt>
+		<dd>Some extra easing functions and mousewheel support</dd>
+
+	</dl>
+
+	<h3 class="thin">External libs</h3>
+
+	<dl class="definition inline">
+		<dt>CLEditor</dt>
+		<dd>A simple yet complete WYSIWYG editor - <a href="http://premiumsoftware.net/cleditor/">http://premiumsoftware.net/cleditor/</a></dd>
+
+		<dt>glDatePicker</dt>
+		<dd>The usual datepicker - <a href="https://github.com/glad/glDatePicker">https://github.com/glad/glDatePicker</a></dd>
+
+		<dt>jquery-1.8.2.min.js</dt>
+		<dd>The awesome JS framework - <a href="http://jquery.com/">http://jquery.com/</a></dd>
+
+		<dt>jquery.details.min.js</dt>
+		<dd>Polyfill for the HTML5 details element - <a href="https://github.com/mathiasbynens/jquery-details">https://github.com/mathiasbynens/jquery-details</a></dd>
+
+		<dt>jquery.tablesorter.min.js</dt>
+		<dd>Table sorting, fast and easy - <a href="http://tablesorter.com/">http://tablesorter.com/</a></dd>
+
+		<dt>modernizr.custom.js</dt>
+		<dd>Features detections and HTML5 polyfill, on a custom build (link to rebuild the same version included in the file) - <a href="http://www.modernizr.com/">http://www.modernizr.com/</a></dd>
+
+		<dt>respond.min.js</dt>
+		<dd>Media Queries polyfill, slightly modded (see details inside the file) - <a href="https://github.com/scottjehl/Respond">https://github.com/scottjehl/Respond</a></dd>
+
+		<dt>tinycon.min.js</dt>
+		<dd>Favicon notifications plugin - <a href="https://github.com/tommoor/tinycon">https://github.com/tommoor/tinycon</a></dd>
+	</dl>
+
+</div>

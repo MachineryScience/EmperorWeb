@@ -1,0 +1,158 @@
+<hgroup id="main-title" class="thin">
+	<h1>Styles overview</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<p>The template stylesheets and fonts are organized in 3 folders:</p>
+	<ul class="bullet-list">
+		<li>The base stylesheets, in <b>css/</b></li>
+		<li>The extra styles, which should be loaded only when required, in <b>css/styles/</b></li>
+		<li>The font-icon Entypo, in <b>css/Entypo</b></li>
+	</ul>
+
+	<h3 class="thin">Base stylesheets</h3>
+
+	<dl class="definition inline">
+		<dt>reset.css</dt>
+		<dd>The usual reset file</dd>
+
+		<dt>style.css</dt>
+		<dd>The main stylesheet (see below for more details)</dd>
+
+		<dt>480.css</dt>
+		<dd>Styles for mobile - landscape</dd>
+
+		<dt>768.css</dt>
+		<dd>Styles for tablet - portrait</dd>
+
+		<dt>992.css</dt>
+		<dd>Styles for tablet - landscape</dd>
+
+		<dt>1200.css</dt>
+		<dd>Styles for wide screens</dd>
+
+		<dt>print.css</dt>
+		<dd>Basic print styles</dd>
+
+		<dt>login.css</dt>
+		<dd>Styles for the login page</dd>
+
+		<dt>error.css</dt>
+		<dd>Styles for the error pages</dd>
+	</dl>
+
+	<h3 class="thin small-margin-bottom">style.css</h3>
+	<p class="intro">This is the main stylesheet, always required.</p>
+	<div class="boxed left-border margin-bottom">
+		<p>Note that some of the styles it defines are overridden by upper mediaqueries - tagged as below:</p>
+		<dl class="definition inline">
+			<dt>Smartphone - landscape</dt>
+			<dd><small class="tag orange-bg">480</small></dd>
+
+			<dt>Tablet - portrait</dt>
+			<dd><small class="tag orange-bg">768</small></dd>
+
+			<dt>Tablet - landscape</dt>
+			<dd><small class="tag orange-bg">992</small></dd>
+
+			<dt>Wide screens</dt>
+			<dd><small class="tag orange-bg">1200</small></dd>
+		</dl>
+	</div>
+
+	<dl class="definition inline">
+		<dt>Typography</dt>
+		<dd>The various headers <small class="tag orange-bg">768</small></dd>
+
+		<dt>Utility classes</dt>
+		<dd>Classes to control text style, alignement, float, paddings and margins, positioning, box styles...</dd>
+
+		<dt>Generic shadows</dt>
+		<dd>Generic CSS3 shadow classes to compose your own elements</dd>
+
+		<dt>Generic bevel/emboss/gloss</dt>
+		<dd>Generic CSS3 volume classes to compose your own elements</dd>
+
+		<dt>Generic effects</dt>
+		<dd>Generic CSS3 effects: border, glow, stripes...</dd>
+
+		<dt>Columns</dt>
+		<dd>Fluid CSS grid <small class="tag orange-bg">480</small> <small class="tag orange-bg">768</small> <small class="tag orange-bg">1200</small> and fixed columns <small class="tag orange-bg">768</small></dd>
+
+		<dt>List &amp; tags</dt>
+		<dd>Basic lists <small class="tag orange-bg">768</small> (block lists are defined in styles/lists.css) and tags</dd>
+
+		<dt>List extras</dt>
+		<dd>Additional elements for lists</dd>
+
+		<dt>Block arrows</dt>
+		<dd>An arrow style that may be used everywhere</dd>
+
+		<dt>Generic elements</dt>
+		<dd>Count and close bubbles, blocks, accordions, ribbon, meter and info spot</dd>
+
+		<dt>Icons</dt>
+		<dd>Font-icons classes</dd>
+
+		<dt>Main layout elements</dt>
+		<dd>Main template blocks: title bar <small class="tag orange-bg">768</small> <small class="tag orange-bg">992</small>, shortcuts <small class="tag orange-bg">480</small> <small class="tag orange-bg">768</small>, menu <small class="tag orange-bg">768</small> <small class="tag orange-bg">992</small>, main content <small class="tag orange-bg">768</small> <small class="tag orange-bg">992</small>...</dd>
+
+		<dt>Menus styles</dt>
+		<dd>Styles for the navigation menu</dd>
+
+		<dt>Custom scrollbars</dt>
+		<dd>The styles are used by the custom scroll plugin</dd>
+
+		<dt>Buttons</dt>
+		<dd>Generic buttons styles, with groups and button-icons</dd>
+
+		<dt>Loaders</dt>
+		<dd>Simple ajax loaders styles</dd>
+
+		<dt>Messages</dt>
+		<dd>Simple and big messages styles</dd>
+
+		<dt>Tabs</dt>
+		<dd>Styles to define tabs <small class="tag orange-bg">768</small>, used by the tabs plugin</dd>
+
+		<dt>Notifications</dt>
+		<dd>Styles <small class="tag orange-bg">768</small> required by the notification plugin</dd>
+
+		<dt>Tooltips</dt>
+		<dd>Styles required by the tooltip plugin and the slider/progress plugin</dd>
+
+		<dt>Extra stuff</dt>
+		<dd>Utility classes (such as clearfix) and vendor-specific styles</dd>
+
+	</dl>
+
+	<h3 class="thin">Extra styles</h3>
+
+	<dl class="definition inline">
+		<dt>agenda.css</dt>
+		<dd>Agenda and calendars</dd>
+
+		<dt>dashboard.css</dt>
+		<dd>Used for the dashboard page</dd>
+
+		<dt>form.css</dt>
+		<dd>Forms elements and layouts</dd>
+
+		<dt>lists.css</dt>
+		<dd>Various block lists</dd>
+
+		<dt>modal.css</dt>
+		<dd>Styles required by the modal plugin</dd>
+
+		<dt>progress-slider.css</dt>
+		<dd>Styles required by the progress and slider plugin</dd>
+
+		<dt>switches.css</dt>
+		<dd>iOS-like switches</dd>
+
+		<dt>table.css</dt>
+		<dd>Various tables styles</dd>
+	</dl>
+
+</div>

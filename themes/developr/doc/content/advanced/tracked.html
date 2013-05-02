@@ -1,0 +1,65 @@
+<hgroup id="main-title" class="thin">
+	<h1>Tracked elements</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<p>The template provides a way to handle tracking elements: those are absolutely positioned elements which are following another element in the document flow. They need to be repositioned everytime the user scrolls, for instance.</p>
+
+	<h3 class="thin">How to use it</h3>
+
+	<p>To start tracking an element, use this jQuery method:</p>
+
+	<pre class="prettyprint">
+$(selector).trackElement(target, refreshFunc);
+</pre>
+
+	<p><b>Target</b> is the element which should be tracked, and refreshFunc the function which will refresh the tracking element's position (called with tracking element as 'this' and target as argument).</p>
+
+	<p>You can also stop tracking:</p>
+
+	<pre class="prettyprint">
+$(selector).stopTracking();
+</pre>
+
+	<div class="wrapped big-left-icon icon-info-round margin-bottom">
+		<h4 class="no-margin-bottom">Set it and forget it</h4>
+		Tracking elements will automatically be removed when the tracked element is deleted
+	</div>
+
+	<h3 class="thin">Methods</h3>
+
+	<dl class="definition">
+		<dt>$(selector).trackElement(target, refreshFunc)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Make the current element track another element</p>
+			<h6>Parameters</h6>
+			<p>@param jQuery target the jQuery object of the target element<br>
+			@param function refreshFunc the function to refresh position (called with tracking element as 'this' and target as argument)<br>
+			If none, the tracking element will be aligned with its target</p>
+		</dd>
+
+		<dt>$(selector).stopTracking(clearPos)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Stop a element from tracking<br>
+			<br>
+			@param boolean clearPos if true, will clean position styling (top &amp; left)</p>
+		</dd>
+
+		<dt>$(selector).refreshTrackedElements()</dt>
+		<dd class="boxed margin-bottom">
+			<p>Updated tracking elements within selection</p>
+		</dd>
+
+		<dt>$(selector).refreshInnerTrackedElements()</dt>
+		<dd class="boxed margin-bottom">
+			<p>Update tracking elements in selection's inner elements</p>
+		</dd>
+
+		<dt>$(selector).getTrackers()</dt>
+		<dd class="boxed margin-bottom">
+			<p>Returns the jQuery list of tracking elements</p>
+		</dd>
+	</dl>
+
+</div>

@@ -1,0 +1,106 @@
+<hgroup id="main-title" class="thin">
+	<h1>Generic styles</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<p>The template provides a set of styling classes:</p>
+
+	<div class="columns">
+
+		<div class="four-columns six-columns-tablet twelve-columns-mobile">
+
+			<h3 class="thin">Shadows</h3>
+
+			<h5 class="green">Box shadows</h5>
+			<p class="wrapped lite-box-shadow">class="lite-box-shadow"</p>
+			<p class="wrapped box-shadow">class="box-shadow"</p>
+			<p class="wrapped strong-box-shadow">class="strong-box-shadow"</p>
+			<p class="wrapped large-box-shadow">class="large-box-shadow"</p>
+
+			<h5 class="green">Text shadows</h5>
+			<p class="wrapped lite-text-shadow">class="lite-text-shadow"</p>
+			<p class="wrapped text-shadow">class="text-shadow"</p>
+			<p class="wrapped strong-text-shadow">class="strong-text-shadow"</p>
+			<p class="wrapped large-text-shadow">class="large-text-shadow"</p>
+
+		</div>
+
+		<div class="four-columns six-columns-tablet twelve-columns-mobile">
+
+			<h3 class="thin">Bevels and emboss</h3>
+
+			<h5 class="green">Top bevel</h5>
+			<p class="wrapped top-bevel-on-light">class="top-bevel-on-light"</p>
+			<p class="wrapped top-bevel grey-bg">class="top-bevel"</p>
+			<p class="wrapped top-bevel-on-dark anthracite-bg">class="top-bevel-on-dark"</p>
+
+			<h5 class="green">Bottom bevel</h5>
+			<p class="wrapped bottom-bevel-on-light">class="bottom-bevel-on-light"</p>
+			<p class="wrapped bottom-bevel grey-bg">class="bottom-bevel"</p>
+			<p class="wrapped bottom-bevel-on-dark anthracite-bg">class="bottom-bevel-on-dark"</p>
+
+			<h5 class="green">Bevel</h5>
+			<p class="wrapped bevel-on-light">class="bevel-on-light"</p>
+			<p class="wrapped bevel grey-bg">class="bevel"</p>
+			<p class="wrapped bevel-on-dark anthracite-bg">class="bevel-on-dark"</p>
+
+			<h5 class="green">Emboss</h5>
+			<p class="wrapped emboss grey-bg">class="emboss"</p>
+			<p class="wrapped emboss-on-dark anthracite-bg">class="emboss-on-dark"</p>
+
+			<div class="margin-bottom big-left-icon icon-info-round">
+				<h4 class="no-margin-bottom">Quick tip</h4>
+				bevel and emboss classes are available for ul/ol elements: add the suffix <b>-subs</b> to the class name and all children elements will be styled, (e.g. bevel-subs).
+			</div>
+
+			<h5 class="green">Text bevel</h5>
+			<p class="wrapped bright-text-bevel grey-bg">class="bright-text-bevel"</p>
+			<p class="wrapped bright-text-bevel-on-dark anthracite-bg">class="bright-text-bevel-on-dark"</p>
+			<p class="wrapped dark-text-bevel">class="dark-text-bevel"</p>
+			<p class="wrapped dark-text-bevel-on-dark grey-bg black">class="dark-text-bevel-on-dark"</p>
+
+		</div>
+
+		<div class="new-row-tablet four-columns twelve-columns-tablet twelve-columns-mobile">
+
+			<h3 class="thin">Effects</h3>
+
+			<h5 class="green">Border</h5>
+			<p class="boxed with-border">class="with-border"</p>
+			<p>This class forces a border on an element which does not have one by default. Color is inherited from element's styling.</p>
+
+			<h5 class="green">Glow</h5>
+			<p class="wrapped anthracite-gradient glow">class="glow"</p>
+			<p>Add a subtle glow effect. Does not work on IE7 due to lack of proper styling support.</p>
+
+			<h3 class="thin">Stripes</h3>
+
+			<p>Stripes are created by adding an overlaying block, thus the parent element needs to have <b>position:absolute</b> or <b>position:relative</b>. If not, just add the class <b>relative</b>:</p>
+
+			<pre class="prettyprint">
+&lt;div class="relative"&gt;
+	Block content
+	&lt;div class="stripes"&gt;&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+			<h5 class="green">Light stripes</h5>
+			<p class="wrapped anthracite-gradient relative">class="thin-stripes"<span class="thin-stripes"></span></p>
+			<p class="wrapped anthracite-gradient relative">class="stripes"<span class="stripes"></span></p>
+			<p class="wrapped anthracite-gradient relative">class="big-stripes"<span class="big-stripes"></span></p>
+
+			<h5 class="green">Dark stripes</h5>
+			<p class="wrapped silver-gradient relative">class="dark-thin-stripes"<span class="dark-thin-stripes"></span></p>
+			<p class="wrapped silver-gradient relative">class="dark-stripes"<span class="dark-stripes"></span></p>
+			<p class="wrapped silver-gradient relative">class="dark-big-stripes"<span class="dark-big-stripes"></span></p>
+
+			<h5 class="green">Animated stripes</h5>
+			<p>Just add the class <b>animated</b> to get moving stripes. This work for all stripes sizes or color, but use it with caution as some slow computers have a hard time rendering them on large elements.</p>
+			<p class="wrapped silver-gradient relative">class="dark-stripes animated"<span class="dark-stripes animated"></span></p>
+
+		</div>
+
+	</div>
+
+</div>

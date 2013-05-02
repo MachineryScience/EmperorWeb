@@ -1,0 +1,566 @@
+<hgroup id="main-title" class="thin">
+	<h1>Progress</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin files <b>js/developr.progress-slider.js</b> and <b>css/styles/progress-slider.css</b> (only if you use the API)
+	</div>
+
+	<p class="left-icon icon-info-round">As the files names suggests, this feature shares common styles and methods with the <b>slider</b> feature, you will find many similar elements between both.</p>
+
+	<p>The template provides a complete set of styles to build progress, either available as raw code and through a powerful API:</p>
+
+	<h3 class="thin">Markup</h3>
+
+	<p>If you want to use the progress style without using the API, here is an example of complete progress markup:</p>
+
+	<p class="button-height large-margin-bottom">
+		<span class="progress" style="width: 250px">
+
+			<!-- Inner marks -->
+			<span class="inner-mark" style="left: 25%"></span>
+			<span class="inner-mark" style="left: 50%"></span>
+			<span class="inner-mark" style="left: 75%"></span>
+
+			<!-- Top marks -->
+			<span class="top-mark" style="left: 1px"><span class="mark-label align-right">0%</span></span>
+			<span class="top-mark" style="left: 25%"><span class="mark-label">25%</span></span>
+			<span class="top-mark" style="left: 50%"><span class="mark-label">50%</span></span>
+			<span class="top-mark" style="left: 75%"><span class="mark-label">75%</span></span>
+			<span class="top-mark" style="left: 100%"><span class="mark-label align-left">100%</span></span>
+
+			<!-- Bottom marks -->
+			<span class="bottom-mark" style="left: 1px"><span class="mark-label align-right">Nope</span></span>
+			<span class="bottom-mark" style="left: 25%"><span class="mark-label">Go on</span></span>
+			<span class="bottom-mark" style="left: 50%"><span class="mark-label">Better</span></span>
+			<span class="bottom-mark" style="left: 75%"><span class="mark-label">Almost</span></span>
+			<span class="bottom-mark" style="left: 100%"><span class="mark-label align-left">Yeah!</span></span>
+
+			<!-- Background-text, revealed when progress bar is too small -->
+			<span class="progress-text">35%</span>
+
+			<!-- Progress bar with foreground text -->
+			<span class="progress-bar" style="width: 35%">
+				<span class="progress-text">35%</span>
+			</span>
+		</span>
+	</p>
+
+	<p class="wrapped left-icon icon-info-round">For RTL version, use <b>right</b> position instead of left.</p>
+
+	<pre class="prettyprint">
+&lt;span class="progress" style="width: 100%"&gt;
+
+	&lt;!-- Inner marks --&gt;
+	&lt;span class="inner-mark" style="left: 25%"&gt;&lt;/span&gt;
+	&lt;span class="inner-mark" style="left: 50%"&gt;&lt;/span&gt;
+	&lt;span class="inner-mark" style="left: 75%"&gt;&lt;/span&gt;
+
+	&lt;!-- Top marks --&gt;
+	&lt;span class="top-mark" style="left: 1px"&gt;&lt;span class="mark-label align-right"&gt;0%&lt;/span&gt;&lt;/span&gt;
+	&lt;span class="top-mark" style="left: 25%"&gt;&lt;span class="mark-label"&gt;25%&lt;/span&gt;&lt;/span&gt;
+	&lt;span class="top-mark" style="left: 50%"&gt;&lt;span class="mark-label"&gt;50%&lt;/span&gt;&lt;/span&gt;
+	&lt;span class="top-mark" style="left: 75%"&gt;&lt;span class="mark-label"&gt;75%&lt;/span&gt;&lt;/span&gt;
+	&lt;span class="top-mark" style="left: 100%"&gt;&lt;span class="mark-label align-left"&gt;100%&lt;/span&gt;&lt;/span&gt;
+
+	&lt;!-- Bottom marks --&gt;
+	&lt;span class="bottom-mark" style="left: 1px"&gt;&lt;span class="mark-label align-right"&gt;Nope&lt;/span&gt;&lt;/span&gt;
+	&lt;span class="bottom-mark" style="left: 25%"&gt;&lt;span class="mark-label"&gt;Go on&lt;/span&gt;&lt;/span&gt;
+	&lt;span class="bottom-mark" style="left: 50%"&gt;&lt;span class="mark-label"&gt;Better&lt;/span&gt;&lt;/span&gt;
+	&lt;span class="bottom-mark" style="left: 75%"&gt;&lt;span class="mark-label"&gt;Almost&lt;/span&gt;&lt;/span&gt;
+	&lt;span class="bottom-mark" style="left: 100%"&gt;&lt;span class="mark-label align-left"&gt;Yeah!&lt;/span&gt;&lt;/span&gt;
+
+	&lt;!-- Background-text, revealed when progress bar is too small --&gt;
+	&lt;span class="progress-text"&gt;35%&lt;/span&gt;
+
+	&lt;!-- Progress bar with foreground text --&gt;
+	&lt;span class="progress-bar" style="width: 35%"&gt;
+		&lt;span class="progress-text"&gt;35%&lt;/span&gt;
+	&lt;/span&gt;
+&lt;/span&gt;
+</pre>
+
+	<p class="left-icon icon-info-round">For a vertical slider, add the class <b>vertical</b> to the main element and use <b>left-mark</b> and <b>right-mark</b> instead of <b>top-mark</b> and <b>bottom-mark</b> (with <b>align-top</b> and <b>align-bottom</b> for extremes).</p>
+
+	<p>Of course, all marks are optional an can be removed at will:</p>
+
+	<p>
+		<span class="progress" style="width: 250px">
+
+			<!-- Background-text, revealed when progress bar is too small -->
+			<span class="progress-text">35%</span>
+
+			<!-- Progress bar with foreground text -->
+			<span class="progress-bar" style="width: 35%">
+				<span class="progress-text">35%</span>
+			</span>
+		</span>
+	</p>
+
+	<p>There is a thin and a large style, and the bar can use any color:</p>
+
+	<p class="button-height">
+		<span class="progress thin" style="width: 250px">
+
+			<!-- Progress bar with foreground text -->
+			<span class="progress-bar red-gradient" style="width: 35%"></span>
+		</span><br>
+
+		<span class="progress large" style="width: 250px">
+
+			<!-- Background-text, revealed when progress bar is too small -->
+			<span class="progress-text">35%</span>
+
+			<!-- Progress bar with foreground text -->
+			<span class="progress-bar anthracite-gradient glossy" style="width: 35%">
+				<span class="progress-text">35%</span>
+			</span>
+		</span>
+	</p>
+
+	<pre class="prettyprint">
+&lt;!-- Thin style --&gt;
+&lt;span class="progress thin" style="width: 100%"&gt;
+
+	&lt;!-- Progress bar with foreground text --&gt;
+	&lt;span class="progress-bar red-gradient" style="width: 35%"&gt;&lt;/span&gt;
+&lt;/span&gt;
+
+&lt;!-- Large style --&gt;
+&lt;span class="progress large" style="width: 100%"&gt;
+
+	&lt;!-- Background-text, revealed when progress bar is too small --&gt;
+	&lt;span class="progress-text"&gt;35%&lt;/span&gt;
+
+	&lt;!-- Progress bar with foreground text --&gt;
+	&lt;span class="progress-bar anthracite-gradient glossy" style="width: 35%"&gt;
+		&lt;span class="progress-text"&gt;35%&lt;/span&gt;
+	&lt;/span&gt;
+&lt;/span&gt;
+</pre>
+
+	<h3 class="thin">API</h3>
+
+	<p>To create a progress using the API, use this method:</p>
+
+	<p class="button-height">
+		<span class="demo-progress"></span>
+	</p>
+
+	<pre class="prettyprint">
+// Explicit value parameter
+$(selector).progress(50, {
+	// Options
+});
+
+// Value as option
+$(selector).progress({
+	value: 50
+});
+</pre>
+
+	<p>You may also write the value inside the target element:</p>
+
+	<pre class="prettyprint">
+&lt;span id="#progress"&gt;50&lt;/span&gt;
+</pre>
+
+	<p>And just call the method without any value:</p>
+
+	<pre class="prettyprint">
+$(selector).progress();
+</pre>
+
+	<p class="left-icon icon-info-round">Use the many available options below to customize the look.</p>
+
+	<h3 class="thin">Methods</h3>
+
+	<dl class="definition">
+		<dt>$(selector).progress(val, options)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Create a progress bar in the target element<br>
+			Options may be set using the inline html5 data-progress-options attribute:<br>
+			&lt;div data-progress-options="{'max':200}"&gt;&lt;/div&gt;</p>
+			<h6>Parameters</h6>
+			<p>@param int val the progress value (can be ommitted and defined in options or available as text inside the target)<br>
+			@param object options</p>
+		</dd>
+
+		<dt>$(selector).setProgressValue(value, showValue)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Set progress current value</p>
+			<h6>Parameters</h6>
+			<p>@param number value the value, may contain an unit<br>
+			@param boolean|null showValue true to show text, false to hide, or leave empty to use original settings value (optional)</p>
+		</dd>
+
+		<dt>$(selector).showProgressStripes(options)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Show stripes on progress bar</p>
+			<h6>Parameters</h6>
+			<p>@param object options any option to override the inital settings (see progress() defaults for more details) (optional)</p>
+		</dd>
+
+		<dt>$(selector).hideProgressStripes()</dt>
+		<dd class="boxed margin-bottom">
+			<p>Hide stripes on progress bar</p>
+		</dd>
+
+		<dt>$(selector).changeProgressBarColor(color, glossy)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Change progress bar color (only works with gradients)</p>
+			<h6>Parameters</h6>
+			<p>@param string color the new gradient color class<br>
+			@param boolean glossy true of false, or leave empty to keep current style (optional)</p>
+		</dd>
+	</dl>
+
+	<h3 class="thin">Options reference</h3>
+
+	<p class="wrapped left-icon icon-info-round">
+		The defaults may be modified at runtime in <b>$.fn.progress.defaults</b>, and options may be passed inline using the <b>data-progress-options</b> attribute
+	</p>
+
+	<dl class="definition">
+		<dt>min</dt>
+		<dd class="boxed margin-bottom">
+			Minimum value<br>
+			<span class="icon-marker black">Type:</span> number<br>
+			<span class="icon-star black">Default:</span> 0
+		</dd>
+		<dt>max</dt>
+		<dd class="boxed margin-bottom">
+			Maximum value<br>
+			<span class="icon-marker black">Type:</span> number<br>
+			<span class="icon-star black">Default:</span> 100
+		</dd>
+		<dt>round</dt>
+		<dd class="boxed margin-bottom">
+			True to round value, a number to set the float length, or false to not round at all<br>
+			<span class="icon-marker black">Type:</span> boolean|int<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+		<dt>step</dt>
+		<dd class="boxed margin-bottom">
+			Size of each interval between min and max, or a list of points to snap the progress bar to<br>
+			<span class="icon-marker black">Type:</span> number|array<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+		<dt>value</dt>
+		<dd class="boxed margin-bottom">
+			Progress value (only used if not passed as parameter or given as text in the target element)<br>
+			<span class="icon-marker black">Type:</span> number<br>
+			<span class="icon-star black">Default:</span> 0
+		</dd>
+		<dt>orientation</dt>
+		<dd class="boxed margin-bottom">
+			Orientation of the progress ('horizontal' or 'vertical')<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> 'horizontal'
+		</dd>
+		<dt>style</dt>
+		<dd class="boxed margin-bottom">
+			Track size ('thin', 'large' or empty for normal)<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+		<dt>showValue</dt>
+		<dd class="boxed margin-bottom">
+			True to show value, false to hide<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+		<dt>barClasses</dt>
+		<dd class="boxed margin-bottom">
+			Class or list of class for the bar<br>
+			<span class="icon-marker black">Type:</span> string|array<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+		<dt>barMode</dt>
+		<dd class="boxed margin-bottom">
+			Mode of progress bar : 'min' to range from left to value, 'max' to range from value to right (reverted in RTL)<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> 'min'
+		</dd>
+		<dt>innerMarksOverBar</dt>
+		<dd class="boxed margin-bottom">
+			Set to true to show inner marks over the bar<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+		<dt>stripes</dt>
+		<dd class="boxed margin-bottom">
+			Enable animated stripes<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+		<dt>animatedStripes</dt>
+		<dd class="boxed margin-bottom">
+			True for animated stripes (only on compatible browsers)<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+		<dt>darkStripes</dt>
+		<dd class="boxed margin-bottom">
+			True for dark stripes, false for white stripes<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+		<dt>stripesSize</dt>
+		<dd class="boxed margin-bottom">
+			Stripes size: 'big', 'normal' or 'thin'<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> 'normal'
+		</dd>
+		<dt>animate</dt>
+		<dd class="boxed margin-bottom">
+			Animate bar moves<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+		<dt>animateSpeed</dt>
+		<dd class="boxed margin-bottom">
+			Speed for animations (any jquery valid value)<br>
+			<span class="icon-marker black">Type:</span> string|int<br>
+			<span class="icon-star black">Default:</span> 'fast'
+		</dd>	</dl>
+
+	<h3 class="thin">Track options reference</h3>
+
+	<p>These options are shared with the slider feature:</p>
+
+	<p class="wrapped left-icon icon-info-round">
+		The defaults may be modified at runtime in <b>$.fn.buildTrack.defaults</b>
+	</p>
+
+	<dl class="definition">
+		<dt>size</dt>
+		<dd class="boxed margin-bottom">
+			Width/height of the track (any css value, int will be used as pixels), or false for fluid size<br>
+			<span class="icon-marker black">Type:</span> int|string|boolean<br>
+			<span class="icon-star black">Default:</span> 250
+		</dd>
+
+		<dt>classes</dt>
+		<dd class="boxed margin-bottom">
+			Class or list of class for the bar<br>
+			<span class="icon-marker black">Type:</span> string|array<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>css</dt>
+		<dd class="boxed margin-bottom">
+			Any extra css styles, in a key/value map<br>
+			<span class="icon-marker black">Type:</span> object<br>
+			<span class="icon-star black">Default:</span> {}
+		</dd>
+
+		<dt>orientation</dt>
+		<dd class="boxed margin-bottom">
+			Orientation of the track ('horizontal' or 'vertical')<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> 'horizontal'
+		</dd>
+
+		<dt>innerMarks</dt>
+		<dd class="boxed margin-bottom">
+			Inner marks, may be:
+			<dl class="definition">
+				<dt>a number</dt>
+				<dd>marks will be created each multiple of this number, starting from 'min'</dd>
+				<dt>an array</dt>
+				<dd>a list of points where marks should be created.</dd>
+		 	</dl>
+			<span class="icon-marker black">Type:</span> string|array<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>topMarks</dt>
+		<dd class="boxed margin-bottom">
+			Top marks, may be:
+			<dl class="definition">
+				<dt>a number</dt>
+				<dd>marks will be created each multiple of this number, starting from 'min'</dd>
+				<dt>an array</dt>
+				<dd>a list of points where marks should be created. Each point can be either a number or an object with a value and two optional properties, 'label' and 'align': { value: x, label: 'label', align: 'center' }.<br>
+					If the point is a number or if 'label' is not set, an automatic label will be created if topLabel is set.<br>
+					If the point is a number or if 'align' is not set, the value of topLabelAlign will be used.</dd>
+		 	</dl>
+			<span class="icon-marker black">Type:</span> string|array<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>topLabel</dt>
+		<dd class="boxed margin-bottom">
+			Automatic label for top marks. Use true to display mark value, or a string with [value] as a placeholder for each mark value, for instance: '[value]%'<br>
+			<span class="icon-marker black">Type:</span> boolean|string<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>topLabelAlign</dt>
+		<dd class="boxed margin-bottom">
+			Alignement for top marks labels: 'left', 'center' or 'right'<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> 'center'
+		</dd>
+
+		<dt>rightMarks</dt>
+		<dd class="boxed margin-bottom">
+			Right marks, may be:
+			<dl class="definition">
+				<dt>a number</dt>
+				<dd>marks will be created each multiple of this number, starting from 'min'</dd>
+				<dt>an array</dt>
+				<dd>a list of points where marks should be created. Each point can be either a number or an object with a value and an optional properties, 'label': { value: x, label: 'label' }.<br>
+					If the point is a number or if 'label' is not set, an automatic label will be created if rightLabel is set.</dd>
+			</dl>
+			<span class="icon-marker black">Type:</span> string|array<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>rightLabel</dt>
+		<dd class="boxed margin-bottom">
+			Automatic label for right marks. Use true to display mark value, or a string with [value] as a placeholder
+		 * for each mark value, for instance: '[value]%'<br>
+			<span class="icon-marker black">Type:</span> boolean|string<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>rightLabelAlign</dt>
+		<dd class="boxed margin-bottom">
+			Alignement for right marks labels: 'top', 'center' or 'bottom'<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> 'center'
+		</dd>
+
+		<dt>bottomMarks</dt>
+		<dd class="boxed margin-bottom">
+			Bottom marks, may be:
+			<dl class="definition">
+				<dt>a number</dt>
+				<dd>marks will be created each multiple of this number, starting from 'min'</dd>
+				<dt>an array</dt>
+				<dd>a list of points where marks should be created. Each point can be either a number or an object with a value and two optional properties, 'label' and 'align': { value: x, label: 'label', align: 'center' }.<br>
+					If the point is a number or if 'label' is not set, an automatic label will be created if bottomLabel is set.<br>
+					If the point is a number or if 'align' is not set, the value of bottomLabelAlign will be used.</dd>
+		 	</dl>
+			<span class="icon-marker black">Type:</span> string|array<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>bottomLabel</dt>
+		<dd class="boxed margin-bottom">
+			Automatic label for top marks. Use true to display mark value, or a string with [value] as a placeholder for each mark value, for instance: '[value]%'<br>
+			<span class="icon-marker black">Type:</span> boolean|string<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>bottomLabelAlign</dt>
+		<dd class="boxed margin-bottom">
+			Alignement for bottom marks labels: 'left', 'center' or 'right'<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> 'center'
+		</dd>
+
+		<dt>leftMarks</dt>
+		<dd class="boxed margin-bottom">
+			Left marks, may be:
+			<dl class="definition">
+				<dt>a number</dt>
+				<dd>marks will be created each multiple of this number, starting from 'min'</dd>
+				<dt>an array</dt>
+				<dd>a list of points where marks should be created. Each point can be either a number or an object with a value and an optional properties, 'label': { value: x, label: 'label' }.<br>
+					If the point is a number or if 'label' is not set, an automatic label will be created if leftLabel is set.</dd>
+			</dl>
+			<span class="icon-marker black">Type:</span> string|array<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>leftLabel</dt>
+		<dd class="boxed margin-bottom">
+			Automatic label for left marks. Use true to display mark value, or a string with [value] as a placeholder for each mark value, for instance: '[value]%'<br>
+			<span class="icon-marker black">Type:</span> boolean|string<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>leftLabelAlign</dt>
+		<dd class="boxed margin-bottom">
+			Alignement for left marks labels: 'top', 'center' or 'bottom'<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> 'center'
+		</dd>
+
+		<dt>insetExtremes</dt>
+		<dd class="boxed margin-bottom">
+			Automaticaly set alignement (if not set) to inset the labels of marks matching min and max<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+
+		<dt>autoSpacing</dt>
+		<dd class="boxed margin-bottom">
+			Will add spacing margins to the track, matching space required by marks and labels - true to enable, false to disable.<br>
+			Setting a numeric value will enabled auto-spacing and add this as an extra margin on top of calculated one.<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+
+		<dt>autoSpacingTop</dt>
+		<dd class="boxed margin-bottom">
+			Auto top spacing: true to enable, false to disable, null to inherit from autoSpacing.<br>
+			Setting a numeric value will enable auto-spacing and add this as an extra margin on top of calculated one.<br>
+			<span class="icon-marker black">Type:</span> boolean|int<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>autoSpacingRight</dt>
+		<dd class="boxed margin-bottom">
+			Auto right spacing: true to enable, false to disable, null to inherit from autoSpacing.<br>
+			Setting a numeric value will enable auto-spacing and add this as an extra margin on top of calculated one.<br>
+			<span class="icon-marker black">Type:</span> boolean|int<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>autoSpacingBottom</dt>
+		<dd class="boxed margin-bottom">
+			Auto bottom spacing: true to enable, false to disable, null to inherit from autoSpacing.<br>
+			Setting a numeric value will enable auto-spacing and add this as an extra margin on top of calculated one.<br>
+			<span class="icon-marker black">Type:</span> boolean|int<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>autoSpacingLeft</dt>
+		<dd class="boxed margin-bottom">
+			Auto left spacing: true to enable, false to disable, null to inherit from autoSpacing.<br>
+			Setting a numeric value will enable auto-spacing and add this as an extra margin on top of calculated one.<br>
+			<span class="icon-marker black">Type:</span> boolean|int<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+
+		<dt>autoSpacingCenterVertical</dt>
+		<dd class="boxed margin-bottom">
+			When auto-spacing, equalize top and bottom margins to the highest - for instance to keep alignement on baseline<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+
+		<dt>autoSpacingCenterHorizontal</dt>
+		<dd class="boxed margin-bottom">
+			When auto-spacing, equalize left and right margins to the highest - for instance to center in a block<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+	</dl>
+
+</div>
+<script>
+
+	// Progress
+	$('.demo-progress').progress({
+		value: 50
+	});
+
+</script>

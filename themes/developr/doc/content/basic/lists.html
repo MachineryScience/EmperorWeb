@@ -1,0 +1,202 @@
+<hgroup id="main-title" class="thin">
+	<h1>Lists</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<h3 class="thin">Basic list</h3>
+
+	<div class="columns">
+		<div class="six-columns twelve-columns-tablet">
+			<h4 class="green">Default style</h4>
+			<ul class="list">
+				<li>Simple text</li>
+				<li><a href="#">With simple link</a></li>
+				<li><a href="#" class="list-link">With block link</a></li>
+			</ul>
+
+			<pre class="prettyprint">
+&lt;ul class="list"&gt;
+	&lt;li&gt;Simple text&lt;/li&gt;
+	&lt;li&gt;&lt;a href="#"&gt;With simple link&lt;/a&gt;&lt;/li&gt;
+	&lt;li&gt;&lt;a href="#" class="list-link"&gt;With block link&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+
+			<p>This style works fine with icons:</p>
+
+			<ul class="list">
+				<li class="icon-user">Simple text</li>
+				<li><a href="#" class="icon-user">With simple link</a></li>
+				<li><a href="#" class="list-link icon-user">With block link</a></li>
+			</ul>
+
+			<pre class="prettyprint">
+&lt;ul class="list"&gt;
+	&lt;li class="icon-user"&gt;Simple text&lt;/li&gt;
+	&lt;li&gt;&lt;a href="#" class="icon-user"&gt;With simple link&lt;/a&gt;&lt;/li&gt;
+	&lt;li&gt;&lt;a href="#" class="list-link icon-user"&gt;With block link&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+		</div>
+		<div class="six-columns twelve-columns-tablet">
+			<h4 class="green">Spaced style and sort handles</h4>
+			<ul class="list spaced">
+				<li>
+					<a href="#" class="list-link">Some text</a>
+					<span class="list-sort"></span>
+				</li>
+				<li>
+					<a href="#" class="list-link">Some text</a>
+					<span class="list-sort"></span>
+				</li>
+				<li>
+					<a href="#" class="list-link">Some text</a>
+					<span class="list-sort"></span>
+				</li>
+			</ul>
+
+			<pre class="prettyprint">
+&lt;ul class="list spaced"&gt;
+	&lt;li&gt;
+		&lt;a href="#" class="list-link"&gt;With block link&lt;/a&gt;
+		&lt;span class="list-sort"&gt;&lt;/span&gt;
+	&lt;/li&gt;
+	...
+&lt;/ul&gt;
+</pre>
+
+			<p>To enable sorting, you may use <a href="http://jqueryui.com">jQueri UI</a> - make sure to include the <b>sortable</b> interaction - like this:</p>
+
+			<pre class="prettyprint">
+$('.list').has('.list-sort').sortable({
+	handle: '.list-sort',
+	placeholder: 'ui-state-highlight'
+});
+</pre>
+		</div>
+	</div>
+
+	<h3 class="thin">Block lists</h3>
+
+	<div class="columns">
+		<div class="six-columns twelve-columns-mobile">
+
+			<h4 class="green">Default style</h4>
+			<ul class="blocks-list">
+				<li>This</li>
+				<li>Is</li>
+				<li>The Default</li>
+				<li>Block</li>
+				<li>List Style</li>
+			</ul>
+			<pre class="prettyprint">
+&lt;ul class="blocks-list"&gt;
+	&lt;li&gt;This&lt;/li&gt;
+	&lt;li&gt;Is&lt;/li&gt;
+	&lt;li&gt;The Default&lt;/li&gt;
+	&lt;li&gt;Block&lt;/li&gt;
+	&lt;li&gt;List Style&lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+
+			<h4 class="green">Fixed width</h4>
+
+			<h5>class="blocks-list fixed-size-50"</h5>
+			<ul class="blocks-list fixed-size-50">
+				<li>Block</li>
+				<li>Block</li>
+				<li>Block</li>
+				<li>Block</li>
+			</ul>
+
+			<h5>class="blocks-list fixed-size-100"</h5>
+			<ul class="blocks-list fixed-size-100">
+				<li>Block</li>
+				<li>Block</li>
+				<li>Block</li>
+				<li>Block</li>
+			</ul>
+
+			<h5>class="blocks-list fixed-size-150"</h5>
+			<ul class="blocks-list fixed-size-150">
+				<li>Block</li>
+				<li>Block</li>
+				<li>Block</li>
+				<li>Block</li>
+			</ul>
+
+			<h5>class="blocks-list fixed-size-200"</h5>
+			<ul class="blocks-list fixed-size-200">
+				<li>Block</li>
+				<li>Block</li>
+				<li>Block</li>
+				<li>Block</li>
+			</ul>
+
+			<h5>class="blocks-list fixed-size-250"</h5>
+			<ul class="blocks-list fixed-size-250">
+				<li>Block</li>
+				<li>Block</li>
+				<li>Block</li>
+				<li>Block</li>
+			</ul>
+
+		</div>
+
+		<div class="six-columns twelve-columns-tablet">
+
+			<h4 class="green">Square blocks</h4>
+
+			<h5>class="blocks-list square-26"</h5>
+			<ul class="blocks-list square-26">
+				<li><span class="icon-user"></span></li>
+				<li><span class="icon-user"></span></li>
+				<li><span class="icon-user"></span></li>
+				<li><span class="icon-user"></span></li>
+			</ul>
+
+			<h5>class="blocks-list square-46"</h5>
+			<ul class="blocks-list square-46">
+				<li><span class="icon-user icon-size2"></span></li>
+				<li><span class="icon-user icon-size2"></span></li>
+				<li><span class="icon-user icon-size2"></span></li>
+				<li><span class="icon-user icon-size2"></span></li>
+			</ul>
+
+			<h5>class="blocks-list square-66"</h5>
+			<ul class="blocks-list square-66">
+				<li><span class="icon-user icon-size3"></span></li>
+				<li><span class="icon-user icon-size3"></span></li>
+				<li><span class="icon-user icon-size3"></span></li>
+				<li><span class="icon-user icon-size3"></span></li>
+			</ul>
+
+			<h5>class="blocks-list square-90"</h5>
+			<ul class="blocks-list square-90">
+				<li><span class="icon-user icon-size4"></span></li>
+				<li><span class="icon-user icon-size4"></span></li>
+				<li><span class="icon-user icon-size4"></span></li>
+				<li><span class="icon-user icon-size4"></span></li>
+			</ul>
+
+			<h5>class="blocks-list square-134"</h5>
+			<ul class="blocks-list square-134">
+				<li><span class="icon-user icon-size5"></span></li>
+				<li><span class="icon-user icon-size5"></span></li>
+				<li><span class="icon-user icon-size5"></span></li>
+				<li><span class="icon-user icon-size5"></span></li>
+			</ul>
+
+		</div>
+	</div>
+</div>
+<script>
+
+	// Sortable list
+	$('.list').has('.list-sort').sortable({
+		handle: '.list-sort',
+		placeholder: 'ui-state-highlight'
+	});
+
+</script>

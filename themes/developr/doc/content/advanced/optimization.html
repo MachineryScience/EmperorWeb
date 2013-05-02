@@ -1,0 +1,91 @@
+<hgroup id="main-title" class="thin">
+	<h1>Optimization</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<p>This page is not a detailled guide on webapp optimization, it will just give you some quick advice to make the template (and your app) faster for your users.</p>
+
+	<h3 class="thin">Keep only what is needed</h3>
+
+	<p>This may seem obvious, but this is important: the template includes many features, and your app may not need some of them, either on some pages or anywhere. Thoses features where put in separate files on purpose, just remove those files from your markup, this will reduce the amount of data your app will load and speed up the overall.</p>
+
+	<h3 class="thin">Concatenate and minimize</h3>
+
+	<p>Once you have removed what is not necessary, the next step in optimization is to concatenate separate files into a big one: this will reduce the number of files the browser has to load, and improve loading performance.</p>
+
+	<p>There are several tools to do this, some online and some available as command-line utilities or stand-alone softwares. Here is a selection from <a href="http://robertnyman.com/2010/01/19/tools-for-concatenating-and-minifying-css-and-javascript-files-in-different-development-environments/">this article</a>:</p>
+
+	<h4>PHP</h4>
+	<dl class="definition">
+		<dt><a href="http://code.google.com/p/minify/">Minify</a></dt>
+		<dd>Minify combines multiple CSS or JavaScript files, removes unnecessary whitespace and comments, and serves them with gzip encoding and optimal client-side cache headers.</dd>
+		<dt><a href="http://rakaz.nl/code/combine">Combine</a></dt>
+		<dd>PHP script combined with URL rewriting to concatenate and compress CSS and JavaScript files.</dd>
+		<dt><a href="http://farhadi.ir/works/smartoptimizer">SmartOptimizer</a></dt>
+		<dd>A PHP library that enhances your website performance by optimizing the front end using techniques such as minifying, compression, caching, concatenation and embedding. All the work is done on the fly on demand.</dd>
+		<dt><a href="http://csstidy.sourceforge.net/">CSSTidy</a></dt>
+		<dd>Compression of CSS files. <em>Note: no support for JavaScript files.</em></dd>
+		<dt><a href="http://crisp.tweakblogs.net/blog/1665/a-new-javascript-minifier-jsmin+.html">JSMin+</a></dt>
+		<dd>PHP-based and it parses the JavaScript. <em>Note: no support for CSS files.</em></dd>
+		<dt><a href="http://github.com/anthonyshort/csscaffold">CSScaffold</a></dt>
+		<dd>Compresses, caches and gzips CSS on-the-fly. <em>Note: no support for JavaScript files.</em></dd>
+		<dt><a href="http://github.com/Schepp/CSS-JS-Booster">CSS-JS-Booster</a></dt>
+		<dd>Concats, minifies and gzips CSS and JavaScript files.</dd>
+		<dt><a href="http://the-echoplex.net/csscrush/">CSS Crush</a></dt>
+		<dd>Concats and minifies CSS files.</dd>
+	</dl>
+
+	<h4>Django</h4>
+	<dl class="definition">
+		<dt><a href="http://github.com/bradleywright/django-static-management">Django Static Management</a></dt>
+		<dd>Intended as an easy way to manage multiple static text assets (CSS and Javascript) in a Django projects.</dd>
+		<dt><a href="http://github.com/mintchaos/django_compressor">Django compressor</a></dt>
+		<dd>Compresses linked and inline javascript or CSS into a single cached file.</dd>
+		<dt><a href="http://github.com/pelme/django-compress">django-compress</a></dt>
+		<dd>django-compress provides an automated system for compressing CSS and JavaScript files. <em>Note: Doesn’t support concatenation of files.</em>.</dd>
+		<dt><a href="http://pedro.valelima.com/blog/2008/jan/17/deploying-compacted-javascript-django/">Deploying compacted javascript with django</a></dt>
+		<dd>Management command to compatct JavaScript. <em>Note: No support for CSS files.</em>.</dd>
+		<dt><a href="http://www.djangosnippets.org/snippets/405/">Templatetag for JavaScript merging and compression</a></dt>
+		<dd>A templatetag that merges several JavaScript files (compressing its code) into only one JavaScript file. <em>Note: No support for CSS files.</em>.</dd>
+	</dl>
+
+	<h4>Ruby</h4>
+	<dl class="definition">
+		<dt><a href="http://getsprockets.com/">Sprockets</a></dt>
+		<dd>Sprockets is a Ruby library that preprocesses and concatenates JavaScript source files.</dd>
+		<dt><a href="http://github.com/cjohansen/juicer">Juicer</a></dt>
+		<dd>Compresses CSS and JavaScript code, JSLints it and also supports Data URI-embedding of images in CSS files.</dd>
+		<dt><a href="http://documentcloud.github.com/jammit/">Jammit</a></dt>
+		<dd>Jammit is providing both CSS and JavaScript concatenation and compression, as well as YUI Compressor and Closure Compiler compatibility, ahead-of-time gzipping, built-in JavaScript template support, and optional Data-URI / MHTML image embedding.</dd>
+		<dt><a href="http://synthesis.sbecker.net/pages/asset_packager">AssetPackager</a></dt>
+		<dd>Merges and compresses JavaScript and CSS when running in production.</dd>
+	</dl>
+
+	<h4>Java</h4>
+		<dl class="definition">
+		<dt><a href="http://developer.yahoo.com/yui/compressor/">YUI Compressor</a></dt>
+		<dd>The leading tool in the for compressing CSS and JavaScript files, and could easily be ported/encapsulated into other environments. <em>Note: Doesn’t support concatenation of files.</em>. Could be used in conjunction with an Ant task, as described in <a href="http://www.julienlecomte.net/blog/2007/09/16/">Building Web Applications With Apache Ant</a></dd>
+		<dt><a href="http://code.google.com/closure/compiler/">Google Closure Compiler</a></dt>
+		<dd>Google Compiler for JavaScript that supports various compressing options for JavaScript. <em>Note: no support for CSS files.</em></dd>
+		<dt><a href="https://jawr.dev.java.net/">Jawr</a></dt>
+		<dd>Supports concatenation and minification of CSS and JavaScript files.</dd>
+		<dt><a href="http://code.google.com/p/granule/">Granule</a></dt>
+		<dd>Combines and compresses CSS and JavaScript files.</dd>
+	</dl>
+
+	<h4>.Net</h4>
+	<dl class="definition">
+		<dt><a href="http://yuicompressor.codeplex.com/">YUI Compressor for .Net</a></dt>
+		<dd>A .NET port of the Yahoo! UI Library’s YUI Compressor Java project.</dd>
+		<dt><a href="http://svn.offwhite.net/trac/SmallSharpTools.Packer/">Packer for .NET</a></dt>
+		<dd>A tool to pack/minify CSS and JavaScript files.</dd>
+		<dt><a href="http://aspnet.codeplex.com/Release/ProjectReleases.aspx?ReleaseId=34488">Microsoft Ajax Minifier</a></dt>
+		<dd>A tool to concatenate and minify JavaScript files. <em>Note: no support for CSS files.</em></dd>
+		<dt><a href="http://www.codeproject.com/KB/aspnet/CombineAndMinify.aspx">CombineAndMinify</a></dt>
+		<dd>A tool to concatenate and minify CSS and JavaScript files.</dd>
+		<dt><a href="http://www.gstylemanager.com/">StyleManager</a></dt>
+		<dd>A tool to concatenate and compress CSS files.</dd>
+	</dl>
+
+</div>

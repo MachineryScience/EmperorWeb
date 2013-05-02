@@ -1,0 +1,47 @@
+<hgroup id="main-title" class="thin">
+	<h1>Validation</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin files <b>js/libs/formValidator/jquery.validationEngine.js</b>, <b>js/libs/formValidator/developr.validationEngine.css</b> and the language pack corresponding to your locale, for instance <b>js/libs/formValidator/languages/jquery.validationEngine-en.js</b>
+	</div>
+
+	<h3 class="thin">Field Validations</h3>
+
+	<p>Validations are defined using the input's class attribute. Here are a few examples:</p>
+
+	<pre class="prettyprint">
+&lt;!-- This field is required and should be a valid email --&gt;
+&lt;input value="someone@nowhere.com" class="validate[required,custom[email]]" type="text" name="email" id="email"&gt;
+
+&lt;!-- This field is required and should be a valid date --&gt;
+&lt;input value="2010-12-01" class="validate[required,custom[date]]" type="text" name="date" id="date"&gt;
+
+&lt;!-- This field is required and should be contain only letters and numbers --&gt;
+&lt;input value="too many spaces obviously" class="validate[required,custom[onlyLetterNumber]]" type="text" name="special" id="special"&gt;
+</pre>
+
+	<p>For more details about validators, please refer to the <a href="http://posabsolute.github.com/jQuery-Validation-Engine/#validators">related plugin documentation</a>.</p>
+
+	<h3 class="thin">Instantiation</h3>
+
+	<p>Once your validation rules are set using classes, you must instanciate the validation process:</p>
+
+	<pre class="prettyprint">
+&lt;script&gt;
+$(document).ready(function(){
+    $("#formID").validationEngine();
+   });
+&lt;/script&gt;
+</pre>
+
+	<p>Now you form will be validated on submit, and if errors are found, the default action will be prevented and error notices will show.</p>
+
+	<h3 class="thin">Full documentation</h3>
+
+	<p>For more details on how to use this plugin, please refer to the <a href="http://posabsolute.github.com/jQuery-Validation-Engine/">plugin's documentation</a>, which will guide you into setting it up, customizing it and also using it with AJAX forms too.</p>
+
+</div>

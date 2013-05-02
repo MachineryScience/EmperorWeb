@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+
+<!--[if IEMobile 7]><html class="no-js iem7 oldie"><![endif]-->
+<!--[if (IE 7)&!(IEMobile)]><html class="no-js ie7 oldie" lang="en"><![endif]-->
+<!--[if (IE 8)&!(IEMobile)]><html class="no-js ie8 oldie" lang="en"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>Emperor</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- http://davidbcalhoun.com/2010/viewport-metatag -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- For all browsers -->
+    <link rel="stylesheet" href="themes/developr/css/reset.css?v=1">
+    <link rel="stylesheet" href="themes/developr/css/style.css?v=1">
+    <link rel="stylesheet" href="themes/developr/css/colors.css?v=1">
+    <link rel="stylesheet" media="print" href="themes/developr/css/print.css?v=1">
+    <!-- For progressively larger displays -->
+    <link rel="stylesheet" media="only all and (min-width: 480px)" href="themes/developr/css/480.css?v=1">
+    <link rel="stylesheet" media="only all and (min-width: 768px)" href="themes/developr/css/768.css?v=1">
+    <link rel="stylesheet" media="only all and (min-width: 992px)" href="themes/developr/css/992.css?v=1">
+    <link rel="stylesheet" media="only all and (min-width: 1200px)" href="themes/developr/css/1200.css?v=1">
+    <!-- For Retina displays -->
+    <link rel="stylesheet" media="only all and (-webkit-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min-device-pixel-ratio: 1.5)" href="themes/developr/css/2x.css?v=1">
+
+    <!-- Webfonts -->
+    <link href='themes/developr/css/font/thinfont.css' rel='stylesheet' type='text/css'>
+
+    <!-- Additional styles -->
+    <link rel="stylesheet" href="themes/developr/css/styles/agenda.css?v=1">
+    <link rel="stylesheet" href="themes/developr/css/styles/dashboard.css?v=1">
+    <link rel="stylesheet" href="themes/developr/css/styles/files.css?v=1">
+    <link rel="stylesheet" href="themes/developr/css/styles/form.css?v=1">
+    <link rel="stylesheet" href="themes/developr/css/styles/modal.css?v=1">
+    <link rel="stylesheet" href="themes/developr/css/styles/progress-slider.css?v=1">
+    <link rel="stylesheet" href="themes/developr/css/styles/switches.css?v=1">
+    <link rel="stylesheet" href="themes/developr/css/styles/table.css?v=1">
+
+    <link rel="stylesheet" href="themes/developr/css/custom.css">
+
+    <link rel="stylesheet" href="libs/jqueryui/css/ui-lightness/jquery-ui-1.10.2.custom.css">
+
+    <!-- JavaScript at bottom except for Modernizr -->
+    <script src="themes/developr/js/libs/modernizr.custom.js"></script>
+
+    <!-- For Modern Browsers -->
+    <link rel="shortcut icon" href="themes/developr/img/favicons/favicon.png">
+    <!-- For everything else -->
+    <link rel="shortcut icon" href="themes/developr/img/favicons/favicon.ico">
+    <!-- For retina screens -->
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="themes/developr/img/favicons/apple-touch-icon-retina.png">
+    <!-- For iPad 1-->
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="themes/developr/img/favicons/apple-touch-icon-ipad.png">
+    <!-- For iPhone 3G, iPod Touch and Android -->
+    <link rel="apple-touch-icon-precomposed" href="themes/developr/img/favicons/apple-touch-icon.png">
+
+    <!-- iOS web-app metas -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!-- Startup image for web apps -->
+    <link rel="apple-touch-startup-image" href="themes/developr/img/splash/ipad-landscape.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">
+    <link rel="apple-touch-startup-image" href="themes/developr/img/splash/ipad-portrait.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
+    <link rel="apple-touch-startup-image" href="themes/developr/img/splash/iphone.png" media="screen and (max-device-width: 320px)">
+
+    <!-- Microsoft clear type rendering -->
+    <meta http-equiv="cleartype" content="on">
+
+    <!-- IE9 Pinned Sites: http://msdn.microsoft.com/en-us/library/gg131029.aspx -->
+    <meta name="application-name" content="Emperor">
+    <meta name="msapplication-tooltip" content="LinuxCNC Machine Controller.">
+    <!--<meta name="msapplication-starturl" content="http://www.display-inline.fr/demo/developr">-->
+    <!-- These custom tasks are examples, you need to edit them to show actual pages -->
+    <!--<meta name="msapplication-task" content="name=Agenda;action-uri=http://www.display-inline.fr/demo/developr/agenda.html;icon-uri=http://www.display-inline.fr/demo/developr/themes/developr/img/favicons/favicon.ico">-->
+    <!--<meta name="msapplication-task" content="name=My profile;action-uri=http://www.display-inline.fr/demo/developr/profile.html;icon-uri=http://www.display-inline.fr/demo/developr/themes/developr/img/favicons/favicon.ico">-->
+</head>
+
+<body class="clearfix with-menu with-shortcuts not-reversed">
+
+<!-- Prompt IE 6 users to install Chrome Frame -->
+<!--[if lt IE 7]><p class="message red-gradient simpler">Your browser is out of date.  <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+<!-- Title bar -->
+<header role="banner" id="title-bar">
+    <h2>Emperor</h2>
+</header>
+
+<!-- Button to open/hide menu -->
+<a href="#" id="open-menu"><span>Menu</span></a>
+
+<!-- Button to open/hide shortcuts -->
+<a href="#" id="open-shortcuts"><span class="icon-thumbs"></span></a>
+
+<!-- Main content -->
+<section role="main" id="main">
+
+    <!-- Visible only to browsers without javascript -->
+    <noscript class="message black-gradient simpler">Your browser does not support JavaScript! Some features won't work as expected...</noscript>
+
+    <div id="main-content"></div>
+
+</section>
+<!-- End main content -->
+
+<!-- Side tabs shortcuts -->
+<ul id="shortcuts" role="complementary" class="children-tooltip tooltip-right">
+    <!-- Active shortcut -->
+    <li class="current"><a href="./" class="shortcut-dashboard" title="Dashboard">Dashboard</a></li>
+    <!-- Background shortcut -->
+    <li><a href="#" class="shortcut-messages" title="Messages">Messages</a></li>
+    <!-- Disabled shortcut -->
+    <li><span class="shortcut-notes" title="Notes">Notes</span></li>
+</ul>
+
+<!-- Sidebar/drop-down menu -->
+<section id="menu" role="complementary">
+
+    <!-- This wrapper is used by several responsive layouts -->
+    <div id="menu-content">
+
+        <header>
+            Utilities
+        </header>
+
+        <div id="profile">
+            <img src="themes/developr/img/user.png" width="64" height="64" alt="User name" class="user-icon">
+            <span class="name">Status</span>
+            Connected
+        </div>
+
+        <!-- By default, this section is made for 4 icons, see the doc to learn how to change this, in "basic markup explained" -->
+        <ul id="access" class="children-tooltip">
+            <!-- Icon with count -->
+            <li><a href="#" title="Messages">
+                <span class="icon-inbox"></span>
+                <span class="count">2</span>
+            </a></li>
+            <!-- Simple icon -->
+            <li><a href="#" title="Calendar">
+                <span class="icon-calendar"></span></a>
+            </li>
+            <!-- Disabled icon -->
+            <li class="disabled">
+                <span class="icon-gear"></span>
+            </li>
+        </ul>
+
+        <!-- Navigation menu goes here -->
+        <div id="side-menu-content">
+            <div id="side-menu"></div>
+        </div>
+
+    </div>
+    <!-- End content wrapper -->
+
+    <!-- This is optional -->
+    <footer id="menu-footer">
+        <!-- Any content -->
+    </footer>
+
+</section>
+<!-- End sidebar/drop-down menu -->
+
+<!-- JavaScript at the bottom for fast page loading -->
+
+<!-- Scripts -->
+<script src="themes/developr/js/libs/jquery-1.8.2.min.js"></script>
+<script src="themes/developr/js/setup.js"></script>
+
+<!-- Boilerplate -->
+<script src="./libs/underscore/underscore-1.3.3.js" type="text/javascript" charset="utf-8"></script>
+<!-- following libraries are used by the UrlController for client routing and browser history -->
+<script src="./libs/signals/signals.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="./libs/crossroads/crossroads.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="./libs/hasher/hasher.min.js" type="text/javascript" charset="utf-8"></script>
+<!--following library is used by the Mediator class for pub-sub event handling -->
+<script src="./libs/pubsub/pubsub-20120708.js" type="text/javascript" charset="utf-8"></script>
+<!-- sample UI component implementations use knockout for MVVM bindings, but not necessary for BPJS core -->
+<script src="./libs/json/json2.js" type="text/javascript" charset="utf-8"></script>
+<script src="./libs/knockout/knockout-2.2.1.js" type="text/javascript" charset="utf-8"></script>
+
+
+<!-- BPJS initializer scripts-->
+
+<!-- following is the main entry script to the application code. we use requirejs to load main.js -->
+<script type="text/javascript" data-main="main.js" src="./libs/require/require.js"></script>
+
+<!-- Libs go here -->
+            <script src="themes/developr/js/developr.accordions.js"></script>
+            <script src="themes/developr/js/developr.auto-resizing.js"></script>
+            <script src="themes/developr/js/developr.input.js"></script>
+            <script src="themes/developr/js/developr.message.js"></script>
+            <script src="themes/developr/js/developr.modal.js"></script>
+            <script src="themes/developr/js/developr.navigable.js"></script>
+            <script src="themes/developr/js/developr.collapsible.js"></script>
+            <script src="themes/developr/js/developr.notify.js"></script>
+            <script src="themes/developr/js/developr.scroll.js"></script>
+            <script src="themes/developr/js/developr.progress-slider.js"></script>
+            <script src="themes/developr/js/developr.tooltip.js"></script>
+            <script src="themes/developr/js/developr.confirm.js"></script>
+            <script src="themes/developr/js/developr.content-panel.js"></script>
+            <script src="themes/developr/js/developr.agenda.js"></script>
+            <script src="themes/developr/js/developr.table.js"></script>
+            <script src="themes/developr/js/developr.wizard.js"></script>
+            <script src="themes/developr/js/developr.tabs.js"></script>
+            <script src="themes/developr/js/developr.calendar.js"></script>
+            <script src="themes/developr/js/libs/tinycon.min.js"></script>
+
+    <!--Three.js WebGL renderer-->
+    <script src="libs/three/three.js"></script>
+    <script src="libs/three/controls/OrbitControls.js"></script>
+
+    <!--JQuery UI subset-->
+    <script src="libs/jqueryui/js/jquery-ui-1.10.2.custom.js"></script>
+
+</body>
+</html>

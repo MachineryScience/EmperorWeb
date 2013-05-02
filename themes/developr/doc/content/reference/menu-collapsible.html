@@ -1,0 +1,185 @@
+<hgroup id="main-title" class="thin">
+	<h1>Collapsible menus</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<p>The template provides a plugin to display collapsible multi-level menus. It can also load content via AJAX, automatically</p>
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin file <b>js/developr.collapsible.js</b>
+	</div>
+
+	<h3 class="thin">How to use it</h3>
+
+	<p>To enable this feature, simply create a menu with the <b>big-menu</b> style and add the class <b>collapsible</b>:</p>
+
+	<pre class="prettyprint">
+&lt;ul class="big-menu collapsible"&gt;
+	... menu ...
+&lt;/ul&gt;
+</pre>
+
+	<p>Sub-levels should be embedded within their parent element:</p>
+
+	<pre class="prettyprint">
+&lt;ul class="big-menu collapsible"&gt;
+	&lt;li class="with-right-arrow"&gt;
+		&lt;span&gt;&lt;span class="list-count"&gt;3&lt;/span&gt;Root element&lt;/span&gt;
+		&lt;ul class="big-menu"&gt;
+			&lt;li&gt;&lt;a href="#"&gt;Children element&lt;/a&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;a href="#"&gt;Children element&lt;/a&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;a href="#"&gt;Children element&lt;/a&gt;&lt;/li&gt;
+			&lt;li class="with-right-arrow"&gt;
+				&lt;span&gt;Children with subs&lt;/span&gt;
+				&lt;ul class="big-menu"&gt;
+					&lt;li&gt;&lt;a href="#"&gt;Children element&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href="#"&gt;Children element&lt;/a&gt;&lt;/li&gt;
+					&lt;li&gt;&lt;a href="#"&gt;Children element&lt;/a&gt;&lt;/li&gt;
+				&lt;/ul&gt;
+			&lt;/li&gt;
+		&lt;/ul&gt;
+	&lt;/li&gt;
+	...
+&lt;/ul&gt;
+</pre>
+
+	<p class="wrapped left-icon icon-info-round">If you want to use up and down arrows, just add the classes <b>with-left-arrow</b> or <b>with-right-arrow</b>, the plugin will take care of adding the up and down classes.</p>
+
+	<p>Here is an example result:</p>
+
+	<ul class="big-menu collapsible">
+		<li class="with-right-arrow">
+			<span><span class="list-count">3</span>Group</span>
+			<ul class="big-menu grey-gradient">
+				<li><a href="#">Link</a></li>
+				<li><a href="#">Link</a></li>
+				<li class="with-right-arrow">
+					<span>Group</span>
+					<ul class="big-menu anthracite-gradient">
+						<li><a href="#">Link</a></li>
+						<li><a href="#">Link</a></li>
+						<li><a href="#">Link</a></li>
+					</ul>
+				</li>
+			</ul>
+		</li>
+		<li class="with-right-arrow">
+			<span>
+				<span class="list-count">5</span>
+				Messages
+			</span>
+			<ul class="message-menu">
+				<li>
+					<span class="message-status">
+						<span class="unstarred">Not starred</span>
+					</span>
+					<span class="message-info">
+						<span class="blue">08:17</span>
+					</span>
+					<strong class="blue">May Starck</strong><br>
+					Read message
+				</li>
+				<li>
+					<span class="message-status">
+						<span class="unstarred">Not starred</span>
+					</span>
+					<span class="message-info">
+						<span class="blue">Yesterday</span>
+					</span>
+					<strong class="blue">May Starck</strong><br>
+					Read message
+				</li>
+				<li>
+					<span class="message-status">
+						<span class="starred">Starred</span>
+					</span>
+					<span class="message-info">
+						<span class="blue">2 days ago</span>
+					</span>
+					<strong class="blue">May Starck</strong><br>
+					Read message
+				</li>
+				<li>
+					<span class="message-status">
+						<span class="unstarred">Not starred</span>
+					</span>
+					<span class="message-info">
+						<span class="blue">2 days ago</span>
+					</span>
+					<strong class="blue">May Starck</strong><br>
+					Read message
+				</li>
+				<li>
+					<span class="message-status">
+						<span class="unstarred">Not starred</span>
+					</span>
+					<span class="message-info">
+						<span class="blue">3 days ago</span>
+					</span>
+					<strong class="blue">May Starck</strong><br>
+					Read message
+				</li>
+			</ul>
+		</li>
+		<li><a href="javascript:$.modal.alert('This is a standard link');">Link</a></li>
+	</ul>
+
+	<h5 class="green">Open a menu element at startup</h5>
+
+	<p>If you want to menu to be open at startup to show a specific element (for instance, the current page), add the class <b>collapsible-current</b> to this element:</p>
+
+	<pre class="prettyprint">
+&lt;ul class="big-menu collapsible"&gt;
+	...
+	&lt;li&gt;&lt;a href="#" class="collapsible-current"&gt;Current element&lt;/a&gt;&lt;/li&gt;
+	...
+&lt;/ul&gt;
+</pre>
+
+	<h5 class="green">Limit the number of open elements</h5>
+
+	<p>By default, all sub-menus of a given menu may be open at the same time, which results in a very long menu. To only allow one open element by level (like in an accordion), add the class <b>as-accordion</b> to the root element:</p>
+
+	<pre class="prettyprint">
+&lt;ul class="big-menu collapsible as-accordion"&gt;
+</pre>
+
+	<h3 class="thin">AJAX content loading</h3>
+
+	<p>To speed up loading, you may want to include only root elements, and load their content via AJAX. This is really simple with this plugin, just set the menu as a link with the content URL as href and add the class <b>collapsible-ajax</b> - for instance:</p>
+
+	<pre class="prettyprint">
+&lt;ul class="big-menu collapsible"&gt;
+	&lt;li class="with-right-arrow"&gt;
+		&lt;a href="path-to-content" class="collapsible-ajax"&gt;With ajax sub-menu&lt;/a&gt;
+	&lt;/li&gt;
+	...
+&lt;/ul&gt;
+</pre>
+
+	<p>Note that instead of a link, you may use a span with a special data attribute:</p>
+
+	<pre class="prettyprint">
+&lt;ul class="big-menu collapsible"&gt;
+	&lt;li class="with-right-arrow"&gt;
+		&lt;span data-collapsible-url="path-to-content" class="collapsible-ajax"&gt;With ajax sub-menu&lt;/span&gt;
+	&lt;/li&gt;
+	...
+&lt;/ul&gt;
+</pre>
+
+	<p>Here is a demo:</p>
+
+	<ul class="big-menu collapsible margin-bottom">
+		<li class="with-right-arrow">
+			<a href="content/reference/menu-collapsible-ajax.html" class="collapsible-ajax">Load sub-menu</a>
+		</li>
+	</ul>
+
+	<p>The plugin will display a loading animation, and when the content is loaded, append it to the clicked element as a sub-menu. Note that the loaded content should be an already formatted output, the plugin won't perform any transformation on it.</p>
+
+	<p>If loading fails, a message is displayed using the notification plugin (if available).</p>
+
+</div>

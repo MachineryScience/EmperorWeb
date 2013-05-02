@@ -1,0 +1,189 @@
+<hgroup id="main-title" class="thin">
+	<h1>Custom scroll</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin file <b>js/developr.scroll.js</b>
+	</div>
+
+	<p>The template includes a custom scroll plugin, which provides touch-devices-like scrollbars and is compatible with touch devices and mousewheels. It does not create wrapper divs like other similar plugins, thus it may be used for instance on an ul.</p>
+
+	<h3 class="thin">How to use it</h3>
+
+	<p>The easiest way is simply to add the class <b>scrollable</b> to any element:</p>
+
+	<pre class="prettyprint">
+&lt;div class="scrollable"&gt;
+
+	&lt;!-- Your content here --&gt;
+
+&lt;/div&gt;
+</pre>
+
+	<p>If you need to control it via javascript, just call:</p>
+
+	<pre class="prettyprint">
+$(selector).customScroll({ /* options */ });
+</pre>
+
+	<h3 class="thin">Scroll to reveal</h3>
+
+	<p>When using custom scroll, there is a useful method for bringing an element into the visible area:</p>
+
+	<pre class="prettyprint">
+$(selector).scrollToReveal();
+</pre>
+
+	<p>The whole scrolled area will move to show the selected element. Note that this works fine also in nested scrolled elements.</p>
+
+	<h3 class="thin">Methods</h3>
+
+	<dl class="definition">
+
+		<dt>$(selector).customScroll(options)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Enable custom scroll bar</p>
+		</dd>
+
+		<dt>$(selector).removeCustomScroll()</dt>
+		<dd class="boxed margin-bottom">
+			<p>Remove custom scroll</p>
+		</dd>
+
+		<dt>$(selector).hasCustomScroll()</dt>
+		<dd class="boxed margin-bottom">
+			<p>Tell whether the element has custom scrolling</p>
+			<h6>Return</h6>
+			<p>@return boolean true if scrolling, else false</p>
+		</dd>
+
+		<dt>$(selector).refreshCustomScroll()</dt>
+		<dd class="boxed margin-bottom">
+			<p>Refreshes custom scroll bar position</p>
+		</dd>
+
+		<dt>$(selector).moveCustomScroll(deltaX, deltaY, doNotAnimate)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Refreshes custom scroll bar position</p>
+			<h6>Parameters</h6>
+			<p>@param int deltaX the move on the X axis<br>
+			@param int deltaY the move on the Y axis<br>
+			@param boolean doNotAnimate true to skip animation</p>
+		</dd>
+
+		<dt>$(selector).scrollToReveal()</dt>
+		<dd class="boxed margin-bottom">
+			<p>Scroll all custom-scroll parent if required to reveal the element</p>
+		</dd>
+	</dl>
+
+	<h3 class="thin">Options reference</h3>
+
+	<div class="wrapped margin-bottom left-icon icon-info-round">
+		The defaults may be modified at runtime in <b>$.fn.customScroll.defaults</b>, and options may be passed inline using the <b>data-scroll-options</b> attribute
+	</div>
+
+	<dl class="definition">
+		<dt>horizontal</dt>
+		<dd class="boxed margin-bottom">
+			Horizontal scrolling<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+
+		<dt>vertical</dt>
+		<dd class="boxed margin-bottom">
+			Vertical scrolling<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>usePadding</dt>
+		<dd class="boxed margin-bottom">
+			Whether to use or ignore element's padding in the scrollbar position<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+
+		<dt>padding</dt>
+		<dd class="boxed margin-bottom">
+			Padding around scrollbar (can be a single value if regular, or an object with 'top', 'right', 'bottom' and 'left' - unset values will be set to 0)<br>
+			<span class="icon-marker black">Type:</span> int|object<br>
+			<span class="icon-star black">Default:</span> 6
+		</dd>
+
+		<dt>width</dt>
+		<dd class="boxed margin-bottom">
+			Scrollbar's width in pixels<br>
+			<span class="icon-marker black">Type:</span> int<br>
+			<span class="icon-star black">Default:</span> 8
+		</dd>
+
+		<dt>cornerWidth</dt>
+		<dd class="boxed margin-bottom">
+			Size of empty space in the corner of both scrollbars when they are enabled<br>
+			<span class="icon-marker black">Type:</span> int<br>
+			<span class="icon-star black">Default:</span> 10
+		</dd>
+
+		<dt>minScrollerSize</dt>
+		<dd class="boxed margin-bottom">
+			Scroller minimum size, in pixels (will automatically be resized for scrollbars smaller than this value)<br>
+			<span class="icon-marker black">Type:</span> int<br>
+			<span class="icon-star black">Default:</span> 30
+		</dd>
+
+		<dt>minWheelScroll</dt>
+		<dd class="boxed margin-bottom">
+			Minimun wheel scroll increment (prevent mouses with custom driver to scroll too slowly)<br>
+			<span class="icon-marker black">Type:</span> float<br>
+			<span class="icon-star black">Default:</span> 0.25
+		</dd>
+
+		<dt>continuousWheelScroll</dt>
+		<dd class="boxed margin-bottom">
+			Use true to let the parent element scroll when the target can not scroll no more (on mouse wheel)<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>continuousWheelScroll</dt>
+		<dd class="boxed margin-bottom">
+			Use true to let the parent element scroll when the target can not scroll no more (on touch move)<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>speed</dt>
+		<dd class="boxed margin-bottom">
+			Speed: move for each mouse scroll<br>
+			<span class="icon-marker black">Type:</span> int<br>
+			<span class="icon-star black">Default:</span> 48
+		</dd>
+
+		<dt>animate</dt>
+		<dd class="boxed margin-bottom">
+			Animate scroll movement<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+
+		<dt>showOnHover</dt>
+		<dd class="boxed margin-bottom">
+			Show scrollbars only on hover<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>autoHide</dt>
+		<dd class="boxed margin-bottom">
+			Hide useless scrollbars<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+	</dl>
+
+</div>

@@ -1,0 +1,364 @@
+<hgroup id="main-title" class="thin">
+	<h1>Tabs</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin file <b>js/developr.tabs.js</b>
+	</div>
+
+	<h3 class="thin">Styles</h3>
+
+	<p>The template includes 3 tabs styles: standard tabs (on top), side tabs and swipe tabs. On smaller screens, all styles fallback to swipe style, to preserve accessibility. All three styles share the same exact markup, except from the style class, and can be nested as deep as needed, even when using different styles.</p>
+
+	<p>Here is an example of markup, with various tabs states. Note that the tabs links should use a hashtag matching the id of their respective content block:</p>
+
+	<pre class="prettyprint">
+&lt;!-- Wrapper, set tabs style class here --&gt;
+&lt;div class="standard-tabs"&gt;
+
+	&lt;!-- Tabs --&gt;
+	&lt;ul class="tabs"&gt;
+		&lt;li class="active"&gt;&lt;a href="#tab-1"&gt;Selected tab&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="#tab-2"&gt;Another tab&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;&lt;a href="#tab-3"&gt;Another tab&lt;/a&gt;&lt;/li&gt;
+		&lt;li class="disabled"&gt;&lt;a href="#tab-4"&gt;Disabled tab&lt;/a&gt;&lt;/li&gt;
+		&lt;li&gt;Non-active&lt;/li&gt;
+	&lt;/ul&gt;
+
+	&lt;!-- Content --&gt;
+	&lt;div class="tabs-content"&gt;
+
+		&lt;div id="tab-1" class="with-padding"&gt;
+
+			Selected tab
+
+		&lt;/div&gt;
+
+		&lt;div id="tab-2" class="with-padding"&gt;
+
+			Alternate tab
+
+		&lt;/div&gt;
+
+		&lt;div id="tab-4" class="with-padding"&gt;
+
+			Disabled tab
+
+		&lt;/div&gt;
+
+	&lt;/div&gt;
+
+&lt;/div&gt;
+</pre>
+
+	<h4>Top tabs</h4>
+
+	<p>Class: <b>standard-tabs</b></p>
+
+	<div class="standard-tabs same-height margin-bottom">
+
+		<ul class="tabs">
+			<li class="active"><a href="#tab-1">Selected tab</a></li>
+			<li><a href="#tab-2">Another tab</a></li>
+			<li><a href="#tab-3">Another tab</a></li>
+			<li class="disabled"><a href="#tab-4">Disabled tab</a></li>
+			<li>Non-active</li>
+		</ul>
+
+		<div class="tabs-content">
+
+			<div id="tab-1" class="with-padding">
+
+				Selected tab
+
+			</div>
+
+			<div id="tab-2" class="with-padding">
+
+				Alternate tab 1
+
+			</div>
+
+			<div id="tab-3" class="with-padding">
+
+				Alternate tab 2
+
+			</div>
+
+			<div id="tab-4" class="with-padding">
+
+				Disabled tab
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<p>Add class <b>at-bottom</b> to use bottom tabs:</p>
+
+	<div class="standard-tabs at-bottom same-height margin-bottom">
+
+		<ul class="tabs">
+			<li class="active"><a href="#tab-bottom-1">Selected tab</a></li>
+			<li><a href="#tab-bottom-2">Another tab</a></li>
+			<li><a href="#tab-bottom-3">Another tab</a></li>
+			<li class="disabled"><a href="#tab-bottom-4">Disabled tab</a></li>
+			<li>Non-active</li>
+		</ul>
+
+		<div class="tabs-content">
+
+			<div id="tab-bottom-1" class="with-padding">
+
+				Selected tab
+
+			</div>
+
+			<div id="tab-bottom-2" class="with-padding">
+
+				Alternate tab 1
+
+			</div>
+
+			<div id="tab-bottom-3" class="with-padding">
+
+				Alternate tab 2
+
+			</div>
+
+			<div id="tab-bottom-4" class="with-padding">
+
+				Disabled tab
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<h4>Side tabs</h4>
+
+	<p>Class: <b>side-tabs</b></p>
+
+	<div class="side-tabs same-height margin-bottom">
+		<ul class="tabs">
+			<li class="active"><a href="#sidetab-1">Selected tab</a></li>
+			<li><a href="#sidetab-2">Another tab</a></li>
+			<li><a href="#sidetab-3">Another tab</a></li>
+			<li class="disabled"><a href="#sidetab-4">Disabled tab</a></li>
+			<li>Non-active</li>
+		</ul>
+
+		<div class="tabs-content">
+
+			<div id="sidetab-1" class="with-padding">
+
+				Selected tab
+
+			</div>
+
+			<div id="sidetab-2" class="with-padding">
+
+				Alternate tab 1
+
+			</div>
+
+			<div id="sidetab-3" class="with-padding">
+
+				Alternate tab 2
+
+			</div>
+
+			<div id="sidetab-4" class="with-padding">
+
+				Disabled tab
+
+			</div>
+
+		</div>
+	</div>
+
+	<p>Add class <b>on-right</b> to use right tabs:</p>
+
+	<div class="side-tabs on-right same-height margin-bottom">
+		<ul class="tabs">
+			<li class="active"><a href="#sidetab-right-1">Selected tab</a></li>
+			<li><a href="#sidetab-right-2">Another tab</a></li>
+			<li><a href="#sidetab-right-3">Another tab</a></li>
+			<li class="disabled"><a href="#sidetab-right-4">Disabled tab</a></li>
+			<li>Non-active</li>
+		</ul>
+
+		<div class="tabs-content">
+
+			<div id="sidetab-right-1" class="with-padding">
+
+				Selected tab
+
+			</div>
+
+			<div id="sidetab-right-2" class="with-padding">
+
+				Alternate tab 1
+
+			</div>
+
+			<div id="sidetab-right-3" class="with-padding">
+
+				Alternate tab 2
+
+			</div>
+
+			<div id="sidetab-right-4" class="with-padding">
+
+				Disabled tab
+
+			</div>
+
+		</div>
+	</div>
+
+	<h4>Swipe tabs</h4>
+
+	<p>Class: <b>swipe-tabs</b></p>
+
+	<div class="swipe-tabs same-height margin-bottom">
+
+		<ul class="tabs">
+			<li class="active"><a href="#swipe-tab-1">Selected tab</a></li>
+			<li><a href="#swipe-tab-2">Another tab</a></li>
+			<li><a href="#swipe-tab-3">Another tab</a></li>
+			<li class="disabled"><a href="#swipe-tab-4">Disabled tab</a></li>
+			<li>Non-active</li>
+		</ul>
+
+		<div class="tabs-content">
+
+			<div id="swipe-tab-1" class="with-padding">
+
+				Selected tab
+
+			</div>
+
+			<div id="swipe-tab-2" class="with-padding">
+
+				Alternate tab 1
+
+			</div>
+
+			<div id="swipe-tab-3" class="with-padding">
+
+				Alternate tab 2
+
+			</div>
+
+			<div id="swipe-tab-4" class="with-padding">
+
+				Disabled tab
+
+			</div>
+
+		</div>
+
+	</div>
+
+	<h3 class="thin">Height equilizing</h3>
+
+	<p>In most cases, you would want the tabs to have the same height: just add the class <b>same-height</b> to the wrapper, and the plugin will handle this alone.</p>
+
+	<pre class="prettyprint">
+&lt;div class="standard-tabs same-height"&gt;
+</pre>
+
+	<h3 class="thin">Handling tabs</h3>
+
+	<p>The tabs plugin fires automatically at startup, and refreshes the tabs each time a tab is clicked, so most of the time you should not have to think about it. But in some cases, you may need to change the tabs structure (add or remove a tab) or the content (which may change tabs size): just call this code on the tabs wrapper or on any element inside it:</p>
+
+	<pre class="prettyprint">
+$(selector).refreshTabs();
+</pre>
+
+	<p>This method will refresh the current tab, equalize heights if needed, and also trigger a refresh on wrapping tabs if nested.</p>
+
+	<p>If you changed an element containing tabs, you may also use:</p>
+
+	<pre class="prettyprint">
+$(selector).refreshInnerTabs();
+</pre>
+
+	<p>You may also show the tab relative to a specific content-block (call it on the content-block or any element inside it):</p>
+
+	<pre class="prettyprint">
+$(selector).showTab();
+</pre>
+
+	<p>The plugin also provides methods for adding or removing tabs, see reference below.</p>
+
+	<h3 class="thin">Tabs events</h3>
+
+	<p>The plugin will also send some events to help you hook your own functions to the tabs:</p>
+
+	<pre class="prettyprint">
+$('.tabs-content > div').on('showtabinit', function()
+{
+	// Called only once per tab, when shown for the first time (includes first tab shown at page load)
+});
+
+$('.tabs-content > div').on('showtab', function()
+{
+	// Called everytime a tab is shown (includes first tab shown at page load)
+});
+
+$('.tabs-content > div').on('hidetab', function()
+{
+	// Called everytime a tab is hidden
+});
+</pre>
+
+	<p class="left-icon icon-info-round"><b>Note:</b> the hidetab event will always be called before the showtab event</p>
+
+	<p>The showtabinit event is useful if you want to load a tab's content only when opened:</p>
+
+	<pre class="prettyprint">
+$('#tab-1').on('showtabinit', function()
+{
+	$(this).load('content-url');
+});
+</pre>
+
+	<h3 class="thin">Methods</h3>
+
+	<dl class="definition">
+
+		<dt>$(selector).refreshInnerTabs()</dt>
+		<dd class="boxed margin-bottom">
+			<p>Refresh tabs contained in an element</p>
+		</dd>
+
+		<dt>$(selector).refreshTabs()</dt>
+		<dd class="boxed margin-bottom">
+			<p>Refresh tabs: equalize height, show current tab...</p>
+		</dd>
+
+		<dt>$(selector).addTab(id, title, content, noPadding)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Add a tab</p>
+			<h6>Parameters</h6>
+			<p>@param string id the tab id<br>
+			@param string title the title of the tab<br>
+			@param string content the content of the tab<br>
+			@param boolean noPadding use true to prevent adding padding on the tab content block (optional, default: false)</p>
+		</dd>
+
+		<dt>$(selector).removeTab()</dt>
+		<dd class="boxed margin-bottom">
+			<p>Remove a tab: use it either on the tab or the content block. The tab should be valid for the method to work</p>
+		</dd>
+
+	</dl>
+
+</div>

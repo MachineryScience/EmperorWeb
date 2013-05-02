@@ -1,0 +1,636 @@
+<hgroup id="main-title" class="thin">
+	<h1>Files</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin file <b>css/styles/files.css</b>
+	</div>
+
+	<p>The template provides 2 differents files lists styles, both with 2 different sizes. It also includes a complete file types icon set.</p>
+
+	<h3 class="thin">Icon lists</h3>
+
+	<div class="columns">
+		<div class="six-columns twelve-columns-tablet">
+
+			<h5>This style has the following options:</h5>
+
+			<ul class="bullet-list">
+				<li>No link, full-block link or link only on file name</li>
+				<li>Custom controls showing on hover</li>
+				<li>Use image thumbnails, with or without transparency</li>
+				<li>Optional image frame</li>
+			</ul>
+
+			<h5 class="green">Default style</h5>
+
+			<p class="wrapped left-icon icon-info-round">Add the class <b>on-dark</b> to the list when used against a dark background.</p>
+
+			<ul class="files-icons">
+
+				<li>
+					<span class="icon file-gif"></span>
+					Static
+				</li>
+
+				<li><a href="#" class="file-link">
+					<span class="icon file-image"></span>
+					Clickable
+				</a></li>
+
+				<li>
+					<span class="icon file-png"></span>
+					<a href="#">Clickable name</a>
+				</li>
+
+				<li>
+					<span class="icon file-png"></span>
+					<div class="controls">
+						<span class="button-group compact children-tooltip">
+							<a href="#" class="button icon-gear" title="Edit properties"></a>
+							<a href="#" class="button icon-trash" title="Move to trash"></a>
+						</span>
+					</div>
+					<a href="#">Hover menu</a>
+				</li>
+
+				<li><a href="#" class="file-link">
+					<span class="icon"><img src="img/demo/picto.png"></span>
+					Thumbnail
+				</a></li>
+
+				<li><a href="#" class="file-link">
+					<span class="icon"><img src="img/demo/picture.png" class="framed"></span>
+					Thumbnail with border
+				</a></li>
+
+			</ul>
+
+			<h5 class="green">Mini style</h5>
+
+			<p class="wrapped left-icon icon-info-round">Add the class <b>mini</b> to the list to use this style.</p>
+
+			<ul class="files-icons mini">
+
+				<li>
+					<span class="icon file-gif"></span>
+					Static
+				</li>
+
+				<li><a href="#" class="file-link">
+					<span class="icon file-image"></span>
+					Link
+				</a></li>
+
+				<li>
+					<span class="icon file-png"></span>
+					<a href="#">Link name</a>
+				</li>
+
+				<li>
+					<span class="icon file-png"></span>
+					<div class="controls">
+						<a href="#" class="button compact icon-trash" title="Move to trash"></a>
+					</div>
+					<a href="#">Hover menu</a>
+				</li>
+
+				<li><a href="#" class="file-link">
+					<span class="icon"><img src="img/demo/picto.png"></span>
+					Thumb
+				</a></li>
+
+				<li><a href="#" class="file-link">
+					<span class="icon"><img src="img/demo/picture.png" class="framed"></span>
+					With border
+				</a></li>
+
+			</ul>
+
+			<div class="wrapped big-left-icon icon-info-round">
+				<h4 class="no-margin-bottom">Quick tip</h4>
+				If you omit the images size attributes, they will automatically be resized to fit, and the aspect ratio is preserved.
+			</div>
+
+		</div>
+		<div class="six-columns twelve-columns-tablet">
+
+			<pre class="prettyprint">
+&lt;ul class="files-icons"&gt;
+
+	&lt;!-- default style, with no link --&gt;
+	&lt;li&gt;
+		&lt;span class="icon file-gif"&gt;&lt;/span&gt;
+		Static
+	&lt;/li&gt;
+
+	&lt;!-- Full block link --&gt;
+	&lt;li&gt;&lt;a href="#" class="file-link"&gt;
+		&lt;span class="icon file-image"&gt;&lt;/span&gt;
+		Clickable
+	&lt;/a&gt;&lt;/li&gt;
+
+	&lt;!-- Link only on file name --&gt;
+	&lt;li&gt;
+		&lt;span class="icon file-png"&gt;&lt;/span&gt;
+		&lt;a href="#"&gt;Clickable name&lt;/a&gt;
+	&lt;/li&gt;
+
+	&lt;!-- With controls on hover --&gt;
+	&lt;li&gt;
+		&lt;span class="icon file-png"&gt;&lt;/span&gt;
+		&lt;div class="controls"&gt;
+			&lt;span class="button-group compact children-tooltip"&gt;
+				&lt;a href="#" class="button icon-gear" title="Edit properties"&gt;&lt;/a&gt;
+				&lt;a href="#" class="button icon-trash" title="Move to trash"&gt;&lt;/a&gt;
+			&lt;/span&gt;
+		&lt;/div&gt;
+		&lt;a href="#"&gt;Hover menu&lt;/a&gt;
+	&lt;/li&gt;
+
+	&lt;!-- With an transparent icon --&gt;
+	&lt;li&gt;&lt;a href="#" class="file-link"&gt;
+		&lt;span class="icon"&gt;&lt;img src="img/demo/picto.png"&gt;&lt;/span&gt;
+		Thumbnail
+	&lt;/a&gt;&lt;/li&gt;
+
+	&lt;!-- With a frame around thumbnail --&gt;
+	&lt;li&gt;&lt;a href="#" class="file-link"&gt;
+		&lt;span class="icon"&gt;&lt;img src="img/demo/picture.png" class="framed"&gt;&lt;/span&gt;
+		Thumbnail with border
+	&lt;/a&gt;&lt;/li&gt;
+
+&lt;/ul&gt;
+</pre>
+
+		</div>
+	</div>
+
+	<h3 class="thin">File lists</h3>
+
+	<div class="columns">
+		<div class="six-columns twelve-columns-tablet">
+
+			<h5>This style has the following options:</h5>
+
+			<ul class="bullet-list">
+				<li>No link, full-block link or link only on file name</li>
+				<li>Custom controls showing on hover</li>
+				<li>Use image thumbnails, with or without transparency</li>
+				<li>Optional image frame</li>
+			</ul>
+
+			<h5 class="green">Default style</h5>
+
+			<p class="wrapped left-icon icon-info-round">Add the class <b>on-dark</b> to the list when used against a dark background.</p>
+
+			<ul class="files-list silver-gradient">
+
+				<li>
+					<span class="icon file-gif"></span>
+					<b class="black">Static</b><br>
+					image/gif
+				</li>
+
+				<li><a href="#" class="file-link">
+					<span class="icon file-image"></span>
+					<b class="black">Clickable</b><br>
+					image/psd
+				</a></li>
+
+				<li>
+					<span class="icon file-png"></span>
+					<a href="#">
+						<b class="black">Clickable name</b><br>
+						image/png
+					</a>
+				</li>
+
+				<li>
+					<span class="icon file-png"></span>
+					<div class="controls show-on-parent-hover">
+						<span class="button-group compact children-tooltip">
+							<a href="#" class="button icon-gear" title="Edit properties">Edit</a>
+							<a href="#" class="button icon-trash" title="Move to trash"></a>
+						</span>
+					</div>
+					<a href="#">
+						<b class="black">Hover menu</b><br>
+						image/png
+					</a>
+				</li>
+
+				<li><a href="#" class="file-link">
+					<span class="icon"><img src="img/demo/picto.png"></span>
+					<b class="black">Thumbnail</b><br>
+					image/png
+				</a></li>
+
+				<li><a href="#" class="file-link">
+					<span class="icon"><img src="img/demo/picture.png" class="framed"></span>
+					<b class="black">Thumbnail with border</b><br>
+					image/jpg
+				</a></li>
+
+			</ul>
+
+			<h5 class="green">Mini style</h5>
+
+			<p class="wrapped left-icon icon-info-round">Add the class <b>mini</b> to the list to use this style.</p>
+
+			<ul class="files-list mini silver-gradient">
+
+				<li>
+					<span class="icon file-gif"></span>
+					Static
+				</li>
+
+				<li><a href="#" class="file-link">
+					<span class="icon file-image"></span>
+					Clickable
+				</a></li>
+
+				<li>
+					<span class="icon file-png"></span>
+					<a href="#">Clickable name</a>
+				</li>
+
+				<li>
+					<span class="icon file-png"></span>
+					<div class="controls show-on-parent-hover">
+						<span class="button-group compact children-tooltip">
+							<a href="#" class="button icon-gear" title="Edit properties">Edit</a>
+							<a href="#" class="button icon-trash" title="Move to trash"></a>
+						</span>
+					</div>
+					<a href="#">Hover menu</a>
+				</li>
+
+				<li><a href="#" class="file-link">
+					<span class="icon"><img src="img/demo/picto.png"></span>
+					Thumbnail
+				</a></li>
+
+				<li><a href="#" class="file-link">
+					<span class="icon"><img src="img/demo/picture.png" class="framed"></span>
+					Thumbnail with border
+				</a></li>
+
+			</ul>
+
+			<div class="wrapped big-left-icon icon-info-round">
+				<h4 class="no-margin-bottom">Quick tip</h4>
+				If you omit the images size attributes, they will automatically be resized to fit, and the aspect ratio is preserved.
+			</div>
+
+		</div>
+		<div class="six-columns twelve-columns-tablet">
+
+			<pre class="prettyprint">
+&lt;!-- The class silver-gradient is optional --&gt;
+&lt;ul class="files-list mini silver-gradient"&gt;
+
+	&lt;!-- default style, with no link --&gt;
+	&lt;li&gt;
+		&lt;span class="icon file-gif"&gt;&lt;/span&gt;
+		Static
+	&lt;/li&gt;
+
+	&lt;!-- Full block link --&gt;
+	&lt;li&gt;&lt;a href="#" class="file-link"&gt;
+		&lt;span class="icon file-image"&gt;&lt;/span&gt;
+		Clickable
+	&lt;/a&gt;&lt;/li&gt;
+
+	&lt;!-- Link only on file name --&gt;
+	&lt;li&gt;
+		&lt;span class="icon file-png"&gt;&lt;/span&gt;
+		&lt;a href="#"&gt;Clickable name&lt;/a&gt;
+	&lt;/li&gt;
+
+	&lt;!-- With controls on hover --&gt;
+	&lt;li&gt;
+		&lt;span class="icon file-png"&gt;&lt;/span&gt;
+		&lt;div class="controls"&gt;
+			&lt;span class="button-group compact children-tooltip"&gt;
+				&lt;a href="#" class="button icon-gear" title="Edit properties"&gt;Edit&lt;/a&gt;
+				&lt;a href="#" class="button icon-trash" title="Move to trash"&gt;&lt;/a&gt;
+			&lt;/span&gt;
+		&lt;/div&gt;
+		&lt;a href="#"&gt;Hover menu&lt;/a&gt;
+	&lt;/li&gt;
+
+	&lt;!-- With an transparent icon --&gt;
+	&lt;li&gt;&lt;a href="#" class="file-link"&gt;
+		&lt;span class="icon"&gt;&lt;img src="img/demo/picto.png"&gt;&lt;/span&gt;
+		Thumbnail
+	&lt;/a&gt;&lt;/li&gt;
+
+	&lt;!-- With a frame around thumbnail --&gt;
+	&lt;li&gt;&lt;a href="#" class="file-link"&gt;
+		&lt;span class="icon"&gt;&lt;img src="img/demo/picture.png" class="framed"&gt;&lt;/span&gt;
+		Thumbnail with border
+	&lt;/a&gt;&lt;/li&gt;
+
+&lt;/ul&gt;
+</pre>
+
+		</div>
+	</div>
+
+	<h3 class="thin">Files types icon set</h3>
+
+	<ul class="files-icons">
+
+		<li>
+			<span class="icon folder-close"></span>
+			folder-close
+		</li>
+
+		<li>
+			<span class="icon folder-docs"></span>
+			folder-docs
+		</li>
+
+		<li>
+			<span class="icon folder-favs"></span>
+			folder-favs
+		</li>
+
+		<li>
+			<span class="icon folder-image"></span>
+			folder-image
+		</li>
+
+		<li>
+			<span class="icon folder-movie"></span>
+			folder-movie
+		</li>
+
+		<li>
+			<span class="icon folder-music"></span>
+			folder-music
+		</li>
+
+		<li>
+			<span class="icon folder-net"></span>
+			folder-net
+		</li>
+
+		<li>
+			<span class="icon folder-open"></span>
+			folder-open
+		</li>
+
+		<li>
+			<span class="icon folder-program"></span>
+			folder-program
+		</li>
+
+		<li>
+			<span class="icon folder-pen"></span>
+			folder-pen
+		</li>
+
+
+		<li>
+			<span class="icon file-aac"></span>
+			file-aac
+		</li>
+
+		<li>
+			<span class="icon file-access"></span>
+			file-access
+		</li>
+
+		<li>
+			<span class="icon file-avi"></span>
+			file-avi
+		</li>
+
+		<li>
+			<span class="icon file-bat"></span>
+			file-bat
+		</li>
+
+		<li>
+			<span class="icon file-bmp"></span>
+			file-bmp
+		</li>
+
+		<li>
+			<span class="icon file-chm"></span>
+			file-chm
+		</li>
+
+		<li>
+			<span class="icon file-css"></span>
+			file-css
+		</li>
+
+		<li>
+			<span class="icon file-dat"></span>
+			file-dat
+		</li>
+
+		<li>
+			<span class="icon file-default"></span>
+			file-default
+		</li>
+
+		<li>
+			<span class="icon file-desktop"></span>
+			file-desktop
+		</li>
+
+		<li>
+			<span class="icon file-dll"></span>
+			file-dll
+		</li>
+
+		<li>
+			<span class="icon file-excel"></span>
+			file-excel
+		</li>
+
+		<li>
+			<span class="icon file-exe"></span>
+			file-exe
+		</li>
+
+		<li>
+			<span class="icon file-fon"></span>
+			file-fon
+		</li>
+
+		<li>
+			<span class="icon file-gif"></span>
+			file-gif
+		</li>
+
+		<li>
+			<span class="icon file-html"></span>
+			file-html
+		</li>
+
+		<li>
+			<span class="icon file-image"></span>
+			file-image
+		</li>
+
+		<li>
+			<span class="icon file-ini"></span>
+			file-ini
+		</li>
+
+		<li>
+			<span class="icon file-jar"></span>
+			file-jar
+		</li>
+
+		<li>
+			<span class="icon file-jpg"></span>
+			file-jpg
+		</li>
+
+		<li>
+			<span class="icon file-js"></span>
+			file-js
+		</li>
+
+		<li>
+			<span class="icon file-log"></span>
+			file-log
+		</li>
+
+		<li>
+			<span class="icon file-mov"></span>
+			file-mov
+		</li>
+
+		<li>
+			<span class="icon file-movie"></span>
+			file-movie
+		</li>
+
+		<li>
+			<span class="icon file-mp"></span>
+			file-mp
+		</li>
+
+		<li>
+			<span class="icon file-mpg"></span>
+			file-mpg
+		</li>
+
+		<li>
+			<span class="icon file-music"></span>
+			file-music
+		</li>
+
+		<li>
+			<span class="icon file-music2"></span>
+			file-music2
+		</li>
+
+		<li>
+			<span class="icon file-otf"></span>
+			file-otf
+		</li>
+
+		<li>
+			<span class="icon file-pdf"></span>
+			file-pdf
+		</li>
+
+		<li>
+			<span class="icon file-png"></span>
+			file-png
+		</li>
+
+		<li>
+			<span class="icon file-powerpoint"></span>
+			file-powerpoint
+		</li>
+
+		<li>
+			<span class="icon file-real"></span>
+			file-real
+		</li>
+
+		<li>
+			<span class="icon file-reg"></span>
+			file-reg
+		</li>
+
+		<li>
+			<span class="icon file-rtf"></span>
+			file-rtf
+		</li>
+
+		<li>
+			<span class="icon file-swf"></span>
+			file-swf
+		</li>
+
+		<li>
+			<span class="icon file-sys"></span>
+			file-sys
+		</li>
+
+		<li>
+			<span class="icon file-txt"></span>
+			file-txt
+		</li>
+
+		<li>
+			<span class="icon file-ttc"></span>
+			file-ttc
+		</li>
+
+		<li>
+			<span class="icon file-ttf"></span>
+			file-ttf
+		</li>
+
+		<li>
+			<span class="icon file-vbs"></span>
+			file-vbs
+		</li>
+
+		<li>
+			<span class="icon file-wav"></span>
+			file-wav
+		</li>
+
+		<li>
+			<span class="icon file-wma"></span>
+			file-wma
+		</li>
+
+		<li>
+			<span class="icon file-wmv"></span>
+			file-wmv
+		</li>
+
+		<li>
+			<span class="icon file-word"></span>
+			file-word
+		</li>
+
+		<li>
+			<span class="icon file-xml"></span>
+			file-xml
+		</li>
+
+		<li>
+			<span class="icon file-xsl"></span>
+			file-xsl
+		</li>
+
+	</ul>
+
+</div>

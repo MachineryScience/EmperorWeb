@@ -1,0 +1,135 @@
+<hgroup id="main-title" class="thin">
+	<h1>Stats</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		Theses features requires the plugin file <b>css/style/dashboard.css</b>
+	</div>
+
+	<h3 class="thin">Stats</h3>
+
+	<p>Clean and simple style to display a list of statistic, with or without a link</p>
+
+	<ul class="stats">
+		<li><a href="#">
+			<strong>21</strong> new <br>accounts
+		</a></li>
+		<li><a href="#">
+			<strong>15</strong> referred new <br>accounts
+		</a></li>
+		<li>
+			<strong>5</strong> new <br>items
+		</li>
+		<li>
+			<strong>235</strong> new <br>comments
+		</li>
+	</ul>
+
+	<pre class="prettyprint">
+&lt;ul class="stats"&gt;
+
+	&lt;!-- With link --&gt;
+	&lt;li&gt;&lt;a href="#"&gt;
+		&lt;strong&gt;21&lt;/strong&gt; new &lt;br&gt;accounts
+	&lt;/a&gt;&lt;/li&gt;
+
+	&lt;!-- Without link --&gt;
+	&lt;li&gt;
+		&lt;strong&gt;5&lt;/strong&gt; new &lt;br&gt;items
+	&lt;/li&gt;
+
+&lt;/ul&gt;
+</pre>
+
+	<p>You may also add the class <b>split-on-mobile</b> to the <b>ul</b>: this will cause the list to split in two columns on mobile screens.</p>
+
+	<h3 class="thin">Facts</h3>
+
+	<p>This style is made to display a simple data by block, either a statistic, a value or anything else. This style is responsive, it will be more compact on smaller screens so two elements can fit side by side.</p>
+
+	<div class="fact margin-bottom">
+		<span class="fact-value">
+			50 <span class="fact-unit">Min</span>
+		</span>
+		Average time per session<br>
+		<span class="fact-progress red">-5% ▼</span>
+	</div>
+
+	<pre class="prettyprint">
+&lt;div class="fact"&gt;
+	&lt;span class="fact-value"&gt;
+		50 &lt;span class="fact-unit"&gt;Min&lt;/span&gt;
+	&lt;/span&gt;
+	Average time per session&lt;br&gt;
+	&lt;span class="fact-progress red"&gt;-5% ▼&lt;/span&gt;
+&lt;/div&gt;
+</pre>
+
+	<p>If you want to display several facts in a row, use the wrapper element - inner facts will float to rearrange when the screen is too small:</p>
+
+	<div class="facts clearfix">
+
+		<div class="fact">
+			<span class="fact-value">
+				50 <span class="fact-unit">Min</span>
+			</span>
+			Average time per session<br>
+			<span class="fact-progress red">-5% ▼</span>
+		</div>
+
+		<div class="fact">
+			<span class="fact-value">
+				25 <span class="fact-unit">%</span>
+			</span>
+			Traffic growth over 30 days<br>
+			<span class="fact-progress green">+7.1% ▲</span>
+		</div>
+
+	</div>
+
+	<pre class="prettyprint">
+&lt;div class="facts clearfix"&gt;
+
+	&lt;div class="fact"&gt;
+		...
+	&lt;/div&gt;
+
+	&lt;div class="fact"&gt;
+		...
+	&lt;/div&gt;
+
+&lt;/div&gt;
+</pre>
+
+	<h3 class="thin">Charts</h3>
+
+	<p>The demo files of the template use the Google Charts API to generate charts. Head over to <a href="http://code.google.com/apis/chart/interactive/docs/">http://code.google.com/apis/chart/interactive/docs/</a> to learn more on how to use it, and check the many available styles!</p>
+
+	<p>The chart on the dashboard (index.html) also show how to asynchronously draw the chart and resize it on each resize:</p>
+
+	<pre class="prettyprint">
+// Chart drawing function
+function drawChart()
+{
+	// Draw the chart here
+};
+
+// Load the Visualization API and the required packages.
+google.load('visualization', '1', {
+	'packages': ['corechart']
+});
+
+// Set a callback to run when the Google Visualization API is loaded.
+google.setOnLoadCallback(drawChart);
+
+// Watch for block resizing
+$('#demo-chart').widthchange(drawChart);
+
+// Respond.js hook (media query polyfill)
+$(document).on('respond-ready', drawChart);
+</pre>
+
+</div>

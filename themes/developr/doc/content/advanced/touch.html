@@ -1,0 +1,61 @@
+<hgroup id="main-title" class="thin">
+	<h1>TouchClick events</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<div class="wrapped big-left-icon icon-info-round margin-bottom">
+		<h4 class="no-margin-bottom">Advanced users only</h4>
+		This feature is still experimental and should be used with caution, only if you are familiar with touch events handling
+	</div>
+
+	<p>On touch devices, the <b>click event</b> can be somewhat slow (there is a noticeable delay between the end of touch and the triggering of click). One common solution is to replace the <b>click</b> event by a <b>touchend</b> event, but this will break compatibility on devices which use both touch and mouse events (for instance, laptops with touch screens). Another common solution is to use a small JS lib, but this works only for links and performs badly for delegated events.</p>
+
+	<p>To enhance the user experience and provide a better responding feeling, the template provides a touch-click technique: a callback is bound to both events touchend and click, and a special function is used to determine which event to handle.</p>
+
+	<h3 class="thin">How to use it</h3>
+
+	<p>First, start by listening both to <b>click</b> and <b>touchend</b> events:</p>
+
+<pre class="prettyprint">
+$(selector).on('touchend click', function(event) {
+	...
+});
+</pre>
+
+	<p>Then use the template method to determine if the event should be processed:</p>
+
+<pre class="prettyprint">
+$(selector).on('touchend click', function(event)
+{
+	// Check if valid touch-click event
+	if (!$.template.processTouchClick(this, event))
+	{
+		return;
+	}
+
+	// Process event here
+});
+</pre>
+
+	<h3 class="thin">How does it works?</h3>
+
+	<p>This features works as follow:</p>
+
+	<h4>On touch screens</h4>
+
+	<ol>
+		<li>Once the user stop touching the screen, a touchend event is triggered, which fires up the callback set above for the first time.</li>
+		<li>To determine if the event should be handled, the template use an internal listener to check if this touch event was used to scroll the screen or not (basically, if the finger has moved during it). If no scrolling was detected, the event is valid and should be processed.</li>
+		<li>The element is then tagged with the event ID, indicating that it has processed this events trail.</li>
+		<li>When the click event fires in short after, the callback is fired for the second time, the function checks if the element has already processed this event trail, and prevents the event if so.</li>
+	</ol>
+
+	<h4>On non-touch devices</h4>
+
+	<ol>
+		<li>For these devices, the click event is the only one handled, thus it works normally.</li>
+		<li>When the callback is fired, the function checks if the element has already processed this event trail, and returns true so the event is processed.</li>
+	</ol>
+
+</div>

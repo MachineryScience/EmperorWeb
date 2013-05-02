@@ -1,0 +1,122 @@
+<hgroup id="main-title" class="thin">
+	<h1>Responsive layout</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<p>The template is designed from the start to be as responsive as possible. It will format, hide an move the various interface elements according to available space, with the following built-in layouts (and corresponding stylesheets):</p>
+
+	<dl class="definition inline">
+		<dt>mobile-portrait</dt>
+		<dd><small class="tag">style.css</small> Mobiles - portrait / Under 480px wide</dd>
+
+		<dt>mobile-landscape</dt>
+		<dd><small class="tag">480.css</small> Mobiles - landscape / 480px to 767px</dd>
+
+		<dt>tablet-portrait</dt>
+		<dd><small class="tag">768.css</small> Tablets - portrait / 768px to 991px</dd>
+
+		<dt>tablet-landscape</dt>
+		<dd><small class="tag">992.css</small> Tablets - landscape / 992px to 1199px</dd>
+
+		<dt>desktop</dt>
+		<dd><small class="tag">1200.css</small> Wide desktop screens / 1200px and up</dd>
+	</dl>
+
+	<h3 class="thin">How does this works?</h3>
+
+	<p>To achieve this, the template uses a set of files designed for each layout, which are loaded accordingly to viewport size by media queries. For older browsers, a polyfill (<a href="https://github.com/scottjehl/Respond" title="View plugin's repo on Github">respond.js</a>) is used.</p>
+
+	<p class="wrapped left-icon icon-info-round">
+		If your application uses nested folders, you need to set the path to the polyfill (located in /js/ folder) using <strong>$.template.respondPath</strong>
+	</p>
+
+	<p>The template use the principle behind <a href="http://stuffandnonsense.co.uk/projects/320andup/" title="View project website">320 and up</a> developed by <a href="http://stuffandnonsense.co.uk/">Andy Clarke</a> (<a href="http://twitter.com/malarkey">@malarkey</a>): as mobile device are the least powerful devices, they need to have as few styles to parse as possible, so the base styles are designed for them. Then, for each larger layout, an additional stylesheet is loaded and will override some styles to give the expected layout.</p>
+
+	<p>So if you are changing some style and can't get the right result, check if one of the mediaqueries files don't overwrite your changes - sound obvious, but it may happen more often than you think!</p>
+
+	<h3 class="thin">Gettin' Jiggy With It</h3>
+
+	<p>In an admin skin, many elements are resolution and layout dependant, so the template provides several ways to work with media queries:</p>
+
+	<h4>Get the current media query</h4>
+
+	<p>At any moment, you can get the current mode name:</p>
+
+	<pre class="prettyprint">
+if ($.template.mediaQuery.name === 'desktop')
+{
+	// Do something only for widescreens
+}
+</pre>
+
+	<p>Need to know if the current media query is smaller than a given one?</p>
+
+	<pre class="prettyprint">
+if ($.template.mediaQuery.isSmallerThan('tablet-portrait'))
+{
+	// Do something only for smaller screens
+}
+</pre>
+
+	<p>Need to check if a given media query is on?</p>
+
+	<pre class="prettyprint">
+if ($.template.mediaQuery.has('tablet-portrait'))
+{
+	// Fire if this media query is on, even if it is not the current one
+}
+</pre>
+
+	<h4>Listen for changes</h4>
+
+	<p>Knowing the current mode is great, but what is more interesting is to track media queries changes. Several events are triggered to help your scripts:</p>
+
+	<dl class="definition inline">
+		<dt>init-queries</dt>
+		<dd>This event is fired at startup once the media queries tracking mode has started</dd>
+
+		<dt>change-query</dt>
+		<dd>This event will be fired for every mode change</dd>
+
+		<dt>enter-query-[name]</dt>
+		<dd>This event fires when entering the corresponding mode</dd>
+
+		<dt>quit-query-[name]</dt>
+		<dd>This event fires when leaving the corresponding mode</dd>
+	</dl>
+
+	<p>Note that you can also listen for event relative to media queries groups: for instance, <b>mobile-portrait</b> and <b>mobile-landscape</b> belong to the group <b>mobile</b>, so you can track them both by using <b>enter-query-mobile</b> and <b>quit-query-mobile</b>. Note that these events only fire when changing group, not when changing between children modes.</p>
+
+	<p>To use these events, just listen on document:</p>
+
+	<pre class="prettyprint">
+$(document).on('init-queries', function()
+{
+	console.log('media queries ready');
+});
+</pre>
+
+	<p>For instance, if you want an element to be visible only on desktop mode:</p>
+
+	<pre class="prettyprint">
+var element = $('#only-desktop');
+
+$(document).on('init-queries', function()
+{
+	if ($.template.mediaQuery.isSmallerThan('desktop'))
+	{
+		element.hide();
+	}
+
+}).on('enter-query-desktop', function()
+{
+	element.show();
+
+}).on('quit-query-desktop', function()
+{
+	element.hide();
+});
+</pre>
+
+</div>

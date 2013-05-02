@@ -1,0 +1,240 @@
+<hgroup id="main-title" class="thin">
+	<h1>Calendars</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin file <b>css/styles/calendars.css</b>
+	</div>
+
+	<p>The template includes a set of 4 calendar sizes, and a fluid calendar style, all of which are responsive. All sizes allow displaying a list of event for each day, even in smaller sizes.</p>
+
+	<h3 class="thin">Markup</h3>
+
+	<p>The markup is the same for all calendars sizes:</p>
+
+	<pre class="prettyprint">
+&lt;table class="calendar"&gt;
+
+	&lt;!-- Month and scroll arrows --&gt;
+	&lt;caption&gt;
+		&lt;a href="#" class="cal-prev"&gt;◄&lt;/a&gt;
+		&lt;a href="#" class="cal-next"&gt;►&lt;/a&gt;
+		March 2012
+	&lt;/caption&gt;
+
+	&lt;!-- Days names --&gt;
+	&lt;thead&gt;
+		&lt;tr&gt;
+			&lt;th scope="col"&gt;Sun&lt;/th&gt;
+			&lt;th scope="col"&gt;Mon&lt;/th&gt;
+			&lt;th scope="col"&gt;Tue&lt;/th&gt;
+			&lt;th scope="col"&gt;Wed&lt;/th&gt;
+			&lt;th scope="col"&gt;Thu&lt;/th&gt;
+			&lt;th scope="col"&gt;Fri&lt;/th&gt;
+			&lt;th scope="col"&gt;Sat&lt;/th&gt;
+		&lt;/tr&gt;
+	&lt;/thead&gt;
+
+	&lt;!-- Dates --&gt;
+	&lt;tbody&gt;
+		&lt;tr&gt;
+			&lt;td class="week-end prev-month"&gt;&lt;span class="cal-day"&gt;30&lt;/span&gt;&lt;/td&gt;
+			&lt;td&gt;&lt;span class="cal-day"&gt;1&lt;/span&gt;&lt;/td&gt;
+			&lt;td&gt;&lt;span class="cal-day"&gt;2&lt;/span&gt;&lt;/td&gt;
+			&lt;td&gt;&lt;span class="cal-day"&gt;3&lt;/span&gt;&lt;/td&gt;
+			&lt;td&gt;&lt;span class="cal-day"&gt;4&lt;/span&gt;&lt;/td&gt;
+			&lt;td&gt;&lt;span class="cal-day"&gt;5&lt;/span&gt;&lt;/td&gt;
+			&lt;td class="week-end"&gt;&lt;span class="cal-day"&gt;6&lt;/span&gt;&lt;/td&gt;
+		&lt;/tr&gt;
+		...
+	&lt;/tbody&gt;
+	&lt;!-- End dates --&gt;
+
+&lt;/table&gt;
+</pre>
+
+	<h5 class="green">Scroll arrows</h5>
+
+	<p>To show disabled next/previous arrows, you may either use a span or add the class <strong>disabled</strong>:</p>
+
+	<pre class="prettyprint">
+&lt;!-- Using a span element --&gt;
+&lt;span class="cal-prev"&gt;◄&lt;/span&gt;
+
+&lt;!-- Using the class disabled --&gt;
+&lt;a href="#" class="cal-prev disabled"&gt;◄&lt;/a&gt;
+</pre>
+
+	<h5 class="green">Days</h5>
+
+	<p>The calendar days require the date to be wrapped in a span with the class <strong>day-cal</strong>:</p>
+
+	<pre class="prettyprint">
+&lt;td&gt;&lt;span class="cal-day"&gt;1&lt;/span&gt;&lt;/td&gt;
+</pre>
+
+	<p>The cells may take several classes to style them when required:</p>
+
+	<dl class="definition inline">
+		<dt>prev-month</dt>
+		<dd>Day from the previous month</dd>
+
+		<dt>next-month</dt>
+		<dd>Day from the next month</dd>
+
+		<dt>week-end</dt>
+		<dd>Different background for week-end days</dd>
+
+		<dt>today</dt>
+		<dd>The current date will be highlighted</dd>
+
+		<dt>selected</dt>
+		<dd>An alternative highlight style, for any use</dd>
+	</dl>
+
+	<h5 class="green">Sizes</h5>
+
+	<p>The default size is the small one, the template provides 3 additional sizes, which become available as the media queries are fired. To use any bigger size, use one of these classes on <b>table</b>:</p>
+
+	<dl class="definition inline">
+		<dt>medium</dt>
+		<dd>Loaded in mobile-landscape</dd>
+
+		<dt>large</dt>
+		<dd>Loaded in tablet-portrait</dd>
+
+		<dt>largest</dt>
+		<dd>Loaded in tablet-landscape</dd>
+	</dl>
+
+	<pre class="prettyprint">
+&lt;!-- Example for medium size --&gt;
+&lt;table class="calendar medium"&gt;
+</pre>
+
+	<p class"left-icon icon-info-round">When the requested size is not available, the previous size is used - for instance, a calendar with the class <b>large</b> will show as <b>medium</b> on a mobile screen, hence it will always fit in.</p>
+
+	<h3 class="thin">Days events</h3>
+
+	<p>To enable day events, you must add the class <b>with-events</b> to the calendar:</p>
+
+	<pre class="prettyprint">
+&lt;table class="calendar with-events"&gt;
+</pre>
+
+	<p class"left-icon icon-info-round">This is not required for fluid calendars (see below).</p>
+
+	<p>The markup for a date with events:</p>
+
+	<pre class="prettyprint">
+&lt;td&gt;
+	&lt;span class="cal-day"&gt;24&lt;/span&gt;
+	&lt;ul class="cal-events"&gt;
+		&lt;!-- Default event style --&gt;
+		&lt;li&gt;Event description&lt;/li&gt;
+		&lt;!-- Red event style --&gt;
+		&lt;li class="important"&gt;Event description&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/td&gt;
+</pre>
+
+	<p>On smaller calendars, these events will show as dots, and when the user clicks on a date an extra block is added to display the complete list. On larger calendars, the list is fully displayed.</p>
+
+	<p>2 classes are available to style the events as is they were spreading to another column:</p>
+
+	<dl class="definition inline">
+		<dt>to-previous-day</dt>
+		<dd>The event will touch left column side</dd>
+
+		<dt>to-next-day</dt>
+		<dd>The event will touch right column side</dd>
+	</dl>
+
+	<p class"left-icon icon-info-round">Both styles can be used on a single event. In the example below, the event will look like it spreads over 3 columns:</p>
+
+	<pre class="prettyprint">
+&lt;td&gt;
+	&lt;span class="cal-day"&gt;1&lt;/span&gt;
+	&lt;ul class="cal-events"&gt;
+		&lt;li class="to-next-day"&gt;Event description&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/td&gt;
+&lt;td&gt;
+	&lt;span class="cal-day"&gt;2&lt;/span&gt;
+	&lt;ul class="cal-events"&gt;
+		&lt;li class="to-previous-day to-next-day"&gt;Event description&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/td&gt;
+&lt;td&gt;
+	&lt;span class="cal-day"&gt;3&lt;/span&gt;
+	&lt;ul class="cal-events"&gt;
+		&lt;li class="to-previous-day"&gt;Event description&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/td&gt;
+</pre>
+
+	<h3 class="thin">Fluid calendar</h3>
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin file <b>js/developr.calendar.js</b>
+	</div>
+
+	<p>If you want your calendar to fit all available space, the template provides a fluid calendar size, enhanced by a javascript plugin. To use it, just add the class <b>fluid</b> to your calendar (remove any other size class):</p>
+
+	<pre class="prettyprint">
+&lt;table class="calendar fluid"&gt;
+</pre>
+
+	<p>This style will automaticaly fill all available width, switching between the various size styles to get the best look and accessibility. This is useful also when the calendar is used in a column.</p>
+
+	<p class"left-icon icon-info-round">Fluid calendars will work without the JS plugin most of the time, but in the overall they will look better with it and in some cases the plugin will make some style changes the CSS only can't handle.</p>
+
+	<p>It will also scale cells height to preserve aspect ratio, but it is possible to set a height limit for bigger screens:</p>
+
+	<pre class="prettyprint">
+&lt;!-- Set a max height of 100px for cells --&gt;
+&lt;table class="calendar fluid" data-calendar-options='{"maxHeight":100}'&gt;
+</pre>
+
+	<h5 class="green">Methods</h5>
+
+	<dl class="definition">
+		<dt>$(selector).fluidCalendar(options)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Enable calendar scrolling</p>
+			<h6>Parameters</h6>
+			<p>@param object options - optional (see defaults for a complete list)</p>
+		</dd>
+
+		<dt>$(selector).fluidCalendarRefresh()</dt>
+		<dd class="boxed margin-bottom">
+			<p>Refresh fluid calendar size. This is useful is the calendar content has been changed.</p>
+		</dd>
+	</dl>
+
+	<h5 class="green">Options reference</h5>
+
+	<div class="wrapped margin-bottom left-icon icon-info-round">
+		The defaults may be modified at runtime in <b>$.fn.fluidCalendar.defaults</b>, and options may be passed inline using the <b>data-calendar-options</b> attribute
+	</div>
+
+	<dl class="definition">
+		<dt>maxHeight</dt>
+		<dd class="boxed margin-bottom">
+			Maximum cell height (used for width screens to limit the calendar vertical expansion)<br>
+			<span class="icon-marker black">Type:</span> int<br>
+			<span class="icon-star black">Default:</span> 130
+		</dd>
+		<dt>onSizeChange</dt>
+		<dd class="boxed margin-bottom">
+			Callback on each calendar resize event<br>
+			<span class="icon-marker black">Type:</span> function<br>
+			<span class="icon-star black">Default:</span> null
+		</dd>
+	</dl>
+
+</div>

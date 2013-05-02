@@ -1,0 +1,93 @@
+<hgroup id="main-title" class="thin">
+	<h1>Shortcuts</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<p>The template includes a set of shortcuts tabs on the left of the screen (right if the class <b>reversed</b> is added to &lt;body&gt;). The syntax is quite simple:</p>
+
+	<pre class="prettyprint">
+&lt;!-- Side tabs shortcuts --&gt;
+&lt;ul id="shortcuts" role="complementary" class="children-tooltip tooltip-right"&gt;
+
+	&lt;!-- Active shortcut --&gt;
+	&lt;li class="current"&gt;&lt;a href="./" class="shortcut-dashboard" title="Dashboard"&gt;Dashboard&lt;/a&gt;&lt;/li&gt;
+
+	&lt;!-- Background shortcut --&gt;
+	&lt;li&gt;&lt;a href="#" class="shortcut-messages" title="Messages"&gt;Messages&lt;/a&gt;&lt;/li&gt;
+
+	&lt;!-- Disabled shortcut --&gt;
+	&lt;li&gt;&lt;span class="shortcut-notes" title="Notes"&gt;Notes&lt;/span&gt;&lt;/li&gt;
+
+&lt;/ul&gt;
+</pre>
+
+	<p><b>Note:</b> the classes <b>children-tooltip</b> and <b>tooltip-right</b> are here to enable tooltips (see related section for more details), you may remove them safely if you do not want to use those tooltips.</p>
+
+	<h3 class="thin">Icons</h3>
+	<p>The template includes a set of 8 icon classes for most uses:<p>
+	<ul class="bullet-list">
+		<li>shortcut-dashboard</li>
+		<li>shortcut-messages</li>
+		<li>shortcut-agenda</li>
+		<li>shortcut-contacts</li>
+		<li>shortcut-medias</li>
+		<li>shortcut-stats</li>
+		<li>shortcut-settings</li>
+		<li>shortcut-notes</li>
+	</ul>
+
+	<p>These icons are served using an image sprite (to reduce the number of file requests), either at standard resolution or at high resolution depending on the device.</p>
+
+	<h3 class="thin">Add new icons</h3>
+	<p>If you need to add new icons to the template, you need to add them to the image sprite. Here is a quick guide:</p>
+
+	<h5 class="green">In Photoshop</h5>
+	<ol>
+		<li>Find a new icon at resolution <b>96x96</b>, and idealy a down-sized one of <b>48x48</b> (if not available, just resize the big one)</li>
+		<li>In the template package, open file <b>Shortcuts.psd</b></li>
+		<li>You may then do one of the following:
+			<ul class="bullet-list mid-margin-top">
+				<li>Replace an existing icon you don't need</li>
+				<li>Add a new icon line:
+					<ol class="mid-margin-top">
+						<li>Go to menu <b>Image / Canvas size...</b>, and add 140px at the bottom of the image (make sure you clicked one of the upper squares in the <b>position</b> setting)</li>
+						<li>In the tools panel, find the <b>Slice selection tool</b> (if not visible, hold click on the crop tool), and double click on the large slice, then add 140px to the height</li>
+						<li>Same thing for the small slice, but this time just add 70px</li>
+					</ol>
+					<div class="wrapped left-icon icon-info-round margin-bottom">
+						Each icon line should be 272x140px for the hi-res icons, and 136x70px for the standard icons
+					</div>
+				</li>
+			</ul>
+		</li>
+		<li>Import/paste your new icon and position it in the first column (use other icons to find correct position)</li>
+		<li>Duplicate you icon an position it on the side of the first one, in the second column</li>
+		<li>Select back your first icon (find the corresponding layer) and go to menu <b>Image / Adjust / Desaturate</b>: the icon is now only in grey</li>
+		<li>Repeat the last three steps for the standard size icon</li>
+		<li>Go to menu <b>File / Save for the web</b>, select the big slice and save it to the directory <b>img/highres/shortcuts.png</b></li>
+		<li>Repeat for the small slice, and save it to the directory <b>img/standard/shortcuts.png</b></li>
+	</ol>
+
+	<h5 class="green">In css/style.css</h5>
+	<ol>
+		<li>Find the section relative to shortcuts (you may just search '<b>#shortcuts</b>')</li>
+		<li>After the existing icons declaration, insert your own icon class, and set the correct background-position</li>
+		<li>Repeat a few lines below but this time add <b>span</b> to your class name</li>
+		<li>If you replaced an existing icon, you may just rename the class from the previous icon</li>
+	</ol>
+
+	<h5 class="green">In css/768.css</h5>
+	<ol>
+		<li>Insert your own class again twice, around lines <b>234</b> and <b>344</b></li>
+	</ol>
+
+	<p class="wrapped left-icon icon-info-round">If you added or removed a row of icons, you must also edit the following file:</p>
+
+	<h5 class="green">In css/2x.css</h5>
+	<ol>
+		<li>Find the section relative to shortcuts links (you may just search '<b>#shortcuts &gt; li &gt; a</b>')</li>
+		<li>Change the background-size property to match the <b>standard</b> resolution file dimensions</li>
+	</ol>
+
+</div>

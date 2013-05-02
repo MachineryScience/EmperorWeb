@@ -1,0 +1,94 @@
+<hgroup id="main-title" class="thin">
+	<h1>Events list</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin file <b>css/styles/agenda.css</b>
+	</div>
+
+	<p>The event lists style is a clean simple design to display a list of events
+
+	<div class="columns">
+
+		<div class="six-columns twelve-columns-mobile">
+
+			<h5 class="green">Appearance</h5>
+
+			<ul class="events">
+
+				<!-- Basic markup -->
+				<li>
+					<span class="event-date">8</span>
+					<a href="#" class="event-description">
+						<h4>Event title</h4>
+						<p>Event description text</p>
+					</a>
+				</li>
+
+				<!-- Colored date -->
+				<li>
+					<span class="event-date orange">15</span>
+					<span class="event-description">
+						<h4>Another event</h4>
+						<p>Other event description text, other event description text</p>
+					</span>
+				</li>
+
+				<!-- Date with month -->
+				<li>
+					<span class="event-date with-month">
+						8 <span class="event-month">April</span>
+					</span>
+					<h4>Next month event</h4>
+					<p>Another description text</p>
+				</li>
+
+			</ul>
+
+		</div>
+
+		<div class="six-columns twelve-columns-mobile">
+
+			<h5 class="green">Markup</h5>
+
+			<pre class="prettyprint">
+&lt;ul class="events"&gt;
+
+	&lt;!-- Link markup --&gt;
+	&lt;li&gt;
+		&lt;span class="event-date"&gt;8&lt;/span&gt;
+		&lt;a href="#" class="event-description"&gt;
+			&lt;h4&gt;Event title&lt;/h4&gt;
+			&lt;p&gt;Event description text&lt;/p&gt;
+		&lt;/a&gt;
+	&lt;/li&gt;
+
+	&lt;!-- Span markup --&gt;
+	&lt;li&gt;
+		&lt;span class="event-date orange"&gt;15&lt;/span&gt;
+		&lt;span class="event-description"&gt;
+			&lt;h4&gt;Another event&lt;/h4&gt;
+			&lt;p&gt;Other event description text, other event description text&lt;/p&gt;
+		&lt;/span&gt;
+	&lt;/li&gt;
+
+	&lt;!-- No wrapper markup, with month --&gt;
+	&lt;li&gt;
+		&lt;span class="event-date with-month"&gt;
+			8 &lt;span class="event-month"&gt;April&lt;/span&gt;
+		&lt;/span&gt;
+		&lt;h4&gt;Next month event&lt;/h4&gt;
+		&lt;p&gt;Another description text&lt;/p&gt;
+	&lt;/li&gt;
+
+&lt;/ul&gt;
+</pre>
+
+		</div>
+
+	</div>
+
+</div>

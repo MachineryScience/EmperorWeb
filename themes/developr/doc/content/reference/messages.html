@@ -1,0 +1,510 @@
+<hgroup id="main-title" class="thin">
+	<h1>Messages</h1>
+</hgroup>
+
+<div class="with-padding">
+
+	<p>The template includes a complete set of messages styles, along with an API to display/remove them.</p>
+
+	<h3 class="thin">Styles</h3>
+
+	<div class="columns">
+
+		<div class="six-columns twelve-columns-tablet">
+
+			<h4>Messages</h4>
+
+			<p class="message">Standard message</p>
+			<pre class="prettyprint">
+&lt;p class="message"&gt;Standard message&lt;/p&gt;
+</pre>
+			<p class="message icon-speech">Message with icon</p>
+			<pre class="prettyprint">
+&lt;p class="message icon-speech"&gt;Standard message&lt;/p&gt;
+</pre>
+
+			<h6>Close button</h6>
+
+			<p class="message icon-speech grey-gradient">
+				<a href="#" title="Hide message" class="close">✕</a>
+				Message with close button
+			</p>
+			<pre class="prettyprint">
+&lt;p class="message"&gt;
+	&lt;a href="#" title="Hide message" class="close"&gt;✕&lt;/a&gt;
+	Message with close button
+&lt;/p&gt;
+</pre>
+
+			<p class="message icon-speech black-gradient glossy">
+				<a href="#" title="Hide message" class="close show-on-parent-hover">✕</a>
+				Close button on hover only
+			</p>
+			<pre class="prettyprint">
+&lt;p class="message"&gt;
+	&lt;a href="#" title="Hide message" class="close show-on-parent-hover"&gt;✕&lt;/a&gt;
+	Close button on hover only
+&lt;/p&gt;
+</pre>
+
+			<h6>Arrows</h6>
+
+			<p class="message icon-speech blue-gradient">
+				<span class="block-arrow"><span></span></span>
+				Message with block arrow
+			</p>
+
+			<pre class="prettyprint">
+&lt;p class="message"&gt;
+	&lt;span class="block-arrow"&gt;&lt;span&gt;&lt;/span&gt;&lt;/span&gt;
+	Arrow top
+&lt;/p&gt;
+</pre>
+
+			<h6>Stripes</h6>
+
+			<p class="message icon-speech">
+				<span class="dark-stripes"></span>
+				Message with stripes
+			</p>
+
+			<pre class="prettyprint">
+&lt;p class="message"&gt;
+	&lt;span class="dark-stripes"&gt;&lt;/span&gt;
+	Message with stripes
+&lt;/p&gt;
+</pre>
+
+		</div>
+
+		<div class="six-columns twelve-columns-tablet">
+
+			<h4>Big messages</h4>
+
+			<p>The big message style may inherit from all message styles, and includes several specific features:</p>
+
+			<p class="big-message">
+				Basic big message
+			</p>
+			<pre class="prettyprint">
+&lt;p class="big-message"&gt;Basic big message&lt;/p&gt;
+</pre>
+
+			<p class="big-message">
+				<strong>Big message with title</strong><br>
+				And a nice baseline, too.
+			</p>
+			<pre class="prettyprint">
+&lt;p class="big-message"&gt;
+	&lt;strong&gt;Big message with title&lt;/strong&gt;&lt;br&gt;
+	And a nice baseline, too.
+&lt;/p&gt;
+</pre>
+
+			<p class="big-message">
+				<span class="big-message-icon icon-speech"></span>
+				<strong>Big message with icon</strong><br>
+				Color is inherited from baseline text
+			</p>
+			<pre class="prettyprint">
+&lt;p class="big-message"&gt;
+	&lt;span class="big-message-icon icon-speech"&gt;&lt;/span&gt;
+	&lt;strong&gt;Big message with icon&lt;/strong&gt;&lt;br&gt;
+	Color is inherited from baseline text
+&lt;/p&gt;
+</pre>
+
+			<p class="big-message">
+				<span class="big-message-icon icon-speech right-side with-text blue">Here I am!</span>
+				<strong>Big message with icon on the right</strong><br>
+				May be colored and have a baseline, too!
+			</p>
+			<pre class="prettyprint">
+&lt;p class="big-message"&gt;
+	&lt;span class="big-message-icon icon-speech right-side with-text blue"&gt;Here I am!&lt;/span&gt;
+	&lt;strong&gt;Big message with icon on the right&lt;/strong&gt;&lt;br&gt;
+	May be colored and have a baseline, too!
+&lt;/p&gt;
+</pre>
+
+		</div>
+
+	</div>
+
+	<h3 class="thin">Messages API</h3>
+
+	<p>The template includes a complete API to display and hide messages:</p>
+
+	<div class="wrapped margin-bottom big-left-icon icon-gear">
+		<h4 class="no-margin-bottom">Required plugin</h4>
+		This feature requires the plugin file <b>js/developr.message.js</b>
+	</div>
+
+	<div class="columns">
+
+		<form method="post" action="" id="messages-form" class="six-columns twelve-columns-tablet button-height">
+
+			<p class="inline-label">
+				<span class="label">Text</span>
+				<input type="text" name="message" id="message" class="input full-width" value="This is a demo message">
+			</p>
+
+			<p class="inline-label">
+				<span class="label">Position</span>
+
+				<span class="button-group">
+					<label for="position-top" class="button green-active">
+						<input type="radio" name="position" id="position-top" value="top" checked>
+						Top
+					</label>
+					<label for="position-bottom" class="button green-active">
+						<input type="radio" name="position" id="position-bottom" value="bottom">
+						Bottom
+					</label>
+				</span>
+			</p>
+
+			<p class="inline-label">
+				<span class="label">Inside block</span>
+
+				<span class="button-group">
+					<label for="append-1" class="button green-active">
+						<input type="radio" name="append" id="append-1" value="1" checked>
+						Yes
+					</label>
+					<label for="append-0" class="button green-active">
+						<input type="radio" name="append" id="append-0" value="0">
+						No
+					</label>
+				</span>
+			</p>
+
+			<p class="inline-label">
+				<span class="label">Color</span>
+
+				<select name="color" id="color" class="select">
+					<option value="">Default</option>
+					<option value="white-gradient">White</option>
+					<option value="grey-gradient">Grey</option>
+					<option value="anthracite-gradient">Anthracite</option>
+					<option value="black-gradient">Black</option>
+					<option value="red-gradient">Red</option>
+					<option value="orange-gradient">Orange</option>
+					<option value="green-gradient">Green</option>
+					<option value="blue-gradient">Blue</option>
+				</select>
+			</p>
+
+			<p class="inline-label">
+				<span class="label">Arrow</span>
+
+				<input type="checkbox" name="arrow" id="arrow" value="1" class="switch mid-margin-right" data-text-on="YES" data-text-off="NO">
+				<span class="button-group">
+					<label for="arrow-direction-top" class="button green-active">
+						<input type="radio" name="arrow-direction" id="arrow-direction-top" value="top">
+						Top
+					</label>
+					<label for="arrow-direction-bottom" class="button green-active">
+						<input type="radio" name="arrow-direction" id="arrow-direction-bottom" value="bottom" checked>
+						Bottom
+					</label>
+				</span>
+			</p>
+
+			<p class="inline-label">
+				<span class="label">Close button</span>
+
+				<span class="button-group">
+					<label for="close-none" class="button green-active">
+						<input type="radio" name="close" id="close-none" value="none">
+						None
+					</label>
+					<label for="close-always" class="button green-active">
+						<input type="radio" name="close" id="close-always" value="always">
+						Visible
+					</label>
+					<label for="close-hover" class="button green-active">
+						<input type="radio" name="close" id="close-hover" value="hover" checked>
+						On hover
+					</label>
+				</span>
+			</p>
+
+			<p class="inline-label">
+				<label for="group-similar" class="label">Group similar</label>
+				<input type="checkbox" name="group-similar" id="group-similar" value="1" class="switch" checked data-text-on="YES" data-text-off="NO">
+			</p>
+
+			<p class="inline-label">
+				<label for="autoclose" class="label">Auto-close</label>
+				<input type="checkbox" name="autoclose" id="autoclose" value="1" class="switch"> after
+				<input type="text" name="autoclose-delay" id="autoclose-delay" class="input" value="3000"> milliseconds
+			</p>
+
+			<p class="inline-label">
+				<button type="submit" class="button blue-gradient">Show message</button>
+				<button type="button" class="button" id="messages-clear">Clear</button>
+			</p>
+
+		</form>
+
+		<div class="six-columns twelve-columns-tablet">
+
+			<div class="linen with-padding margin-bottom">
+				<div class="boxed white-bg margin-bottom" id="message-block">
+					<div class="align-center" style="height: 100px; line-height: 100px;">I'm just a box.</div>
+				</div>
+				<p>Use the options to create your own messages</p>
+			</div>
+
+		</div>
+
+	</div>
+
+	<h3 class="thin">Methods</h3>
+
+	<dl class="definition">
+		<dt>message(message, options)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Display a message on the target element</p>
+			<h6>Parameters</h6>
+			<p>@param string message the text or html message to display<br>
+			@param object options - optional (see defaults for a complete list)</p>
+			<h6>Return</h6>
+			<p>@return jQuery the messages nodes</p>
+		</dd>
+
+		<dt>clearMessages(message, animate)</dt>
+		<dd class="boxed margin-bottom">
+			<p>Clear element's message(s)</p>
+			<h6>Parameters</h6>
+			<p>@param string message the message to remove (can be omitted)<br>
+			@param boolean animate use an animation (foldAndRemove) to remove the messages (default: false)</p>
+			<h6>Return</h6>
+			<p>@return jQuery the chain</p>
+		</dd>
+	</dl>
+
+	<h3 class="thin">Options reference</h3>
+
+	<div class="wrapped margin-bottom left-icon icon-info-round">
+		The defaults may be modified at runtime in <b>$.fn.message.defaults</b>, and options may be passed inline using the <b>data-message-options</b> attribute
+	</div>
+
+	<dl class="definition">
+		<dt>append</dt>
+		<dd class="boxed margin-bottom">
+			Whether to append the message element or to insert it next to the target<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>position</dt>
+		<dd class="boxed margin-bottom">
+			Position in or next the target: 'top' or 'bottom'<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> 'top'
+		</dd>
+
+		<dt>arrow</dt>
+		<dd class="boxed margin-bottom">
+			Arrow direction or false for none<br>
+			<span class="icon-marker black">Type:</span> string|boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+
+		<dt>node</dt>
+		<dd class="boxed margin-bottom">
+			Node type for the message (tip: 'p' has bottom-margin, 'a' and 'div' have none)<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> 'p'
+		</dd>
+
+		<dt>link</dt>
+		<dd class="boxed margin-bottom">
+			Link when the node type is 'a'<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> '#'
+		</dd>
+
+		<dt>classes</dt>
+		<dd class="boxed margin-bottom">
+			Extra classes (colors...)<br>
+			<span class="icon-marker black">Type:</span> array<br>
+			<span class="icon-star black">Default:</span> []
+		</dd>
+
+		<dt>stripes</dt>
+		<dd class="boxed margin-bottom">
+			Enable animated stripes<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+
+		<dt>animatedStripes</dt>
+		<dd class="boxed margin-bottom">
+			True for animated stripes (only on compatible browsers)<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>darkStripes</dt>
+		<dd class="boxed margin-bottom">
+			True for dark stripes, false for white stripes<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>stripesSize</dt>
+		<dd class="boxed margin-bottom">
+			Stripes size: 'big', 'normal' or 'thin'<br>
+			<span class="icon-marker black">Type:</span> string<br>
+			<span class="icon-star black">Default:</span> 'normal'
+		</dd>
+
+		<dt>simpler</dt>
+		<dd class="boxed margin-bottom">
+			Use true to remove rounded corners and bewel<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+
+		<dt>closable</dt>
+		<dd class="boxed margin-bottom">
+			Enable a close button<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>showCloseOnHover</dt>
+		<dd class="boxed margin-bottom">
+			Show the close button only on hover<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>animate</dt>
+		<dd class="boxed margin-bottom">
+			Animate the message's occurrence<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>animateSpeed</dt>
+		<dd class="boxed margin-bottom">
+			Speed of animation (any jQuery valid value)<br>
+			<span class="icon-marker black">Type:</span> string|int<br>
+			<span class="icon-star black">Default:</span> 'fast'
+		</dd>
+
+		<dt>groupSimilar</dt>
+		<dd class="boxed margin-bottom">
+			Group similar messages<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>groupCount</dt>
+		<dd class="boxed margin-bottom">
+			Display a bubble with the count of grouped messages<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> true
+		</dd>
+
+		<dt>inset</dt>
+		<dd class="boxed margin-bottom">
+			Should close and count bubbles be inside the message?<br>
+			<span class="icon-marker black">Type:</span> boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+
+		<dt>autoClose</dt>
+		<dd class="boxed margin-bottom">
+			Auto-close after specified delay (in milliseconds), or false to disable<br>
+			<span class="icon-marker black">Type:</span> int|boolean<br>
+			<span class="icon-star black">Default:</span> false
+		</dd>
+	</dl>
+
+</div>
+<script>
+
+	// Messages form
+	$('#messages-form').submit(function(event)
+	{
+		var messageBlock = $('#message-block'),
+			closable, showCloseOnHover,
+			color = $('#color').val(),
+			options, finalOptions = {},
+			hasOptions = false, displayOptions = [],
+			thevar, optionsString;
+
+		event.preventDefault();
+
+		// Close button
+		if ($('#close-none').prop('checked'))
+		{
+			closable = false;
+			showCloseOnHover = false;
+		}
+		else if ($('#close-always').prop('checked'))
+		{
+			closable = true;
+			showCloseOnHover = false;
+		}
+		else
+		{
+			closable = true;
+			showCloseOnHover = true;
+		}
+
+		// Auto-close delay
+		autoCloseDelay = parseInt($('#autoclose-delay').val(), 10) || 0;
+
+		// Gather options
+		options = {
+			position:			$('#position-top').prop('checked') ? 'top' : 'bottom',
+			append:				$('#append-1').prop('checked'),
+			classes:			(color.length > 0) ? [color] : [],
+			arrow:				$('#arrow').prop('checked') ? ($('#arrow-direction-top').prop('checked') ? 'top' : 'bottom') : false,
+			closable:			closable,
+			showCloseOnHover:	showCloseOnHover,
+			groupSimilar:		$('#group-similar').prop('checked'),
+			autoClose:			($('#autoclose').prop('checked') && autoCloseDelay) ? autoCloseDelay : false
+		};
+
+		// Filter default values
+		for (thevar in options)
+		{
+			if (options[thevar].toString() !== $.fn.message.defaults[thevar].toString())
+			{
+				finalOptions[thevar] = options[thevar];
+				if (typeof options[thevar] === 'object')
+				{
+					displayOptions.push(thevar+': '+(options[thevar].length > 0 ? '[\''+options[thevar].join('\',\'')+'\']' : '[]'));
+				}
+				else
+				{
+					displayOptions.push(thevar+': '+((typeof options[thevar] === 'string') ? "'"+options[thevar]+"'" : options[thevar]));
+				}
+				hasOptions = true;
+			}
+		}
+
+		// Display message
+		messageBlock.message($('#message').val(), finalOptions);
+
+		// Display code
+		$('#code-display').remove();
+		optionsString = hasOptions ? ', {'+"\n\t"+displayOptions.join(','+"\n\t")+"\n"+'}' : '';
+		$('<pre class="prettyprint" id="code-display">'+"\n"+'$(selector).message(\''+$('#message').val()+'\''+optionsString+');'+"\n"+'</pre>').insertAfter(messageBlock.parent());
+		prettyPrint();
+	});
+
+	// Clear button
+	$('#messages-clear').click(function(event)
+	{
+		$('#message-block').clearMessages();
+	});
+
+</script>
