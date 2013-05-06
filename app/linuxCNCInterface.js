@@ -516,12 +516,14 @@ define(function (require) {
     lcncsvr.hbTimeout = new Date() / 1000.0 + lcncsvr.serverReconnectHBTimeoutInterval;
     lcncsvr.checkHB = function()
     {
-        if ( (new Date()/1000.0) > lcncsvr.hbTimeout )
-        {
-            lcncsvr.reopen();
-        } else {
-            lcncsvr.socket.send(JSON.stringify({"id": "HB", "command": "get", "name": "estop"}));
-        }
+        try {
+            if ( (new Date()/1000.0) > lcncsvr.hbTimeout )
+            {
+                lcncsvr.reopen();
+            } else {
+                lcncsvr.socket.send(JSON.stringify({"id": "HB", "command": "get", "name": "estop"}));
+            }
+        } catch (ex) {}
     }
     lcncsvr.hbCheckIntervalID = setInterval( lcncsvr.checkHB, lcncsvr.serverReconnectCheckInterval );
 
