@@ -1,0 +1,153 @@
+username;Nazwa użytkownika
+password;Hasło
+login;Zalogować
+forgot_password;Zapomniałeś hasła
+register;Zarejestrować
+logout;Wyloguj się
+new_chat_messages;Nowe wiadomości czatu
+new_products;Nowe produkty
+new_emails;Nowe emaile
+new_members;Nowy czġonek
+dashboard;Tablica rozdzielcza
+finances;Finanse
+ui_elements;Elementy UI
+ui_elements_long;Elementy interfejsu uṡytkownika
+forms;Formularze
+my_account;Moje konto
+form_demo;Formularze demonstracyjny
+form_elements;Elementy formularza
+form_validator;Formularz werfikujacy
+form_wizzard;Kreator formularzy
+file_managers;Menadzer plików
+tables;Tabele
+tables_classic;Tabele klasyczne 
+tables_themed;Tabele tematyczne
+tables_enhanced;Tabele rozszerzone
+calendar;Kalendarz
+bookings;Rezerwacje
+photo_gallery;Galeria zdjêæ
+hours;Godziny
+days;Dni
+clear;Oczyścić
+website_traffic;Ruchu na stronie
+traffic;Ruch
+overview;Streszczenie
+visits;Odwiedziny
+visitors;Odwiedzający
+pageviews;Odsłon
+interest;Odsetki
+avg_time;Średni czas
+returning;Powracający
+total_users;Llość użytkowników
+new_users;Nowi użytkownicy
+products;Produkty
+total_orders;Razem zamówień
+pending_orders;Zlecenia oczekujące
+pending_delivery;Oczekiwaniu na dostawy
+support;Wsparcie
+traffic_sources;Źródła ruchu
+organic;Organiczny
+direct;Kierować
+referral;Skierowanie
+cpc;CPC
+referrals;Skierowania
+source;Źródło
+medium;Ośrodek
+pg_views;Wyświetleń strony
+exits;Wyjście
+conversions;Konwersje
+activity;Działalność
+charts;Wykresy
+chart_simple;Proste wykresy
+chart_lines_fill_nopoints;Linie wykresu z wypeġnieniem i bez punktów
+chart_ordered_bars;Sortowane sġupki wykresu
+chart_donut;Wykres piercieniowy
+chart_stacked_bars;Skumulowany wykres sġupkowy
+chart_pie;Wykres sġupkowy koġowego
+chart_horizontal_bars;Wykres poziomy
+chart_live;Automatyczna aktualizacja wykresu
+orders;Zamówienia
+categories;Kategorie 
+add_product;Dodaj produkt
+manage_products;Zarządzać produktami
+manage_categories;Zarządzanie kategoriami
+total_products;Wszystkich produktów
+sort_by;Sortuj według
+no_crt;Nr.
+title;Tytuł
+drag;Ciągnąć
+preview;Podgląd
+stock;Akcje
+price;Cena
+actions;Akcje
+filter;Filtr
+category;Kategoria
+select;Wybierać
+from;Z
+to;Do
+show_active_products;Pokazać aktywnych produktów
+show_inactive_products;Pokaż nieaktywnych produktów
+with_selected;Z wybranymi
+online_shop;Sklep internetowy
+save;Zapisać
+description;Opis
+photos;Zdjęcia
+custom_attributes;Niestandardowe atrybuty
+qty_and_price;Ilość i cena
+product_title;Nazwa produktu
+summary;Streszczenie
+add_record;Dodać rekord
+history;Historia
+sidebar_menu;Pasek boczny menu
+creditors;Wierzyciele
+debitors;Dłużnicy
+clients;Klientów
+total_expenses;Całkowite wydatki
+total_income;Całkowity dochód
+view_details;Zobacz szczegóły
+cash_flow;Przepływy pieniężne
+out_of;Z
+transactions;Transakcje
+transaction;Tranzakcja
+date;Data
+amount;Kwota
+show_all;Pokaż wszystkie
+time;Czas
+client;Klient
+phone;Telefon
+heard_from;Usłyszał od
+location;Lokalizacja
+add_booking;Dodać rezerwacji
+total_amount;Łączna kwota
+new_clients;Nowych klientów
+cancellations;Anulowanie
+lost;Zagubiony
+print;Wydrukować
+view;Widok
+personal_details;Informacje osobiste
+first_name;Imię
+last_name;Nazwisko
+gender;Płeć
+male;Mężczyzna
+female;Kobieta
+age;Wiek
+date_of_birth;Data urodzenia
+about_me;O mnie
+save_changes;Zapisać zmiany
+cancel;Anulować
+edit_account;Edycja konta
+account_details;Szczegóły konta
+account_settings;Ustawienia konta
+profile_image;Zdjęcie w profilu
+select_image;Wybrać obraz
+change;Zmieniać
+remove;Usunąć
+old_password;Stare hasło
+new_password;Nowe hasło
+repeat_new_password;Powtórz nowe hasło
+contact_details;Dane kontaktowe
+change_password;Zmienić hasło
+confirm_password;Zatwierdzić hasło
+site_pages;Stronach witryny
+add_page;Dodaj stronę
+edit;Edytować

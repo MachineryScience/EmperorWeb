@@ -1,0 +1,38 @@
+<!-- Title bar -->
+
+<div class="navbar navbar-inverse navbar-fixed-bottom" id="nav_bottom">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <a class="brand" href="#">Status</a>
+
+
+            <ul class="nav">
+                <li>
+                    <a href="#help_network" >
+                        <span class="label larger-label" data-bind="css: {'label-important': !linuxCNCServer.server_logged_in()}">{{nls.network}}</span>
+                        <span data-bind="visible: linuxCNCServer.server_logged_in">{{nls.connected}}</span>
+                        <span data-bind="visible: !linuxCNCServer.server_logged_in()">{{nls.not_connected}}</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#help_file">
+                        <span class="label larger-label">{{nls.filename}}</span> <span data-bind="text: filename_short"></span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#help_units">
+                        <span class="label larger-label">{{nls.program_unit}}</span>
+                        <span data-bind="visible: linuxCNCServer.vars.program_units.data() == 1">{{nls.inch}}</span>
+                        <span data-bind="visible: linuxCNCServer.vars.program_units.data() == 2">{{nls.mm}}</span>
+                        <span data-bind="visible: linuxCNCServer.vars.program_units.data() == 3">{{nls.cm}}</span>
+                    </a>
+                </li>
+
+
+            </ul>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,153 @@
+username;Nume utilizator
+password;Parolă
+login;Autentificare
+forgot_password;ai uitat parola
+register;Înregistrare
+logout;Ieșire din cont
+new_chat_messages;mesaje noi
+new_products;produse noi
+new_emails;email-uri noi
+new_members;membri noi
+dashboard;Tablou de bord
+finances;Financiar
+ui_elements;Elemente UI
+ui_elements_long;Elemente de interfață cu utilizatorul
+forms;Formulare
+my_account;Contul meu
+form_demo;Formulare demo
+form_elements;Elemente formular
+form_validator;Validare formulare
+form_wizzard;Pas cu pas
+file_managers;Administrare fisiere
+tables;Tabele
+tables_classic;Tabele clasice
+tables_themed;Tabele cu tematică
+tables_enhanced;Tabele avansate
+calendar;Calendar
+bookings;Rezervări
+photo_gallery;Galerie Foto
+hours;Ore
+days;Zile
+clear;Resetează
+website_traffic;Trafic pe site
+traffic;Trafic
+overview;Sumar
+visits;Vizite
+visitors;Vizitatori
+pageviews;Afișări pagină
+interest;Interes
+avg_time;Timp mediu
+returning;Vizitatori care revin
+total_users;Total utilizatori
+new_users;Utilizatori noi
+products;Produse
+total_orders;Total comenzi
+pending_orders;Comenzi în așteptare
+pending_delivery;Așteaptă livrare
+support;Suport
+traffic_sources;Surse de trafic
+organic;organic
+direct;direct
+referral;referință
+cpc;cpc
+referrals;Referințe
+source;Sursă
+medium;Mediu
+pg_views;Afișări pg.
+exits;Ieșiri
+conversions;Conversii
+activity;Activitate
+charts;Grafice
+chart_simple;Grafic simplu
+chart_lines_fill_nopoints;Grafic cu linii umplute & fără puncte
+chart_ordered_bars;Grafic cu bare ordonate
+chart_donut;Grafic tip gogoașă
+chart_stacked_bars;Grafic cu bare stratificate
+chart_pie;Grafic tip placintă
+chart_horizontal_bars;Grafic cu bare orizontale
+chart_live;Grafic cu actualizare automată
+orders;Comenzi
+categories;Categorii
+add_product;Adăugare produs
+manage_products;Administrare produse
+manage_categories;Administrare categorii
+total_products;Total produse
+sort_by;Sortează după
+no_crt;Nr.
+title;Titlu
+drag;Trage
+preview;Previzualizează
+stock;Stoc
+price;Preț
+actions;Acțiuni
+filter;Filtrează
+category;Categorie
+select;Selectează
+from;De la
+to;Până la
+show_active_products;Arată produse active
+show_inactive_products;Arată produse inactive
+with_selected;Cu cele selectate
+online_shop;Magazin online
+save;Salvează
+description;Descriere
+photos;Imagini
+custom_attributes;Proprietăți
+qty_and_price;Cantitate și preț
+product_title;Denumire produs
+summary;Sumar
+add_record;Adaugă înregistrare
+history;Istoric
+sidebar_menu;Meniu lateral
+creditors;Creditori
+debitors;Debitori
+clients;Clienți
+total_expenses;Total cheltuieli
+total_income;Total venituri
+view_details;Vezi detalii
+cash_flow;Flux numerar
+out_of;din
+transactions;Tranzacții
+transaction;Tranzacție
+date;Dată
+amount;Sumă
+show_all;Arată tot
+time;Timp
+client;Client
+phone;Telefon
+heard_from;Auzit de la
+location;Locație
+add_booking;Adaugă rezervare
+total_amount;Total sumă
+new_clients;Clienți noi
+cancellations;Anulări
+lost;Pierdut
+print;Imprimă
+view;Vezi
+personal_details;Detalii personale
+first_name;Nume
+last_name;Prenume
+gender;Sex
+male;Bărbat
+female;Femeie
+age;Vârstă
+date_of_birth;Data nașterii
+about_me;Despre mine
+save_changes;Salvează modificări
+cancel;Anulează
+edit_account;Editare cont
+account_details;Detalii cont
+account_settings;Setări cont
+profile_image;Imagine profil
+select_image;Alege imagine
+change;Schimbă
+remove;Șterge
+old_password;Parolă veche
+new_password;Parolă nouă
+repeat_new_password;Repetă parolă nouă
+contact_details;Detalii contact
+change_password;Schimbă parolă
+confirm_password;Confirmă parolă
+site_pages;Pagini site
+add_page;Adaugă pagină
+edit;Editare

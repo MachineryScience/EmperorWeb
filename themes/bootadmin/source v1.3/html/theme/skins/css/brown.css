@@ -1,0 +1,149 @@
+.widget .widget-head,
+.btn-primary,
+.navbar.main .topnav > li .dropdown-menu li > a:hover,
+.navbar.main .topnav > li .dropdown-menu .active > a,
+.navbar.main .topnav > li .dropdown-menu .active > a:hover,
+#flotTip,
+.btn-group.open .btn-primary.dropdown-toggle,
+.btn-primary.disabled,
+.btn-primary[disabled],
+.btn-primary:hover,
+.filter-bar div.lbl,
+.widget.widget-2.primary .widget-head,
+.widget .widget-body.list.list-2 ul li.active a i:before,
+.label-important,
+.table-primary thead th,
+.pagination ul > .active > a,
+.pagination ul > .active > span,
+.gallery ul li .thumb {
+  background-color: #ba5d32;
+}
+a,
+p a,
+.col.main-left ul li.active.glyphicons i:before,
+.col.main-left ul li.active a,
+.widget .widget-body.list ul li .count,
+.breadcrumb a,
+.breadcrumb .glyphicons i:before,
+.breadcrumb .glyphicons,
+.navbar.main .profile h1,
+.col.main-left .navarrow span i:before,
+.forgot,
+.forgot i:before,
+.glyphicons.single,
+.glyphicons.single i:before,
+.widget .widget-body.list.list-2 ul li.active a,
+.table-primary tbody td.important,
+.finances_cashflow .glyphicons.btn-action.single i:before,
+.col.main-left ul li.hasSubmenu2 ul.collapse li.active a i:before {
+  color: #ba5d32;
+}
+.navbar.main .profile em {
+  color: #f0d5c8;
+}
+.navbar.main .notif li a i:before {
+  color: #a6532d;
+}
+.navbar.main .notif li a {
+  background-color: #db9777;
+}
+.col.main-left ul li.active,
+.widget .widget-head,
+.btn-primary,
+.navbar.main .notif li a,
+#flotTip,
+.widget.widget-2.primary .widget-head,
+.widget .widget-body.list.list-2 ul li.active a i:before,
+.table-primary thead th,
+.pagination ul > .active > a,
+.pagination ul > .active > span {
+  border-color: #ba5d32;
+}
+.navbar.main,
+.navbar.main .profile,
+.navbar.main .topnav > li {
+  background-color: #402a21;
+}
+.navbar.main .profile,
+.navbar.main .topnav > li,
+.navbar.main .profile img.avatar,
+.navbar.main .innerpx {
+  border-color: #1e1410;
+}
+.navbar.main .line,
+.loginWrapper .line {
+  border-bottom-color: #1e1410;
+  border-top-color: #835644;
+  border-left-color: #1e1410;
+  border-right-color: #835644;
+}
+.navbar.main .topnav > li > a span,
+.navbar.main .topnav > li > .glyphicons i:before,
+.navbar.main .profile strong {
+  color: #c9a597;
+  text-shadow: 0 1px 0 #000000;
+}
+.navbar.main .profile,
+.navbar.main .topnav > li {
+  box-shadow: 0 0 0 1px #835644;
+  -webkit-box-shadow: 0 0 0 1px #835644;
+  -moz-box-shadow: 0 0 0 1px #835644;
+}
+.navbar.main .topnav > li .btn-group .caret {
+  border-top-color: #c9a597;
+  border-bottom-color: #c9a597;
+}
+.navbar.main .notif li a {
+  background-color: #db9777;
+}
+.col.main-left {
+  background-color: #855843;
+}
+.col.main-left ul li.hasSubmenu2 ul.collapse li {
+  background-color: #523629;
+}
+.col.main-left ul li {
+  border-color: #634232;
+}
+.col.main-left ul li > a,
+.col.main-left ul li.hasSubmenu2 ul {
+  border-color: #b98b75;
+}
+.col.main-left ul li a,
+.col.main-left ul li.glyphicons i:before,
+.col.main-left ul li .glyphicons i:before {
+  color: #ede0da;
+  text-shadow: 0 1px 0 #412b21;
+}
+.col.main-left ul li.active i:before {
+  text-shadow: none;
+}
+.span12.main,
+.col.main-left ul li.active,
+.col.main-left ul li.hasSubmenu2 ul.collapse li.active {
+  background-color: #ffffff;
+}
+.table-primary tbody td {
+  background-color: #fbf3f0;
+}
+.table-primary tbody tr.selected td,
+.table-primary tbody tr.selectable:hover td {
+  background-color: #f0d5c8;
+}
+.table-primary.table-bordered tbody td,
+.table-primary,
+.pagination ul > .disabled > a,
+.pagination ul > .disabled > span {
+  border-color: #fbf3f0;
+}
+.widget .widget-body.list.list-2 ul li.active {
+  border-color: #db9777;
+}
+.widget .widget-body.list.list-2 ul li a {
+  color: #db9777;
+}
+.widget .widget-body.list.list-2 ul li a i:before {
+  background: #fbf3f0;
+  color: #d0784f;
+  border-color: #db9777;
+}

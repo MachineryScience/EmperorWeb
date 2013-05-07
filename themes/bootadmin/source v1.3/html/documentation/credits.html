@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>    <html class="lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>    <html class="lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html> <!--<![endif]-->
+<head>
+	<title>BootAdmin - Responsive Admin HTML Template</title>
+	
+	<!-- Meta -->
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	
+	<!-- Bootstrap -->
+	<link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="../bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />
+	
+	<!-- Bootstrap Extended -->
+	<link href="../bootstrap/extend/jasny-bootstrap/css/jasny-bootstrap.min.css" rel="stylesheet">
+	<link href="../bootstrap/extend/jasny-bootstrap/css/jasny-bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="../bootstrap/extend/bootstrap-wysihtml5/css/bootstrap-wysihtml5-0.0.2.css" rel="stylesheet">
+	
+	<!-- JQueryUI v1.9.2 -->
+	<link rel="stylesheet" href="../theme/scripts/jquery-ui-1.9.2.custom/css/smoothness/jquery-ui-1.9.2.custom.min.css" />
+	
+	<!-- Glyphicons -->
+	<link rel="stylesheet" href="../theme/css/glyphicons.css" />
+	
+	<!-- Bootstrap Extended -->
+	<link rel="stylesheet" href="../bootstrap/extend/bootstrap-select/bootstrap-select.css" />
+	<link rel="stylesheet" href="../bootstrap/extend/bootstrap-toggle-buttons/static/stylesheets/bootstrap-toggle-buttons.css" />
+	
+	<!-- Uniform -->
+	<link rel="stylesheet" media="screen" href="../theme/scripts/pixelmatrix-uniform/css/uniform.default.css" />
+
+	<!-- JQuery v1.8.2 -->
+	<script src="../theme/scripts/jquery-1.8.2.min.js"></script>
+	
+	<!-- Modernizr -->
+	<script src="../theme/scripts/modernizr.custom.76094.js"></script>
+	
+	<!-- MiniColors -->
+	<link rel="stylesheet" media="screen" href="../theme/scripts/jquery-miniColors/jquery.miniColors.css" />
+	
+	<!-- google-code-prettify -->
+	<link href="../theme/scripts/google-code-prettify/prettify.css" type="text/css" rel="stylesheet" />
+	
+	<!-- Theme -->
+	<link rel="stylesheet" href="../theme/css/style.min.css?1359189028" />
+	
+	<!-- Google Analytics -->
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-36057737-1']);
+	  _gaq.push(['_trackPageview']);
+	
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	
+	</script>
+	
+	<!-- LESS 2 CSS -->
+	<script src="../theme/scripts/less-1.3.3.min.js"></script>
+	
+</head>
+<body>
+	
+	<!-- Start Content -->
+	<div class="container-fluid left-menu">
+		
+		<div class="navbar main">
+			<div class="innerpx">
+				<button type="button" class="btn btn-navbar hidden-desktop hidden-tablet">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<div class="positionWrapper">
+					<span class="line"></span>
+										<div class="profile">
+						<img src="http://www.placehold.it/38x38/232323" class="avatar" alt="Profile" />
+						<span class="info hidden-phone">
+							<strong>Adrian Demian</strong>
+							<em>Content Manager</em>
+						</span>
+					</div>
+					<ul class="notif">
+						<li><a href="" class="glyphicons chat btn" rel="tooltip" data-placement="bottom" data-original-title="7 new chat message(s)"><i></i><span>7</span></a></li>
+						<li><a href="" class="glyphicons shopping_cart btn" rel="tooltip" data-placement="bottom" data-original-title="1 new product(s)"><i></i><span>1</span></a></li>
+						<li><a href="" class="glyphicons user_add btn" rel="tooltip" data-placement="bottom" data-original-title="4 new member(s)"><i></i><span>4</span></a></li>
+						<li><a href="" class="glyphicons envelope btn" rel="tooltip" data-placement="bottom" data-original-title="3 new email(s)"><i></i><span>3</span></a></li>
+					</ul>
+										<ul class="topnav hidden-phone">
+						<li>
+							<div class="btn-group">
+								<a href="#" class="btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<img src="../theme/images/lang/en.png" align="absmiddle">
+								<span class="caret"></span></a>
+						    	<ul class="dropdown-menu pull-right">
+						      		<li class="active"><a href="?page=documentation&section=credits&lang=en" title="English"><img src="../theme/images/lang/en.png" align="absmiddle"> English</a></li>
+						      		<li><a href="?page=documentation&section=credits&lang=ro" title="Romanian"><img src="../theme/images/lang/ro.png" align="absmiddle"> Romanian</a></li>
+						      		<li><a href="?page=documentation&section=credits&lang=it" title="Italian"><img src="../theme/images/lang/it.png" align="absmiddle"> Italian</a></li>
+						      		<li><a href="?page=documentation&section=credits&lang=fr" title="French"><img src="../theme/images/lang/fr.png" align="absmiddle"> French</a></li>
+						      		<li><a href="?page=documentation&section=credits&lang=pl" title="Polish"><img src="../theme/images/lang/pl.png" align="absmiddle"> Polish</a></li>
+						    	</ul>
+						  	</div>
+						</li>
+												<li>
+							<a href="#themer" data-toggle="collapse" class="logout glyphicons eyedropper"><i></i><span>Themer</span></a>
+							<div id="themer" class="collapse">
+								<div class="wrapper">
+									<h4>Themer <span>color &amp; layout options</span></h4>
+									<ul>
+										<li>Theme: <select id="themer-theme" class="pull-right"></select><div class="clearfix"></div></li>
+										<li>Primary Color: <input type="minicolors" data-default="#ffffff" data-slider="hue" data-textfield="false" data-position="left" id="themer-primary-cp" /><div class="clearfix"></div></li>
+										<li class="advanced">Header Color: <input type="minicolors" data-slider="hue" data-default="#ffffff" data-textfield="false" data-position="left" id="themer-header-cp" /><div class="clearfix"></div></li>
+										<li class="advanced">Menu Color: <input type="minicolors" data-slider="hue" data-default="#ffffff" data-textfield="false" data-position="left" id="themer-menu-cp" /><div class="clearfix"></div></li>
+										<li>
+											<span class="link" id="themer-custom-reset">reset theme</span>
+											<span class="pull-right"><label>advanced <input type="checkbox" value="1" id="themer-advanced-toggle" /></label></span>
+										</li>
+									</ul>
+																		<hr class="separator" />
+									<ul>
+										<li>Menu position: <select id="themer-menu-position" class="pull-right"></select><div class="clearfix"></div></li>
+										<li>Menu size: <select id="themer-menu-size" class="pull-right"></select><div class="clearfix"></div></li>
+									</ul>
+																		<div id="themer-getcode" class="hide">
+										<hr class="separator" />
+										<button class="btn btn-primary btn-small pull-right btn-icon glyphicons download" id="themer-getcode-less"><i></i>Get LESS</button>
+										<button class="btn btn-inverse btn-small pull-right btn-icon glyphicons download" id="themer-getcode-css"><i></i>Get CSS</button>
+										<div class="clearfix"></div>
+									</div>
+								</div>
+							</div>
+						</li>
+																		<li>
+							<a href="../login.html?lang=en" class="logout glyphicons lock"><i></i><span>Logout</span></a>
+						</li>
+											</ul>
+				</div>
+			</div>
+		</div>
+	
+		<div class="row-fluid rrow main">
+			<div class="span12 main col" role="main">
+				<div class="row-fluid rrow">
+					<div class="span2 col main-left hide hidden-phone menu-large">
+						<div class="rrow scroll-y-left">
+							<div class="iScrollWrapper">
+								<ul>
+									<li class="glyphicons home"><a href="../index.html?lang=en"><i></i><span>Dashboard</span></a></li>
+									<li class="glyphicons coins"><a href="../finances.html?lang=en"><i></i><span>Finances</span></a></li>
+									<li class="hasSubmenu2">
+										<a data-toggle="collapse" class="glyphicons shopping_cart" href="#menu_ecommerce"><i></i><span>Online Shop</span></a>
+										<ul class="collapse" id="menu_ecommerce">
+											<li class=""><a href="../products.html?lang=en" class="glyphicons show_thumbnails"><i></i><span>Products</span></a></li>
+											<!-- <li class=""><a href="../categories.html?lang=en" class="glyphicons show_big_thumbnails"><i></i><span>Categories</span></a></li> -->
+											<li class=""><a href="../product_edit.html?lang=en" class="glyphicons cart_in"><i></i><span>Add product</span></a></li>
+											<!-- <li class=""><a href="../orders.html?lang=en" class="glyphicons list"><i></i><span>Orders</span></a></li> -->
+										</ul>
+									</li>
+									<li class="glyphicons sort"><a href="../pages.html?lang=en"><i></i><span>Site Pages</span></a></li>
+									<li class="glyphicons picture"><a href="../gallery.html?lang=en"><i></i><span>Photo Gallery</span></a></li>
+									<li class="glyphicons adress_book"><a href="../bookings.html?lang=en"><i></i><span>Bookings</span></a></li>
+									<li class="glyphicons charts"><a href="../charts.html?lang=en"><i></i><span>Charts</span></a></li>
+									<li class="glyphicons cogwheels"><a href="../ui.html?lang=en"><i></i><span>UI Elements</span></a></li>
+									<li class="hasSubmenu2">
+										<a data-toggle="collapse" class="glyphicons show_thumbnails_with_lines" href="#menu_forms"><i></i><span>Forms</span></a>
+										<ul class="collapse" id="menu_forms">
+											<li class=""><a href="../form_demo.html?lang=en" class="glyphicons user"><i></i><span>My Account</span></a></li>
+											<li class=""><a href="../form_elements.html?lang=en" class="glyphicons show_big_thumbnails"><i></i><span>Form Elements</span></a></li>
+											<li class=""><a href="../form_validator.html?lang=en" class="glyphicons circle_ok"><i></i><span>Form Validator</span></a></li>
+											<!-- <li class=""><a href="../form_wizzard.html?lang=en" class="glyphicons share_alt"><i></i><span>Form Wizzard</span></a></li> -->
+											<li class=""><a href="../file_managers.html?lang=en" class="glyphicons file_import"><i></i><span>File Managers</span></a></li>
+										</ul>
+									</li>
+									<li class="hasSubmenu2">
+										<a data-toggle="collapse" class="glyphicons table" href="#menu_tables"><i></i><span>Tables</span></a>
+										<ul class="collapse" id="menu_tables">
+											<li class=""><a href="../tables.html?lang=en" class="glyphicons show_thumbnails"><i></i><span>Classic Tables</span></a></li>
+											<li class=""><a href="../tables_themed.html?lang=en" class="glyphicons show_thumbnails"><i></i><span>Themed Tables</span></a></li>
+											<li class=""><a href="../tables_enhanced.html?lang=en" class="glyphicons show_thumbnails"><i></i><span>Enhanced Tables</span></a></li>
+										</ul>
+									</li>
+									<li class="glyphicons calendar"><a href="../calendar.html?lang=en"><i></i><span>Calendar</span></a></li>
+								</ul>
+							</div>
+							<span class="navarrow hide">
+								<span class="glyphicons circle_arrow_down"><i></i></span>
+							</span>
+						</div>
+					</div>
+					<div class="span10 col main-right">
+						<div class="rrow scroll-y" id="mainYScroller">
+							<div class="inner topRight"><!-- Documentation -->
+<section class="documentation">
+	<div class="row-fluid">
+		<div class="span9">
+				
+			<!-- Documentation CONTENT -->
+			<h1>Credits</h1>
+<hr class="separator bottom" />
+<p>Packages &amp; libraries used in the BootAdmin Template, along with attributions to their authors and licenses.</p>
+
+<h3>Libraries &amp; Plugins</h3>
+<hr class="separator bottom" />
+<ul>
+	<li><span>Twitter Bootstrap - <a class="no-js" href="https://github.com/twitter/bootstrap" target="_blank">github.com/twitter/bootstrap</a></span></li>
+	<li><span>JQuery - <a class="no-js" href="http://jquery.com" target="_blank">jquery.com</a></span></li>
+	<li><span>Twitter Feed - <a class="no-js" href="http://www.queness.com/post/8567/create-a-dead-simple-twitter-feed-with-jquery" target="_blank">queness.com/post/8567/create-a-dead-simple-twitter-feed-with-jquery</a></span></li>
+	<li><span>less.js - <a class="no-js" href="https://github.com/cloudhead/less.js" target="_blank">github.com/cloudhead/less.js</a> - <a class="no-js" href="https://github.com/cloudhead/less.js/blob/master/LICENSE" target="_blank">(Apache License 2.0)</a></span></li>
+	<li><span>Cubiq iScroll 4 - <a class="no-js" href="http://cubiq.org/iscroll-4" target="_blank">cubiq.org/iscroll-4</a> - <a class="no-js" href="http://cubiq.org/license" target="_blank">MIT Licensed</a></li>
+	<li><span>DataTables - <a class="no-js" href="http://www.datatables.net" target="_blank">www.datatables.net</a>  - Dual licensed GPLv2 &amp; BSD</li>
+	<li><span>Farbtastic - <a class="no-js" href="http://acko.net/blog/farbtastic-jquery-color-picker-plug-in/" target="_blank">acko.net/blog/farbtastic-jquery-color-picker-plug-in</a> - (GPL Licensed)</span></li>
+	<li><span>FullCalendar - <a class="no-js" href="http://arshaw.com/fullcalendar" target="_blank">arshaw.com/fullcalendar</a> - Dual licensed under the MIT and GPL licenses</li>
+	<li><span>google-code-prettify - <a class="no-js" href="http://code.google.com/p/google-code-prettify/" target="_blank">code.google.com/p/google-code-prettify</a> - <a class="no-js" href="http://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License 2.0</a></span></li>
+	<li><span>jQuery Knob - <a class="no-js" href="https://github.com/aterrien/jQuery-Knob" target="_blank">github.com/aterrien/jQuery-Knob</a> - Dual licensed under the MIT and GPL</li>
+	<li><span>400+ Glyphicons PRO - <a class="no-js" href="http://glyphicons.com" target="_blank">glyphicons.com</a> - <a class="no-js" href="http://glyphicons.com/glyphicons-licenses/" target="_blank">PRO License</a><p style="padding: 5px 0 0;"><strong class="highlight-1">You are allowed to use the Glyphicons as part of this item ONLY.</strong> Reselling of the icons is prohibited and the license is non transferable. If you would like to use GLYPHICONS as a part of your own (another) product, you have to buy your own license.</p></span></li>
+	<li><span>Google Web Fonts - <a class="no-js" href="http://www.google.com/webfonts" target="_blank">www.google.com/webfonts</a></li>
+	<li><span>jQuery MiniColors - <a class="no-js" href="http://labs.abeautifulsite.net/jquery-miniColors/" target="_blank">abeautifulsite.net</a> - Dual-licensed under the MIT and GPL Version 2 licenses</li>
+	<li><span>jQuery UI - <a class="no-js" href="http://www.jqueryui.com" target="_blank">www.jqueryui.com</a></li>
+	<li><span>jQuery UI Touch Punch - <a class="no-js" href="http://touchpunch.furf.com" target="_blank">touchpunch.furf.com</a> - dual licensed under the MIT or GPL Version 2 licenses</li>
+	<li><span>jQuery Validation - <a class="no-js" href="http://bassistance.de/jquery-plugins/jquery-plugin-validation/" target="_blank">bassistance.de</a> - Licensed under the MIT license</li>
+	<li><span>Pixelmatrix Uniform - <a class="no-js" href="https://github.com/pixelmatrix/uniform" target="_blank">github.com/pixelmatrix/uniform</a> - MIT License</li>
+	<li><span>Plupload - <a class="no-js" href="http://www.plupload.com/" target="_blank">www.plupload.com</a> - GPLv2 licensed</li>
+	<li><span>jQuery.ba-resize - <a class="no-js" href="http://benalman.com/projects/jquery-resize-plugin" target="_blank">benalman.com</a> - Dual licensed under the MIT and GPL licenses</li>
+	<li><span>jQuery Cookie - <a class="no-js" href="https://github.com/carhartl/jquery-cookie " target="_blank">github.com/carhartl/jquery-cookie</a> - Dual licensed under the MIT or GPL Version 2 licenses</li>
+	<li><span>jQuery Masonry - <a class="no-js" href="http://masonry.desandro.com" target="_blank">masonry.desandro.com</a> - Licensed under the MIT license</li>
+	<li><span>Modernizr - <a class="no-js" href="http://modernizr.com/" target="_blank">modernizr.com</a> - MIT &amp; BSD</li>
+	<li><span>Flot Charts - <a class="no-js" href="http://www.flotcharts.org/" target="_blank">http://www.flotcharts.org/</a></span></li>
+	<li><span>Jasny Bootstrap - <a class="no-js" href="https://jasny.github.com/bootstrap/" target="_blank">https://jasny.github.com/bootstrap/</a></span></li>
+	<li><span>Boostrap WYSIHTML5 - <a class="no-js" href="http://jhollingworth.github.com/bootstrap-wysihtml5/" target="_blank">http://jhollingworth.github.com/bootstrap-wysihtml5</a></span></li>
+	<li><span>Bootstrap Bootbox - <a class="no-js" href="http://bootboxjs.com" target="_blank">bootboxjs.com</a></span></li>
+	<li><span>Zend Framework - <a class="no-js" href="http://framework.zend.com" target="_blank">framework.zend.com</a></span></li>
+</ul><br/>
+
+<h3>Flickr Photos</h3>
+<hr class="separator bottom" />
+<p>With most respect to the authors, the following photos were used for BootAdmin's photo gallery as demo content. All images are licensed under <a href="http://creativecommons.org/licenses/by/2.0/deed.en">Creative Commons - Attribution 2.0 Generic</a></p>
+<ul class="listbox">
+	<li><span><a class="no-js" href="http://www.flickr.com/photos/ag2r/4372171371" target="_blank">I see you</a> - by <a class="no-js" href="http://www.flickr.com/photos/ag2r/" target="_blank">Angelo Gonzalez</a></span></li>
+	<li><span><a class="no-js" href="http://www.flickr.com/photos/ag2r/8017625581" target="_blank">hope</a> - by <a class="no-js" href="http://www.flickr.com/photos/ag2r/" target="_blank">Angelo Gonzalez</a></span></li>
+	<li><span><a class="no-js" href="http://www.flickr.com/photos/ag2r/7897228018" target="_blank">blonde look</a> - by <a class="no-js" href="http://www.flickr.com/photos/ag2r/" target="_blank">Angelo Gonzalez</a></span></li>
+	<li><span><a class="no-js" href="http://www.flickr.com/photos/ag2r/7827375218" target="_blank">Sympathy</a> - by <a class="no-js" href="http://www.flickr.com/photos/ag2r/" target="_blank">Angelo Gonzalez</a></span></li>
+	<li><span><a class="no-js" href="http://www.flickr.com/photos/ag2r/7804955466" target="_blank">Nei</a> - by <a class="no-js" href="http://www.flickr.com/photos/ag2r/" target="_blank">Angelo Gonzalez</a></span></li>
+	<li><span><a class="no-js" href="http://www.flickr.com/photos/ag2r/7736460500" target="_blank">come over here</a> - by <a class="no-js" href="http://www.flickr.com/photos/ag2r/" target="_blank">Angelo Gonzalez</a></span></li>
+	<li><span><a class="no-js" href="http://www.flickr.com/photos/ag2r/7728300972" target="_blank">scarlett</a> - by <a class="no-js" href="http://www.flickr.com/photos/ag2r/" target="_blank">Angelo Gonzalez</a></span></li>
+	<li><span><a class="no-js" href="http://www.flickr.com/photos/ag2r/7609228282" target="_blank">what is good does not last forever, long enough to be memorable.</a> - by <a class="no-js" href="http://www.flickr.com/photos/ag2r/" target="_blank">Angelo Gonzalez</a></span></li>
+	<li><span><a class="no-js" href="http://www.flickr.com/photos/ag2r/7134946449" target="_blank">happy couple</a> - by <a class="no-js" href="http://www.flickr.com/photos/ag2r/" target="_blank">Angelo Gonzalez</a></span></li>
+	<li><span><a class="no-js" href="http://www.flickr.com/photos/ag2r/6831365198" target="_blank">elphic sister</a> - by <a class="no-js" href="http://www.flickr.com/photos/ag2r/" target="_blank">Angelo Gonzalez</a></span></li>
+	<li><span><a class="no-js" href="http://www.flickr.com/photos/ag2r/7044394107" target="_blank">couple</a> - by <a class="no-js" href="http://www.flickr.com/photos/ag2r/" target="_blank">Angelo Gonzalez</a></span></li>
+	<li><span><a class="no-js" href="http://www.flickr.com/photos/ag2r/7041235787" target="_blank">waiting for you</a> - by <a class="no-js" href="http://www.flickr.com/photos/ag2r/" target="_blank">Angelo Gonzalez</a></span></li>
+</ul><br/>
+
+<h3>PhotoDune Items</h3>
+<hr class="separator bottom" />
+
+<p>With most respect to the authors, the following item covers were used for the live preview, as demo content. NOT included in the download package.</p>
+<ul class="listbox">
+	<li><span><a class="no-js" href="http://photodune.net/item/programming/2359705?ref=mosaicpro" target="_blank">Programming</a> - Young programmer typing on a computer keyboard while holding a cup of coffee in his other hand and a pencil in his mouth - by <a class="no-js" href="http://photodune.net/user/ollyi?ref=mosaicpro" target="_blank">ollyi</a></span></li>
+</ul><br/>			<!-- Documentation CONTENT END -->
+				
+		</div>
+		<div class="span3">
+			<div class="widget widget-2 primary widget-body-white">
+				<div class="widget-head">
+					<h4 class="heading glyphicons circle_question_mark"><i></i> Documentation</h4>
+				</div>
+				<div class="widget-body list list-2">
+					<ul>
+						<li><a href="../documentation.html?lang=en" title="" class="glyphicons link"><i></i>Overview</a></li>
+						<li class="hasSubmenu">
+							<a href="../documentation/getting-started/files.html?lang=en" title="" class="glyphicons link"><i></i>Getting Started</a>
+							<ul>
+								<li><a href="../documentation/getting-started/files.html?lang=en" title="">What's in the package</a></li>
+								<li><a href="../documentation/getting-started/config.html?lang=en" title="">Configuration</a></li>
+								<li><a href="../documentation/getting-started/lang.html?lang=en" title="">Translations</a></li>
+							</ul>
+						</li>
+						<li class="hasSubmenu">
+							<a href="../documentation/customization-guide/grid-system.html?lang=en" title="" class="glyphicons link"><i></i>Customization Guide</a>
+							<ul>
+								<li><a href="../documentation/customization-guide/grid-system.html?lang=en" title="">Grid System</a></li>
+								<li><a href="../documentation/customization-guide/buttons.html?lang=en" title="">Buttons</a></li>
+								<li><a href="../documentation/customization-guide/icons.html?lang=en" title="">Icons</a></li>
+								<li><a href="../documentation/customization-guide/tables.html?lang=en" title="">Tables</a></li>
+								<li><a href="../documentation/customization-guide/widgets.html?lang=en" title="">Widgets</a></li>
+								<li><a href="../documentation/customization-guide/tabs.html?lang=en" title="">Tabs</a></li>
+								<li><a href="../documentation/customization-guide/elements.html?lang=en" title="">Other</a></li>
+							</ul>
+						</li>
+						<li class="active"><a href="../documentation/credits.html?lang=en" title="" class="glyphicons link"><i></i>Credits</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- Documentation END -->							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		<!-- End Content -->
+		</div>
+		
+		<!-- Sticky Footer -->
+		<div id="footer" class="hide">
+	      	<div class="wrap">
+	      		<ul>
+	      				      			<li class="active"><span data-toggle="menu-position" data-menu-position="left-menu" class="glyphicons circle_arrow_left" title=""><i></i></span></li>
+	      			<li><span data-toggle="menu-position" data-menu-position="right-menu" class="glyphicons circle_arrow_right" title=""><i></i></span></li>
+	      			<li><span data-toggle="menu-position" data-menu-position="top-menu" class="glyphicons circle_arrow_top" title=""><i></i></span></li>
+	      			<li class="divider"></li>
+	      			<li class="active"><span data-toggle="menu-size" data-menu-size="0" class="glyphicons show_big_thumbnails text" title=""><i></i><span class="hidden-phone">Large menus</span></span></li>
+	      			<li><span data-toggle="menu-size" data-menu-size="1" class="glyphicons show_thumbnails text" title=""><i></i><span class="hidden-phone">Small menus</span></span></li>
+	      				      			<li><a href="../documentation.html?lang=en" class="glyphicons circle_question_mark text" title=""><i></i><span class="hidden-phone">Documentation</span></a></li>
+	      		</ul>
+	      	</div>
+	    </div>
+		
+	</div>
+	
+	<!-- Cubiq iScroll -->
+	<!--[if gte IE 9]><!-->
+	<script src="../theme/scripts/cubiq-iscroll/src/iscroll.js"></script>
+	<!--<![endif]-->
+	
+	<!--[if lt IE 9]>
+	<script src="../theme/scripts/cubiq-iscroll/src/iscroll-ie.js"></script>
+	<![endif]-->
+	
+	<script type="text/javascript">
+	var scrollers = [];
+	var mainYScroller;
+	
+	$(function()
+	{
+		//document.addEventListener('touchmove', function(e){ e.preventDefault(); });
+		var xScrollers = $(".scroll-x");
+	    for (var i = 0; i < xScrollers.length; i++)
+			scrollers.push(new iScroll(xScrollers[i], { 
+				vScroll: false, 
+				hideScrollbar: true,
+				useTransform: $('html').is('.lt-ie9') ? false : true,
+				onBeforeScrollStart: function (e) 
+				{
+					var target;
+					if (!e) var e = window.event;
+					if (e.target) target = e.target;
+					else if (e.srcElement) target = e.srcElement;
+					if (target.nodeType == 3) target = target.parentNode;
+
+					if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA')
+					{
+						if (e.preventDefault) e.preventDefault();
+						else e.returnValue = false;
+					}
+				} 
+			}));
+
+		var yScrollers = $('.scroll-y').not('#mainYScroller');
+	    $.each(yScrollers, function(i,v)
+		{
+	    	var scroller = new iScroll($(v).attr('id'),
+	    	{
+		    	hScroll: false, 
+		    	hideScrollbar: true,
+		    	useTransform: $('html').is('.lt-ie9') ? false : true,
+		    	onBeforeScrollStart: function (e) 
+		    	{
+		    		var target;
+					if (!e) var e = window.event;
+					if (e.target) target = e.target;
+					else if (e.srcElement) target = e.srcElement;
+					if (target.nodeType == 3) target = target.parentNode;
+					
+					if (target.tagName != 'SELECT' && 
+						target.tagName != 'INPUT' && 
+						target.tagName != 'TEXTAREA' &&
+						$(target).parents('table-responsive').size() == 0)
+					{
+						if (e.preventDefault) e.preventDefault();
+						else e.returnValue = false;
+					}
+				}
+		    });
+	    	scrollers.push(scroller);
+		});
+
+	    mainYScroller = new iScroll('mainYScroller',
+    	{
+	    	zoom: true,
+	    	hScroll: false, 
+	    	hideScrollbar: true,
+	    	useTransform: $('html').is('.lt-ie9') ? false : true,
+	    	onBeforeScrollStart: function (e) 
+	    	{
+	    		var target;
+				if (!e) var e = window.event;
+				if (e.target) target = e.target;
+				else if (e.srcElement) target = e.srcElement;
+				if (target.nodeType == 3) target = target.parentNode;
+
+				if ($('input:focus, textarea:focus').length) $('input:focus, textarea:focus').blur();
+
+				if ($(target).parents('.table-responsive').size() > 0 ||
+					$(target).parents('.google-visualization-table-table').size() > 0 ||
+					$(target).parents('#calendar').size() > 0 ||
+					$(target).is('.btn'))
+					{
+						return true;
+					}
+					
+				if (target.tagName != 'SELECT' && 
+					target.tagName != 'INPUT' && 
+					target.tagName != 'TEXTAREA')
+				{
+					if (e.preventDefault) e.preventDefault();
+					else e.returnValue = false;
+				}
+			},
+			onScrollEnd: function()
+			{
+				//if (mainYScroller.enabled == false) mainYScroller.enable();
+			}
+	    });
+	    scrollers['mainYScroller'] = mainYScroller;
+	});
+	</script>
+	
+	<!-- JQueryUI v1.9.2 -->
+	<script src="../theme/scripts/jquery-ui-1.9.2.custom/js/jquery-ui-1.9.2.custom.min.js"></script>
+	
+	<!-- JQueryUI Touch Punch -->
+	<!-- small hack that enables the use of touch events on sites using the jQuery UI user interface library -->
+	<script src="../theme/scripts/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+	
+	<!-- MiniColors -->
+	<script src="../theme/scripts/jquery-miniColors/jquery.miniColors.js"></script>
+	
+	<!-- Themer -->
+	<script>
+	var themerPrimaryColor = '#DA4C4C',
+		themerHeaderColor = '#393D41',
+		themerMenuColor = '#232628';
+	</script>
+	<script src="../theme/scripts/jquery.cookie.js"></script>
+	<script src="../theme/scripts/themer.js"></script>
+	
+	
+	
+	<!-- Resize Script -->
+	<script src="../theme/scripts/jquery.ba-resize.js"></script>
+	
+	<!-- Uniform -->
+	<script src="../theme/scripts/pixelmatrix-uniform/jquery.uniform.min.js"></script>
+	
+	<!-- Bootstrap Script -->
+	<script src="../bootstrap/js/bootstrap.min.js"></script>
+	
+	<!-- Bootstrap Extended -->
+	<script src="../bootstrap/extend/bootstrap-select/bootstrap-select.js"></script>
+	<script src="../bootstrap/extend/bootstrap-toggle-buttons/static/js/jquery.toggle.buttons.js"></script>
+	<script src="../bootstrap/extend/bootstrap-hover-dropdown/twitter-bootstrap-hover-dropdown.min.js"></script>
+	<script src="../bootstrap/extend/jasny-bootstrap/js/jasny-bootstrap.min.js" type="text/javascript"></script>
+	<script src="../bootstrap/extend/jasny-bootstrap/js/bootstrap-fileupload.js" type="text/javascript"></script>
+	<script src="../bootstrap/extend/bootbox.js" type="text/javascript"></script>
+	<script src="../bootstrap/extend/bootstrap-wysihtml5/js/wysihtml5-0.3.0_rc2.min.js" type="text/javascript"></script>
+	<script src="../bootstrap/extend/bootstrap-wysihtml5/js/bootstrap-wysihtml5-0.0.2.js" type="text/javascript"></script>
+	
+	<!-- Custom Onload Script -->
+	<script src="../theme/scripts/load.js"></script>
+	
+	<!-- google-code-prettify -->
+	<script src="../theme/scripts/google-code-prettify/prettify.js"></script>
+	<script>
+	$(function(){
+		prettyPrint();
+	});
+	</script>
+	
+</body>
+</html>

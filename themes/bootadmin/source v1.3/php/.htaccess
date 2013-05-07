@@ -1,0 +1,8 @@
+AddType application/x-httpd-php .html .htm
+
+RewriteEngine ON
+RewriteBase /bootadmin/php/
+
+RewriteRule ^(.*)\/(.*)\/(.*)\.html$ index.php?page=$1&section=$2&ss=$3 [QSA,L]
+RewriteRule ^(.*)\/(.*)\.html$ index.php?page=$1&section=$2 [QSA,L]
+RewriteRule ^(.*)\.html$ index.php?page=$1 [QSA,L]

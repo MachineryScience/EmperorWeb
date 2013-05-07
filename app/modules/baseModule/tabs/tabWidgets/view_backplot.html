@@ -1,15 +1,16 @@
-<fieldset class="fieldset silver-bg">
+<div class="well large-box-shadow">
+    <fieldset class="fieldset">
 
-    <legend class="legend">{{nls.BackplotTitle}}</legend>
+        <legend class="legend">{{nls.BackplotTitle}}</legend>
 
-    <div id="BACKPLOT_SIZER" style=" height: 300px;">
-        <div id="BACKPLOT_CONTENT" class="large-box-shadow" style="overflow:hidden; height: 300px;" data-bind="event: { 'dblclick': setTopView }"></div>
-    </div>
-    <div class="icon-down align-center" style="margin-top: -7px; display:block; width:100%; overflow:visible;"></div>
+        <div class="" id="BACKPLOT_SIZER" style="height: 300px;">
+            <div id="BACKPLOT_CONTENT" class="box-shadow" style="overflow:hidden; height: 300px; margin-top:-10px;" data-bind="event: { 'dblclick': setTopView }"></div>
+        </div>
+        <i class="icon-arrow-down align-center normal_cursor" style="margin-top: -7px; display:block; width:100%; overflow:visible;"></i>
 
 
-    <div class="compact">
-        <button class="button" data-bind="click: setTopView">{{nls.TopView}}</button>
-    </div>
+        <button class="btn" data-bind="click: setTopView">{{nls.TopView}}</button>
 
-</fieldset>
+
+    </fieldset>
+</div>

@@ -67,18 +67,19 @@ define(function (require) {
     lcncsvr.vars.g5x_index = { data: ko.observable(0), watched: true };
     lcncsvr.vars.program_units = { data: ko.observable(0), watched: true };
     lcncsvr.vars.homed = { data: ko.observableArray([0, 0, 0, 0, 0, 0, 0, 0, 0]), watched: true };
+    lcncsvr.vars.gcodes = { data: ko.observableArray([]), watched: true };
+    lcncsvr.vars.file = { data: ko.observable(""), watched: true };
 
     lcncsvr.vars.axis_mask = { data: ko.observable(0), watched: true };
     lcncsvr.vars.backplot = { data: ko.observable(""), watched: false };
 
     // calculated variables
-    lcncsvr.vars.actual_position_x = { data: ko.computed(function () {
-        return !lcncsvr.vars.actual_position.data()[0];
-    }), watched: false };
-    lcncsvr.vars.estop_inverse = { data: ko.computed(function () {
+    lcncsvr.estop_inverse = ko.computed(function () {
         return !lcncsvr.vars.estop.data();
-    }), watched: false };
-
+    });
+    lcncsvr.power_is_on = ko.computed(function () {
+        return lcncsvr.vars.task_state.data() === lcncsvr.STATE_ON;
+    });
 
     /**
      * Synthetic Variables
@@ -189,6 +190,17 @@ define(function (require) {
             lcncsvr.sendCommand("power","state",["STATE_ON"]);
         else
             lcncsvr.sendCommand("power","state",["STATE_OFF"]);
+    }
+
+    lcncsvr.togglePower = function( )
+    {
+        if (lcncsvr.vars.task_state.data() === lcncsvr.STATE_ESTOP)
+            return;
+
+        if ( lcncsvr.vars.task_state.data() === lcncsvr.STATE_OFF || lcncsvr.vars.task_state.data() === lcncsvr.STATE_ESTOP_RESET )
+            lcncsvr.machinePower( true );
+        else
+            lcncsvr.machinePower( false );
     }
 
     lcncsvr.runFrom = function( lineNum )
@@ -495,7 +507,7 @@ define(function (require) {
 
 
     lcncsvr.sendBackplotRequest = function () {
-        console.debug("WEBSOCKET: send get request for backplot");
+        //console.debug("WEBSOCKET: send get request for backplot");
         lcncsvr.socket.send(JSON.stringify({"id": "backplot", "command": "get", "name": "backplot"}));
     }
 
@@ -503,7 +515,7 @@ define(function (require) {
         try {
             $.each(lcncsvr.vars, function (key, val) {
                 if (val.watched) {
-                    console.debug("WEBSOCKET: send watch request for " + key);
+                    //console.debug("WEBSOCKET: send watch request for " + key);
                     lcncsvr.socket.send(JSON.stringify({"id": key, "command": "watch", "name": key}));
                 }
             });
@@ -513,7 +525,7 @@ define(function (require) {
 
 
     // **** Function to auto-reopen the connection if there hasn't been activity (heartbeat)
-    lcncsvr.hbTimeout = new Date() / 1000.0 + lcncsvr.serverReconnectHBTimeoutInterval;
+    lcncsvr.hbTimeout = new Date() / 1000.0 + lcncsvr.serverReconnectHBTimeoutInterval / 1000.0;
     lcncsvr.checkHB = function()
     {
         try {
@@ -530,7 +542,7 @@ define(function (require) {
     // **** reopen the connection.  will close an existing connection
     lcncsvr.reopen = function()
     {
-        lcncsvr.hbTimeout = new Date() / 1000.0 + lcncsvr.serverReconnectHBTimeoutInterval;
+        lcncsvr.hbTimeout = new Date() / 1000.0 + lcncsvr.serverReconnectHBTimeoutInterval / 1000.0;
 
         try {
             lcncsvr.socket.close();
@@ -554,7 +566,7 @@ define(function (require) {
                         return;
                     }
 
-                    lcncsvr.hbTimeout = new Date() / 1000.0 + lcncsvr.serverReconnectHBTimeoutInterval;
+                    lcncsvr.hbTimeout = new Date() / 1000.0 + lcncsvr.serverReconnectHBTimeoutInterval / 1000.0;
 
                     if (data.id == "LOGIN")
                     {

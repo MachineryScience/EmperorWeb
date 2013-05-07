@@ -1,0 +1,25 @@
+.widget .widget-head,.btn-primary,.navbar.main .topnav>li .dropdown-menu li>a:hover,.navbar.main .topnav>li .dropdown-menu .active>a,.navbar.main .topnav>li .dropdown-menu .active>a:hover,#flotTip,.btn-group.open .btn-primary.dropdown-toggle,.btn-primary.disabled,.btn-primary[disabled],.btn-primary:hover,.filter-bar div.lbl,.widget.widget-2.primary .widget-head,.widget .widget-body.list.list-2 ul li.active a i:before,.label-important,.table-primary thead th,.pagination ul>.active>a,.pagination ul>.active>span,.gallery ul li .thumb{background-color:#575757;}
+a,p a,.col.main-left ul li.active.glyphicons i:before,.col.main-left ul li.active a,.widget .widget-body.list ul li .count,.breadcrumb a,.breadcrumb .glyphicons i:before,.breadcrumb .glyphicons,.navbar.main .profile h1,.col.main-left .navarrow span i:before,.forgot,.forgot i:before,.glyphicons.single,.glyphicons.single i:before,.widget .widget-body.list.list-2 ul li.active a,.table-primary tbody td.important,.finances_cashflow .glyphicons.btn-action.single i:before,.col.main-left ul li.hasSubmenu2 ul.collapse li.active a i:before{color:#575757;}
+.navbar.main .profile em{color:#3e3e3e;}
+.navbar.main .notif li a i:before{color:#8a8a8a;}
+.navbar.main .notif li a{background-color:#575757;}
+.col.main-left ul li.active,.widget .widget-head,.btn-primary,.navbar.main .notif li a,#flotTip,.widget.widget-2.primary .widget-head,.widget .widget-body.list.list-2 ul li.active a i:before,.table-primary thead th,.pagination ul>.active>a,.pagination ul>.active>span{border-color:#575757;}
+.navbar.main,.navbar.main .profile,.navbar.main .topnav>li{background-color:#d4d4d4;}
+.navbar.main .profile,.navbar.main .topnav>li,.navbar.main .profile img.avatar,.navbar.main .innerpx{border-color:#d9d9d9;}
+.navbar.main .line,.loginWrapper .line{border-bottom-color:#d9d9d9;border-top-color:#8d8d8d;border-left-color:#d9d9d9;border-right-color:#8d8d8d;}
+.navbar.main .topnav>li>a span,.navbar.main .topnav>li>.glyphicons i:before,.navbar.main .profile strong{color:#555555;text-shadow:0 1px 0 #ffffff;}
+.navbar.main .profile,.navbar.main .topnav>li{box-shadow:0 0 0 1px #8d8d8d;-webkit-box-shadow:0 0 0 1px #8d8d8d;-moz-box-shadow:0 0 0 1px #8d8d8d;}
+.navbar.main .topnav>li .btn-group .caret{border-top-color:#555555;border-bottom-color:#555555;}
+.navbar.main .notif li a{background-color:#575757;}
+.col.main-left{background-color:#292929;}
+.col.main-left ul li.hasSubmenu2 ul.collapse li{background-color:#030303;}
+.col.main-left ul li{border-color:#101010;}
+.col.main-left ul li>a,.col.main-left ul li.hasSubmenu2 ul{border-color:#5c5c5c;}
+.col.main-left ul li a,.col.main-left ul li.glyphicons i:before,.col.main-left ul li .glyphicons i:before{color:#a9a9a9;text-shadow:0 1px 0 #000000;}
+.col.main-left ul li.active i:before{text-shadow:none;}
+.span12.main,.col.main-left ul li.active,.col.main-left ul li.hasSubmenu2 ul.collapse li.active{background-color:#ffffff;}
+.table-primary tbody td{background-color:#d7d7d7;}
+.table-primary tbody tr.selected td,.table-primary tbody tr.selectable:hover td{background-color:#bdbdbd;}
+.table-primary.table-bordered tbody td,.table-primary,.pagination ul>.disabled>a,.pagination ul>.disabled>span{border-color:#d7d7d7;}
+.widget .widget-body.list.list-2 ul li.active{border-color:#8a8a8a;}
+.widget .widget-body.list.list-2 ul li a{color:#8a8a8a;}.widget .widget-body.list.list-2 ul li a i:before{background:#d7d7d7;color:#717171;border-color:#8a8a8a;}

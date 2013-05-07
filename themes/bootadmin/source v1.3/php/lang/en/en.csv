@@ -1,0 +1,153 @@
+username;Username
+password;Password
+login;Login
+forgot_password;forgot password
+register;Register
+logout;Logout
+new_chat_messages;new chat message(s)
+new_products;new product(s)
+new_emails;new email(s)
+new_members;new member(s)
+dashboard;Dashboard
+finances;Finances
+ui_elements;UI Elements
+ui_elements_long;User Interface Elements
+forms;Forms
+my_account;My Account
+form_demo;Demo Forms
+form_elements;Form Elements
+form_validator;Form Validator
+form_wizzard;Form Wizzard
+file_managers;File Managers
+tables;Tables
+tables_classic;Classic Tables
+tables_themed;Themed Tables
+tables_enhanced;Enhanced Tables
+calendar;Calendar
+bookings;Bookings
+photo_gallery;Photo Gallery
+hours;Hours
+days;Days
+clear;Clear
+website_traffic;Website Traffic
+traffic;Traffic
+overview;Overview
+visits;Visits
+visitors;Visitors
+pageviews;Pageviews
+interest;Interest
+avg_time;avg.time
+returning;returning
+total_users;Total users
+new_users;New users
+products;Products
+total_orders;Total orders
+pending_orders;Pending orders
+pending_delivery;Pending delivery
+support;Support
+traffic_sources;Traffic sources
+organic;organic
+direct;direct
+referral;referral
+cpc;cpc
+referrals;Referrals
+source;Source
+medium;Medium
+pg_views;Pg.Views
+exits;Exits
+conversions;Conversions
+activity;Activity
+charts;Charts
+chart_simple;Simple chart
+chart_lines_fill_nopoints;Lines chart with fill & without points
+chart_ordered_bars;Ordered bars chart
+chart_donut;Donut chart
+chart_stacked_bars;Stacked bars chart
+chart_pie;Pie chart
+chart_horizontal_bars;Horizontal bars chart
+chart_live;Auto updating chart
+orders;Orders
+categories;Categories
+add_product;Add product
+manage_products;Manage products
+manage_categories;Manage categories
+total_products;Total products
+sort_by;Sort by
+no_crt;No.
+title;Title
+drag;Drag
+preview;Preview
+stock;Stock
+price;Price
+actions;Actions
+filter;Filter
+category;Category
+select;Select
+from;From
+to;To
+show_active_products;Show active products
+show_inactive_products;Show inactive products
+with_selected;With selected
+online_shop;Online Shop
+save;Save
+description;Description
+photos;Photos
+custom_attributes;Custom Attributes
+qty_and_price;Qty & Price
+product_title;Product title
+summary;Summary
+add_record;Add record
+history;History
+sidebar_menu;Sidebar Menu
+creditors;Creditors
+debitors;Debitors
+clients;Clients
+total_expenses;Total expenses
+total_income;Total income
+view_details;View details
+cash_flow;Cash Flow
+out_of;out of
+transactions;Transactions
+transaction;Transaction
+date;Date
+amount;Amount
+show_all;Show all
+time;Time
+client;Client
+phone;Phone
+heard_from;Heard from
+location;Location
+add_booking;Add booking
+total_amount;Total amount
+new_clients;New clients
+cancellations;Cancellations
+lost;Lost
+print;Print
+view;View
+personal_details;Personal details
+first_name;First name
+last_name;Last name
+gender;Gender
+male;Male
+female;Female
+age;Age
+date_of_birth;Date of birth
+about_me;About me
+save_changes;Save changes
+cancel;Cancel
+edit_account;Edit account
+account_details;Account details
+account_settings;Account settings
+profile_image;Profile image
+select_image;Select image
+change;Change
+remove;Remove
+old_password;Old password
+new_password;New password
+repeat_new_password;Repeat new password
+contact_details;Contact details
+change_password;Change password
+confirm_password;Confirm password
+site_pages;Site Pages
+add_page;Add page
+edit;Edit

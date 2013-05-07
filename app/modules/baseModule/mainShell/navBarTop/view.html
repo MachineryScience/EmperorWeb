@@ -1,0 +1,32 @@
+<!-- Title bar -->
+<div class="navbar navbar-inverse navbar-fixed-top" id="nav_top">
+    <div class="navbar-inner">
+        <div class="container-fluid">
+            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="brand" href="#">{{nls.appTitle}}</a>
+            <div class="nav-collapse collapse">
+
+                <div class="navbar-form pull-right">
+                    <button class="btn" data-bind="click: linuxCNCServer.toggleEstop, css : { 'btn-danger' : linuxCNCServer.estop_inverse } ">{{nls.estop}}</button>
+                    <button class="btn btn-warning" data-bind="click: linuxCNCServer.togglePower, css : { 'btn-warning' : linuxCNCServer.power_is_on }, enable: linuxCNCServer.estop_inverse ">{{nls.power_on}}</button>
+                    <button class="btn btn-warning" data-bind="click: linuxCNCServer.stop, enable: linuxCNCServer.power_is_on, css : { 'btn-warning' : linuxCNCServer.power_is_on }">{{nls.abort}}</button>
+                </div>
+
+                <ul class="nav">
+                    <li data-bind="css: {'active' : activeTab0}, click: tabChange.bind(0)"><a href="#0"><i class="icon-plane"></i> {{nls.overview}}</a></li>
+                    <li data-bind="css: {'active' : activeTab1}, click: tabChange.bind(1)"><a href="#1"><i class="icon-folder-open"></i> {{nls.file}}</a></li>
+                    <li data-bind="css: {'active' : activeTab2}, click: tabChange.bind(2)"><a href="#2"><i class="icon-signin"></i> {{nls.work_setup}}</a></li>
+                    <li data-bind="css: {'active' : activeTab3}, click: tabChange.bind(3)"><a href="#3"><i class="icon-filter"></i> {{nls.tooling}}</a></li>
+                    <li data-bind="css: {'active' : activeTab4}, click: tabChange.bind(4)"><a href="#4"><i class="icon-play-circle"></i> {{nls.run}}</a></li>
+                    <li data-bind="css: {'active' : activeTab5}, click: tabChange.bind(5)"><a href="#5"><i class="icon-cogs"></i> {{nls.config}}</a></li>
+                    <li data-bind="css: {'active' : activeTab6}, click: tabChange.bind(6)"><a href="#6"><i class="icon-question-sign"></i> {{nls.help}}</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
+</div>
+

@@ -3,6 +3,7 @@ define(function(require) {
     var template = require('text!./view_backplot.html');
     var nls = require('i18n!./nls/resources');
 
+
     var ViewModel = function(moduleContext) {
 
         var self = this;
@@ -28,16 +29,22 @@ define(function(require) {
 
         self.gridMinorDivisions = 10;
         self.gridMajorSpacing = 1;
+        self.renderer = null;
+
+        self.initSubscription = _.once(function()
+        {
+            self.linuxCNCServer.vars.backplot.data.subscribe( function( newValue ) {
+                self.onNewData(newValue);
+            } );
+        });
 
         self.initialize = function( backplotPanel ) {
             self.panel = backplotPanel;
 
-            self.linuxCNCServer.vars.backplot.data.subscribe( function( newValue ) {
-                self.onNewData(newValue);
-            } );
+            self.initSubscription();
 
-            if ( ! $.isEmptyObject(self.linuxCNCServer.vars.backplot.data()) )
-                self.onNewData(self.linuxCNCServer.vars.backplot.data());
+            if ( ! $.isEmptyObject(self.renderer) )
+                setTimeout(self.resize,2);
             else
                 self.linuxCNCServer.sendBackplotRequest();
         };
@@ -150,8 +157,19 @@ define(function(require) {
 
         }
 
+        self.resize_handler = function() {
+            var timer_id;
+            $(window).resize(function() {
+                clearTimeout(timer_id);
+                timer_id = setTimeout(function() {
+                    self.resize();
+                }, 100);
+            });
+        }
+
         self.onNewData = function(newData)
         {
+            console.debug("Backplot new data");
             if (self.renderer)
             {
                 try{
@@ -180,18 +198,15 @@ define(function(require) {
 
             $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).append( self.renderer.domElement );
 
-            if ( ! $("#BACKPLOT_PANEL").hasClass('backplot_resize_bound') )
-            {
-                $("#BACKPLOT_PANEL").addClass('backplot_resize_bound');
-                $("#BACKPLOT_PANEL").on('sizechange',self.resize );
-            }
-
             try { // try to remove the resize property if it is there, so we don't do it twice
                 $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).resizable( 'destroy' );
             } catch (ex) {}
             $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).resizable({ handles: "s", minHeight:150 });
 
             self.animate();
+
+            setTimeout(self.resize,2);
+            self.resize();
         }
 
         self.setTopView = function()
@@ -211,14 +226,18 @@ define(function(require) {
             } catch (ex) {}
         }
 
+
+
         self.resize = function(event){
-            $(self.renderer.domElement).detach();
-            self.camera.aspect = $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).width() / $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).height();
-            self.camera.updateProjectionMatrix();
-            self.renderer.setSize( $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).width(), $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).height() );
-            $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).height($("#BACKPLOT_SIZER",self.panel.getJQueryElement()).height());
-            $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).append( self.renderer.domElement );
-            self.render();
+            try {
+                $(self.renderer.domElement).detach();
+                self.camera.aspect = $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).width() / $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).height();
+                self.camera.updateProjectionMatrix();
+                self.renderer.setSize( $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).width(), $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).height() );
+                $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).height($("#BACKPLOT_SIZER",self.panel.getJQueryElement()).height());
+                $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).append( self.renderer.domElement );
+                self.render();
+            } catch (ex){  };
         }
 
         self.render = function()
@@ -235,6 +254,8 @@ define(function(require) {
                 self.renderer.render( self.scene, self.camera );
             } catch (ex) {}
         }
+
+        self.resize_handler();
 
     };
 

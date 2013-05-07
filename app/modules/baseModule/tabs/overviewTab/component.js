@@ -1,10 +1,9 @@
 define(function(require) {
 
     // Load the dependencies
-    var Boiler = require('Boiler'), 
-        template = require('text!./view.html'),
-        nls = require('i18n!./nls/resources');
+    var Boiler = require('Boiler');
 
+    var ViewModel = require('./viewmodel');
     var ViewModel_dro = require('../tabWidgets/viewmodel_dro');
     var ViewModel_backplot = require('../tabWidgets/viewmodel_backplot');
 
@@ -12,14 +11,17 @@ define(function(require) {
 		var panel = null;
         var panel_dro = null;
         var panel_backplot = null;
+        var vm = null;
         var vm_dro = null;
         var vm_backplot = null;
 		return {
 			activate : function(parent) {
 				if (!panel) {
-					panel = new Boiler.ViewTemplate(parent, template, nls);
-                    ko.applyBindings( moduleContext.getSettings(), panel.getDomElement());
+                    vm = new ViewModel(moduleContext);
+					panel = new Boiler.ViewTemplate(parent, vm.getTemplate(), vm.getNls());
+                    ko.applyBindings( vm, panel.getDomElement());
 				}
+                vm.initialize(panel);
 
                 if (!panel_dro) {
                     vm_dro = new ViewModel_dro(moduleContext);
@@ -32,8 +34,8 @@ define(function(require) {
                     vm_backplot = new ViewModel_backplot(moduleContext);
                     panel_backplot = new Boiler.ViewTemplate(panel.getJQueryElement().find("#BACKPLOT_PANEL"), vm_backplot.getTemplate(), vm_backplot.getNls());
                     ko.applyBindings( vm_backplot, panel_backplot.getDomElement());
-                    vm_backplot.initialize(panel_backplot);
                 }
+                vm_backplot.initialize(panel_backplot);
 
                 panel.show();
                 //panel_dro.show();

@@ -1,0 +1,153 @@
+username;Nome utente
+password;Password
+login;Accesso
+forgot_password;hai dimenticato la password
+register;Registrare
+logout;effettuare il logout
+new_chat_messages;nuovi messaggi di chat
+new_products;prodotti nuovi
+new_emails;nuove email
+new_members;membri nuovi
+dashboard;Cruscotto
+finances;Finanza
+ui_elements;Elementi dell UI
+ui_elements_long;Elementi dell'interfaccia utente
+forms;Moduli
+my_account;My Account
+form_demo;Demo Forms
+form_elements;Form Elements
+form_validator;Form Validator
+form_wizzard;Form Wizzard
+file_managers;File Managers
+tables;Tabelle
+tables_classic;Tavoli classici
+tables_themed;Tavoli a tema
+tables_enhanced;Tabelle avanzate
+calendar;Calendario
+bookings;Prenotazioni
+photo_gallery;Galleria Fotografica
+hours;Ore
+days;Giorni
+clear;Cancella
+website_traffic;Traffico del sito web
+traffic;Traffico
+overview;Sommario
+visits;Visite
+visitors;Visitatori
+pageviews;Visualizzazioni
+interest;Partecipazione
+avg_time;Tempo medio
+returning;Ritornando
+total_users;Utenti totali
+new_users;Nuovi utenti
+products;Prodotti
+total_orders;Totale acquisti
+pending_orders;Acquisti in sospeso
+pending_delivery;Sino alla pronuncia
+support;Richieste di sostegno
+traffic_sources;Sorgenti di traffico
+organic;organico
+direct;diretta
+referral;rinvio
+cpc;cpc
+referrals;Rinvii
+source;Origine
+medium;Ambiente
+pg_views;Visualizzazioni
+exits;Uscite
+conversions;Conversioni
+activity;Attività
+charts;Grafici
+chart_simple;Semplice grafico
+chart_lines_fill_nopoints;Grafico con linee riempiti e senza punti
+chart_ordered_bars;Grafico con barre ordinate
+chart_donut;Grafico ad anello
+chart_stacked_bars;Grafico con barre in pila
+chart_pie;Grafico a torta
+chart_horizontal_bars;Grafico con barre orizzontali
+chart_live;Grafico con l'aggiornamento automatico
+orders;Ordini
+categories;Categories
+add_product;Aggiungere prodotto
+manage_products;Gestione dei prodotti
+manage_categories;Gestire le categorie
+total_products;Totale prodotti
+sort_by;Ordina per
+no_crt;No.
+title;Titolo
+drag;Trascinare
+preview;Anteprima
+stock;Scorta
+price;Prezzo
+actions;Azioni
+filter;Filter
+category;Categoria
+select;Selezionare
+from;Da
+to;A
+show_active_products;Mostra prodotti attivi
+show_inactive_products;Mostra prodotti inattivi
+with_selected;Con i selezionati
+online_shop;Negozio Online
+save;Salvare
+description;Descrizione
+photos;Foto
+custom_attributes;Attributi personalizzati
+qty_and_price;Quantità e Prezzo
+product_title;Titolo del prodotto
+summary;Sommario
+add_record;Aggiungi record
+history;Storia
+sidebar_menu;Barra laterale
+creditors;Creditori
+debitors;Debitori
+clients;Clienti
+total_expenses;Totale spese
+total_income;Totale proventi
+view_details;Visualizza i dettagli
+cash_flow;Flusso di cassa
+out_of;su
+transactions;Transazioni
+transaction;Operazione
+date;Data
+amount;Somma
+show_all;Mostra tutto
+time;Tempo
+client;Cliente
+phone;Telefono
+heard_from;Sentito da
+location;Localizzazione
+add_booking;Aggiungi prenotazione
+total_amount;Importo totale
+new_clients;Nuovi clienti
+cancellations;Cancellazioni
+lost;Perso
+print;Stampa
+view;Vedere
+personal_details;Dati personali
+first_name;Nome
+last_name;Cognome
+gender;Genere
+male;Maschio
+female;Femmina
+age;Età
+date_of_birth;Data di nascita
+about_me;Su di me
+save_changes;Salvare le modifiche
+cancel;Annullare
+edit_account;Modifica account
+account_details;Dettagli account
+account_settings;Impostazioni account
+profile_image;Profilo immagine
+select_image;Seleziona immagine
+change;Cambiare
+remove;Rimuovere
+old_password;Vecchia password
+new_password;Nuova password
+repeat_new_password;Ripeti nuova password
+contact_details;Particolari del contatto
+change_password;Modifica password
+confirm_password;Conferma password
+site_pages;Pagine del sito
+add_page;Aggiungere pagina
+edit;Modifica

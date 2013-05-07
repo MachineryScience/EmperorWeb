@@ -1,0 +1,9 @@
+.gallery.paper .view {
+    overflow: hidden;
+}
+.gallery.paper .view:hover img {
+    left: -85px;
+}
+.gallery.paper .view .back {
+    background: #666;
+}

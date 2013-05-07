@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>    <html class="lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>    <html class="lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html> <!--<![endif]-->
+<head>
+	<title>BootAdmin - Responsive Admin HTML Template</title>
+	
+	<!-- Meta -->
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	
+	<!-- Bootstrap -->
+	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+	<link href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet" />
+	
+	<!-- Bootstrap Extended -->
+	<link href="bootstrap/extend/jasny-bootstrap/css/jasny-bootstrap.min.css" rel="stylesheet">
+	<link href="bootstrap/extend/jasny-bootstrap/css/jasny-bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="bootstrap/extend/bootstrap-wysihtml5/css/bootstrap-wysihtml5-0.0.2.css" rel="stylesheet">
+	
+	<!-- JQueryUI v1.9.2 -->
+	<link rel="stylesheet" href="theme/scripts/jquery-ui-1.9.2.custom/css/smoothness/jquery-ui-1.9.2.custom.min.css" />
+	
+	<!-- Glyphicons -->
+	<link rel="stylesheet" href="theme/css/glyphicons.css" />
+	
+	<!-- Bootstrap Extended -->
+	<link rel="stylesheet" href="bootstrap/extend/bootstrap-select/bootstrap-select.css" />
+	<link rel="stylesheet" href="bootstrap/extend/bootstrap-toggle-buttons/static/stylesheets/bootstrap-toggle-buttons.css" />
+	
+	<!-- Uniform -->
+	<link rel="stylesheet" media="screen" href="theme/scripts/pixelmatrix-uniform/css/uniform.default.css" />
+
+	<!-- JQuery v1.8.2 -->
+	<script src="theme/scripts/jquery-1.8.2.min.js"></script>
+	
+	<!-- Modernizr -->
+	<script src="theme/scripts/modernizr.custom.76094.js"></script>
+	
+	<!-- MiniColors -->
+	<link rel="stylesheet" media="screen" href="theme/scripts/jquery-miniColors/jquery.miniColors.css" />
+	
+	<!-- Theme -->
+	<link rel="stylesheet" href="theme/css/style.min.css?1359188809" />
+	
+	<!-- Google Analytics -->
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-36057737-1']);
+	  _gaq.push(['_trackPageview']);
+	
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	
+	</script>
+	
+	<!-- LESS 2 CSS -->
+	<script src="theme/scripts/less-1.3.3.min.js"></script>
+	
+</head>
+<body>
+	
+	<!-- Start Content -->
+	<div class="container-fluid left-menu">
+		
+		<div class="navbar main">
+			<div class="innerpx">
+				<button type="button" class="btn btn-navbar hidden-desktop hidden-tablet">
+					<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<div class="positionWrapper">
+					<span class="line"></span>
+										<div class="profile">
+						<img src="http://www.placehold.it/38x38/232323" class="avatar" alt="Profile" />
+						<span class="info hidden-phone">
+							<strong>Adrian Demian</strong>
+							<em>Content Manager</em>
+						</span>
+					</div>
+					<ul class="notif">
+						<li><a href="" class="glyphicons chat btn" rel="tooltip" data-placement="bottom" data-original-title="7 new chat message(s)"><i></i><span>7</span></a></li>
+						<li><a href="" class="glyphicons shopping_cart btn" rel="tooltip" data-placement="bottom" data-original-title="1 new product(s)"><i></i><span>1</span></a></li>
+						<li><a href="" class="glyphicons user_add btn" rel="tooltip" data-placement="bottom" data-original-title="4 new member(s)"><i></i><span>4</span></a></li>
+						<li><a href="" class="glyphicons envelope btn" rel="tooltip" data-placement="bottom" data-original-title="3 new email(s)"><i></i><span>3</span></a></li>
+					</ul>
+										<ul class="topnav hidden-phone">
+						<li>
+							<div class="btn-group">
+								<a href="#" class="btn-inverse dropdown-toggle" data-toggle="dropdown">
+								<img src="theme/images/lang/en.png" align="absmiddle">
+								<span class="caret"></span></a>
+						    	<ul class="dropdown-menu pull-right">
+						      		<li class="active"><a href="?page=products&lang=en" title="English"><img src="theme/images/lang/en.png" align="absmiddle"> English</a></li>
+						      		<li><a href="?page=products&lang=ro" title="Romanian"><img src="theme/images/lang/ro.png" align="absmiddle"> Romanian</a></li>
+						      		<li><a href="?page=products&lang=it" title="Italian"><img src="theme/images/lang/it.png" align="absmiddle"> Italian</a></li>
+						      		<li><a href="?page=products&lang=fr" title="French"><img src="theme/images/lang/fr.png" align="absmiddle"> French</a></li>
+						      		<li><a href="?page=products&lang=pl" title="Polish"><img src="theme/images/lang/pl.png" align="absmiddle"> Polish</a></li>
+						    	</ul>
+						  	</div>
+						</li>
+												<li>
+							<a href="#themer" data-toggle="collapse" class="logout glyphicons eyedropper"><i></i><span>Themer</span></a>
+							<div id="themer" class="collapse">
+								<div class="wrapper">
+									<h4>Themer <span>color &amp; layout options</span></h4>
+									<ul>
+										<li>Theme: <select id="themer-theme" class="pull-right"></select><div class="clearfix"></div></li>
+										<li>Primary Color: <input type="minicolors" data-default="#ffffff" data-slider="hue" data-textfield="false" data-position="left" id="themer-primary-cp" /><div class="clearfix"></div></li>
+										<li class="advanced">Header Color: <input type="minicolors" data-slider="hue" data-default="#ffffff" data-textfield="false" data-position="left" id="themer-header-cp" /><div class="clearfix"></div></li>
+										<li class="advanced">Menu Color: <input type="minicolors" data-slider="hue" data-default="#ffffff" data-textfield="false" data-position="left" id="themer-menu-cp" /><div class="clearfix"></div></li>
+										<li>
+											<span class="link" id="themer-custom-reset">reset theme</span>
+											<span class="pull-right"><label>advanced <input type="checkbox" value="1" id="themer-advanced-toggle" /></label></span>
+										</li>
+									</ul>
+																		<hr class="separator" />
+									<ul>
+										<li>Menu position: <select id="themer-menu-position" class="pull-right"></select><div class="clearfix"></div></li>
+										<li>Menu size: <select id="themer-menu-size" class="pull-right"></select><div class="clearfix"></div></li>
+									</ul>
+																		<div id="themer-getcode" class="hide">
+										<hr class="separator" />
+										<button class="btn btn-primary btn-small pull-right btn-icon glyphicons download" id="themer-getcode-less"><i></i>Get LESS</button>
+										<button class="btn btn-inverse btn-small pull-right btn-icon glyphicons download" id="themer-getcode-css"><i></i>Get CSS</button>
+										<div class="clearfix"></div>
+									</div>
+								</div>
+							</div>
+						</li>
+																		<li>
+							<a href="login.html?lang=en" class="logout glyphicons lock"><i></i><span>Logout</span></a>
+						</li>
+											</ul>
+				</div>
+			</div>
+		</div>
+	
+		<div class="row-fluid rrow main">
+			<div class="span12 main col" role="main">
+				<div class="row-fluid rrow">
+					<div class="span2 col main-left hide hidden-phone menu-large">
+						<div class="rrow scroll-y-left">
+							<div class="iScrollWrapper">
+								<ul>
+									<li class="glyphicons home"><a href="index.html?lang=en"><i></i><span>Dashboard</span></a></li>
+									<li class="glyphicons coins"><a href="finances.html?lang=en"><i></i><span>Finances</span></a></li>
+									<li class="hasSubmenu2 currentScroll">
+										<a data-toggle="collapse" class="glyphicons shopping_cart" href="#menu_ecommerce"><i></i><span>Online Shop</span></a>
+										<ul class="collapse in" id="menu_ecommerce">
+											<li class=" active"><a href="products.html?lang=en" class="glyphicons show_thumbnails"><i></i><span>Products</span></a></li>
+											<!-- <li class=""><a href="categories.html?lang=en" class="glyphicons show_big_thumbnails"><i></i><span>Categories</span></a></li> -->
+											<li class=""><a href="product_edit.html?lang=en" class="glyphicons cart_in"><i></i><span>Add product</span></a></li>
+											<!-- <li class=""><a href="orders.html?lang=en" class="glyphicons list"><i></i><span>Orders</span></a></li> -->
+										</ul>
+									</li>
+									<li class="glyphicons sort"><a href="pages.html?lang=en"><i></i><span>Site Pages</span></a></li>
+									<li class="glyphicons picture"><a href="gallery.html?lang=en"><i></i><span>Photo Gallery</span></a></li>
+									<li class="glyphicons adress_book"><a href="bookings.html?lang=en"><i></i><span>Bookings</span></a></li>
+									<li class="glyphicons charts"><a href="charts.html?lang=en"><i></i><span>Charts</span></a></li>
+									<li class="glyphicons cogwheels"><a href="ui.html?lang=en"><i></i><span>UI Elements</span></a></li>
+									<li class="hasSubmenu2">
+										<a data-toggle="collapse" class="glyphicons show_thumbnails_with_lines" href="#menu_forms"><i></i><span>Forms</span></a>
+										<ul class="collapse" id="menu_forms">
+											<li class=""><a href="form_demo.html?lang=en" class="glyphicons user"><i></i><span>My Account</span></a></li>
+											<li class=""><a href="form_elements.html?lang=en" class="glyphicons show_big_thumbnails"><i></i><span>Form Elements</span></a></li>
+											<li class=""><a href="form_validator.html?lang=en" class="glyphicons circle_ok"><i></i><span>Form Validator</span></a></li>
+											<!-- <li class=""><a href="form_wizzard.html?lang=en" class="glyphicons share_alt"><i></i><span>Form Wizzard</span></a></li> -->
+											<li class=""><a href="file_managers.html?lang=en" class="glyphicons file_import"><i></i><span>File Managers</span></a></li>
+										</ul>
+									</li>
+									<li class="hasSubmenu2">
+										<a data-toggle="collapse" class="glyphicons table" href="#menu_tables"><i></i><span>Tables</span></a>
+										<ul class="collapse" id="menu_tables">
+											<li class=""><a href="tables.html?lang=en" class="glyphicons show_thumbnails"><i></i><span>Classic Tables</span></a></li>
+											<li class=""><a href="tables_themed.html?lang=en" class="glyphicons show_thumbnails"><i></i><span>Themed Tables</span></a></li>
+											<li class=""><a href="tables_enhanced.html?lang=en" class="glyphicons show_thumbnails"><i></i><span>Enhanced Tables</span></a></li>
+										</ul>
+									</li>
+									<li class="glyphicons calendar"><a href="calendar.html?lang=en"><i></i><span>Calendar</span></a></li>
+								</ul>
+							</div>
+							<span class="navarrow hide">
+								<span class="glyphicons circle_arrow_down"><i></i></span>
+							</span>
+						</div>
+					</div>
+					<div class="span10 col main-right">
+						<div class="rrow scroll-y" id="mainYScroller">
+							<div class="inner topRight"><ul class="breadcrumb">
+	<li><a href="index.html?lang=en" class="glyphicons home"><i></i> BootAdmin</a></li>
+	<li class="divider"></li>
+	<li>Online Shop</li>
+	<li class="divider"></li>
+	<li>Products</li>
+</ul>
+<div class="separator"></div>
+
+<div class="heading-buttons">
+	<h2 class="glyphicons shopping_cart"><i></i> Products</h2>
+	<div class="buttons pull-right">
+		<a href="" class="btn btn-primary btn-icon glyphicons circle_plus"><i></i> Add product</a>
+		<a href="" class="btn btn-default btn-icon glyphicons inbox"><i></i> Manage categories</a>
+	</div>
+</div>
+<div class="separator"></div>
+
+<div class="row-fluid">
+	<div class="span9">
+		<div class="widget widget-2">
+			<div class="widget-head">
+				<h4 class="heading glyphicons list"><i></i> Manage products</h4>
+			</div>
+			<div class="widget-body">
+				<div class="separator bottom form-inline small">
+					Total products: 26
+					<span class="pull-right">
+						<label class="strong">Sort by:</label>
+						<select class="selectpicker" data-style="btn-default btn-small">
+							<option>Option</option>
+							<option>Option</option>
+							<option>Option</option>
+						</select>
+					</span>
+				</div>
+				<table class="table table-bordered table-condensed table-striped table-primary table-vertical-center checkboxs js-table-sortable">
+					<thead>
+						<tr>
+							<th width="1%" class="uniformjs"><input type="checkbox" /></th>
+							<th width="1%" class="center">No.</th>
+							<th>Title</th>
+							<th width="1%" class="center">Drag</th>
+							<th class="center">Preview</th>
+							<th class="center">Stock</th>
+							<th class="center">Price</th>
+							<th class="center" width="60">Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+																		<tr class="selectable">
+							<td class="center uniformjs"><input type="checkbox" /></td>
+							<td class="center">1</td>
+							<td><strong>Lorem Amet Dolor</strong></td>
+							<td class="center js-sortable-handle"><span class="glyphicons btn-action single move" style="margin-right: 0;"><i></i></span></td>
+							<td class="center important"><span class="glyphicons btn-action single picture" style="margin-right: 0;"><i></i></span>2 photos</td>
+							<td class="center form-inline small">
+								<input type="text" style="width: 30px;" value="5" />
+							</td>
+							<td class="center">&euro;20</td>
+							<td class="center">
+								<a href="product_edit.html?lang=en" class="btn-action glyphicons pencil btn-success"><i></i></a>
+								<a href="#" class="btn-action glyphicons remove_2 btn-danger"><i></i></a>
+							</td>
+						</tr>
+												<tr class="selectable selected">
+							<td class="center uniformjs"><input type="checkbox" checked="checked" /></td>
+							<td class="center">2</td>
+							<td><strong>Lorem Dolor Ipsum</strong></td>
+							<td class="center js-sortable-handle"><span class="glyphicons btn-action single move" style="margin-right: 0;"><i></i></span></td>
+							<td class="center important"><span class="glyphicons btn-action single picture" style="margin-right: 0;"><i></i></span>2 photos</td>
+							<td class="center form-inline small">
+								<input type="text" style="width: 30px;" value="8" />
+							</td>
+							<td class="center">&euro;21</td>
+							<td class="center">
+								<a href="product_edit.html?lang=en" class="btn-action glyphicons pencil btn-success"><i></i></a>
+								<a href="#" class="btn-action glyphicons remove_2 btn-danger"><i></i></a>
+							</td>
+						</tr>
+												<tr class="selectable selected">
+							<td class="center uniformjs"><input type="checkbox" checked="checked" /></td>
+							<td class="center">3</td>
+							<td><strong>Lorem Dolor Ipsum</strong></td>
+							<td class="center js-sortable-handle"><span class="glyphicons btn-action single move" style="margin-right: 0;"><i></i></span></td>
+							<td class="center important"><span class="glyphicons btn-action single picture" style="margin-right: 0;"><i></i></span>1 photos</td>
+							<td class="center form-inline small">
+								<input type="text" style="width: 30px;" value="9" />
+							</td>
+							<td class="center">&euro;48</td>
+							<td class="center">
+								<a href="product_edit.html?lang=en" class="btn-action glyphicons pencil btn-success"><i></i></a>
+								<a href="#" class="btn-action glyphicons remove_2 btn-danger"><i></i></a>
+							</td>
+						</tr>
+												<tr class="selectable">
+							<td class="center uniformjs"><input type="checkbox" /></td>
+							<td class="center">4</td>
+							<td><strong>Lorem Amet Dolor</strong></td>
+							<td class="center js-sortable-handle"><span class="glyphicons btn-action single move" style="margin-right: 0;"><i></i></span></td>
+							<td class="center important"><span class="glyphicons btn-action single picture" style="margin-right: 0;"><i></i></span>1 photos</td>
+							<td class="center form-inline small">
+								<input type="text" style="width: 30px;" value="6" />
+							</td>
+							<td class="center">&euro;15</td>
+							<td class="center">
+								<a href="product_edit.html?lang=en" class="btn-action glyphicons pencil btn-success"><i></i></a>
+								<a href="#" class="btn-action glyphicons remove_2 btn-danger"><i></i></a>
+							</td>
+						</tr>
+												<tr class="selectable">
+							<td class="center uniformjs"><input type="checkbox" /></td>
+							<td class="center">5</td>
+							<td><strong>Lorem Amet Dolor</strong></td>
+							<td class="center js-sortable-handle"><span class="glyphicons btn-action single move" style="margin-right: 0;"><i></i></span></td>
+							<td class="center important"><span class="glyphicons btn-action single picture" style="margin-right: 0;"><i></i></span>3 photos</td>
+							<td class="center form-inline small">
+								<input type="text" style="width: 30px;" value="7" />
+							</td>
+							<td class="center">&euro;39</td>
+							<td class="center">
+								<a href="product_edit.html?lang=en" class="btn-action glyphicons pencil btn-success"><i></i></a>
+								<a href="#" class="btn-action glyphicons remove_2 btn-danger"><i></i></a>
+							</td>
+						</tr>
+												<tr class="selectable">
+							<td class="center uniformjs"><input type="checkbox" /></td>
+							<td class="center">6</td>
+							<td><strong>Lorem Amet Dolor</strong></td>
+							<td class="center js-sortable-handle"><span class="glyphicons btn-action single move" style="margin-right: 0;"><i></i></span></td>
+							<td class="center important"><span class="glyphicons btn-action single picture" style="margin-right: 0;"><i></i></span>2 photos</td>
+							<td class="center form-inline small">
+								<input type="text" style="width: 30px;" value="4" />
+							</td>
+							<td class="center">&euro;31</td>
+							<td class="center">
+								<a href="product_edit.html?lang=en" class="btn-action glyphicons pencil btn-success"><i></i></a>
+								<a href="#" class="btn-action glyphicons remove_2 btn-danger"><i></i></a>
+							</td>
+						</tr>
+												<tr class="selectable">
+							<td class="center uniformjs"><input type="checkbox" /></td>
+							<td class="center">7</td>
+							<td><strong>Lorem Amet Dolor</strong></td>
+							<td class="center js-sortable-handle"><span class="glyphicons btn-action single move" style="margin-right: 0;"><i></i></span></td>
+							<td class="center important"><span class="glyphicons btn-action single picture" style="margin-right: 0;"><i></i></span>3 photos</td>
+							<td class="center form-inline small">
+								<input type="text" style="width: 30px;" value="10" />
+							</td>
+							<td class="center">&euro;18</td>
+							<td class="center">
+								<a href="product_edit.html?lang=en" class="btn-action glyphicons pencil btn-success"><i></i></a>
+								<a href="#" class="btn-action glyphicons remove_2 btn-danger"><i></i></a>
+							</td>
+						</tr>
+												<tr class="selectable">
+							<td class="center uniformjs"><input type="checkbox" /></td>
+							<td class="center">8</td>
+							<td><strong>Lorem Amet Dolor</strong></td>
+							<td class="center js-sortable-handle"><span class="glyphicons btn-action single move" style="margin-right: 0;"><i></i></span></td>
+							<td class="center important"><span class="glyphicons btn-action single picture" style="margin-right: 0;"><i></i></span>2 photos</td>
+							<td class="center form-inline small">
+								<input type="text" style="width: 30px;" value="8" />
+							</td>
+							<td class="center">&euro;41</td>
+							<td class="center">
+								<a href="product_edit.html?lang=en" class="btn-action glyphicons pencil btn-success"><i></i></a>
+								<a href="#" class="btn-action glyphicons remove_2 btn-danger"><i></i></a>
+							</td>
+						</tr>
+												<tr class="selectable">
+							<td class="center uniformjs"><input type="checkbox" /></td>
+							<td class="center">9</td>
+							<td><strong>Lorem Ipsum Sit</strong></td>
+							<td class="center js-sortable-handle"><span class="glyphicons btn-action single move" style="margin-right: 0;"><i></i></span></td>
+							<td class="center important"><span class="glyphicons btn-action single picture" style="margin-right: 0;"><i></i></span>1 photos</td>
+							<td class="center form-inline small">
+								<input type="text" style="width: 30px;" value="2" />
+							</td>
+							<td class="center">&euro;20</td>
+							<td class="center">
+								<a href="product_edit.html?lang=en" class="btn-action glyphicons pencil btn-success"><i></i></a>
+								<a href="#" class="btn-action glyphicons remove_2 btn-danger"><i></i></a>
+							</td>
+						</tr>
+												<tr class="selectable">
+							<td class="center uniformjs"><input type="checkbox" /></td>
+							<td class="center">10</td>
+							<td><strong>Lorem Dolor Ipsum</strong></td>
+							<td class="center js-sortable-handle"><span class="glyphicons btn-action single move" style="margin-right: 0;"><i></i></span></td>
+							<td class="center important"><span class="glyphicons btn-action single picture" style="margin-right: 0;"><i></i></span>3 photos</td>
+							<td class="center form-inline small">
+								<input type="text" style="width: 30px;" value="6" />
+							</td>
+							<td class="center">&euro;32</td>
+							<td class="center">
+								<a href="product_edit.html?lang=en" class="btn-action glyphicons pencil btn-success"><i></i></a>
+								<a href="#" class="btn-action glyphicons remove_2 btn-danger"><i></i></a>
+							</td>
+						</tr>
+											</tbody>
+				</table>
+				<div class="separator top form-inline small">
+					<div class="pull-left checkboxs_actions hide">
+						<label class="strong">With selected:</label>
+						<select class="selectpicker" data-style="btn-default btn-small">
+							<option>Action</option>
+							<option>Action</option>
+							<option>Action</option>
+						</select>
+					</div>
+					<div class="pagination pagination-small pull-right" style="margin: 0;">
+						<ul>
+							<li class="disabled"><a href="#">&laquo;</a></li>
+							<li class="active"><a href="#">1</a></li>
+							<li><a href="#">2</a></li>
+							<li><a href="#">3</a></li>
+							<li><a href="#">&raquo;</a></li>
+						</ul>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="span3">
+		<div class="widget widget-2 primary widget-body-white">
+			<div class="widget-head">
+				<h4 class="heading glyphicons cogwheel"><i></i> Filter</h4>
+			</div>
+			<div class="widget-body list list-2 fluid js-filters form-inline small">
+				<ul>
+					<li>
+						<div class="input-append block">
+							<input type="text" placeholder="search ..." />
+							<span class="add-on glyphicons search"><i></i></span>
+						</div>
+					</li>
+					<li class="right">
+						<label class="span4">Categories:</label>
+						<div class="right">
+							<select class="js-filter-category" name="category" style="width: 120px;">
+								<option>Category</option>
+								<option>Category</option>
+								<option>Category</option>
+							</select>
+						</div>
+					</li>
+					<li class="js-filter-categories center">
+						<span class="label label-important">Category <strong>&times;</strong></span>
+						<span class="label label-important">Category <strong>&times;</strong></span>
+						<span class="label label-important">Category <strong>&times;</strong></span>
+					</li>
+					<li>
+						<label class="span4">Select:</label>
+						<div class="right">
+							<select class="" name="from" style="width: 120px;">
+								<option>Some option</option>
+								<option>Other option</option>
+								<option>Some other option</option>
+							</select>
+						</div>
+					</li>
+					<li>
+						<label>From:</label>
+						<div class="right">
+							<div class="input-append">
+								<input type="text" name="from" id="dateRangeFrom" class="input-mini" value="08/05/13" style="width: 85px;" />
+								<span class="add-on glyphicons calendar"><i></i></span>
+							</div>
+						</div>
+					</li>
+					<li>
+						<label>To:</label>
+						<div class="right">
+							<div class="input-append">
+								<input type="text" name="to" id="dateRangeTo" class="input-mini" value="08/18/13" style="width: 85px;" />
+								<span class="add-on glyphicons calendar"><i></i></span>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="widget-body list list-2">
+				<ul>
+					<li class="active"><a href="" class="glyphicons link"><i></i>Show active products</a></li>
+					<li><a href="" class="glyphicons link"><i></i>Show inactive products</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<br/>							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		<!-- End Content -->
+		</div>
+		
+		<!-- Sticky Footer -->
+		<div id="footer" class="hide">
+	      	<div class="wrap">
+	      		<ul>
+	      				      			<li class="active"><span data-toggle="menu-position" data-menu-position="left-menu" class="glyphicons circle_arrow_left" title=""><i></i></span></li>
+	      			<li><span data-toggle="menu-position" data-menu-position="right-menu" class="glyphicons circle_arrow_right" title=""><i></i></span></li>
+	      			<li><span data-toggle="menu-position" data-menu-position="top-menu" class="glyphicons circle_arrow_top" title=""><i></i></span></li>
+	      			<li class="divider"></li>
+	      			<li class="active"><span data-toggle="menu-size" data-menu-size="0" class="glyphicons show_big_thumbnails text" title=""><i></i><span class="hidden-phone">Large menus</span></span></li>
+	      			<li><span data-toggle="menu-size" data-menu-size="1" class="glyphicons show_thumbnails text" title=""><i></i><span class="hidden-phone">Small menus</span></span></li>
+	      				      			<li><a href="documentation.html?lang=en" class="glyphicons circle_question_mark text" title=""><i></i><span class="hidden-phone">Documentation</span></a></li>
+	      		</ul>
+	      	</div>
+	    </div>
+		
+	</div>
+	
+	<!-- Cubiq iScroll -->
+	<!--[if gte IE 9]><!-->
+	<script src="theme/scripts/cubiq-iscroll/src/iscroll.js"></script>
+	<!--<![endif]-->
+	
+	<!--[if lt IE 9]>
+	<script src="theme/scripts/cubiq-iscroll/src/iscroll-ie.js"></script>
+	<![endif]-->
+	
+	<script type="text/javascript">
+	var scrollers = [];
+	var mainYScroller;
+	
+	$(function()
+	{
+		//document.addEventListener('touchmove', function(e){ e.preventDefault(); });
+		var xScrollers = $(".scroll-x");
+	    for (var i = 0; i < xScrollers.length; i++)
+			scrollers.push(new iScroll(xScrollers[i], { 
+				vScroll: false, 
+				hideScrollbar: true,
+				useTransform: $('html').is('.lt-ie9') ? false : true,
+				onBeforeScrollStart: function (e) 
+				{
+					var target;
+					if (!e) var e = window.event;
+					if (e.target) target = e.target;
+					else if (e.srcElement) target = e.srcElement;
+					if (target.nodeType == 3) target = target.parentNode;
+
+					if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA')
+					{
+						if (e.preventDefault) e.preventDefault();
+						else e.returnValue = false;
+					}
+				} 
+			}));
+
+		var yScrollers = $('.scroll-y').not('#mainYScroller');
+	    $.each(yScrollers, function(i,v)
+		{
+	    	var scroller = new iScroll($(v).attr('id'),
+	    	{
+		    	hScroll: false, 
+		    	hideScrollbar: true,
+		    	useTransform: $('html').is('.lt-ie9') ? false : true,
+		    	onBeforeScrollStart: function (e) 
+		    	{
+		    		var target;
+					if (!e) var e = window.event;
+					if (e.target) target = e.target;
+					else if (e.srcElement) target = e.srcElement;
+					if (target.nodeType == 3) target = target.parentNode;
+					
+					if (target.tagName != 'SELECT' && 
+						target.tagName != 'INPUT' && 
+						target.tagName != 'TEXTAREA' &&
+						$(target).parents('table-responsive').size() == 0)
+					{
+						if (e.preventDefault) e.preventDefault();
+						else e.returnValue = false;
+					}
+				}
+		    });
+	    	scrollers.push(scroller);
+		});
+
+	    mainYScroller = new iScroll('mainYScroller',
+    	{
+	    	zoom: true,
+	    	hScroll: false, 
+	    	hideScrollbar: true,
+	    	useTransform: $('html').is('.lt-ie9') ? false : true,
+	    	onBeforeScrollStart: function (e) 
+	    	{
+	    		var target;
+				if (!e) var e = window.event;
+				if (e.target) target = e.target;
+				else if (e.srcElement) target = e.srcElement;
+				if (target.nodeType == 3) target = target.parentNode;
+
+				if ($('input:focus, textarea:focus').length) $('input:focus, textarea:focus').blur();
+
+				if ($(target).parents('.table-responsive').size() > 0 ||
+					$(target).parents('.google-visualization-table-table').size() > 0 ||
+					$(target).parents('#calendar').size() > 0 ||
+					$(target).is('.btn'))
+					{
+						return true;
+					}
+					
+				if (target.tagName != 'SELECT' && 
+					target.tagName != 'INPUT' && 
+					target.tagName != 'TEXTAREA')
+				{
+					if (e.preventDefault) e.preventDefault();
+					else e.returnValue = false;
+				}
+			},
+			onScrollEnd: function()
+			{
+				//if (mainYScroller.enabled == false) mainYScroller.enable();
+			}
+	    });
+	    scrollers['mainYScroller'] = mainYScroller;
+	});
+	</script>
+	
+	<!-- JQueryUI v1.9.2 -->
+	<script src="theme/scripts/jquery-ui-1.9.2.custom/js/jquery-ui-1.9.2.custom.min.js"></script>
+	
+	<!-- JQueryUI Touch Punch -->
+	<!-- small hack that enables the use of touch events on sites using the jQuery UI user interface library -->
+	<script src="theme/scripts/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+	
+	<!-- MiniColors -->
+	<script src="theme/scripts/jquery-miniColors/jquery.miniColors.js"></script>
+	
+	<!-- Themer -->
+	<script>
+	var themerPrimaryColor = '#DA4C4C',
+		themerHeaderColor = '#393D41',
+		themerMenuColor = '#232628';
+	</script>
+	<script src="theme/scripts/jquery.cookie.js"></script>
+	<script src="theme/scripts/themer.js"></script>
+	
+	
+	
+	<!-- Resize Script -->
+	<script src="theme/scripts/jquery.ba-resize.js"></script>
+	
+	<!-- Uniform -->
+	<script src="theme/scripts/pixelmatrix-uniform/jquery.uniform.min.js"></script>
+	
+	<!-- Bootstrap Script -->
+	<script src="bootstrap/js/bootstrap.min.js"></script>
+	
+	<!-- Bootstrap Extended -->
+	<script src="bootstrap/extend/bootstrap-select/bootstrap-select.js"></script>
+	<script src="bootstrap/extend/bootstrap-toggle-buttons/static/js/jquery.toggle.buttons.js"></script>
+	<script src="bootstrap/extend/bootstrap-hover-dropdown/twitter-bootstrap-hover-dropdown.min.js"></script>
+	<script src="bootstrap/extend/jasny-bootstrap/js/jasny-bootstrap.min.js" type="text/javascript"></script>
+	<script src="bootstrap/extend/jasny-bootstrap/js/bootstrap-fileupload.js" type="text/javascript"></script>
+	<script src="bootstrap/extend/bootbox.js" type="text/javascript"></script>
+	<script src="bootstrap/extend/bootstrap-wysihtml5/js/wysihtml5-0.3.0_rc2.min.js" type="text/javascript"></script>
+	<script src="bootstrap/extend/bootstrap-wysihtml5/js/bootstrap-wysihtml5-0.0.2.js" type="text/javascript"></script>
+	
+	<!-- Custom Onload Script -->
+	<script src="theme/scripts/load.js"></script>
+	
+</body>
+</html>

@@ -6,8 +6,9 @@ define(function(require) {
 
     // Load the dependencies
     var Boiler = require('Boiler'), 
-        SideMenuComponent = require('./mainShell/sideMenu/component'),
-        TestContentComponent = require('./tabs/overviewTab/component');
+        NavBarTopComponent = require('./mainShell/navBarTop/component'),
+        NavBarBottomComponent = require('./mainShell/navBarBottom/component'),
+        OverviewTab = require('./tabs/overviewTab/component');
 
     // Definition of the base Module as an object, this is the return value of this AMD script
     return {
@@ -19,12 +20,13 @@ define(function(require) {
             var controller = new Boiler.DomController($('body'));
             //add routes with DOM node selector queries and relevant components
             controller.addRoutes({
-                "#side-menu" : new SideMenuComponent(context)
+                "#navbar_top_wrapper" : new NavBarTopComponent(context),
+                "#navbar_bottom_wrapper" : new NavBarBottomComponent(context)
             });
             controller.start();
 
             var controller = new Boiler.UrlController($("#main-content"));
-            var test = new TestContentComponent(context);
+            var test = new OverviewTab(context);
             controller.addRoutes({
                 "/" : test,      // DEFAULT landing page
                 "test" : test

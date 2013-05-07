@@ -1,0 +1,153 @@
+username;Nom d'utilisateur
+password;Mot de passe
+login;Login
+forgot_password;oublié mot de passe
+register;Enregistrer
+logout;Déconnexion
+new_chat_messages;nouveaux messages de chat
+new_products;produits nouveaux
+new_emails;nouveaux e-mails
+new_members;nouveaux membres
+dashboard;Tableau de bord
+finances;Finances
+ui_elements;Éléments d'interface
+ui_elements_long;Éléments d'interface
+forms;Formulaires
+my_account;Mon compte
+form_demo;Formulaires de démonstration
+form_elements;Les éléments de formulaire
+form_validator;Formulaire Validator
+form_wizzard;Formulaire Assistant
+file_managers;Gestionnaires de fichiers
+tables;Tableaux
+tables_classic;Tables classiques
+tables_themed;Tableaux thématiques
+tables_enhanced;Tableaux améliorés
+calendar;Calendrier
+bookings;Réservations
+photo_gallery;Galerie de photos
+hours;Heures
+days;Journées
+clear;Remettre
+website_traffic;Trafic du site
+traffic;Trafic
+overview;Sommaire
+visits;Visites
+visitors;Visiteurs
+pageviews;Pages Vues
+interest;Intérêt
+avg_time;temps moyen
+returning;retour
+total_users;Nombre d'utilisateurs
+new_users;Utilisateurs nouveaux
+products;Produits
+total_orders;Total commandes
+pending_orders;Commandes en cours
+pending_delivery;En attendant la délivrance
+support;Aider
+traffic_sources;Sources de trafic
+organic;organique
+direct;direct
+referral;référence
+cpc;cpc
+referrals;Parrainages
+source;Source
+medium;Moyen
+pg_views;Pg.Vues
+exits;Quitte
+conversions;Conversions
+activity;Activité
+charts;Graphiques
+chart_simple;Graphique simple
+chart_lines_fill_nopoints;Lignes Graphique avec remplissage et sans points
+chart_ordered_bars;Barres ordonnées Graphique
+chart_donut;Donut Graphique
+chart_stacked_bars;Barres empilées Graphique
+chart_pie;Graphique circulaire
+chart_horizontal_bars;Les barres horizontales Graphique
+chart_live;Mise à jour automatique Graphique
+orders;Ordres
+categories;Catégories
+add_product;Ajouter le produit
+manage_products;Gérer les produits
+manage_categories;Gérer les catégories
+total_products;Total des produits
+sort_by;Trier par
+no_crt;No.
+title;Titre
+drag;Traîner
+preview;Avant-première
+stock;Stock
+price;Prix
+actions;Actes
+filter;Filtrer
+category;Catégorie
+select;Sélectionner
+from;De
+to;De
+show_active_products;Afficher les produits actifs
+show_inactive_products;Afficher les produits inactifs
+with_selected;Avec sélectionnés
+online_shop;Boutique en ligne
+save;Sauver
+description;Description
+photos;Photos
+custom_attributes;Attributs personnalisés
+qty_and_price;Quantité et prix
+product_title;Titre du produit
+summary;Sommaire
+add_record;Ajouter un enregistrement
+history;Histoire
+sidebar_menu;Menu de côté
+creditors;Créanciers
+debitors;Débiteurs
+clients;Clients
+total_expenses;Total des charges
+total_income;Total des revenus
+view_details;Voir les détails
+cash_flow;Flux de trésorerie
+out_of;de
+transactions;Transactions
+transaction;Transaction
+date;Date
+amount;Somme
+show_all;Afficher tous
+time;Temps
+client;Client
+phone;Téléphone
+heard_from;Entendu
+location;Emplacement
+add_booking;Ajouter réservation
+total_amount;Montant total
+new_clients;Les nouveaux clients
+cancellations;Annulations
+lost;Perdu
+print;Imprimer
+view;Voir
+personal_details;Données personnelles
+first_name;Prénom
+last_name;Nom de famille
+gender;Sexe
+male;Masculin
+female;Féminin
+age;Âge
+date_of_birth;Date de naissance
+about_me;A propos de moi
+save_changes;Enregistrer les modifications
+cancel;Annuler
+edit_account;Modifier le compte
+account_details;Informations sur le compte
+account_settings;Paramètres de compte
+profile_image;Photo de profil
+select_image;Sélectionner l'image
+change;Changer
+remove;Supprimer
+old_password;Ancien mot de passe
+new_password;Nouveau mot de passe
+repeat_new_password;Répéter nouveau mot de passe
+contact_details;Coordonnées
+change_password;Modifier mot de passe
+confirm_password;Confirmer mot de passe
+site_pages;Les pages du site
+add_page;Ajouter la page
+edit;Modifier

@@ -1,0 +1,181 @@
+@primaryColor: #ba5d32;
+@headerColor: #402a21;
+@headerBorderColor: contrast(@headerColor, lighten(@headerColor, 2%), darken(@headerColor, 10%));
+@headerBorderColor2: contrast(@headerBorderColor, darken(@headerBorderColor, 30%), lighten(@headerBorderColor, 30%));
+@headerTextColor: contrast(@headerColor, darken(@headerColor, 50%), lighten(@headerColor, 50%));
+@headerTextShadowColor: contrast(@headerTextColor, darken(@headerColor, 20%), lighten(@headerColor, 20%));
+
+@headerNotifColor: contrast(@headerColor, @primaryColor, lighten(@primaryColor, 20%));
+
+@menuColor: #855843;
+@menuBorderColor: contrast(@menuColor, lighten(@menuColor, 2%), darken(@menuColor, 10%));
+@menuBorderColor2: contrast(@menuBorderColor, darken(@menuBorderColor, 30%), lighten(@menuBorderColor, 30%));
+@menuTextColor: contrast(@menuColor, darken(@menuColor, 50%), lighten(@menuColor, 50%));
+@menuTextShadowColor: contrast(@menuTextColor, darken(@menuColor, 20%), lighten(@menuColor, 20%));
+
+.widget .widget-head, 
+.btn-primary, 
+.navbar.main .topnav > li .dropdown-menu li > a:hover, .navbar.main .topnav > li .dropdown-menu .active > a, .navbar.main .topnav > li .dropdown-menu .active > a:hover, 
+#flotTip, 
+.btn-group.open .btn-primary.dropdown-toggle, .btn-primary.disabled, .btn-primary[disabled], .btn-primary:hover, 
+.filter-bar div.lbl, 
+.widget.widget-2.primary .widget-head, 
+.widget .widget-body.list.list-2 ul li.active a i:before, 
+.label-important, 
+.table-primary thead th, 
+.pagination ul > .active > a, .pagination ul > .active > span, 
+.gallery ul li .thumb
+{
+	background-color: @primaryColor;
+}
+
+a, p a, 
+.col.main-left ul li.active.glyphicons i:before, 
+.col.main-left ul li.active a, 
+.widget .widget-body.list ul li .count, 
+.breadcrumb a, .breadcrumb .glyphicons i:before, .breadcrumb .glyphicons, 
+.navbar.main .profile h1, 
+.col.main-left .navarrow span i:before, 
+.forgot, .forgot i:before, 
+.glyphicons.single, .glyphicons.single i:before, 
+.widget .widget-body.list.list-2 ul li.active a, 
+.table-primary tbody td.important, 
+.finances_cashflow .glyphicons.btn-action.single i:before, 
+.col.main-left ul li.hasSubmenu2 ul.collapse li.active a i:before
+{
+	color: @primaryColor;
+}
+
+.navbar.main .profile em {
+	color: contrast(@headerColor, darken(@primaryColor, 10%), lighten(@primaryColor, 40%));
+}
+
+.navbar.main .notif li a i:before {
+	color: contrast(@headerNotifColor, darken(@primaryColor, 5%), lighten(@primaryColor, 20%));
+}
+
+.navbar.main .notif li a {
+	background-color: @headerNotifColor;
+}
+
+.col.main-left ul li.active, 
+.widget .widget-head, 
+.btn-primary, 
+.navbar.main .notif li a, 
+#flotTip, 
+.widget.widget-2.primary .widget-head, 
+.widget .widget-body.list.list-2 ul li.active a i:before, 
+.table-primary thead th, 
+.pagination ul > .active > a, .pagination ul > .active > span
+{
+	border-color: @primaryColor;
+}
+
+.navbar.main, 
+.navbar.main .profile, 
+.navbar.main .topnav > li
+{
+	background-color:#402a21;
+}
+
+.navbar.main .profile, 
+.navbar.main .topnav > li, 
+.navbar.main .profile img.avatar, 
+.navbar.main .innerpx
+{
+	border-color: @headerBorderColor;
+}
+
+.navbar.main .line, 
+.loginWrapper .line
+{
+	border-bottom-color: @headerBorderColor;
+	border-top-color: @headerBorderColor2;
+	border-left-color: @headerBorderColor;
+	border-right-color: @headerBorderColor2;
+}
+
+.navbar.main .topnav > li > a span, 
+.navbar.main .topnav > li > .glyphicons i:before, 
+.navbar.main .profile strong
+{
+	color: @headerTextColor;
+	text-shadow: 0 1px 0 @headerTextShadowColor;
+}
+
+.navbar.main .profile, 
+.navbar.main .topnav > li
+{
+	box-shadow: 0 0 0 1px @headerBorderColor2;
+	-webkit-box-shadow: 0 0 0 1px @headerBorderColor2;
+	-moz-box-shadow: 0 0 0 1px @headerBorderColor2;}
+
+.navbar.main .topnav > li .btn-group .caret
+{
+	border-top-color: @headerTextColor;
+	border-bottom-color: @headerTextColor;
+}
+
+.navbar.main .notif li a {
+	background-color: contrast(@headerColor, @primaryColor, lighten(@primaryColor, 20%));
+}
+
+.col.main-left
+{
+	background-color: @menuColor;
+}
+
+.col.main-left ul li.hasSubmenu2 ul.collapse li
+{
+	background-color: darken(@menuColor, 15%);
+}
+
+.col.main-left ul li
+{
+	border-color: @menuBorderColor;
+}
+
+.col.main-left ul li > a, 
+.col.main-left ul li.hasSubmenu2 ul
+{
+	border-color: @menuBorderColor2;
+}
+
+.col.main-left ul li a, 
+.col.main-left ul li.glyphicons i:before, 
+.col.main-left ul li .glyphicons i:before
+{
+	color: @menuTextColor;
+	text-shadow: 0 1px 0 @menuTextShadowColor;
+}
+
+.col.main-left ul li.active i:before {
+	text-shadow: none;
+}
+
+.span12.main, 
+.col.main-left ul li.active, .col.main-left ul li.hasSubmenu2 ul.collapse li.active
+{
+	background-color: #ffffff;
+}
+
+.table-primary tbody td
+{
+	background-color: lighten(@primaryColor, 50%);
+}
+
+.table-primary tbody tr.selected td, .table-primary tbody tr.selectable:hover td
+{
+	background-color: lighten(@primaryColor, 40%);
+}
+
+.table-primary.table-bordered tbody td, .table-primary, .pagination ul > .disabled > a, .pagination ul > .disabled > span
+{
+	border-color: lighten(@primaryColor, 50%);
+}
+
+.widget .widget-body.list.list-2 ul li
+{
+	&.active { border-color: lighten(@primaryColor, 20%); }
+	a { color: lighten(@primaryColor, 20%); i:before { background: lighten(@primaryColor, 50%); color: lighten(@primaryColor, 10%); border-color: lighten(@primaryColor, 20%); } }
+}
