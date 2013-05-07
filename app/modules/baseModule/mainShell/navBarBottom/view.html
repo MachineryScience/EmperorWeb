@@ -9,24 +9,28 @@
             <ul class="nav">
                 <li>
                     <a href="#help_network" >
-                        <span class="label larger-label" data-bind="css: {'label-important': !linuxCNCServer.server_logged_in()}">{{nls.network}}</span>
+                        <span class="label larger-label" data-bind="css: {'label-important': !linuxCNCServer.server_logged_in(), 'label-info': linuxCNCServer.server_logged_in }">
                         <span data-bind="visible: linuxCNCServer.server_logged_in">{{nls.connected}}</span>
                         <span data-bind="visible: !linuxCNCServer.server_logged_in()">{{nls.not_connected}}</span>
+                            </span>
                     </a>
                 </li>
 
                 <li>
                     <a href="#help_file">
-                        <span class="label larger-label">{{nls.filename}}</span> <span data-bind="text: filename_short"></span>
+                        <span class="label larger-label label-info">
+                        <span data-bind="text: filename_short"></span>
+                            </span>
                     </a>
                 </li>
 
                 <li>
                     <a href="#help_units">
-                        <span class="label larger-label">{{nls.program_unit}}</span>
+                        <span class="label larger-label label-info">
                         <span data-bind="visible: linuxCNCServer.vars.program_units.data() == 1">{{nls.inch}}</span>
                         <span data-bind="visible: linuxCNCServer.vars.program_units.data() == 2">{{nls.mm}}</span>
                         <span data-bind="visible: linuxCNCServer.vars.program_units.data() == 3">{{nls.cm}}</span>
+                        </span>
                     </a>
                 </li>
 

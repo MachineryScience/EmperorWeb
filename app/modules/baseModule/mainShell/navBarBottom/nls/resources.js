@@ -4,7 +4,7 @@ define({
         "connected": "Connected",
         "not_connected": "Connecting...",
         "filename": "File: ",
-        "program_unit": "Units",
+        "program_unit": "Units: ",
         "mm": "MM",
         "cm": "CM",
         "inch": "Inches",
