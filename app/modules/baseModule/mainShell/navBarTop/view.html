@@ -12,7 +12,7 @@
 
                 <div class="navbar-form pull-right">
                     <button class="btn" data-bind="click: linuxCNCServer.toggleEstop, css : { 'btn-danger' : linuxCNCServer.estop_inverse } ">{{nls.estop}}</button>
-                    <button class="btn btn-warning" data-bind="click: linuxCNCServer.togglePower, css : { 'btn-warning' : linuxCNCServer.power_is_on }, enable: linuxCNCServer.estop_inverse ">{{nls.power_on}}</button>
+                    <button class="btn btn-warning" data-bind="click: linuxCNCServer.togglePower, css : { 'btn-warning' : linuxCNCServer.power_is_on }, enable: linuxCNCServer.estop_inverse ">{{nls.power}}</button>
                     <button class="btn btn-warning" data-bind="click: linuxCNCServer.stop, enable: linuxCNCServer.power_is_on, css : { 'btn-warning' : linuxCNCServer.power_is_on }">{{nls.abort}}</button>
                 </div>
 

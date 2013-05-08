@@ -1,0 +1,37 @@
+
+<div class="well large-box-shadow">
+    <fieldset class="">
+        <legend class="legend">{{nls.RunTitle}}</legend>
+
+        <p class="form-inline">
+            <button class="btn btn-success width-button-larger" data-bind="click: run, disable: linuxCNCServer.RmtRunning"><i class="icon-play"></i> {{nls.RunFrom}}:</button>
+            <input type="text" class="input width-line-number" data-bind="value: linuxCNCServer.vars.motion_line.data">
+            <span>&nbsp;</span>
+            <button class="btn btn-warning width-button-larger" data-bind="click: linuxCNCServer.pause,  visible: !linuxCNCServer.vars.paused.data()"><i class="icon-pause"></i> {{nls.Pause}}</button>
+            <button class="btn btn-warning width-button-larger" data-bind="click: function(){resume();}, visible: linuxCNCServer.vars.paused.data">
+                <span data-bind="visible: !singleStep()"><i class="icon-play-circle"></i> {{nls.Resume}}</span>
+                <span data-bind="visible: singleStep"><i class="icon-step-forward"></i> {{nls.Step}}</span>
+            </button>
+            <button class="btn btn-danger width-button-larger" data-bind="click: function(){linuxCNCServer.stop();}"><i class="icon-stop"></i> {{nls.Stop}}</button>
+        </p>
+
+        <p class="form-inline">
+
+            <!--Optional Stop-->
+            <label for="run_opstop_toggle_cb">{{nls.OptionalStop}}:</label>
+            <span  id="run_opstop_toggle" class="switch" data-on="success" data-off="warning" data-bind="event: { 'switch-change': function(){ linuxCNCServer.setOptionalStop($('#run_opstop_toggle').bootstrapSwitch('status')); }}">
+                <input id="run_opstop_toggle_cb" type="checkbox">
+            </span>
+
+            <span>&nbsp;</span>
+
+            <!--Single Step-->
+            <label for="run_sstep_toggle_cb">{{nls.SingleStep}}:</label>
+            <span  id="run_sstep_toggle" class="switch" data-on="success" data-off="warning" data-bind="event: { 'switch-change': function(){ singleStep($('#run_sstep_toggle').bootstrapSwitch('status')); }}">
+                <input id="run_sstep_toggle_cb" type="checkbox">
+            </span>
+
+        </p>
+
+    </fieldset>
+</div>

@@ -8,30 +8,27 @@
         <tbody data-bind="foreach:linuxCNCServer.RmtDRO" >
 
         <!-- ko if: (1 << $index()) & $root.linuxCNCServer.vars.axis_mask.data() -->
-            <!--<tr data-bind="if: (1 << $index()) & $root.linuxCNCServer.vars.axis_mask.data()" class="span12">-->
         <tr class="borderless-table">
                     <td class="width-axis-label ">
                         <label data-bind="attr:{for: (($index()).toString()+'droax') }, text: ($root.linuxCNCServer.axisNames)[$index()]+':', click: $root.onDROFocus " class="label big-label span12 label-info" style="text-align: center;"></label>
                     </td>
 
                     <td class="" >
-                        <input type="text" class="input span12 huge-label" style="text-align: right; font-weight:bold;" data-bind="event: {change: function(data,event){ $root.onDROValChange(data,event,$index())} }, value: new ko.computed( function(){return $root.linuxCNCServer.RmtDRO()[$index()].toFixed(4)} ), attr:{id: (($index()).toString()+'droax') } ">
+                        <input type="text" class="input span12 huge-label" style="text-align: right; font-weight:bold;" data-bind="event: {change: function(data,event){ $root.onDROValChange(data,event,$index())}, blur: function(data,event){ $root.onDROValChange(data,event,$index()) } }, value: new ko.computed( function(){return $root.linuxCNCServer.RmtDRO()[$index()].toFixed(4)} ), attr:{id: (($index()).toString()+'droax') } ">
                     </td>
 
-                    <td class="width-button ">
+                    <td class="width-button">
                         <button class="btn btn-block" data-bind="click: function(){$root.onZeroDRO($index())}, attr:{id: ('bzdro'+($index()).toString())}" >{{nls.Zero}}</button>
                     </td>
 
-                    <td class="width-button ">
+                    <td class="width-button">
                         <!--Homing Button-->
                         <button class="btn btn-block" data-bind="click: function(){$root.onHome($index())}, attr:{id: ('bhdro'+($index()).toString())}" >
                             <span class="" data-bind="visible: (!$root.linuxCNCServer.vars.homed.data()[$index()]), css: {count: ! $root.linuxCNCServer.vars.homed.data()[$index()] }"><i class="icon-warning-sign" style="color:red"></i></span>
                             {{nls.Home}}
                         </button>
                     </td>
-
         </tr>
-            <!--</tr>-->
         <!-- /ko -->
 
         </tbody>
@@ -39,6 +36,9 @@
 
         </table>
 
+        <div class="btn-toolbar">
+            <button class="btn" data-bind="click: linuxCNCServer.homeAll">{{nls.HomeAll}}</button>
+        </div>
 
     </fieldset>
 </div>

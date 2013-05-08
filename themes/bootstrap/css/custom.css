@@ -1,22 +1,37 @@
 .larger-label {
   font-size: 16px !important;
-  line-height: 20px !important;
+  line-height: 22px !important;
+}
+.form-inline {
+  line-height: 38.5px !important;
+}
+.has-switch {
+  margin-bottom: -10px !important;
 }
 .big-label {
   font-size: 19.2px !important;
-  line-height: 24px !important;
+  line-height: 26.4px !important;
 }
 .huge-label {
   font-size: 24px !important;
-  line-height: 30px !important;
+  line-height: 33px !important;
 }
 .width-button {
   width: 10%;
-  min-width: 10ex;
+  min-width: 12ex;
+}
+.width-button-larger {
+  width: 25%;
+  min-width: 13ex;
 }
 .width-axis-label {
   width: 3ex;
   max-width: 4ex;
+}
+.width-line-number {
+  width: 8ex;
+  max-width: 8ex;
+  min-width: 8ex;
 }
 .borderless-table > td {
   border: none !important;
@@ -40,7 +55,7 @@ fieldset {
   cursor: default;
 }
 .icon-info {
-  color: #772953;
+  color: #2f96b4;
 }
 .lite-box-shadow {
   -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);

@@ -69,6 +69,10 @@ define(function (require) {
     lcncsvr.vars.homed = { data: ko.observableArray([0, 0, 0, 0, 0, 0, 0, 0, 0]), watched: true };
     lcncsvr.vars.gcodes = { data: ko.observableArray([]), watched: true };
     lcncsvr.vars.file = { data: ko.observable(""), watched: true };
+    lcncsvr.vars.motion_line = { data: ko.observable(0), watched: true };
+    lcncsvr.vars.optional_stop = { data: ko.observable(false), watched: true };
+    lcncsvr.vars.error = { data: ko.observable(""), watched: true };
+
 
     lcncsvr.vars.axis_mask = { data: ko.observable(0), watched: true };
     lcncsvr.vars.backplot = { data: ko.observable(""), watched: false };
@@ -102,6 +106,9 @@ define(function (require) {
             ret[idx] = lcncsvr.vars.actual_position.data()[idx] - lcncsvr.vars.g5x_offset.data()[idx] - lcncsvr.vars.g92_offset.data()[idx] - lcncsvr.vars.tool_offset.data()[idx];
         return ret;
     });
+    lcncsvr.RmtPaused = ko.computed( function() {
+       return lcncsvr.vars.interp_state.data() == lcncsvr.TASK_INTERP_PAUSED;
+    });
 
 
     /**
@@ -127,7 +134,7 @@ define(function (require) {
         if ($.isEmptyObject(modes) || !$.isArray(modes) )
             return false;
         try {
-            if ($.inArray( lcncsvr.vars.task_mode.data(), modes ) )
+            if ($.inArray( lcncsvr.vars.task_mode.data(), modes ) >= 0 )
                 return true;
             if (lcncsvr.RmtRunning())
                 return false;
@@ -156,6 +163,7 @@ define(function (require) {
                 break;
         }
         lcncsvr.sendCommand("wait_complete","wait_complete",["1"]);
+        return true;
     }
 
     lcncsvr.abort = function()
@@ -179,6 +187,16 @@ define(function (require) {
             lcncsvr.estop( false );
         else
             lcncsvr.estop( true );
+    }
+
+    lcncsvr.toggleOptionalStop = function( )
+    {
+        lcncsvr.setOptionalStop(!lcncsvr.vars.optional_stop.data());
+    }
+
+    lcncsvr.setOptionalStop = function( onoff )
+    {
+        lcncsvr.sendCommand("set_optional_stop","set_optional_stop",[onoff]);
     }
 
     lcncsvr.machinePower = function( onoff )
@@ -230,7 +248,7 @@ define(function (require) {
     }
 
 
-    lcncsvr.resume = function(  )
+    lcncsvr.resume = function()
     {
         if (!lcncsvr.vars.paused.data())
             return;

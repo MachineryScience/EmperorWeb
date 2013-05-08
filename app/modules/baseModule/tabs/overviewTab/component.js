@@ -5,15 +5,19 @@ define(function(require) {
 
     var ViewModel = require('./viewmodel');
     var ViewModel_dro = require('../tabWidgets/viewmodel_dro');
+    var ViewModel_run = require('../tabWidgets/viewmodel_run');
     var ViewModel_backplot = require('../tabWidgets/viewmodel_backplot');
 
     var Component = function(moduleContext) {
 		var panel = null;
         var panel_dro = null;
+        var panel_run = null;
         var panel_backplot = null;
         var vm = null;
         var vm_dro = null;
+        var vm_run = null;
         var vm_backplot = null;
+
 		return {
 			activate : function(parent) {
 				if (!panel) {
@@ -30,6 +34,13 @@ define(function(require) {
                 }
                 vm_dro.initialize(panel_dro);
 
+                if (!panel_run) {
+                    vm_run = new ViewModel_run(moduleContext);
+                    panel_run = new Boiler.ViewTemplate(panel.getJQueryElement().find("#RUN_PANEL"), vm_run.getTemplate(), vm_run.getNls());
+                    ko.applyBindings( vm_run, panel_run.getDomElement());
+                }
+                vm_run.initialize(panel_run);
+
                 if (!panel_backplot) {
                     vm_backplot = new ViewModel_backplot(moduleContext);
                     panel_backplot = new Boiler.ViewTemplate(panel.getJQueryElement().find("#BACKPLOT_PANEL"), vm_backplot.getTemplate(), vm_backplot.getNls());
@@ -40,7 +51,13 @@ define(function(require) {
                 panel.show();
                 //panel_dro.show();
 //                panel_backplot.show();
+
+
+
+
 			},
+
+
 
 			deactivate : function() {
 				if (panel) {

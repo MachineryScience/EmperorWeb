@@ -32,6 +32,18 @@ define(function(require) {
                 "test" : test
             });
             controller.start();
+
+            // error notifications
+            parentContext.getSettings().linuxCNCServer.vars.error.data.subscribe(function(){
+                try  {
+                if (parentContext.getSettings().linuxCNCServer.vars.error.data().text.length > 0)
+                    $.pnotify({
+                        type: "error",
+                        title: "Controller Error",
+                        text: parentContext.getSettings().linuxCNCServer.vars.error.data().text
+                    })
+                } catch(ex) {}
+            });
         }
         
     }

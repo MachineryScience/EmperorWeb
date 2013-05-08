@@ -11,8 +11,7 @@ define({
     	"config": "Configuration",
 
         "estop":"ESTOP",
-        "power_on":"Power On",
-        "power_off":"Power Off",
+        "power":"Power",
         "abort":"Abort"
     }
 //    "sv" : true

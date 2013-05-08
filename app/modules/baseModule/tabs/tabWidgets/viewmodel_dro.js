@@ -41,7 +41,7 @@ define(function(require) {
         self.onDROValChange=function(oldval,event,index)
         {
             if ($.isNumeric(event.currentTarget.value))
-                if (event.currentTarget.value != self.linuxCNCServer.RmtDRO()[index].toFixed(4))
+                if ( parseFloat(event.currentTarget.value) != self.linuxCNCServer.RmtDRO()[index])
                     self.linuxCNCServer.touchoffCurrent( index, event.currentTarget.value );
                 else
                     $(event.currentTarget).val( self.linuxCNCServer.RmtDRO()[index].toFixed(4) );

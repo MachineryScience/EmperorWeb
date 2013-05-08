@@ -29,7 +29,7 @@
 .input-block-level {
   display: block;
   width: 100%;
-  min-height: 30px;
+  min-height: 32px;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -205,7 +205,7 @@
   .row-fluid [class*="span"] {
     display: block;
     width: 100%;
-    min-height: 30px;
+    min-height: 32px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -554,7 +554,7 @@
   .row-fluid [class*="span"] {
     display: block;
     width: 100%;
-    min-height: 30px;
+    min-height: 32px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -848,7 +848,7 @@
   .uneditable-input {
     display: block;
     width: 100%;
-    min-height: 30px;
+    min-height: 32px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -884,7 +884,7 @@
   }
   .page-header h1 small {
     display: block;
-    line-height: 20px;
+    line-height: 22px;
   }
   input[type="checkbox"],
   input[type="radio"] {
@@ -935,10 +935,10 @@
     position: fixed;
   }
   .navbar-fixed-top {
-    margin-bottom: 20px;
+    margin-bottom: 22px;
   }
   .navbar-fixed-bottom {
-    margin-top: 20px;
+    margin-top: 22px;
   }
   .navbar-fixed-top .navbar-inner,
   .navbar-fixed-bottom .navbar-inner {
@@ -957,7 +957,7 @@
   }
   .nav-collapse .nav {
     float: none;
-    margin: 0 0 10px;
+    margin: 0 0 11px;
   }
   .nav-collapse .nav > li {
     float: none;
@@ -969,7 +969,7 @@
     display: none;
   }
   .nav-collapse .nav .nav-header {
-    color: #ffffff;
+    color: #f5f5f5;
     text-shadow: none;
   }
   .nav-collapse .nav > li > a,
@@ -995,7 +995,7 @@
   .nav-collapse .nav > li > a:focus,
   .nav-collapse .dropdown-menu a:hover,
   .nav-collapse .dropdown-menu a:focus {
-    background-color: #dd4814;
+    background-color: #2fa4e7;
   }
   .navbar-inverse .nav-collapse .nav > li > a,
   .navbar-inverse .nav-collapse .dropdown-menu a {
@@ -1005,7 +1005,7 @@
   .navbar-inverse .nav-collapse .nav > li > a:focus,
   .navbar-inverse .nav-collapse .dropdown-menu a:hover,
   .navbar-inverse .nav-collapse .dropdown-menu a:focus {
-    background-color: #772953;
+    background-color: #033c73;
   }
   .nav-collapse.in .btn-group {
     margin-top: 5px;
@@ -1046,18 +1046,18 @@
   .nav-collapse .navbar-form,
   .nav-collapse .navbar-search {
     float: none;
-    padding: 10px 15px;
-    margin: 10px 0;
-    border-top: 1px solid #dd4814;
-    border-bottom: 1px solid #dd4814;
+    padding: 11px 15px;
+    margin: 11px 0;
+    border-top: 1px solid #2fa4e7;
+    border-bottom: 1px solid #2fa4e7;
     -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 0 rgba(255,255,255,.1);
     -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 0 rgba(255,255,255,.1);
     box-shadow: inset 0 1px 0 rgba(255,255,255,.1), 0 1px 0 rgba(255,255,255,.1);
   }
   .navbar-inverse .nav-collapse .navbar-form,
   .navbar-inverse .nav-collapse .navbar-search {
-    border-top-color: #772953;
-    border-bottom-color: #772953;
+    border-top-color: #033c73;
+    border-bottom-color: #033c73;
   }
   .navbar .nav-collapse .nav.pull-right {
     float: none;
