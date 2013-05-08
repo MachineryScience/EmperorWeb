@@ -16,6 +16,9 @@
   font-size: 24px !important;
   line-height: 33px !important;
 }
+.huge-input {
+  font-size: 24px !important;
+}
 .width-button {
   width: 10%;
   min-width: 12ex;

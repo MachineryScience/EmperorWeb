@@ -14,7 +14,7 @@
                     </td>
 
                     <td class="" >
-                        <input type="text" class="input span12 huge-label" style="text-align: right; font-weight:bold;" data-bind="event: {change: function(data,event){ $root.onDROValChange(data,event,$index())}, blur: function(data,event){ $root.onDROValChange(data,event,$index()) } }, value: new ko.computed( function(){return $root.linuxCNCServer.RmtDRO()[$index()].toFixed(4)} ), attr:{id: (($index()).toString()+'droax') } ">
+                        <input type="text" class="input span12 huge-input" style="text-align: right; font-weight:bold;" data-bind="event: {change: function(data,event){ $root.onDROValChange(data,event,$index())}, blur: function(data,event){ $root.onDROValChange(data,event,$index()) } }, value: new ko.computed( function(){return $root.linuxCNCServer.RmtDRO()[$index()].toFixed(4)} ), attr:{id: (($index()).toString()+'droax') } ">
                     </td>
 
                     <td class="width-button">
