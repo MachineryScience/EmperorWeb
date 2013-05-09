@@ -2,6 +2,7 @@ define(function(require) {
 
     var template = require('text!./view_run.html');
     var nls = require('i18n!./nls/resources');
+    var utils = require('/app/core/helpers/utility.js');
 
 	var ViewModel = function(moduleContext) {
 
@@ -24,6 +25,10 @@ define(function(require) {
             {
                 $('#run_opstop_toggle', Panel.getJQueryElement()).bootstrapSwitch('setState',newVal);
             });
+
+            utils.JQVSlider( $( "#run_spindle_rate_slider" ), self.linuxCNCServer.vars.spindlerate.data, 0, 1, 0.01, function(event,ui){ self.linuxCNCServer.setSpindleOverride(ui.value); } );
+            utils.JQVSlider( $( "#run_feed_rate_slider" ), self.linuxCNCServer.vars.feedrate.data, 0, 1, 0.01, function(event,ui){ self.linuxCNCServer.setFeedrate(ui.value); } );
+
 		};
 
         self.run = function()

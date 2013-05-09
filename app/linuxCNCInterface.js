@@ -72,6 +72,8 @@ define(function (require) {
     lcncsvr.vars.motion_line = { data: ko.observable(0), watched: true };
     lcncsvr.vars.optional_stop = { data: ko.observable(false), watched: true };
     lcncsvr.vars.error = { data: ko.observable(""), watched: true };
+    lcncsvr.vars.spindlerate = { data: ko.observable(1), watched: true };
+    lcncsvr.vars.feedrate = { data: ko.observable(1), watched: true };
 
 
     lcncsvr.vars.axis_mask = { data: ko.observable(0), watched: true };

@@ -15,23 +15,56 @@
             <button class="btn btn-danger width-button-larger" data-bind="click: function(){linuxCNCServer.stop();}"><i class="icon-stop"></i> {{nls.Stop}}</button>
         </p>
 
-        <p class="form-inline">
 
-            <!--Optional Stop-->
-            <label for="run_opstop_toggle_cb">{{nls.OptionalStop}}:</label>
-            <span  id="run_opstop_toggle" class="switch" data-on="success" data-off="warning" data-bind="event: { 'switch-change': function(){ linuxCNCServer.setOptionalStop($('#run_opstop_toggle').bootstrapSwitch('status')); }}">
-                <input id="run_opstop_toggle_cb" type="checkbox">
-            </span>
+        <div class="row-fluid">
 
-            <span>&nbsp;</span>
+            <div class="span12">
 
-            <!--Single Step-->
-            <label for="run_sstep_toggle_cb">{{nls.SingleStep}}:</label>
-            <span  id="run_sstep_toggle" class="switch" data-on="success" data-off="warning" data-bind="event: { 'switch-change': function(){ singleStep($('#run_sstep_toggle').bootstrapSwitch('status')); }}">
-                <input id="run_sstep_toggle_cb" type="checkbox">
-            </span>
+                <table class="table table table-condensed">
+                    <tr class="borderless-table">
+                    <!--Optional Stop-->
 
-        </p>
+                        <td>
+                            <label for="run_opstop_toggle_cb"><h5>{{nls.OptionalStop}}:</h5></label>
+                            <span id="run_opstop_toggle" class="switch" data-on="success" data-off="warning" data-bind="event: { 'switch-change': function(){ linuxCNCServer.setOptionalStop($('#run_opstop_toggle').bootstrapSwitch('status')); }}">
+                            <input id="run_opstop_toggle_cb" type="checkbox"> </span>
+                        </td>
 
+
+
+                        <td>
+                            <!--Single Step-->
+                            <label for="run_sstep_toggle_cb"><h5>{{nls.SingleStep}}:</h5></label>
+                            <span id="run_sstep_toggle" class="switch" data-on="success" data-off="warning"
+                                  data-bind="event: { 'switch-change': function(){ singleStep($('#run_sstep_toggle').bootstrapSwitch('status')); }}">
+                                <input id="run_sstep_toggle_cb" type="checkbox">
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="sliders-vertical">
+                                <span id="run_feed_rate_slider" class="slider-primary"></span>
+                            </div>
+                            <div>
+                                <p><h5>Feed Rate</h5></p>
+                                <p><span class="">100%</span></p>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="sliders-vertical">
+                                <span id="run_spindle_rate_slider" class="slider-primary"></span>
+                            </div>
+                            <div>
+                                <p><h5>Spindle Rate</h5></p>
+                                <p><span class="">100%</span></p>
+                            </div>
+                        </td>
+
+
+                    </tr>
+                 </table>
+            </div>
+        </div>
     </fieldset>
 </div>

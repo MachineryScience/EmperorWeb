@@ -35,7 +35,7 @@
 
 .width-button-larger {
   width: 25%;
-  min-width: 13ex;
+  min-width: 15ex;
 }
 
 .width-axis-label {
@@ -160,3 +160,137 @@ a > span {
 .with-mid-padding		{ padding: 10px !important; }
 .with-small-padding		{ padding: 5px !important; }
 .no-padding				{ padding: 0 !important; }
+
+
+
+
+
+.rotate_text_90 {
+  -webkit-transform: rotate(-90deg);
+  -moz-transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+
+  /* also accepts left, right, top, bottom coordinates; not required, but a good idea for styling */
+  -webkit-transform-origin: 50% 50%;
+  -moz-transform-origin: 50% 50%;
+  -ms-transform-origin: 50% 50%;
+  -o-transform-origin: 50% 50%;
+  transform-origin: 50% 50%;
+
+  /* Should be unset in IE9+ I think. */
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+}
+
+
+
+
+
+/* SLIDERS WITH JQUERY UI */
+
+.bevelEmboss(@ol:0.2, @od:0.2) {
+  box-shadow: inset 1px 1px 1px rgba(255, 255, 255, @ol), inset -1px -1px 1px rgba(0, 0, 0, @od);
+  -moz-box-shadow: inset 1px 1px 1px rgba(255, 255, 255, @ol), inset -1px -1px 1px rgba(0, 0, 0, @od);
+  -webkit-box-shadow: inset 1px 1px 1px rgba(255, 255, 255, @ol), inset -1px -1px 1px rgba(0, 0, 0, @od);
+}
+
+.rounded (@a:0, @b:0, @c:0, @d:0)
+{
+  -webkit-border-radius: @a @b @c @d;
+  -moz-border-radius: @a @b @c @d;
+  border-radius: @a @b @c @d;
+}
+
+@primaryColor: #496cad;
+
+.sliders-vertical span {
+  height: 120px;
+  float: left;
+  margin: 15px
+}
+.ui-widget-header {
+  border-color: @primaryColor;
+  background: @primaryColor;
+  color: #fff;
+}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default
+{
+  background: #fbefef;
+  border-color: #f1cbcb;
+  color: #d4a6a6;
+}
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active
+{
+  background: @primaryColor;
+  color: #fff;
+}
+.ui-widget-content { border: none; }
+.ui-datepicker-inline { width: 100%; padding: 0; }
+.ui-slider-wrap {
+  display: block;
+  padding: 5px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2) inset, 0 2px 2px rgba(0, 0, 0, 0.05) inset, 0 0 0 1px rgba(255, 255, 255, 0.9) inset, 0 1px 0 rgba(255, 255, 255, 0.3) inset;
+  -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2) inset, 0 2px 2px rgba(0, 0, 0, 0.05) inset, 0 0 0 1px rgba(255, 255, 255, 0.9) inset, 0 1px 0 rgba(255, 255, 255, 0.3) inset;
+  -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2) inset, 0 2px 2px rgba(0, 0, 0, 0.05) inset, 0 0 0 1px rgba(255, 255, 255, 0.9) inset, 0 1px 0 rgba(255, 255, 255, 0.3) inset;
+  .rounded(10px,10px,10px,10px);
+  .ui-slider {
+    background: rgba(0,0,0,.1);
+    .bevelEmboss();
+    .rounded(10px,10px,10px,10px);
+  }
+  .ui-slider-horizontal {
+    height: 10px;
+    .ui-slider-handle { top: -5px; }
+  }
+  .ui-slider-vertical {
+    .ui-slider-handle { left: -3px; }
+  }
+  .ui-slider-handle {
+    .rounded(50%,50%,50%,50%);
+    background: #fff;
+    border-width: 3px;
+    border-style: solid;
+    border-color: rgba(0,0,0,.3);
+    width: 13px;
+    height: 13px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  .ui-slider-range {
+    .rounded(10px,10px,10px,10px);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5) inset, 0 2px 2px rgba(0, 0, 0, 0.05) inset;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5) inset, 0 2px 2px rgba(0, 0, 0, 0.05) inset;
+    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5) inset, 0 2px 2px rgba(0, 0, 0, 0.05) inset;
+    background: rgba(0,0,0,.2);
+  }
+
+  .slider-primary {
+    .ui-slider-handle { border-color: @btnInfoBackgroundHighlight; }
+    .ui-slider-range { background: @btnInfoBackgroundHighlight; }
+  }
+  .slider-warning {
+    .ui-slider-handle { border-color: @btnWarningBackground; }
+    .ui-slider-range { background: @btnWarningBackground; }
+  }
+  .slider-success {
+    .ui-slider-handle { border-color: @btnSuccessBackground; }
+    .ui-slider-range { background: @btnSuccessBackground; }
+  }
+  .slider-inverse {
+    .ui-slider-handle { border-color: @btnInverseBackground; }
+    .ui-slider-range { background: @btnInverseBackground; }
+  }
+  .slider-info {
+    .ui-slider-handle { border-color: @btnInfoBackground; }
+    .ui-slider-range { background: @btnInfoBackground; }
+  }
+}
+.sliders-vertical {
+  position: relative;
+  margin: 0 auto;
+
+  .ui-slider-wrap { margin: 0 5px; }
+  .ui-slider { margin: 0; }
+}
