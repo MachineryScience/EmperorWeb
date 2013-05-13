@@ -198,10 +198,10 @@ define(function(require) {
 
             $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).append( self.renderer.domElement );
 
-            try { // try to remove the resize property if it is there, so we don't do it twice
-                $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).resizable( 'destroy' );
-            } catch (ex) {}
-            $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).resizable({ handles: "s", minHeight:150 });
+//            try { // try to remove the resize property if it is there, so we don't do it twice
+//                $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).resizable( 'destroy' );
+//            } catch (ex) {}
+//            $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).resizable({ handles: "s", minHeight:150 });
 
             self.animate();
 
@@ -230,6 +230,16 @@ define(function(require) {
 
         self.resize = function(event){
             try {
+
+
+                var height_of_bp_area = $("#BACKPLOT_INNER_WRAP",self.panel.getJQueryElement()).height() -
+                    ( $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).offset().top - $("#BACKPLOT_INNER_WRAP",self.panel.getJQueryElement()).offset().top ) -
+                    50;
+
+                if (height_of_bp_area < 100)
+                    height_of_bp_area = 100;
+                $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).height( height_of_bp_area );
+
                 $(self.renderer.domElement).detach();
                 self.camera.aspect = $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).width() / $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).height();
                 self.camera.updateProjectionMatrix();

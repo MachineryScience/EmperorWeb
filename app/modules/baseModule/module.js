@@ -44,6 +44,18 @@ define(function(require) {
                     })
                 } catch(ex) {}
             });
+
+            var resizefunc = function() {
+                $('.fill-height').each(function(idx,el){
+                    if ($(el).is(":visible"))
+                    {
+                        var val = $(window).height() - $(el).offset().top - parseInt($('body').css('padding-bottom')) -  ( $(el).outerHeight(true) - $(el).height() ) - 20 ;
+                        $(el).height( val  );
+                    }
+                });
+            }
+            $(window).resize( resizefunc );
+            resizefunc();
         }
         
     }

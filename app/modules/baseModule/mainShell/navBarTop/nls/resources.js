@@ -8,7 +8,7 @@ define({
         "tooling": "Tooling",
         "run" : "Production",
     	"help": "Help",
-    	"config": "Configuration",
+    	"config": "Conf.",
 
         "estop":"ESTOP",
         "power":"Power",

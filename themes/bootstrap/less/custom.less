@@ -1,5 +1,22 @@
 @import 'variables';
 
+.widget_stack {
+  z-index: 10;
+}
+
+.table-condensed th, .table-condensed td {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.well {
+  padding-bottom: 0px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
+
+}
+
 .larger-label {
   font-size: (@baseFontSize * 1) !important;
   line-height: (@baseLineHeight * 1) !important;
@@ -27,14 +44,41 @@
   font-size: (@baseFontSize * 1.5) !important;
 }
 
+@left-bar-width: 512px;
+.row-fluid > .left-col {
+  position: relative;
+  top: 0;
+  left:auto;
+  width: @left-bar-width;
+  float: left;
+}
+
+.right-col {
+  float: right;
+}
+
+.fixed-fluid {
+  margin-left: @left-bar-width;
+  padding-left: @gridGutterWidth;
+}
+
+.width-fixed-one {
+  width: (@left-bar-width / 2);
+  display: inline-block;
+}
+
+.width-fixed-two {
+  width: @left-bar-width;
+  display: inline-block;
+}
 
 .width-button {
-  width: 10%;
+  width: 12ex;
   min-width: 12ex;
 }
 
 .width-button-larger {
-  width: 25%;
+  width: 15ex;
   min-width: 15ex;
 }
 
@@ -44,9 +88,9 @@
 }
 
 .width-line-number {
-  width: 8ex;
-  max-width: 8ex;
-  min-width: 8ex;
+  width: 5ex;
+  max-width: 5ex;
+  min-width: 5ex;
 }
 
 .borderless-table > td  {

@@ -12,12 +12,13 @@
 
                 <div class="navbar-form pull-right">
                     <button class="btn" data-bind="click: linuxCNCServer.toggleEstop, css : { 'btn-danger' : linuxCNCServer.estop_inverse } ">{{nls.estop}}</button>
+                    &nbsp;
                     <button class="btn btn-warning" data-bind="click: linuxCNCServer.togglePower, css : { 'btn-warning' : linuxCNCServer.power_is_on }, enable: linuxCNCServer.estop_inverse ">{{nls.power}}</button>
                     <button class="btn btn-warning" data-bind="click: linuxCNCServer.stop, enable: linuxCNCServer.power_is_on, css : { 'btn-warning' : linuxCNCServer.power_is_on }">{{nls.abort}}</button>
                 </div>
 
                 <ul class="nav">
-                    <li data-bind="css: {'active' : activeTab0}, click: tabChange.bind(0)"><a href="#0"><i class="icon-plane"></i> {{nls.overview}}</a></li>
+                    <!--<li data-bind="css: {'active' : activeTab0}, click: tabChange.bind(0)"><a href="#0"><i class="icon-plane"></i> xxx{{nls.overview}}</a></li>-->
                     <li data-bind="css: {'active' : activeTab1}, click: tabChange.bind(1)"><a href="#1"><i class="icon-folder-open"></i> {{nls.file}}</a></li>
                     <li data-bind="css: {'active' : activeTab2}, click: tabChange.bind(2)"><a href="#2"><i class="icon-signin"></i> {{nls.work_setup}}</a></li>
                     <li data-bind="css: {'active' : activeTab3}, click: tabChange.bind(3)"><a href="#3"><i class="icon-filter"></i> {{nls.tooling}}</a></li>
