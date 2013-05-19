@@ -74,10 +74,10 @@ define(function (require) {
     lcncsvr.vars.error = { data: ko.observable(""), watched: true };
     lcncsvr.vars.spindlerate = { data: ko.observable(1), watched: true };
     lcncsvr.vars.feedrate = { data: ko.observable(1), watched: true };
-
+    lcncsvr.vars.client_config = { data: ko.observable({invalid:true}), watched: true, convert_to_json: true };
 
     lcncsvr.vars.axis_mask = { data: ko.observable(0), watched: true };
-    lcncsvr.vars.backplot = { data: ko.observable(""), watched: false };
+    lcncsvr.vars.backplot = { data: ko.observable(""), watched: false, convert_to_json: true };
 
     // calculated variables
     lcncsvr.estop_inverse = ko.computed(function () {
@@ -112,6 +112,20 @@ define(function (require) {
        return lcncsvr.vars.interp_state.data() == lcncsvr.TASK_INTERP_PAUSED;
     });
 
+    lcncsvr.filename_short = ko.computed( function() {
+        var str = lcncsvr.vars.file.data();
+        if (str.length > 45)
+            return "..." + str.substr( str.length - 42 );
+        return str;
+    });
+
+    lcncsvr.filename_nopath = ko.computed( function() {
+        var str = lcncsvr.vars.file.data();
+        str = str.split("/");
+        str = $(str).last()[0];
+        str = str || "";
+        return str;
+    });
 
     /**
      * Server Functions
@@ -525,10 +539,32 @@ define(function (require) {
         lcncsvr.mdi( "G43" );
     }
 
+    lcncsvr.setClientConfig = function( config_string )
+    {
+        lcncsvr.sendCommand("save_client_config","save_client_config",[config_string]);
+    }
 
-    lcncsvr.sendBackplotRequest = function () {
+    lcncsvr.setClientConfigVal = function ( key, value )
+    {
+        if (lcncsvr.vars.client_config.data().invalid)
+            return false;
+        var oldval = lcncsvr.vars.client_config.data();
+        oldval[key] = value;
+        lcncsvr.setClientConfig( JSON.stringify(oldval) );
+    }
+
+    lcncsvr.sendBackplotRequestOrNotify = function () {
         //console.debug("WEBSOCKET: send get request for backplot");
-        lcncsvr.socket.send(JSON.stringify({"id": "backplot", "command": "get", "name": "backplot"}));
+        if (typeof(lcncsvr.vars.backplot.data()) == "string")
+            lcncsvr.socket.send(JSON.stringify({"id": "backplot", "command": "get", "name": "backplot"}));
+        else
+            lcncsvr.vars.backplot.data.valueHasMutated();
+    }
+
+    lcncsvr.uploadGCode = function(filename, data) {
+        lcncsvr.setRmtMode(lcncsvr.TASK_MODE_MDI);
+        lcncsvr.setRmtMode(lcncsvr.TASK_MODE_AUTO);
+        lcncsvr.sendCommand("program_upload","program_upload",[filename, data]);
     }
 
     lcncsvr.sendAllWatchRequests = function () {
@@ -595,7 +631,7 @@ define(function (require) {
                     }
 
                     if (lcncsvr.vars.hasOwnProperty(data.id)) {
-                        if (data.id == 'backplot')
+                        if (lcncsvr.vars[data.id].convert_to_json)
                             lcncsvr.vars[data.id].data(JSON.parse(data.data));
                         else
                             lcncsvr.vars[data.id].data(data.data);

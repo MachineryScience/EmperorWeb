@@ -11,12 +11,12 @@
   // ----------------
   // Remove any padding from the body
   body {
-    //padding-top: 0;
+    padding-top: 0;
   }
   // Unfix the navbars
   .navbar-fixed-top,
   .navbar-fixed-bottom {
-    position: fixed;  // PJJ Force top and bottom nav bar to stay affixed.  For floating bars, use "static" instead of "fixed"
+    position: static;
   }
   .navbar-fixed-top {
     margin-bottom: @baseLineHeight;
@@ -34,7 +34,7 @@
   }
   // Account for brand name
   .navbar .brand {
-    //padding-left: 10px;
+    padding-left: 10px;
     padding-right: 10px;
     margin: 0 0 0 -5px;
   }

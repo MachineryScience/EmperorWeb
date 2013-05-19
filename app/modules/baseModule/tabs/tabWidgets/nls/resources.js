@@ -9,6 +9,7 @@ define({
 
         "BackplotTitle": "Backplot",
         "TopView" : "Top View",
+        "PerspectiveView": "PerspectiveView",
 
         "RunTitle": "Run",
         "RunFrom": "Run From",
@@ -17,7 +18,10 @@ define({
         "Step": "Step",
         "Stop": "Stop",
         "OptionalStop": "Optional Stop",
-        "SingleStep": "Single Step"
+        "SingleStep": "Single Step",
+
+        "Load": "Load",
+        "File": "File:"
     }
 //    "sv" : true
 });

@@ -1,4 +1,3 @@
-
 <div class="well large-box-shadow span12">
     <!--<fieldset class="">-->
         <!--<legend class="legend">{{nls.DROTitle}}</legend>-->
@@ -24,7 +23,7 @@
                     <td class="width-button">
                         <!--Homing Button-->
                         <button class="btn btn-block" data-bind="click: function(){$root.onHome($index())}, attr:{id: ('bhdro'+($index()).toString())}" >
-                            <span class="" data-bind="visible: (!$root.linuxCNCServer.vars.homed.data()[$index()]), css: {count: ! $root.linuxCNCServer.vars.homed.data()[$index()] }"><i class="icon-warning-sign" style="color:red"></i></span>
+                            <span class="" data-bind="visible: (!$root.linuxCNCServer.vars.homed.data()[$index()]), css: {count: ! $root.linuxCNCServer.vars.homed.data()[$index()] }"><i class="icon-warning-sign"></i></span>
                             {{nls.Home}}
                         </button>
                     </td>

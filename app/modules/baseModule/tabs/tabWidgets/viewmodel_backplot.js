@@ -7,6 +7,7 @@ define(function(require) {
     var ViewModel = function(moduleContext) {
 
         var self = this;
+        self.panel = null;
 
         this.getTemplate = function()
         {
@@ -39,14 +40,18 @@ define(function(require) {
         });
 
         self.initialize = function( backplotPanel ) {
-            self.panel = backplotPanel;
+            if (self.panel == null)
+            {
+                self.panel = backplotPanel;
 
-            self.initSubscription();
+                self.initSubscription();
 
-            if ( ! $.isEmptyObject(self.renderer) )
-                setTimeout(self.resize,2);
-            else
-                self.linuxCNCServer.sendBackplotRequest();
+                if ( ! $.isEmptyObject(self.renderer) )
+                    setTimeout(self.resize,2);
+                else
+                    self.linuxCNCServer.sendBackplotRequestOrNotify();
+            } else
+                self.resize();
         };
 
 
@@ -206,7 +211,7 @@ define(function(require) {
             self.animate();
 
             setTimeout(self.resize,2);
-            self.resize();
+            //self.resize();
         }
 
         self.setTopView = function()
@@ -215,6 +220,7 @@ define(function(require) {
                 var centerPos = self.feedGeometry.boundingBox.center();
                 centerPos.z = centerPos.z + self.span*2;
                 self.camera.position.set( centerPos.x, centerPos.y, centerPos.z );
+                self.camera.up.x=0;self.camera.up.y=1;self.camera.up.z=0;
                 self.camera.lookAt(self.feedGeometry.boundingBox.center() );
 
                 self.controls.object = null;
@@ -227,14 +233,20 @@ define(function(require) {
         }
 
 
+        self.setPerspectiveView = function()
+        {
+            try {
+                self.setTopView();
+                self.controls.rotateRight(Math.PI/4);
+                self.controls.rotateDown(Math.PI/4);
+            } catch (ex) {}
+        }
 
         self.resize = function(event){
             try {
 
-
                 var height_of_bp_area = $("#BACKPLOT_INNER_WRAP",self.panel.getJQueryElement()).height() -
-                    ( $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).offset().top - $("#BACKPLOT_INNER_WRAP",self.panel.getJQueryElement()).offset().top ) -
-                    50;
+                    ( $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).offset().top - $("#BACKPLOT_INNER_WRAP",self.panel.getJQueryElement()).offset().top ) - 50;
 
                 if (height_of_bp_area < 100)
                     height_of_bp_area = 100;
@@ -247,6 +259,7 @@ define(function(require) {
                 $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).height($("#BACKPLOT_SIZER",self.panel.getJQueryElement()).height());
                 $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).append( self.renderer.domElement );
                 self.render();
+
             } catch (ex){  };
         }
 

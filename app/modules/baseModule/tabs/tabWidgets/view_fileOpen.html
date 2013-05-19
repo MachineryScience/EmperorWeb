@@ -1,0 +1,31 @@
+<div class="well large-box-shadow">
+
+    <div class="fileupload fileupload-new" data-provides="fileupload">
+        <div class="input-append">
+
+            <table class="table table-condensed">
+                <tbody>
+                <tr class="borderless-table">
+                    <td class="">
+                        <label for="file_input" style="text-align: center;"><h5 class="align_button">{{nls.File}}</h5></label>
+                    </td>
+
+                    <td>
+                        <div class="uneditable-input" style="width:350px;">
+                            <i class="icon-file"></i>
+                            <span class="" data-bind="text: linuxCNCServer.filename_short"></span>
+                        </div>
+
+                        <span class="btn btn-file">
+                            <span class="">{{nls.Load}}</span>
+                            <input id="file_input" type="file"/>
+                        </span>
+                    <td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+</div>

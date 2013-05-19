@@ -60,6 +60,11 @@ THREE.OrbitControls = function ( object, domElement ) {
 	var STATE = { NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2 };
 	var state = STATE.NONE;
 
+    var zaxis = new THREE.Vector3(0,0,1);
+    var nzaxis = new THREE.Vector3(0,0,-1);
+    var cameraLookDir = new THREE.Vector3(0,0,0);
+    var cameraDirRight = new THREE.Vector3(1,0,0);
+
 	// events
 
 	var changeEvent = { type: 'change' };
@@ -147,46 +152,76 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	};
 
+    this.RotateVectorAbout = function( vec, about, angle )
+    {
+        //about = about.normalize();
+        var x = about.x * ( about.x * vec.x + about.y * vec.y + about.z * vec.z ) * (1-Math.cos(angle)) + vec.x * Math.cos(angle) + (-about.z * vec.y + about.y * vec.z) * Math.sin(angle);
+        var y = about.y * ( about.x * vec.x + about.y * vec.y + about.z * vec.z ) * (1-Math.cos(angle)) + vec.y * Math.cos(angle) + ( about.z * vec.x - about.x * vec.z) * Math.sin(angle);
+        var z = about.z * ( about.x * vec.x + about.y * vec.y + about.z * vec.z ) * (1-Math.cos(angle)) + vec.z * Math.cos(angle) + ( -about.y * vec.x + about.x * vec.y) * Math.sin(angle);
+        return new THREE.Vector3(x,y,z);
+    }
+
+    this.RotX = function( cam, cameraLookDir, cameraDirUp ) // dx in pixels
+    {
+        if (thetaDelta == 0 && scale == 1)
+            return;
+
+        // always rotate around vector (0,0,1)
+        var dist = this.object.position.clone().sub( this.center ).length() * scale;
+
+        if (thetaDelta != 0) {
+            cameraLookDir = this.RotateVectorAbout( cameraLookDir, zaxis, thetaDelta).normalize();
+            cameraDirUp = this.RotateVectorAbout( cameraDirUp, zaxis, thetaDelta).normalize();
+        }
+
+        cameraLookDir.multiplyScalar(-dist);
+
+        cam.position.copy(this.center).add(cameraLookDir);
+        cam.up.copy( cameraDirUp );
+        cam.lookAt(this.center);
+    }
+
+    this.RotY = function( cam, cameraLookDir, cameraDirUp  ) // dx in pixels
+    {
+        if (phiDelta == 0)
+            return;
+
+        // always rotate around vector (0,0,1)
+        var dist = this.object.position.clone().sub( this.center).length();
+        cameraDirRight.copy(cameraLookDir);
+
+        cameraDirRight.cross(cameraDirUp).normalize();
+        cameraLookDir = this.RotateVectorAbout( cameraLookDir, cameraDirRight, phiDelta).normalize();
+        cameraDirUp = this.RotateVectorAbout( cameraDirUp, cameraDirRight, phiDelta).normalize();
+
+        cameraLookDir.multiplyScalar(-dist);
+
+        cam.position.copy(this.center).add(cameraLookDir);
+        cam.up.copy( cameraDirUp );
+        cam.lookAt(this.center);
+    }
+
 	this.update = function () {
 
 		var position = this.object.position;
 		var offset = position.clone().sub( this.center );
 
-		// angle from z-axis around y-axis
+        cameraLookDir.copy(nzaxis);
+        cameraLookDir.applyEuler( this.object.rotation, object.eulerOrder );
+        var cameraUpDir = this.object.up;
+        this.RotX(this.object, cameraLookDir, cameraUpDir);
 
-		var theta = Math.atan2( offset.x, offset.z );
+        cameraLookDir.copy(nzaxis);
+        cameraLookDir.applyEuler( this.object.rotation, object.eulerOrder );
+        cameraUpDir = this.object.up;
+        this.RotY(this.object, cameraLookDir, cameraUpDir);
 
-		// angle from y-axis
-
-		var phi = Math.atan2( Math.sqrt( offset.x * offset.x + offset.z * offset.z ), offset.y );
 
 		if ( this.autoRotate ) {
 
 			this.rotateLeft( getAutoRotationAngle() );
 
 		}
-
-		theta += thetaDelta;
-		phi += phiDelta;
-
-		// restrict phi to be between desired limits
-		phi = Math.max( this.minPolarAngle, Math.min( this.maxPolarAngle, phi ) );
-
-		// restrict phi to be betwee EPS and PI-EPS
-		phi = Math.max( EPS, Math.min( Math.PI - EPS, phi ) );
-
-		var radius = offset.length() * scale;
-
-		// restrict radius to be between desired limits
-		radius = Math.max( this.minDistance, Math.min( this.maxDistance, radius ) );
-
-		offset.x = radius * Math.sin( phi ) * Math.sin( theta );
-		offset.y = radius * Math.cos( phi );
-		offset.z = radius * Math.sin( phi ) * Math.cos( theta );
-
-		position.copy( this.center ).add( offset );
-
-		this.object.lookAt( this.center );
 
 		thetaDelta = 0;
 		phiDelta = 0;
@@ -195,9 +230,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 		if ( lastPosition.distanceTo( this.object.position ) > 0 ) {
 
 			this.dispatchEvent( changeEvent );
-
 			lastPosition.copy( this.object.position );
-
 		}
 
 	};

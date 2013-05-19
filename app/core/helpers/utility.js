@@ -17,7 +17,7 @@ define(function(require) {
     utils.JQVSlider = function( jqElement, observable, val_min, val_max, val_step, stop_callback ){
         jqElement.each(function()
         {
-            var value = parseInt( $( this ).text(), 10 );
+            //var value = parseInt( $( this ).text(), 10 );
             var ret = $( this ).empty().slider({
                 create: utils.JQSliderCreate,
                 value: observable(),

@@ -8,7 +8,8 @@ define(function(require) {
     var Boiler = require('Boiler'), 
         NavBarTopComponent = require('./mainShell/navBarTop/component'),
         NavBarBottomComponent = require('./mainShell/navBarBottom/component'),
-        OverviewTab = require('./tabs/overviewTab/component');
+        OverviewTab = require('./tabs/overviewTab/component'),
+        WorkSetupTab = require('./tabs/workSetupTab/component');
 
     // Definition of the base Module as an object, this is the return value of this AMD script
     return {
@@ -26,10 +27,12 @@ define(function(require) {
             controller.start();
 
             var controller = new Boiler.UrlController($("#main-content"));
-            var test = new OverviewTab(context);
+            var myOverviewTab = new OverviewTab(context);
+            var myWorkSetupTab = new WorkSetupTab(context);
             controller.addRoutes({
-                "/" : test,      // DEFAULT landing page
-                "test" : test
+                "/" : myOverviewTab,      // DEFAULT landing page
+                "1" : myOverviewTab,
+                "2" : myWorkSetupTab
             });
             controller.start();
 
@@ -45,17 +48,24 @@ define(function(require) {
                 } catch(ex) {}
             });
 
-            var resizefunc = function() {
-                $('.fill-height').each(function(idx,el){
+            var resizeFuncWithContext = function( jqElem )
+            {
+                if (!(jqElem instanceof jQuery))
+                    jqElem = $('body');
+
+                $('.fill-height',jqElem).each(function(idx,el){
                     if ($(el).is(":visible"))
                     {
                         var val = $(window).height() - $(el).offset().top - parseInt($('body').css('padding-bottom')) -  ( $(el).outerHeight(true) - $(el).height() ) - 20 ;
                         $(el).height( val  );
                     }
                 });
-            }
-            $(window).resize( resizefunc );
-            resizefunc();
+            };
+
+            $(window).resize( resizeFuncWithContext );
+            resizeFuncWithContext();
+
+            context.listen("ActivatedTabNeedsResize", resizeFuncWithContext);
         }
         
     }

@@ -6,16 +6,19 @@ define(function(require) {
     var ViewModel = require('./viewmodel');
     var ViewModel_dro = require('../tabWidgets/viewmodel_dro');
     var ViewModel_run = require('../tabWidgets/viewmodel_run');
+    var ViewModel_fileOpen = require('../tabWidgets/viewmodel_fileOpen');
     var ViewModel_backplot = require('../tabWidgets/viewmodel_backplot');
 
     var Component = function(moduleContext) {
 		var panel = null;
         var panel_dro = null;
         var panel_run = null;
+        var panel_fileopen = null;
         var panel_backplot = null;
         var vm = null;
         var vm_dro = null;
         var vm_run = null;
+        var vm_fileopen = null;
         var vm_backplot = null;
 
 		return {
@@ -41,19 +44,23 @@ define(function(require) {
                 }
                 vm_run.initialize(panel_run);
 
+                if (!panel_fileopen) {
+                    vm_fileopen = new ViewModel_fileOpen(moduleContext);
+                    panel_fileopen = new Boiler.ViewTemplate(panel.getJQueryElement().find("#FILE_OPEN_PANEL"), vm_fileopen.getTemplate(), vm_fileopen.getNls());
+                    ko.applyBindings( vm_fileopen, panel_fileopen.getDomElement());
+                }
+                vm_fileopen.initialize(panel_fileopen);
+
                 if (!panel_backplot) {
                     vm_backplot = new ViewModel_backplot(moduleContext);
                     panel_backplot = new Boiler.ViewTemplate(panel.getJQueryElement().find("#BACKPLOT_PANEL"), vm_backplot.getTemplate(), vm_backplot.getNls());
                     ko.applyBindings( vm_backplot, panel_backplot.getDomElement());
                 }
-                vm_backplot.initialize(panel_backplot);
 
                 panel.show();
-                //panel_dro.show();
-//                panel_backplot.show();
 
-
-
+                vm_backplot.initialize(panel_backplot);
+                moduleContext.notify("ActivatedTabNeedsResize",panel_backplot.getJQueryElement());
 
 			},
 
@@ -62,8 +69,6 @@ define(function(require) {
 			deactivate : function() {
 				if (panel) {
 					panel.hide();
-//                    panel_dro.hide();
-//                    panel_backplot.hide();
 				}
 			}
 		};
