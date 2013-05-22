@@ -18,6 +18,8 @@ define(function(require) {
                     ko.applyBindings( vm, panel.getDomElement());
                     Boiler.ViewTemplate.setStyleLink(cssPath);
                 }
+                vm.initialize(panel);
+
                 panel.show();
 
                 // Main setup

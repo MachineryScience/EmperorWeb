@@ -9,8 +9,37 @@ define(['/app/linuxCNCInterface.js'], function(linuxcnc ) {
 
     var settings = {};
 
+    $.cookie.json = true;
+
 	settings.appName =  "Emperor";
     settings.linuxCNCServer = linuxcnc;
+
+    settings.mdiHistory = ko.observableArray([]);
+
+    // setup mdiHistory initially
+    var tmp = $.cookie('mdi_History');
+    if (_.isArray(tmp)) settings.mdiHistory(tmp);
+    settings.mdiHistory.subscribe( function(newval) {
+        $.cookie('mdi_History', newval, { expires: 365, path: '/' });
+    });
+
+    // utility for adding to MDI history
+    settings.addToMDIHistory = function( newVal )
+    {
+        if (!_.isString(newVal))
+            return;
+
+        newVal = newVal.toUpperCase();
+
+        var old =  $.cookie('mdi_History');
+        if (!_.isArray(old)) old = [];
+        old = _.without(old,newVal);
+        old.push(newVal);
+
+        settings.mdiHistory(_.uniq(_.last(old,15)));
+        settings.mdiHistory.valueHasMutated();
+    }
+
 
     return settings;
 });

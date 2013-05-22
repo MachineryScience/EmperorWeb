@@ -141,7 +141,7 @@
       this.$menu
         .insertAfter(this.$element)
         .css({
-          top: pos.top + pos.height
+          top: this.options.dropup ? "auto" : pos.top + pos.height
         , left: pos.left
         })
         .show()
@@ -494,6 +494,7 @@
   , item: '<li><a href="#"></a></li>'
   , ajaxdelay: 400
   , minLength: 1
+  , dropup: false
   }
 
   $.fn.typeahead.Constructor = Typeahead

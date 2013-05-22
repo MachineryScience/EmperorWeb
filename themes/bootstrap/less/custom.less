@@ -1,12 +1,35 @@
-@import 'variables';
+@import 'variables.less';
+@import 'mixins.less';
+@import 'tables.less';
+@import 'labels-badges.less';
 
-.widget_stack {
-  z-index: 10;
-}
 
-.table-condensed th, .table-condensed td {
-  padding-top: 0px;
-  padding-bottom: 0px;
+.well-label {
+  .label;
+  background-color: @navbarInverseBackground;
+//  backgroun-color: @btnPrimaryBackground;
+  display: block;
+  float: left;
+  top: 0px;
+  position: absolute;
+  left: 0px;
+  width: 100%;
+  padding-left: 2px;
+  margin-left: -1px;
+//  padding-left: 0px;
+//  margin-left: 0px;
+  padding-right: 0px;
+  text-align: center;
+
+
+  -webkit-border-bottom-right-radius: 0px;
+  -webkit-border-bottom-left-radius: 0px;
+
+  -moz-border-radius-bottomright: 0px;
+  -moz-border-radius-bottomleft: 0px;
+
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
 }
 
 .well {
@@ -14,8 +37,59 @@
   padding-left: 10px;
   padding-right: 10px;
   padding-top: 10px;
-
+  position: relative;
+  .box-shadow;
 }
+
+.well-with-label
+{
+  padding-top: 25px;
+}
+
+.table-condensed-no-border
+{
+  .table-condensed;
+}
+
+.table-condensed-no-border th, .table-condensed-no-border td {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.table-condensed th, .table-condensed td {
+  padding: 1px 4px;
+}
+
+.table-tight
+{
+  td {
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+}
+.table-vcentertext
+{
+  td {
+    vertical-align: middle;
+    input {
+      margin-top: 12px;
+    }
+  }
+}
+
+.table-raligntext
+{
+  td {
+    text-align: right;
+  }
+}
+
+
+.white-caret {
+  border-top-color: rgb(255, 255, 255) !important;
+  border-bottom-color: rgb(255, 255, 255)  !important;
+}
+
 
 .larger-label {
   font-size: (@baseFontSize * 1) !important;
@@ -110,6 +184,15 @@ fieldset {
   text-align: center;
 }
 
+.align-right {
+  text-align: right;
+}
+
+.float-right {
+  float: right;
+}
+
+
 .nav-btn-toolbar {
   font-size: 0;
   margin-bottom: 1px;
@@ -198,6 +281,10 @@ a > span {
   border-radius: 7px;
 }
 
+.dropdown-menu {
+  z-index: 999999;
+}
+
 // ***
 // Utility
 // ***
@@ -207,6 +294,7 @@ a > span {
 .with-mid-padding		{ padding: 10px !important; }
 .with-small-padding		{ padding: 5px !important; }
 .no-padding				{ padding: 0 !important; }
+
 
 
 

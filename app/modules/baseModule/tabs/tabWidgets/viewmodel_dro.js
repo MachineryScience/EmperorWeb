@@ -35,18 +35,18 @@ define(function(require) {
 
         self.onZeroDRO = function(index)
         {
-            self.linuxCNCServer.touchoffCurrent( index, 0 );
+            self.linuxCNCServer.touchoffCurrentDisplay( index, 0 );
         }
 
         self.onDROValChange=function(oldval,event,index)
         {
             if ($.isNumeric(event.currentTarget.value))
                 if ( parseFloat(event.currentTarget.value) != self.linuxCNCServer.RmtDRO()[index])
-                    self.linuxCNCServer.touchoffCurrent( index, event.currentTarget.value );
+                    self.linuxCNCServer.touchoffCurrentDisplay( index, event.currentTarget.value );
                 else
-                    $(event.currentTarget).val( self.linuxCNCServer.RmtDRO()[index].toFixed(4) );
+                    $(event.currentTarget).val( self.linuxCNCServer.RmtDRO()[index].toFixed(self.linuxCNCServer.DisplayPrecision()) );
             else
-                $(event.currentTarget).val( self.linuxCNCServer.RmtDRO()[index].toFixed(4) );
+                $(event.currentTarget).val( self.linuxCNCServer.RmtDRO()[index].toFixed(self.linuxCNCServer.DisplayPrecision()) );
         }
 	};
 

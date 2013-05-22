@@ -1,0 +1,145 @@
+<div class="well well-with-label">
+
+        <span class="well-label">{{nls.WorkOffsetTitle}}</span>
+
+        <table class="table table-condensed table-striped table-vcentertext table-tight table-raligntext">
+
+            <thead>
+                <tr>
+                    <th>{{nls.AxisTitle}}</th>
+
+                    <th><span class="text-center" >{{nls.DROPositionTitle}}</span></th>
+
+                    <th></th>
+
+                    <th><span class="text-center" >{{nls.MachineCoordinateTitle}}</span></th>
+
+                    <th ></th>
+
+                    <th>
+                        <div class="text-center">
+                        <span class="dropdown" >
+                            <a class=" dropdown-toggle text-center act act-primary" data-bind="text: linuxCNCServer.RmtG5xString" id="woG5xTitleDrop" role="button" data-toggle="dropdown" href="#"></a>
+                            <ul class="dropdown-menu text-left" role="menu" aria-labelledby="woG5xTitleDrop" >
+                                <li role="presentation" data-bind="if: (linuxCNCServer.vars.g5x_index.data() != 1)"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(){linuxCNCServer.setG5x(1);}">{{nls.SetG54}}</a></li>
+                                <li role="presentation" data-bind="if: (linuxCNCServer.vars.g5x_index.data() != 2)"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(){linuxCNCServer.setG5x(2);}">{{nls.SetG55}}</a></li>
+                                <li role="presentation" data-bind="if: (linuxCNCServer.vars.g5x_index.data() != 3)"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(){linuxCNCServer.setG5x(3);}">{{nls.SetG56}}</a></li>
+                                <li role="presentation" data-bind="if: (linuxCNCServer.vars.g5x_index.data() != 4)"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(){linuxCNCServer.setG5x(4);}">{{nls.SetG57}}</a></li>
+                                <li role="presentation" data-bind="if: (linuxCNCServer.vars.g5x_index.data() != 5)"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(){linuxCNCServer.setG5x(5);}">{{nls.SetG58}}</a></li>
+                                <li role="presentation" data-bind="if: (linuxCNCServer.vars.g5x_index.data() != 6)"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(){linuxCNCServer.setG5x(6);}">{{nls.SetG59}}</a></li>
+                                <li role="presentation" data-bind="if: (linuxCNCServer.vars.g5x_index.data() != 7)"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(){linuxCNCServer.setG5x(7);}">{{nls.SetG591}}</a></li>
+                                <li role="presentation" data-bind="if: (linuxCNCServer.vars.g5x_index.data() != 8)"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(){linuxCNCServer.setG5x(8);}">{{nls.SetG592}}</a></li>
+                                <li role="presentation" data-bind="if: (linuxCNCServer.vars.g5x_index.data() != 9)"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(){linuxCNCServer.setG5x(9);}">{{nls.SetG593}}</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="click: linuxCNCServer.clearG5xAllCurrent">{{nls.ClearG5xAll}}</a></li>
+                            </ul>
+                        </span>
+                        </div>
+                    </th>
+
+                    <th></th>
+
+                    <th>
+                        <div class="text-center">
+                            <span class="dropdown" >
+                                <a class=" dropdown-toggle text-center act act-primary" id="wo92TitleDrop" role="button" data-toggle="dropdown" href="#">{{nls.G92OffsetTitle}}</a>
+                                <ul class="dropdown-menu text-left" role="menu" aria-labelledby="woG92TitleDrop" >
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(){linuxCNCServer.setG92Enable(true);}">{{nls.RestoreG92All}} (G92.3)</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(){linuxCNCServer.setG92Enable(false);}">{{nls.DisableG92All}} (G92.2)</a></li>
+                                </ul>
+                            </span>
+                        </div>
+                    </th>
+
+                    <th></th>
+                    <th class="text-center"><div class="text-center" ><abbr class="text-center" title="{{nls.TLOFullName}}">{{nls.ToolLengthOffsetTitle}}</abbr></div></th>
+                </tr>
+            </thead>
+
+            <tbody data-bind="foreach:linuxCNCServer.AxesNumbers" >
+            <tr class="">
+                <td class="">
+                    <label data-bind="attr:{for: (($data).toString()+'woax') }" class="span12 text-center">
+                        <h5 data-bind="text: ($root.linuxCNCServer.axisNames)[$data]+':'"></h5>
+                    </label>
+                </td>
+
+                <td class="text-center" >
+                    <strong class="text-center" data-bind="text: ($root.linuxCNCServer.RmtDRO()[$data].toFixed($root.linuxCNCServer.DisplayPrecision())), attr:{id: (($data).toString()+'woax') } "></strong>
+                </td>
+
+                <td class="">
+                    <span>=</span>
+                </td>
+
+                <td class="text-center" >
+                    <span class="text-center" data-bind="text: ( $root.linuxCNCServer.vars.actual_positionDisplay.data()[$data].toFixed($root.linuxCNCServer.DisplayPrecision())) "></span>
+                </td>
+
+                <td class="">
+                    <span><h5>-</h5></span>
+                </td>
+
+                <td class="text-center">
+                    <div class="dropdown" >
+                        <div class="btn-group span12">
+                        <a class="btn span12 dropdown-toggle text-center" data-bind="text: ( $root.linuxCNCServer.vars.g5x_offsetDisplay.data()[$data].toFixed($root.linuxCNCServer.DisplayPrecision())), attr:{id: (($data).toString()+'woG5xDrop') }" role="button" data-toggle="dropdown" href="#"></a>
+                        <ul class="dropdown-menu text-left" role="menu" data-bind="attr:{'aria-labelledby':(($data).toString()+'woG5xDrop')}" >
+                            <li role="presentation" data-bind="if: ($data < 2)"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(data,event){ $root.G54SetDROToRadius(data,event,$data); }"><i class="icon-step-forward" data-bind="css:{rotate_text_90: ($data==1)}"></i> {{nls.SetG5xToRadius}}</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(data,event){ $root.G54SetDRO(data,event,$data); }">{{nls.SetG5xToValue}}</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(data,event){ $root.G54ZeroDRO(data,event,$data); }">{{nls.ZeroG5x}}</a></li>
+                            <li role="presentation" class="divider"></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(data,event){ $root.G54Clear(data,event,$data); }">{{nls.ClearG5x}}</a></li>
+                        </ul>
+                        </div>
+                    </div>
+                </td>
+
+                <td class="">
+                    <span><h5>-</h5></span>
+                </td>
+
+                <td class="text-center" >
+                    <div class="dropdown" >
+                        <div class="btn-group span12">
+                        <a class="btn span12 dropdown-toggle text-center" data-bind="text: ( $root.linuxCNCServer.vars.g92_offsetDisplay.data()[$data].toFixed($root.linuxCNCServer.DisplayPrecision())), attr:{id: (($data).toString()+'woTLOdrop') }" role="button" data-toggle="dropdown" href="#"></a>
+                        <ul class="dropdown-menu text-left" role="menu" data-bind="attr:{'aria-labelledby':(($data).toString()+'woTLOdrop')}" >
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="alert('action')">{{nls.ZeroG5x}}</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">{{nls.SetG5xToValue}}</a></li>
+                            <li role="presentation" class="divider"></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">{{nls.ClearG5x}}</a></li>
+                        </ul>
+                        </div>
+                    </div>
+                </td>
+
+                <td class="">
+                    <span><h5 data-bind="if: ($data == 2)">-</h5></span>
+                </td>
+
+                <td class="" >
+                    <!--<div class="dropdown" data-bind="if: new ko.computed(function(){return ($data == 2);})" >-->
+                    <div class="dropdown" data-bind="if: ($data == 2)" >
+                        <div class="btn-group span12">
+                        <a class="btn span12 dropdown-toggle text-center" data-bind="text: ( $root.linuxCNCServer.vars.tool_offsetDisplay.data()[$data].toFixed($root.linuxCNCServer.DisplayPrecision())), attr:{id: (($data).toString()+'woG92drop') }" role="button" data-toggle="dropdown" href="#"></a>
+                        <ul class="dropdown-menu text-left" role="menu" data-bind="attr:{'aria-labelledby':(($data).toString()+'woG92drop')}" >
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#" onclick="alert('action')">{{nls.ZeroTLO}}</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">{{nls.SetTLOToGauge}}</a></li>
+                            <li role="presentation" class="divider"></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">{{nls.ClearTLO}}</a></li>
+                        </ul>
+                        </div>
+                    </div>
+
+                </td>
+
+            </tr>
+
+
+            </tbody>
+
+
+        </table>
+
+
+
+</div>

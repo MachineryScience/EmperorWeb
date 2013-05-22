@@ -15,7 +15,9 @@ define({
         "feed_rate_mode" : "Feed",
         "inverse_time": "Inverse Time",
         "units_per_minute": "/minute",
-        "units_per_revolution": "/revolution"
+        "units_per_revolution": "/revolution",
+
+        "mdiExecute": "MDI"
     }
 //    "sv" : true
 });

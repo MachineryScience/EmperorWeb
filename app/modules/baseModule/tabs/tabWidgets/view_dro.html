@@ -1,34 +1,32 @@
-<div class="well large-box-shadow span12">
-    <!--<fieldset class="">-->
-        <!--<legend class="legend">{{nls.DROTitle}}</legend>-->
+<div class="well well-with-label">
 
-        <table class="table table-condensed">
+        <span class="well-label"><abbr title="{{nls.DROFullName}}">{{nls.DROTitle}}</abbr></span>
 
-        <tbody data-bind="foreach:linuxCNCServer.RmtDRO" >
+        <table class="table table-condensed-no-border">
 
-        <!-- ko if: (1 << $index()) & $root.linuxCNCServer.vars.axis_mask.data() -->
+        <tbody data-bind="foreach:linuxCNCServer.AxesNumbers" >
+        
         <tr class="borderless-table">
                     <td class="width-axis-label ">
-                        <label data-bind="attr:{for: (($index()).toString()+'droax') }, text: ($root.linuxCNCServer.axisNames)[$index()]+':', click: $root.onDROFocus " class="label big-label span12 label-info" style="text-align: center;"></label>
+                        <label data-bind="attr:{for: (($data).toString()+'droax') }, text: ($root.linuxCNCServer.axisNames)[$data]+':', click: $root.onDROFocus " class="label big-label span12 label-info" style="text-align: center;"></label>
                     </td>
 
                     <td class="" >
-                        <input type="text" class="input span12 huge-input" style="text-align: right; font-weight:bold;" data-bind="event: {change: function(data,event){ $root.onDROValChange(data,event,$index())}, blur: function(data,event){ $root.onDROValChange(data,event,$index()) } }, value: new ko.computed( function(){return $root.linuxCNCServer.RmtDRO()[$index()].toFixed(4)} ), attr:{id: (($index()).toString()+'droax') } ">
+                        <input type="text" class="input span12 huge-input" style="text-align: right; font-weight:bold;" data-bind="event: {change: function(data,event){ $root.onDROValChange(data,event,$data)}, blur: function(data,event){ $root.onDROValChange(data,event,$data) } }, value: ( $root.linuxCNCServer.RmtDRO()[$data].toFixed($root.linuxCNCServer.DisplayPrecision()) ), attr:{id: (($data).toString()+'droax') } ">
                     </td>
 
                     <td class="width-button">
-                        <button class="btn btn-block" data-bind="click: function(){$root.onZeroDRO($index())}, attr:{id: ('bzdro'+($index()).toString())}" >{{nls.Zero}}</button>
+                        <button class="btn btn-block" data-bind="click: function(){$root.onZeroDRO($data)}, attr:{id: ('bzdro'+($data).toString())}" >{{nls.Zero}}</button>
                     </td>
 
                     <td class="width-button">
                         <!--Homing Button-->
-                        <button class="btn btn-block" data-bind="click: function(){$root.onHome($index())}, attr:{id: ('bhdro'+($index()).toString())}" >
-                            <span class="" data-bind="visible: (!$root.linuxCNCServer.vars.homed.data()[$index()]), css: {count: ! $root.linuxCNCServer.vars.homed.data()[$index()] }"><i class="icon-warning-sign"></i></span>
+                        <button class="btn btn-block" data-bind="click: function(){$root.onHome($data)}, attr:{id: ('bhdro'+($data).toString())}" >
+                            <span class="" data-bind="visible: (!$root.linuxCNCServer.vars.homed.data()[$data]), css: {count: ! $root.linuxCNCServer.vars.homed.data()[$data] }"><i class="icon-warning-sign"></i></span>
                             {{nls.Home}}
                         </button>
                     </td>
         </tr>
-        <!-- /ko -->
 
         </tbody>
 
@@ -39,6 +37,6 @@
             <button class="btn" data-bind="click: linuxCNCServer.homeAll">{{nls.HomeAll}}</button>
         </div>
 
-    <!--</fieldset>-->
+
 </div>
 </div>

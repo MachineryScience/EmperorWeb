@@ -40,11 +40,14 @@ define(function(require) {
             parentContext.getSettings().linuxCNCServer.vars.error.data.subscribe(function(){
                 try  {
                 if (parentContext.getSettings().linuxCNCServer.vars.error.data().text.length > 0)
+                {
                     $.pnotify({
                         type: "error",
                         title: "Controller Error",
                         text: parentContext.getSettings().linuxCNCServer.vars.error.data().text
-                    })
+                    });
+                    parentContext.getSettings().linuxCNCServer.clearLastError();
+                }
                 } catch(ex) {}
             });
 
@@ -66,6 +69,8 @@ define(function(require) {
             resizeFuncWithContext();
 
             context.listen("ActivatedTabNeedsResize", resizeFuncWithContext);
+
+            setInterval( resizeFuncWithContext, 1000 );
         }
         
     }
