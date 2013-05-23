@@ -17,8 +17,8 @@ define(function(require) {
             return nls;
         }
 
-		this.initialize = function( droPanel ) {
-            self.droPanel = droPanel;
+		this.initialize = function( Panel ) {
+            self.Panel = Panel;
 		};
 
         this.onDROFocus = function(data, event)

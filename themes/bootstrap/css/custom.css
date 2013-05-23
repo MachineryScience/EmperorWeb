@@ -425,6 +425,12 @@ a.badge:focus {
 .well-with-label {
   padding-top: 25px;
 }
+.navbar {
+  min-width: 960px;
+}
+#FileListTable .htCore .current {
+  background-color: lightcyan;
+}
 .table-condensed-no-border th,
 .table-condensed-no-border td {
   padding: 4px 5px;
@@ -754,7 +760,7 @@ fieldset {
   margin: 0 auto;
 }
 .sliders-vertical .ui-slider-wrap {
-  margin: 0 5px;
+  margin: 0px 5px 5px 5px;
 }
 .sliders-vertical .ui-slider {
   margin: 0;

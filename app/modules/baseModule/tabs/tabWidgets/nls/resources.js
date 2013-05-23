@@ -60,7 +60,11 @@ define({
         "SetG593"        : "Use Work Offset G59.3",
 
         "DisableG92All" : "Disable",
-        "RestoreG92All" : "Restore"
+        "RestoreG92All" : "Restore",
+
+        "FileTitle"     : "File",
+        "SetLine"       : "Make this the current execution line ",
+        "GotoCurrentLine" : "Display current execution line "
 
 
     }

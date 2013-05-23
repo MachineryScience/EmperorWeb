@@ -211,6 +211,9 @@ define(function (require) {
 
     lcncsvr.vars.axis_mask = { data: ko.observable(0), watched: true };
     lcncsvr.vars.backplot = { data: ko.observable(""), watched: false, convert_to_json: true };
+    lcncsvr.vars.file.data.subscribe( function(newval){ lcncsvr.socket.send(JSON.stringify({"id": "backplot", "command": "get", "name": "backplot"})); });
+    lcncsvr.vars.file_content = { data: ko.observable(""), watched: false };
+    lcncsvr.vars.file.data.subscribe( function(newval){ lcncsvr.socket.send(JSON.stringify({"id": "file_content", "command": "get", "name": "file_content"})); });
 
     // calculated variables
     lcncsvr.estop_inverse = ko.computed(function () {
@@ -724,8 +727,14 @@ define(function (require) {
         lcncsvr.sendCommand("cc","save_client_config",[key,value]);
     }
 
+    lcncsvr.sendFileContentRequestOrNotify = function() {
+        if (typeof(lcncsvr.vars.file_content.data()) == "string")
+            lcncsvr.socket.send(JSON.stringify({"id": "file_content", "command": "get", "name": "file_content"}));
+        else
+            lcncsvr.vars.file_content.data.valueHasMutated();
+    }
+
     lcncsvr.sendBackplotRequestOrNotify = function () {
-        //console.debug("WEBSOCKET: send get request for backplot");
         if (typeof(lcncsvr.vars.backplot.data()) == "string")
             lcncsvr.socket.send(JSON.stringify({"id": "backplot", "command": "get", "name": "backplot"}));
         else

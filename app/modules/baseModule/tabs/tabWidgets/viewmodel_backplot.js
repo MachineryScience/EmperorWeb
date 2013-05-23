@@ -32,6 +32,8 @@ define(function(require) {
         self.gridMajorSpacing = 1;
         self.renderer = null;
 
+        self.needRender = true;
+
         self.initSubscription = _.once(function()
         {
             self.linuxCNCServer.vars.backplot.data.subscribe( function( newValue ) {
@@ -196,6 +198,8 @@ define(function(require) {
             self.controls.userPanSpeed = self.span / 100;;
             self.controls.center = self.feedGeometry.boundingBox.center();
 
+            self.controls.addEventListener( 'change', function(){ self.needRender = true; console.log("NEED RENDER"); } );
+
             self.renderer = new THREE.WebGLRenderer( {antialias: true} );
             self.renderer.setClearColor( self.BGCOLOR );
 
@@ -221,12 +225,8 @@ define(function(require) {
                 centerPos.z = centerPos.z + self.span*2;
                 self.camera.position.set( centerPos.x, centerPos.y, centerPos.z );
                 self.camera.up.x=0;self.camera.up.y=1;self.camera.up.z=0;
-                self.camera.lookAt(self.feedGeometry.boundingBox.center() );
-
-                self.controls.object = null;
-                self.controls = new THREE.OrbitControls( self.camera, $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).get(0) );
-                self.controls.userPanSpeed = self.span / 100;
                 self.controls.center = self.feedGeometry.boundingBox.center();
+                self.camera.lookAt(self.feedGeometry.boundingBox.center() );
 
                 self.render();
             } catch (ex) {}
@@ -239,6 +239,8 @@ define(function(require) {
                 self.setTopView();
                 self.controls.rotateRight(Math.PI/4);
                 self.controls.rotateDown(Math.PI/4);
+
+                self.render();
             } catch (ex) {}
         }
 
@@ -274,7 +276,10 @@ define(function(require) {
             requestAnimationFrame( self.animate );
             try {
                 self.controls.update();
-                self.renderer.render( self.scene, self.camera );
+                if (self.needRender) {
+                    self.needRender = false;
+                    self.renderer.render( self.scene, self.camera );
+                }
             } catch (ex) {}
         }
 

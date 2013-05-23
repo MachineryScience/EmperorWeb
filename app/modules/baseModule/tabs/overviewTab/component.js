@@ -5,6 +5,7 @@ define(function(require) {
 
     var ViewModel = require('./viewmodel');
     var ViewModel_dro = require('../tabWidgets/viewmodel_dro');
+    var ViewModel_file = require('../tabWidgets/viewmodel_file');
     var ViewModel_run = require('../tabWidgets/viewmodel_run');
     var ViewModel_fileOpen = require('../tabWidgets/viewmodel_fileOpen');
     var ViewModel_workOffsets = require('../tabWidgets/viewmodel_workOffsets');
@@ -13,12 +14,14 @@ define(function(require) {
     var Component = function(moduleContext) {
 		var panel = null;
         var panel_dro = null;
+        var panel_file = null;
         var panel_run = null;
         var panel_fileopen = null;
         var panel_workoffsets = null;
         var panel_backplot = null;
         var vm = null;
         var vm_dro = null;
+        var vm_file = null;
         var vm_run = null;
         var vm_fileopen = null;
         var vm_workoffsets = null;
@@ -66,6 +69,13 @@ define(function(require) {
                     panel_backplot = new Boiler.ViewTemplate(panel.getJQueryElement().find("#BACKPLOT_PANEL"), vm_backplot.getTemplate(), vm_backplot.getNls());
                     ko.applyBindings( vm_backplot, panel_backplot.getDomElement());
                 }
+
+                if (!panel_file) {
+                    vm_file = new ViewModel_file(moduleContext);
+                    panel_file = new Boiler.ViewTemplate(panel.getJQueryElement().find("#FILE_PANEL"), vm_file.getTemplate(), vm_file.getNls());
+                    ko.applyBindings( vm_file, panel_file.getDomElement());
+                }
+                vm_file.initialize(panel_file);
 
                 panel.show();
 

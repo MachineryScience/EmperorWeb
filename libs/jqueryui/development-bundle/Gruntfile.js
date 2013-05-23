@@ -73,7 +73,7 @@ var
 		},
 		main: {
 			options: {
-				keepSpecialComments: '*'
+				keepSpecialComments: "*"
 			},
 			src: "dist/jquery-ui.css",
 			dest: "dist/jquery-ui.min.css"
@@ -348,26 +348,26 @@ grunt.initConfig({
 		}
 	},
 	csslint: {
-		// TODO figure out what to check for, then fix and enable
 		base_theme: {
-			src: expandFiles( "themes/base/*.css" ).filter(function( file ) {
-				// TODO remove items from this list once rewritten
-				return !( /(button|datepicker|core|dialog|theme)\.css$/ ).test( file );
-			}),
-			// TODO consider reenabling some of these rules
+			src: "themes/base/*.css",
 			options: {
 				"adjoining-classes": false,
+				"box-model": false,
+				"compatible-vendor-prefixes": false,
+				"duplicate-background-images": false,
 				"import": false,
+				"important": false,
 				"outline-none": false,
-				// especially this one
 				"overqualified-elements": false,
-				"compatible-vendor-prefixes": false
+				"text-indent": false
 			}
 		}
 	}
 });
 
-grunt.registerTask( "default", [ "jshint", "csslint", "htmllint", "qunit" ] );
+grunt.registerTask( "default", [ "lint", "test" ] );
+grunt.registerTask( "lint", [ "jshint", "csslint", "htmllint" ] );
+grunt.registerTask( "test", [ "qunit" ] );
 grunt.registerTask( "sizer", [ "concat:ui", "uglify:main", "compare_size:all" ] );
 grunt.registerTask( "sizer_all", [ "concat:ui", "uglify", "compare_size" ] );
 grunt.registerTask( "build", [ "concat", "uglify", "cssmin", "copy:dist_units_images" ] );
