@@ -83,11 +83,6 @@ define(function (require) {
         }
     });
 
-    lcncsvr.DisplayUnitsPerMM.subscribe(function(v){
-        console.log("DisplayUnitsPerMM Set to " + v);
-    });
-
-
     // UNIT CONVERSION
 
     lcncsvr.MachineUnitsToDisplayUnitsLinear = function(val)
@@ -124,12 +119,13 @@ define(function (require) {
     {
         try{
             var MachineUnitPerMM = lcncsvr.vars.linear_units.data();
+            var DisplayUnitsPerMM = lcncsvr.DisplayUnitsPerMM()
             var val = v.slice(0);
 
             for (i = 0; i < 3; i++)
-                val[i] = val[i] * MachineUnitPerMM / lcncsvr.DisplayUnitsPerMM();
+                val[i] = val[i] * MachineUnitPerMM / DisplayUnitsPerMM;
             for (i = 6; i < 9; i++)
-                val[i] = val[i] * MachineUnitPerMM / lcncsvr.DisplayUnitsPerMM();
+                val[i] = val[i] * MachineUnitPerMM / DisplayUnitsPerMM;
             return val;
         } catch(ex) {}
     }
@@ -140,6 +136,7 @@ define(function (require) {
         var vProgramUnitsPerMM = 1;
         if (punits == lcncsvr.UNITS_INCHES )
             vProgramUnitsPerMM = 1/25.4;
+        else
         if (punits == lcncsvr.UNITS_CM )
             vProgramUnitsPerMM = 1/10;
         return vProgramUnitsPerMM;
@@ -156,11 +153,13 @@ define(function (require) {
     {
         try{
             var val = v.slice(0);
+            var pupmm = lcncsvr.ProgramUnitsPerMM();
+            var dupmm = lcncsvr.DisplayUnitsPerMM();
 
             for (i = 0; i < 3; i++)
-                val[i] = val[i] * lcncsvr.ProgramUnitsPerMM() / lcncsvr.DisplayUnitsPerMM();
+                val[i] = val[i] * pupmm / dupmm;
             for (i = 6; i < 9; i++)
-                val[i] = val[i] * lcncsvr.ProgramUnitsPerMM() / lcncsvr.DisplayUnitsPerMM();
+                val[i] = val[i] * pupmm / dupmm;
             return val;
         } catch(ex) {}
     }
@@ -233,6 +232,7 @@ define(function (require) {
         return lcncsvr.vars.task_state.data() === lcncsvr.STATE_ON && ( lcncsvr.vars.interp_state.data() === lcncsvr.TASK_INTERP_IDLE || ( lcncsvr.vars.task_mode.data() === lcncsvr.TASK_MODE_MDI && !lcncsvr.vars.queue_full.data() ) );
     });
 
+    lcncsvr.RmtDROProgram = ko.observable([0, 0, 0, 0, 0, 0, 0, 0, 0]);
     lcncsvr.RmtDRO = ko.observable([0, 0, 0, 0, 0, 0, 0, 0, 0]);
     lcncsvr.RmtDROReal = ko.computed({
         read: function () {
@@ -250,6 +250,7 @@ define(function (require) {
     });
     lcncsvr.RmtDROReal.subscribe(function(newval){
         lcncsvr.RmtDRO(newval);
+        lcncsvr.RmtDROProgram( lcncsvr.DisplayUnitsToProgramUnitsPos(newval) );
     });
 
     lcncsvr.AxesNumbers = ko.observable([]);
@@ -488,6 +489,16 @@ define(function (require) {
         return;
     }
 
+    lcncsvr.incrementFeedrate = function( delta )
+    {
+        if (!$.isNumeric(delta))
+            return;
+
+        lcncsvr.sendCommand("set_feed_override","set_feed_override", ["1"]);
+        lcncsvr.sendCommand("set_feedrate","feedrate", [lcncsvr.vars.feedrate.data() + delta] );
+        return;
+    }
+
     lcncsvr.setSpindleOverride = function( rate )
     {
         if (!$.isNumeric(rate))
@@ -497,6 +508,16 @@ define(function (require) {
 
         lcncsvr.sendCommand("set_spindle_override","set_spindle_override", ["1"]);
         lcncsvr.sendCommand("setspindleoverride","spindleoverride", [rate.toString()] );
+        return;
+    }
+
+    lcncsvr.incrementSpindleOverride = function( delta )
+    {
+        if (!$.isNumeric(delta))
+            return;
+
+        lcncsvr.sendCommand("set_spindle_override","set_spindle_override", ["1"]);
+        lcncsvr.sendCommand("setspindleoverride","spindleoverride", [lcncsvr.vars.spindlerate.data() + delta] );
         return;
     }
 
@@ -766,36 +787,24 @@ define(function (require) {
 
 
     // **** Function to auto-reopen the connection if there hasn't been activity (heartbeat)
-    lcncsvr.hbTimeout = new Date() / 1000.0 + lcncsvr.serverReconnectHBTimeoutInterval / 1000.0;
-    lcncsvr.checkHB = function()
-    {
+    //      The _.debounce causes this to not trigger unless it hasn't been called since
+    //      lcncsvr.serverReconnectCheckInterval milliseconds
+    lcncsvr.hbTimeout = _.debounce( function(){
+        lcncsvr.reopen();
+    }, lcncsvr.serverReconnectHBTimeoutInterval);
+    lcncsvr.checkHB = function() {
         try {
-            if ( (new Date()/1000.0) > lcncsvr.hbTimeout )
-            {
-                lcncsvr.reopen();
-            } else {
-                lcncsvr.socket.send(JSON.stringify({"id": "HB", "command": "get", "name": "estop"}));
-            }
-        } catch (ex) {}
+            lcncsvr.socket.send(JSON.stringify({"id":"HB", command:"get", "name":"estop"}))
+        } catch(ex) {}
     }
     lcncsvr.hbCheckIntervalID = setInterval( lcncsvr.checkHB, lcncsvr.serverReconnectCheckInterval );
 
-    lcncsvr.lastAP = [0,0,0,0,0,0,0,0,0];
-    lcncsvr.lastAPChanged = false;
-    lcncsvr.checkAP = function() {
-        if (lcncsvr.lastAPChanged)
-        {
-            lcncsvr.vars.actual_position.data(lcncsvr.lastAP);
-            lcncsvr.lastAPChanged = false;
-        }
-    }
-    lcncsvr.apCheckIntervalID = setInterval( lcncsvr.checkAP, 150 );
+    // throttle the actual position updates
+    lcncsvr.updateActualPosition = _.throttle( function(newVal){ lcncsvr.vars.actual_position.data(newVal); } , 125)
 
     // **** reopen the connection.  will close an existing connection
     lcncsvr.reopen = function()
     {
-        lcncsvr.hbTimeout = new Date() / 1000.0 + lcncsvr.serverReconnectHBTimeoutInterval / 1000.0;
-
         try {
             lcncsvr.socket.close();
         } catch (ex) { }
@@ -820,16 +829,11 @@ define(function (require) {
 
                     if (data.id == "a")
                     {
-                        lcncsvr.lastAP = data.data;
-                        lcncsvr.lastAPChanged = true;
+                        lcncsvr.updateActualPosition(data.data);
                         return;
                     }
 
-                    if (data.id == "HB")
-                    {
-                        lcncsvr.hbTimeout = new Date() / 1000.0 + lcncsvr.serverReconnectHBTimeoutInterval / 1000.0;
-                        return;
-                    }
+                    lcncsvr.hbTimeout();
 
                     if (data.id == "LOGIN")
                     {
@@ -844,6 +848,7 @@ define(function (require) {
                             lcncsvr.vars[data.id].data(data.data);
                     }
                 } catch (ex) {
+
                 }
             }
 
@@ -851,7 +856,9 @@ define(function (require) {
                 lcncsvr.server_open(false);
                 lcncsvr.server_logged_in(false);
             }
-        } catch (ex) {}
+        } catch (ex) {
+
+        }
     }
 
     lcncsvr.reopen();

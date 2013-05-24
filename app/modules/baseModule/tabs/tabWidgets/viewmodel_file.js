@@ -6,6 +6,7 @@ define(function(require) {
 	var ViewModel = function(moduleContext) {
 
 		var self = this;
+        self.Panel = null;
         self.linuxCNCServer = moduleContext.getSettings().linuxCNCServer;
 
         this.getTemplate = function()
@@ -18,55 +19,67 @@ define(function(require) {
         }
 
 		this.initialize = function( Panel ) {
-            self.Panel = Panel;
+            if (_.isNull( self.Panel ))
+            {
+                self.Panel = Panel;
 
-            // var data = self.linuxCNCServer.vars.file_content.data().split('\n');
-            var data = [  ];
+                // var data = self.linuxCNCServer.vars.file_content.data().split('\n');
+                var data = [  ];
 
-            self.fileListTable = $("#FileListTable", self.Panel.getJQueryElement());
-            self.fileListTable.handsontable({
-                data: data,
-                stretchH: "last",
-                rowHeaders: true,
-                height: 254,
-                startCols: 1,
-                outsideClickDeselects: false,
-                columns: [
-                    {
-                        readOnly: true
-                    }
-                ],
-                contextMenu: {
-                    callback: function (key, options) {
-                        if (key === 'set_line') {
-                            if (!self.linuxCNCServer.RmtRunning())
-                                self.linuxCNCServer.vars.motion_line.data(self.fileListTable.handsontable('getSelected')[0]);
-                        } else if (key === 'goto_line' )
+                self.fileListTable = $("#FileListTable", self.Panel.getJQueryElement());
+                self.fileListTable.handsontable({
+                    data: data,
+                    stretchH: "last",
+                    rowHeaders: true,
+                    height: 254,
+                    startCols: 1,
+                    outsideClickDeselects: false,
+                    columns: [
                         {
-                            self.updateLine(self.linuxCNCServer.vars.motion_line.data());
+                            readOnly: true
                         }
-                    },
-                    items: {
-                        "set_line": {
-                            name: nls.SetLine,
-                            disabled: function () {
-                                return self.linuxCNCServer.RmtRunning() || (self.fileListTable.handsontable('getSelected')[0] === self.linuxCNCServer.vars.motion_line.data() );
+                    ],
+                    contextMenu: {
+                        callback: function (key, options) {
+                            if (key === 'set_line') {
+                                self.setMotionLineToSelected();
+                            } else if (key === 'goto_line' )
+                            {
+                                self.updateDisplayLine(self.linuxCNCServer.vars.motion_line.data());
                             }
                         },
-                        "goto_line": {
-                            name: nls.GotoCurrentLine
+                        items: {
+                            "set_line": {
+                                name: nls.SetLine,
+                                disabled: function () {
+                                    return self.linuxCNCServer.RmtRunning() || (self.fileListTable.handsontable('getSelected')[0] === self.linuxCNCServer.vars.motion_line.data() );
+                                }
+                            },
+                            "goto_line": {
+                                name: nls.GotoCurrentLine
+                            }
                         }
                     }
-                }
 
-            });
+                });
 
-            // monitor file contents
-            self.linuxCNCServer.vars.file_content.data.subscribe( self.updateData );
-            self.linuxCNCServer.vars.motion_line.data.subscribe( self.updateLine );
+                // monitor file contents
+                self.linuxCNCServer.vars.file_content.data.subscribe( self.updateData );
+                self.linuxCNCServer.vars.motion_line.data.subscribe( self.updateDisplayLine );
 
-            self.updateLine(self.linuxCNCServer.vars.motion_line.data());
+                self.updateData(self.linuxCNCServer.vars.file_content.data());
+                self.updateDisplayLine(self.linuxCNCServer.vars.motion_line.data());
+
+                self.fileListTable.dblclick( function(){ self.setMotionLineToSelected(); } );
+            }
 		};
+
+        this.setMotionLineToSelected = function()
+        {
+            if (!self.linuxCNCServer.RmtRunning())
+                self.linuxCNCServer.vars.motion_line.data(self.fileListTable.handsontable('getSelected')[0]);
+
+        }
 
         this.updateData = function( newfilecontent )
         {
@@ -86,7 +99,7 @@ define(function(require) {
             ht.render();
         }
 
-        this.updateLine = function( lineNum )
+        this.updateDisplayLine = function( lineNum )
         {
             var ht = self.fileListTable.handsontable('getInstance');
 

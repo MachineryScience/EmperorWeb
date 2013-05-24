@@ -40,23 +40,31 @@
                             </span>
                         </td>
 
-                        <td>
+                        <td style="width:110px;">
                             <div class="sliders-vertical">
                                 <span id="run_feed_rate_slider" class="slider-primary"></span>
                             </div>
                             <div>
                                 <p><h5>Feed Rate</h5></p>
-                                <p><span class="" data-bind="text: feedRateText"></span>%</p>
+                                <p><span><span data-bind="text: feedRateText"></span>% </span><button class="btn btn-mini" data-bind="click: function(){linuxCNCServer.setFeedrate(1)}"><i class="icon-remove-sign"></i></button></p>
+                                <p>
+                                <button class="btn btn-mini" data-bind="click: function(){linuxCNCServer.incrementFeedrate(0.05)} " type="button"><i class="icon-arrow-up"></i></button>
+                                <button class="btn btn-mini" data-bind="click: function(){linuxCNCServer.incrementFeedrate(-0.05)} " type="button"><i class="icon-arrow-down"></i></button>
+                                </p>
                             </div>
                         </td>
 
-                        <td>
+                        <td style="width:130px;">
                             <div class="sliders-vertical">
                                 <span id="run_spindle_rate_slider" class="slider-primary"></span>
                             </div>
                             <div>
                                 <p><h5>Spindle Rate</h5></p>
-                                <p><span class="" data-bind="text: spindleRateText"></span>%</p>
+                                <p><span><span data-bind="text: spindleRateText"></span>% </span><button class="btn btn-mini" data-bind="click: function(){linuxCNCServer.setSpindleOverride(1)}"><i class="icon-remove-sign"></i></button></p>
+                                <p>
+                                <button class="btn btn-mini" data-bind="click: function(){linuxCNCServer.incrementSpindleOverride(0.05)} " type="button"><i class="icon-arrow-up"></i></button>
+                                <button class="btn btn-mini" data-bind="click: function(){linuxCNCServer.incrementSpindleOverride(-0.05)}" type="button"><i class="icon-arrow-down"></i></button>
+                                </p>
                             </div>
                         </td>
 
