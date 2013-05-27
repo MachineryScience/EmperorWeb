@@ -9,7 +9,8 @@ define(function(require) {
         NavBarTopComponent = require('./mainShell/navBarTop/component'),
         NavBarBottomComponent = require('./mainShell/navBarBottom/component'),
         OverviewTab = require('./tabs/overviewTab/component'),
-        WorkSetupTab = require('./tabs/workSetupTab/component');
+        WorkSetupTab = require('./tabs/workSetupTab/component'),
+        ConfigTab = require('./tabs/configTab/component');
 
     // Definition of the base Module as an object, this is the return value of this AMD script
     return {
@@ -29,10 +30,12 @@ define(function(require) {
             var controller = new Boiler.UrlController($("#main-content"));
             var myOverviewTab = new OverviewTab(context);
             var myWorkSetupTab = new WorkSetupTab(context);
+            var myConfigTab = new ConfigTab(context);
             controller.addRoutes({
                 "/" : myOverviewTab,      // DEFAULT landing page
                 "1" : myOverviewTab,
-                "2" : myWorkSetupTab
+                "2" : myWorkSetupTab,
+                "5" : myConfigTab
             });
             controller.start();
 

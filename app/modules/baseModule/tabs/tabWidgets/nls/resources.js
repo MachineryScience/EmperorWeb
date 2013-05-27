@@ -12,6 +12,7 @@ define({
         "BackplotTitle": "Backplot",
         "TopView" : "Top View",
         "PerspectiveView": "PerspectiveView",
+        "Refresh": "Refresh",
 
         "RunTitle": "Run",
         "RunFrom": "Run From",
@@ -64,7 +65,9 @@ define({
 
         "FileTitle"     : "File",
         "SetLine"       : "Make this the current execution line ",
-        "GotoCurrentLine" : "Display current execution line "
+        "GotoCurrentLine" : "Display current execution line ",
+
+        "ConfigTitle"   : "Configuration"
 
 
     }

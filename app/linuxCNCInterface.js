@@ -44,8 +44,6 @@ define(function (require) {
     lcncsvr.serverReconnectCheckInterval = 2000;
     lcncsvr.serverReconnectHBTimeoutInterval = 5000;
 
-
-
     lcncsvr.vars = {};
     lcncsvr.vars.client_config = { data: ko.observable({invalid:true}), watched: true, convert_to_json: true };
     lcncsvr.vars.linear_units = { data: ko.observable(1), watched: true };
@@ -53,7 +51,9 @@ define(function (require) {
 
     lcncsvr.isClientConfigValid = function()
     {
-        return (lcncsvr.vars.client_config.data().invalid) != true;
+        try {
+            return (lcncsvr.vars.client_config.data().invalid) != true;
+        } catch(ex) { return false; }
     }
 
     // Client settings
@@ -85,24 +85,29 @@ define(function (require) {
 
     // UNIT CONVERSION
 
+    lcncsvr.MachineUnitsToDisplayUnitsLinearScaleFactor = ko.computed(function()
+    {
+        var MachineUnitPerMM = lcncsvr.vars.linear_units.data();
+        return lcncsvr.DisplayUnitsPerMM() / MachineUnitPerMM;
+    });
+
     lcncsvr.MachineUnitsToDisplayUnitsLinear = function(val)
     {
         try {
-            var MachineUnitPerMM = lcncsvr.vars.linear_units.data();
-            return val * lcncsvr.DisplayUnitsPerMM() / MachineUnitPerMM;
+            return val * lcncsvr.MachineUnitsToDisplayUnitsLinearScaleFactor();
         } catch(ex) {}
     }
 
     lcncsvr.MachineUnitsToDisplayUnitsLinearPos = function(v)
     {
         try {
-            var MachineUnitPerMM = lcncsvr.vars.linear_units.data();
             var val = v.slice(0);
+            var sf = lcncsvr.MachineUnitsToDisplayUnitsLinearScaleFactor();
 
             for (i = 0; i < 3; i++)
-                val[i] = val[i] * lcncsvr.DisplayUnitsPerMM() / MachineUnitPerMM;
+                val[i] = val[i] * sf;
             for (i = 6; i < 9; i++)
-                val[i] = val[i] * lcncsvr.DisplayUnitsPerMM() / MachineUnitPerMM;
+                val[i] = val[i] * sf;
             return val;
         } catch(ex) {}
     }
@@ -209,8 +214,8 @@ define(function (require) {
     lcncsvr.settings = ko.observable({});
 
     lcncsvr.vars.axis_mask = { data: ko.observable(0), watched: true };
-    lcncsvr.vars.backplot = { data: ko.observable(""), watched: false, convert_to_json: true };
-    lcncsvr.vars.file.data.subscribe( function(newval){ lcncsvr.socket.send(JSON.stringify({"id": "backplot", "command": "get", "name": "backplot"})); });
+    lcncsvr.vars.backplot_async = { data: ko.observable(""), watched: false, convert_to_json: true };
+    lcncsvr.vars.file.data.subscribe( function(newval){ lcncsvr.socket.send(JSON.stringify({"id": "backplot_async", "command": "get", "name": "backplot_async"})); });
     lcncsvr.vars.file_content = { data: ko.observable(""), watched: false };
     lcncsvr.vars.file.data.subscribe( function(newval){ lcncsvr.socket.send(JSON.stringify({"id": "file_content", "command": "get", "name": "file_content"})); });
 
@@ -756,10 +761,11 @@ define(function (require) {
     }
 
     lcncsvr.sendBackplotRequestOrNotify = function () {
-        if (typeof(lcncsvr.vars.backplot.data()) == "string")
-            lcncsvr.socket.send(JSON.stringify({"id": "backplot", "command": "get", "name": "backplot"}));
+        var x;
+        if (typeof(lcncsvr.vars.backplot_async.data()) == "string")
+            x = 1;
         else
-            lcncsvr.vars.backplot.data.valueHasMutated();
+            lcncsvr.vars.backplot_async.data.valueHasMutated();
     }
 
     lcncsvr.uploadGCode = function(filename, data) {

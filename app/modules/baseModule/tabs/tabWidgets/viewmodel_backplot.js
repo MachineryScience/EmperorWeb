@@ -21,28 +21,22 @@ define(function(require) {
 
         self.BGCOLOR = new THREE.Color().setRGB( 159/255, 159/255, 159/255 );
 
-        self.BGCOLOR = new THREE.Color().setRGB( 129/255, 129/255, 129/255 );
-
-//        self.BGCOLOR = new THREE.Color().setRGB( 0,0,0 );
-//        self.GRID_COLOR = new THREE.Color().setRGB(14.0/255,14.0/255,14.0/255);
-//        self.GRID_COLOR_MAJOR = new THREE.Color().setRGB(12.0/255,12.0/255,12.0/255);
-
         self.GRID_COLOR = new THREE.Color().setRGB(.8,.8,.8);
         self.GRID_COLOR_MAJOR = new THREE.Color().setRGB(1,1,1);
+        self.GRID_COLOR = new THREE.Color().setRGB(.5,.5,.5);
+        self.GRID_COLOR_MAJOR = new THREE.Color().setRGB(.2,.2,.2);
 
-
-        self.FEED_COLOR = new THREE.Color().setRGB(0/255, 255/255, 0/255);
-        self.FEED_COLOR_OVERLAY = new THREE.Color().setRGB(128/255, 255/255, 128/255);
-        self.TEMP_LINE_COLOR = new THREE.Color().setRGB(1,0,0);
+        self.FEED_COLOR = new THREE.Color().setRGB(255/255, 255/255, 100/255);
         self.TRAVERSE_COLOR = new THREE.Color().setRGB(0/255, 0/255, 255/255);
 
+        self.EXECUTED_COLOR = new THREE.Color().setRGB(0/255, 255/255, 0/255);
+        self.EXECUTED_COLOR_TRAVERSE = new THREE.Color().setRGB(100/255, 255/255, 255/255);
+
         self.GRID_COLOR_Y = new THREE.Color().setRGB(150/255, 75/255, 75/255);
-//        self.GRID_COLOR_X = new THREE.Color().setRGB(75/255, 150/255, 75/255);
-        self.GRID_COLOR_X = new THREE.Color().setRGB(75/255, 175/255, 75/255);
+        self.GRID_COLOR_X = new THREE.Color().setRGB(75/255, 150/255, 75/255);
 
-
-        var gridopacity = 0.13
-        var forgroundopacity = 0.5;
+        var gridopacity = 0.23
+        var forgroundopacity = 1;
 
         self.gridMinorDivisions = 10;
         self.gridMajorSpacing = 1;
@@ -52,7 +46,7 @@ define(function(require) {
 
         self.initSubscription = _.once(function()
         {
-            self.linuxCNCServer.vars.backplot.data.subscribe( function( newValue ) {
+            self.linuxCNCServer.vars.backplot_async.data.subscribe( function( newValue ) {
                 self.onNewData(newValue);
             } );
         });
@@ -67,18 +61,27 @@ define(function(require) {
                 if ( ! $.isEmptyObject(self.renderer) )
                     setTimeout(self.resize,2);
                 else
-                    self.linuxCNCServer.sendBackplotRequestOrNotify();
+                {
+                    if (typeof(self.linuxCNCServer.vars.backplot_async.data()) == "string")
+                        self.linuxCNCServer.sendBackplotRequestOrNotify();
+                    else
+                        self.onNewData(self.linuxCNCServer.vars.backplot_async.data());
+
+                }
             } else
                 self.resize();
+
+            setTimeout(self.resize,2);
         };
 
 
         self.constructScene = function( scene, data )
         {
-            self.tempLineMaterial = new THREE.LineBasicMaterial( { vertexColors: THREE.NoColors, color:self.FEED_COLOR_OVERLAY, linewidth: 2  } );
-            var material = new THREE.LineBasicMaterial( { vertexColors: THREE.NoColors, color:self.FEED_COLOR, linewidth: 1, transparent: true  } );
+            var material = new THREE.LineBasicMaterial( { vertexColors: THREE.VertexColors, linewidth: 1, transparent: false  } );
             material.opacity = forgroundopacity;
             var divisor = 100000;
+
+            var scale = self.linuxCNCServer.MachineUnitsToDisplayUnitsLinearScaleFactor();
 
             self.motionVectorMap = {};
 
@@ -86,90 +89,85 @@ define(function(require) {
             self.feedGeometry = new THREE.Geometry();
             var idx;
             var tox, toy, toz;
+            var newColor;
 
-            var l1, l2, ll, geom;
             data.feed.forEach( function(element, index, array) {
                 tox = element[4][0] / divisor;
                 toy = element[4][1] / divisor;
                 toz = element[4][2] / divisor;
 
-                l1 = new THREE.Vector3( element[1][0]/divisor - tox, element[1][1]/divisor - toy, element[1][2]/divisor - toz );
-                l2 = new THREE.Vector3( element[2][0]/divisor - tox, element[2][1]/divisor - toy, element[2][2]/divisor - toz );
-
-                geom = new THREE.Geometry();
-                geom.vertices.push(l1);
-                geom.vertices.push(l2);
-
-                ll = new THREE.Line(geom, self.tempLineMaterial, THREE.LinePieces);
+                l1 = new THREE.Vector3( element[1][0]/divisor - tox, element[1][1]/divisor - toy, element[1][2]/divisor - toz).multiplyScalar(scale);
+                l2 = new THREE.Vector3( element[2][0]/divisor - tox, element[2][1]/divisor - toy, element[2][2]/divisor - toz ).multiplyScalar(scale);
 
                 self.feedGeometry.vertices.push( l1 );
                 self.feedGeometry.vertices.push( l2 );
 
-                self.motionVectorMap[element[0].toString()] = ll;
+                var newfname = element[0].toString();
+                if (_.isUndefined(self.motionVectorMap[newfname]))
+                {
+                    newColor = new THREE.Color().copy(self.FEED_COLOR);
+                    self.motionVectorMap[newfname] = [newColor, self.feedGeometry];
+                } else
+                    newColor = self.motionVectorMap[newfname][0];
+
+                self.feedGeometry.colors.push( newColor );
+                self.feedGeometry.colors.push( newColor );
             });
 
-            var fname = "";
+
+            var x = 0;
             geom = undefined;
             data.arcfeed.forEach( function(element, index, array) {
                 tox = element[4][0] / divisor;
                 toy = element[4][1] / divisor;
                 toz = element[4][2] / divisor;
 
-                l1 = new THREE.Vector3( element[1][0]/divisor - tox, element[1][1]/divisor - toy, element[1][2]/divisor - toz );
-                l2 = new THREE.Vector3( element[2][0]/divisor - tox, element[2][1]/divisor - toy, element[2][2]/divisor - toz );
+                l1 = new THREE.Vector3( element[1][0]/divisor - tox, element[1][1]/divisor - toy, element[1][2]/divisor - toz ).multiplyScalar(scale);
+                l2 = new THREE.Vector3( element[2][0]/divisor - tox, element[2][1]/divisor - toy, element[2][2]/divisor - toz ).multiplyScalar(scale);
+
                 self.feedGeometry.vertices.push( l1 );
                 self.feedGeometry.vertices.push( l2 );
 
                 var newfname = element[0].toString();
-                if ( (fname != newfname || index == array.length - 1) && (!_.isUndefined(geom)) )
-                    {
-//                        var mat = new THREE.LineBasicMaterial( { vertexColors: THREE.NoColors, color:self.FEED_COLOR, linewidth: 1  } );
-                        ll = new THREE.Line(geom, self.tempLineMaterial, THREE.LinePieces);
-//                        scene.add(ll);
-                        self.motionVectorMap[fname] = ll;
-                        geom = undefined;
-                    }
-                fname = newfname;
+                if (_.isUndefined(self.motionVectorMap[newfname]))
+                {
+                    newColor = new THREE.Color().copy(self.FEED_COLOR);
+                    self.motionVectorMap[newfname] = [newColor, self.feedGeometry];
+                } else
+                    newColor = self.motionVectorMap[newfname][0];
 
-                if (_.isUndefined(geom))
-                {
-                    geom = new THREE.Geometry();
-                    geom.vertices.push(l1);
-                    geom.vertices.push(l2);
-                }
-                else
-                {
-                    geom.vertices.push(l1);
-                    geom.vertices.push(l2);
-                }
+                self.feedGeometry.colors.push( newColor );
+                self.feedGeometry.colors.push( newColor );
             });
 
             self.feedGeometry.computeBoundingBox();
             scene.add( new THREE.Line(self.feedGeometry, material, THREE.LinePieces) );
 
             // TRAVERSE
-            var materialTrav = new THREE.LineDashedMaterial( { color: self.TRAVERSE_COLOR, dashSize: .3, gapSize: .1, transparent: true } );
+            var materialTrav = new THREE.LineDashedMaterial( { vertexColors: THREE.VertexColors, dashSize: .3, gapSize: .1  } );
             materialTrav.opacity = forgroundopacity;
-            self.tempLineMaterial = new THREE.LineDashedMaterial( { color: self.TRAVERSE_COLOR, dashSize: .3, gapSize: .1  } );
             self.traverseGeometry = new THREE.Geometry();
             data.traverse.forEach( function(element, index, array) {
                 tox = element[3][0] / divisor;
                 toy = element[3][1] / divisor;
                 toz = element[3][2] / divisor;
 
-                l1 = new THREE.Vector3( element[1][0]/divisor - tox, element[1][1]/divisor - toy, element[1][2]/divisor - toz );
-                l2 = new THREE.Vector3( element[2][0]/divisor - tox, element[2][1]/divisor - toy, element[2][2]/divisor - toz );
-
-                geom = new THREE.Geometry();
-                geom.vertices.push(l1);
-                geom.vertices.push(l2);
-                geom.computeLineDistances();
-                ll = new THREE.Line(geom, self.tempLineMaterial, THREE.LinePieces);
-
-                self.motionVectorMap[element[0].toString()] = ll;
+                l1 = new THREE.Vector3( element[1][0]/divisor - tox, element[1][1]/divisor - toy, element[1][2]/divisor - toz ).multiplyScalar(scale);
+                l2 = new THREE.Vector3( element[2][0]/divisor - tox, element[2][1]/divisor - toy, element[2][2]/divisor - toz ).multiplyScalar(scale);
 
                 self.traverseGeometry.vertices.push( l1 );
                 self.traverseGeometry.vertices.push( l2 );
+
+                var newfname = element[0].toString();
+                if (_.isUndefined(self.motionVectorMap[newfname]))
+                {
+                    newColor = new THREE.Color().copy(self.TRAVERSE_COLOR);
+                    self.motionVectorMap[newfname] = [newColor, self.traverseGeometry];
+                } else
+                    newColor = self.motionVectorMap[newfname][0];
+
+                self.traverseGeometry.colors.push( newColor );
+                self.traverseGeometry.colors.push( newColor );
             });
 
             self.traverseGeometry.computeBoundingBox();
@@ -177,23 +175,20 @@ define(function(require) {
             self.scene.add( new THREE.Line(self.traverseGeometry, materialTrav, THREE.LinePieces) );
 
             // Tool
-            self.toolImage = new THREE.SphereGeometry( 0.001 );
-            self.materialTool = new THREE.MeshLambertMaterial( {color: 0xff0000, emissive: 0xff0000, transparent: true   } );
-            self.materialTool.opacity = 0.75;
             var obj3d = new THREE.Object3D();
-            obj3d.add(new THREE.Mesh(self.toolImage, self.materialTool));
             self.toolImage = obj3d;
-            var toolTop = new THREE.CylinderGeometry( 0.125, 0, 1, 32, 1 );
+            var tooheight = 15 * self.linuxCNCServer.DisplayUnitsPerMM();
+            var toolTop = new THREE.CylinderGeometry( tooheight/4, 0, tooheight, 32, 1 );
 
             var m1 = new THREE.Matrix4();
             m1.makeRotationX(Math.PI/2);
             var m2 = new THREE.Matrix4();
-            m2.makeTranslation( 0,0, 0.5 );
+            m2.makeTranslation( 0,0, tooheight/2 );
             var m = new THREE.Matrix4();
             m.multiplyMatrices(m2, m1);
             toolTop.applyMatrix(m);
 
-            var materialToolTop = new THREE.MeshLambertMaterial( {color: 0xffffff, emissive: 0x400000, transparent: true   } );
+            var materialToolTop = new THREE.MeshLambertMaterial( {color: 0xffffff, emissive: 0x403040, transparent: true } );
             materialToolTop.opacity = 0.50;
             self.toolImage.add(new THREE.Mesh(toolTop, materialToolTop));
             scene.add( self.toolImage );
@@ -219,6 +214,8 @@ define(function(require) {
             self.span = Math.ceil(span);
             var span = self.span;
             var minorGridCount = 10;
+            if (span > 100)
+                minorGridCount = 1;
             var itr = 0;
             for (idx = (-span); idx <= (span); idx += 1/minorGridCount)
             {
@@ -306,38 +303,39 @@ define(function(require) {
 
             self.animate();
 
-            self.linuxCNCServer.RmtDROProgram.subscribe( function(newVal){
-                self.toolImage.position.set( newVal[0], newVal[1], newVal[2] );
-                self.needRender = true;
-            } );
+            self.linuxCNCServer.RmtDROProgram.subscribe( self.toolPositionChange );
+
             self.linuxCNCServer.vars.motion_line.data.subscribe( function(newVal){
                 self.hilightMotionLine(newVal);
             } );
+            self.linuxCNCServer.MachineUnitsToDisplayUnitsLinearScaleFactor.subscribe( function(newVal) {
+                self.onNewData(self.linuxCNCServer.vars.backplot_async.data());
+            });
 
-            setTimeout(self.resize,2);
+            //setTimeout(self.resize,2);
+            setTimeout(function(){ self.resize(); self.toolPositionChange(self.linuxCNCServer.RmtDROProgram())},3);
+        }
+
+
+        self.toolPositionChange = function(newVal){
+            self.toolImage.position.set( newVal[0], newVal[1], newVal[2] );
+            self.needRender = true;
         }
 
         self.hilightMotionLine = function(lineNum)
         {
-
-//            if (!_.isUndefined(self.tempHilightObj))
-//                self.scene.remove(self.tempHilightObj);
-
             if (!_.isUndefined( self.motionVectorMap[lineNum.toString()]) )
             {
-                self.scene.add( self.motionVectorMap[lineNum.toString()] );
+                if (self.motionVectorMap[lineNum.toString()][1] === self.feedGeometry)
+                    self.motionVectorMap[lineNum.toString()][0].copy(self.EXECUTED_COLOR );
+                else
+                    self.motionVectorMap[lineNum.toString()][0].copy(self.EXECUTED_COLOR_TRAVERSE );
+
+                self.motionVectorMap[lineNum.toString()][1].colorsNeedUpdate = true;
+
                 return;
+            } else {
             }
-
-//            var newline = new THREE.Geometry();
-//            self.motionVectorMap[lineNum.toString()].forEach( function(element, index, array) {
-//                newline.vertices.push( element );
-//            });
-//
-//            self.tempHilightObj = new THREE.Line( newline, self.tempLineMaterial, THREE.LinePieces );
-//
-//            self.scene.add(self.tempHilightObj);
-
         }
 
         self.setTopView = function()
@@ -376,15 +374,23 @@ define(function(require) {
                     height_of_bp_area = 100;
                 $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).height( height_of_bp_area );
 
+                try {
                 $(self.renderer.domElement).detach();
                 self.camera.aspect = $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).width() / $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).height();
                 self.camera.updateProjectionMatrix();
                 self.renderer.setSize( $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).width(), $("#BACKPLOT_SIZER",self.panel.getJQueryElement()).height() );
+                } catch(ex) {}
+
                 $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).height($("#BACKPLOT_SIZER",self.panel.getJQueryElement()).height());
                 $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).append( self.renderer.domElement );
+
                 self.render();
 
             } catch (ex){  };
+        }
+
+        self.refresh = function(event) {
+            self.linuxCNCServer.sendBackplotRequestOrNotify();
         }
 
         self.render = function()
