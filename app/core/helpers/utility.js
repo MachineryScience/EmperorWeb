@@ -35,5 +35,28 @@ define(function(require) {
         });
     }
 
+    utils.noEmit = function( origFn ) {
+        return _.wrap(origFn, function(func){ try{func();} catch(e){} } );
+    };
+
+
+
+    ko.extenders.withScratch = function(target,opts) {
+
+        target.defaultValue = target();
+
+        target.Scratch = ko.observable(target.defaultValue);
+        target.SaveScratch = function() {target(target.Scratch());};
+        target.ResetScratch = function() {target.Scratch(target());};
+        target.Default = function() {target(target.defaultValue);};
+
+        target.subscribe(function(newval){
+            target.ResetScratch();
+        });
+
+        return target;
+    }
+
+
     return utils;
 });

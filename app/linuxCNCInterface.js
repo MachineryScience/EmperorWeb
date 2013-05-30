@@ -39,6 +39,8 @@ define(function (require) {
     lcncsvr.server_port = ko.observable("8000");
     lcncsvr.server_username = ko.observable("default");
     lcncsvr.server_password = ko.observable("default");
+
+
     lcncsvr.server_open = ko.observable(false);
     lcncsvr.server_logged_in = ko.observable(false);
     lcncsvr.serverReconnectCheckInterval = 2000;
@@ -135,7 +137,7 @@ define(function (require) {
         } catch(ex) {}
     }
 
-    lcncsvr.ProgramUnitsPerMM = function()
+    lcncsvr.ProgramUnitsPerMM = ko.computed(function()
     {
         var punits = lcncsvr.vars.program_units.data();
         var vProgramUnitsPerMM = 1;
@@ -145,7 +147,7 @@ define(function (require) {
         if (punits == lcncsvr.UNITS_CM )
             vProgramUnitsPerMM = 1/10;
         return vProgramUnitsPerMM;
-    }
+    });
 
     lcncsvr.DisplayUnitsToProgramUnits = function(val)
     {
@@ -178,18 +180,18 @@ define(function (require) {
 
 
     lcncsvr.vars.actual_position = { data: ko.observableArray([0, 0, 0, 0, 0, 0, 0, 0, 0]), watched: true };
-    lcncsvr.vars.actual_positionDisplay = { data: ko.computed(function(){ return lcncsvr.MachineUnitsToDisplayUnitsLinearPos(lcncsvr.vars.actual_position.data()) }), watched: false };
+    lcncsvr.vars.actual_positionDisplay = { data: ko.computed(function(){ return lcncsvr.MachineUnitsToDisplayUnitsLinearPos(lcncsvr.vars.actual_position.data()) }), watched: false, local:true };
 
     lcncsvr.vars.g5x_offset = { data: ko.observableArray([0, 0, 0, 0, 0, 0, 0, 0, 0]), watched: true };
-    lcncsvr.vars.g5x_offsetDisplay = { data: ko.computed(function(){ return lcncsvr.MachineUnitsToDisplayUnitsLinearPos(lcncsvr.vars.g5x_offset.data()) }), watched: false };
+    lcncsvr.vars.g5x_offsetDisplay = { data: ko.computed(function(){ return lcncsvr.MachineUnitsToDisplayUnitsLinearPos(lcncsvr.vars.g5x_offset.data()) }), watched: false, local:true };
 
     lcncsvr.vars.g5x_index = { data: ko.observable(1), watched: true };
 
     lcncsvr.vars.g92_offset = { data: ko.observableArray([0, 0, 0, 0, 0, 0, 0, 0, 0]), watched: true };
-    lcncsvr.vars.g92_offsetDisplay = { data: ko.computed(function(){ return lcncsvr.MachineUnitsToDisplayUnitsLinearPos(lcncsvr.vars.g92_offset.data()) }), watched: false };
+    lcncsvr.vars.g92_offsetDisplay = { data: ko.computed(function(){ return lcncsvr.MachineUnitsToDisplayUnitsLinearPos(lcncsvr.vars.g92_offset.data()) }), watched: false, local:true };
 
     lcncsvr.vars.tool_offset = { data: ko.observableArray([0, 0, 0, 0, 0, 0, 0, 0, 0]), watched: true };
-    lcncsvr.vars.tool_offsetDisplay = { data: ko.computed(function(){ return lcncsvr.MachineUnitsToDisplayUnitsLinearPos(lcncsvr.vars.tool_offset.data()) }), watched: false };
+    lcncsvr.vars.tool_offsetDisplay = { data: ko.computed(function(){ return lcncsvr.MachineUnitsToDisplayUnitsLinearPos(lcncsvr.vars.tool_offset.data()) }), watched: false, local:true };
 
     lcncsvr.vars.estop = { data: ko.observable(0), watched: true };
     lcncsvr.vars.task_state = { data: ko.observable(0), watched: true };
@@ -210,14 +212,23 @@ define(function (require) {
     lcncsvr.vars.spindlerate = { data: ko.observable(1), watched: true };
     lcncsvr.vars.feedrate = { data: ko.observable(1), watched: true };
 
-
     lcncsvr.settings = ko.observable({});
 
     lcncsvr.vars.axis_mask = { data: ko.observable(0), watched: true };
-    lcncsvr.vars.backplot_async = { data: ko.observable(""), watched: false, convert_to_json: true };
+    lcncsvr.vars.backplot_async = { data: ko.observable(""), watched: false, convert_to_json: true, local:true };
     lcncsvr.vars.file.data.subscribe( function(newval){ lcncsvr.socket.send(JSON.stringify({"id": "backplot_async", "command": "get", "name": "backplot_async"})); });
-    lcncsvr.vars.file_content = { data: ko.observable(""), watched: false };
+    lcncsvr.vars.file_content = { data: ko.observable(""), watched: false, local:true };
     lcncsvr.vars.file.data.subscribe( function(newval){ lcncsvr.socket.send(JSON.stringify({"id": "file_content", "command": "get", "name": "file_content"})); });
+
+    lcncsvr.server_logged_in.subscribe( function(newval) {
+        if (!newval)
+        {
+            console.log("SERVER_LOGGED_IN: " + newval);
+            lcncsvr.vars.file.data("");
+            lcncsvr.vars.backplot_async.data("");
+            lcncsvr.vars.file_content.data("");
+        }
+    });
 
     // calculated variables
     lcncsvr.estop_inverse = ko.computed(function () {
@@ -315,6 +326,26 @@ define(function (require) {
         } catch (ex) { return false; }
         return true;
     }
+
+    lcncsvr._pendingCommands = [];
+    lcncsvr.sendCommandWhenReady = function( id, name, ordinals )
+    {
+        try {
+            if (lcncsvr.server_logged_in() )
+                lcncsvr.sendCommand(id,name,ordinals);
+            else
+                lcncsvr._pendingCommands.push([id,name,ordinals]);
+        } catch (e) {}
+    }
+    lcncsvr.server_logged_in.subscribe(function(isLoggedIn){
+        if (isLoggedIn)
+        {
+            lcncsvr._pendingCommands.forEach(function(cmd){
+                lcncsvr.sendCommand(cmd[0],cmd[1],cmd[2]);
+            });
+            lcncsvr._pendingCommands = [];
+        }
+    });
 
     lcncsvr.setRmtAnyMode = function( modes )
     {
@@ -551,6 +582,10 @@ define(function (require) {
             cmd = cmd + axis;
         else
             cmd = cmd + lcncsvr.axisNames[axis];
+
+        if (_.isNumber(offset))
+            offset = offset.toFixed(6);
+
         cmd = cmd + (offset);
 
         lcncsvr.mdi(cmd);
@@ -631,6 +666,21 @@ define(function (require) {
 
     lcncsvr.g92Set = function( axis, offset )
     {
+        if (_.isNumber(offset))
+            offset = offset.toFixed(6);
+
+        var cmd = "G92 " + lcncsvr.axisNames[axis] + offset;
+        return lcncsvr.mdi(cmd);
+    }
+
+    lcncsvr.g92SetDisplay = function( axis, offset )
+    {
+        if (axis < 3 || axis > 5)
+            offset = lcncsvr.DisplayUnitsToProgramUnits(offset);
+
+        if (_.isNumber(offset))
+            offset = offset.toFixed(6);
+
         var cmd = "G92 " + lcncsvr.axisNames[axis] + offset;
         return lcncsvr.mdi(cmd);
     }
@@ -737,10 +787,25 @@ define(function (require) {
         return lcncsvr.sendCommand("spindle_brake_set","brake",[val]);
     }
 
+    lcncsvr.setToolTableZ = function( zOffset )
+    {
+        if (_.isNumber(zOffset))
+            zOffset = zOffset.toFixed(6);
+
+        lcncsvr.mdi( "G10 L10 P" + lcncsvr.vars.tool_in_spindle.data() + " Z" + zOffset );
+        lcncsvr.mdi( "G43" );
+    }
+
     lcncsvr.setToolTable = function( zOffset, diameter )
     {
         lcncsvr.mdi( "G10 L10 P" + lcncsvr.vars.tool_in_spindle.data() + "R" + (diameter/2) + " Z" + zOffset );
         lcncsvr.mdi( "G43" );
+    }
+
+    lcncsvr.setToolNumber = function( toolNum )
+    {
+        if (!_.isNaN( parseInt( toolNum)))
+            lcncsvr.mdi( "M6T" + parseInt(toolNum) );
     }
 
     lcncsvr.clearLastError = function()
@@ -750,7 +815,12 @@ define(function (require) {
 
     lcncsvr.setClientConfig = function( key, value )
     {
-        lcncsvr.sendCommand("cc","save_client_config",[key,value]);
+        lcncsvr.sendCommandWhenReady("cc","save_client_config",[key,value]);
+    }
+
+    lcncsvr.getClientConfig = function()
+    {
+        lcncsvr.socket.send(JSON.stringify({"id": "client_config", "command": "get", "name": "client_config"}));
     }
 
     lcncsvr.sendFileContentRequestOrNotify = function() {
@@ -777,6 +847,7 @@ define(function (require) {
     lcncsvr.sendAllWatchRequests = function () {
         try {
             var id;
+            var delayval = 0;
             $.each(lcncsvr.vars, function (key, val) {
                 if (val.watched) {
                     //console.debug("WEBSOCKET: send watch request for " + key);
@@ -784,7 +855,30 @@ define(function (require) {
                         id = "a";
                     else
                         id = key;
-                    lcncsvr.socket.send(JSON.stringify({"id": id, "command": "watch", "name": key}));
+
+                    // delay each request by an increasing amount, just to make sure these don't all spam the server at once
+                    (function(k,i,d){
+                        _.delay( function(key,id){
+                            lcncsvr.socket.send(JSON.stringify({"id": id, "command": "watch", "name": key}));
+                        }, d, k, i  );
+                    })(key,id,delayval);
+                    delayval = delayval + 5;
+
+                } else {
+                    try {
+                        if (!val.local)
+                        {
+                            id = key;
+
+                            // delay each request by an increasing amount, just to make sure these don't all spam the server at once
+                            (function(k,i,d){
+                                _.delay( function(key,id){
+                                    lcncsvr.socket.send(JSON.stringify({"id": id, "command": "get", "name": key}));
+                                }, d, k, i  );
+                            })(key,id,delayval);
+                            delayval = delayval + 5;
+                }
+                    } catch(ex) {}
                 }
             });
         } catch (ex) {
@@ -815,6 +909,8 @@ define(function (require) {
             lcncsvr.socket.close();
         } catch (ex) { }
 
+        lcncsvr.hbTimeout();
+
         try {
             lcncsvr.socket = new WebSocket("ws://" + lcncsvr.server_address() + ":" + lcncsvr.server_port() + "/websocket/");
 
@@ -828,6 +924,8 @@ define(function (require) {
                 try {
                     var data = JSON.parse(msg.data);
 
+//                    console.debug(data);
+
                     if (data.code != "?OK") {
                         console.debug("WEBSOCKET: ERROR code returned " + msg.data);
                         return;
@@ -839,13 +937,11 @@ define(function (require) {
                         return;
                     }
 
-                    lcncsvr.hbTimeout();
-
                     if (data.id == "LOGIN")
-                    {
                         lcncsvr.server_logged_in(true);
-                        return;
-                    }
+
+                    if (lcncsvr.server_logged_in())
+                        lcncsvr.hbTimeout();
 
                     if (lcncsvr.vars.hasOwnProperty(data.id)) {
                         if (lcncsvr.vars[data.id].convert_to_json)
@@ -866,8 +962,6 @@ define(function (require) {
 
         }
     }
-
-    lcncsvr.reopen();
 
     return lcncsvr;
 

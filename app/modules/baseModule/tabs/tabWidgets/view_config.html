@@ -2,19 +2,140 @@
 
         <span class="well-label"><span>{{nls.ConfigTitle}}</span></span>
 
-
         <ul class="nav nav-tabs" id="myTab">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#profile">Profile</a></li>
-            <li><a href="#messages">Messages</a></li>
-            <li><a href="#settings">Settings</a></li>
+            <li><a href="#NetworkSettings" data-toggle="tab">{{nls.NetworkSettingsTabTitle}}</a></li>
+            <li><a href="#DisplaySettings" data-toggle="tab">{{nls.DisplaySettingsTabTitle}}</a></li>
+            <li><a id="OffsetsTab" href="#OffsetSettings" data-toggle="tab">{{nls.OffsetsSettingsTabTitle}}</a></li>
+            <li><a href="#BackplotSettings" data-toggle="tab">{{nls.BackplotSettingsTabTitle}}</a></li>
         </ul>
 
         <div class="tab-content">
-            <div class="tab-pane" id="home">...</div>
-            <div class="tab-pane" id="profile">...<p>xxx</p><p>xxx</p><p>xxx</p><p>xxx</p><p>xxx</p><p>xxx</p><p>xxx</p><p>xxx</p><p>xxx</p></div>
-            <div class="tab-pane" id="messages">...</div>
-            <div class="tab-pane" id="settings">...</div>
+
+            <!--************* NETWORK SETTINGS **************-->
+            <div class="tab-pane" id="NetworkSettings">
+
+                <form class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label" for="inputHostIP">{{nls.HostIP}}</label>
+                        <div class="controls">
+                            <input data-bind="value: linuxCNCServer.server_address" type="text" id="inputHostIP" placeholder="192.168.1.1">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputHostPort">{{nls.HostPort}}</label>
+                        <div class="controls">
+                            <input data-bind="value: linuxCNCServer.server_port" type="text" id="inputHostPort" placeholder="8000">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputUsername">{{nls.Username}}</label>
+                        <div class="controls">
+                            <input data-bind="value: linuxCNCServer.server_username" type="text" id="inputUsername" placeholder="default">
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputPassword">{{nls.Password}}</label>
+                        <div class="controls">
+                            <input data-bind="value: linuxCNCServer.server_password" type="password" id="inputPassword" placeholder="Password">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn" data-bind="click: settings.loadNetworkSettings">{{nls.Refresh}}</button>
+                            <button class="btn" data-bind="click: settings.saveNetworkSettings">{{nls.Save}}</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <!--************************ DISPLAY SETTINGS ************************-->
+            <div class="tab-pane" id="DisplaySettings">
+
+                <form class="form-horizontal">
+                    <div class="control-group">
+                        <label class="control-label" for="inputDisplayUnits">{{nls.DisplayUnits}}</label>
+                        <div class="controls">
+                            <select data-bind="value: getDisplayUnitValue" class="" id="inputDisplayUnits" multiple="false">
+                                <option value="INCH">{{nls.Inches}}</option>
+                                <option value="MM">{{nls.Millimeters}}</option>
+                                <option value="CM">{{nls.Centimeters}}</option>
+                                <option value="PROGRAM">{{nls.ProgramUnits}}</option>
+                            </select>
+
+                        </div>
+
+                        <div class="control-group">
+                            <div class="controls">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <button class="btn" data-bind="click: refreshSettings">{{nls.Refresh}}</button>
+                                <button class="btn" data-bind="click: saveDisplaySettings">{{nls.Save}}</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <!--************************ BACKPLOT SETTINGS ************************-->
+            <div class="tab-pane" id="BackplotSettings">
+
+                <form class="form-horizontal">
+                    <div class="control-group">
+                            <label class="control-label" for="inputBackplotBackgroundColor">{{nls.BackplotBackgroundColorLabel}}</label>
+                        <div class="controls">
+                            <input id="inputBackplotBackgroundColor" class="" value="#8fff00" id="cp1" type="text">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+
+            <!--************************ OFFSET SETTINGS ************************-->
+            <div class="tab-pane" id="OffsetSettings">
+
+                <form class="form-horizontal">
+
+                        <div class="control-group">
+                            <label class="control-label" for="inputProbeRadius">{{nls.ProbeRadiusLabel}}</label>
+                            <div class="controls">
+                                <input id="inputProbeRadius" type="text" data-bind="value: settings.persist.ProbeRadius.Scratch" >
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="inputGaugeHeight">{{nls.GaugeHeightLabel}}</label>
+                            <div class="controls">
+                                <input id="inputGaugeHeight" type="text" data-bind="value: settings.persist.GaugeHeight.Scratch" >
+                            </div>
+                        </div>
+
+
+                        <div class="control-group">
+                            <div class="controls">
+                                <button class="btn" data-bind="click: refreshOffsetSettings">{{nls.Refresh}}</button>
+                                <button class="btn" data-bind="click: saveOffsetSettings">{{nls.Save}}</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
         </div>
 
 </div>

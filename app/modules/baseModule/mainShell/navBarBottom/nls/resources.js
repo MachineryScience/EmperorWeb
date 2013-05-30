@@ -17,6 +17,9 @@ define({
         "units_per_minute": "/minute",
         "units_per_revolution": "/revolution",
 
+        "program_units": "Program: ",
+        "display_units": "Display: ",
+
         "mdiExecute": "MDI"
     }
 //    "sv" : true

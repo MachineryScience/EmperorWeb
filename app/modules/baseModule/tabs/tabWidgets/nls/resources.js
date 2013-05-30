@@ -22,6 +22,10 @@ define({
         "Stop": "Stop",
         "OptionalStop": "Optional Stop",
         "SingleStep": "Single Step",
+        "FeedRateLine1" : "Feed",
+        "FeedRateLine2" : "Rate",
+        "SpindleRateLine1" : "Spindle",
+        "SpindleRateLine2" : "Rate",
 
         "FileOpenTitle": "File Open",
         "Load": "Load",
@@ -63,12 +67,45 @@ define({
         "DisableG92All" : "Disable",
         "RestoreG92All" : "Restore",
 
+        "SetToolNumber" : "Set Tool",
+        "SelectToolDialogTitle" : "Set Tool (M6)",
+        "SetToolLabel"  : "New Tool Number",
+
+        "SetG92DialogTitle" : "Set DRO To Value Using G92",
+        "SetG92LabelTitle1"  : "New Value For ",
+        "SetG92LabelTitle2"  : " Axis",
+
+        "SetG5xDialogTitle" : "Set DRO To Value Using ",
+        "SetG5xLabelTitle1"  : "New Value For ",
+        "SetG5xLabelTitle2"  : " Axis",
+
         "FileTitle"     : "File",
         "SetLine"       : "Make this the current execution line ",
         "GotoCurrentLine" : "Display current execution line ",
 
-        "ConfigTitle"   : "Configuration"
+        "ConfigTitle"   : "Configuration",
+        "NetworkSettingsTabTitle" : "Network",
+        "BackplotSettingsTabTitle": "Backplot",
+        "OffsetsSettingsTabTitle" : "Offsets",
+        "DisplaySettingsTabTitle": "Display",
 
+        "HostIP" : "Host IP Address",
+        "HostPort" : "Host Port",
+        "Username": "Username",
+        "Password": "Password",
+        "Refresh": "Refresh",
+        "Save":     "Save",
+        "DisplayUnits": "Display Units",
+        "Inches" : "Inches",
+        "Millimeters": "Millimeters",
+        "Centimeters": "Centimeters",
+        "ProgramUnits": "Program Units",
+
+        "ProbeRadiusLabel" : "Probe Radius",
+        "GaugeHeightLabel" : "Gauge Height",
+        "BackplotBackgroundColorLabel" : "Backplot Background",
+
+        "DialogClose" : "Close"
 
     }
 //    "sv" : true

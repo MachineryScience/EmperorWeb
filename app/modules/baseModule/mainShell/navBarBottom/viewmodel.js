@@ -20,7 +20,7 @@ define(function(require) {
 
 		this.initialize = function( Panel ) {
             self.Panel = Panel;
-            self.mdiTypeAhead = $('#navBottomMDIInput',self.Panel.getJQueryElement()).typeahead({ dropup: true, source: function() { return self.settings.mdiHistory(); } });
+            self.mdiTypeAhead = $('#navBottomMDIInput',self.Panel.getJQueryElement()).typeahead({ dropup: true, source: function() { return self.settings.persist.MDIHistory(); } });
 		};
 
         this.currentMDIText = ko.observable("");
@@ -49,7 +49,7 @@ define(function(require) {
             {
                 self.linuxCNCServer.mdi(mdiText);
                 self.settings.addToMDIHistory( mdiText );
-                $('#navBottomMDIInput',self.Panel.getJQueryElement()).typeahead({ dropup: true, source: self.settings.mdiHistory() });
+                $('#navBottomMDIInput',self.Panel.getJQueryElement()).typeahead({ dropup: true, source: self.settings.persist.MDIHistory() });
             }
         }
 

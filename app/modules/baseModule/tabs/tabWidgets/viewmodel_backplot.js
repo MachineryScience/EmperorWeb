@@ -46,9 +46,17 @@ define(function(require) {
 
         self.initSubscription = _.once(function()
         {
-            self.linuxCNCServer.vars.backplot_async.data.subscribe( function( newValue ) {
-                self.onNewData(newValue);
+            self.linuxCNCServer.vars.backplot_async.data.subscribe( function(){ self.refreshBackplot();  } );
+
+            self.linuxCNCServer.DisplayUnitsPerMM.subscribe( function(){ self.refreshBackplot();  } );
+            self.linuxCNCServer.ChangeDisplayUnitsToProgramUnits.subscribe( function(){ self.refreshBackplot();  } );
+
+            self.linuxCNCServer.RmtDRO.subscribe( self.toolPositionChange );
+
+            self.linuxCNCServer.vars.motion_line.data.subscribe( function(newVal){
+                self.hilightMotionLine(newVal);
             } );
+            self.linuxCNCServer.MachineUnitsToDisplayUnitsLinearScaleFactor.subscribe( function(){ self.refreshBackplot();  } );
         });
 
         self.initialize = function( backplotPanel ) {
@@ -58,18 +66,13 @@ define(function(require) {
 
                 self.initSubscription();
 
-                if ( ! $.isEmptyObject(self.renderer) )
-                    setTimeout(self.resize,2);
-                else
-                {
-                    if (typeof(self.linuxCNCServer.vars.backplot_async.data()) == "string")
-                        self.linuxCNCServer.sendBackplotRequestOrNotify();
-                    else
-                        self.onNewData(self.linuxCNCServer.vars.backplot_async.data());
+                if ( $.isEmptyObject(self.renderer) )
+                    if (typeof(self.linuxCNCServer.vars.backplot_async.data()) != "string")
+                    {
+                        self.refreshBackplot();
+                    }
 
-                }
-            } else
-                self.resize();
+            }
 
             setTimeout(self.resize,2);
         };
@@ -268,7 +271,6 @@ define(function(require) {
 
         self.onNewData = function(newData)
         {
-            console.debug("Backplot new data");
             if (self.renderer)
             {
                 try{
@@ -303,23 +305,16 @@ define(function(require) {
 
             self.animate();
 
-            self.linuxCNCServer.RmtDROProgram.subscribe( self.toolPositionChange );
-
-            self.linuxCNCServer.vars.motion_line.data.subscribe( function(newVal){
-                self.hilightMotionLine(newVal);
-            } );
-            self.linuxCNCServer.MachineUnitsToDisplayUnitsLinearScaleFactor.subscribe( function(newVal) {
-                self.onNewData(self.linuxCNCServer.vars.backplot_async.data());
-            });
-
             //setTimeout(self.resize,2);
-            setTimeout(function(){ self.resize(); self.toolPositionChange(self.linuxCNCServer.RmtDROProgram())},3);
+            setTimeout(function(){ self.resize(); self.toolPositionChange(self.linuxCNCServer.RmtDRO())},3);
         }
 
 
         self.toolPositionChange = function(newVal){
-            self.toolImage.position.set( newVal[0], newVal[1], newVal[2] );
-            self.needRender = true;
+            try {
+                self.toolImage.position.set( newVal[0], newVal[1], newVal[2] );
+                self.needRender = true;
+            } catch(ex) {};
         }
 
         self.hilightMotionLine = function(lineNum)
@@ -386,12 +381,13 @@ define(function(require) {
 
                 self.render();
 
+
             } catch (ex){  };
         }
 
-        self.refresh = function(event) {
-            self.linuxCNCServer.sendBackplotRequestOrNotify();
-        }
+        self.refreshBackplot = _.debounce( function(event) {
+            self.onNewData(self.linuxCNCServer.vars.backplot_async.data());
+        }, 1000, false );
 
         self.render = function()
         {

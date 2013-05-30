@@ -9,6 +9,7 @@ define(function(require) {
 		var self = this;
         self.Panel = null;
         self.linuxCNCServer = moduleContext.getSettings().linuxCNCServer;
+        self.settings = moduleContext.getSettings();
 
         this.getTemplate = function()
         {
@@ -27,6 +28,14 @@ define(function(require) {
             }
 		};
 
+
+        self.tempToolNumber = ko.observable(self.linuxCNCServer.vars.tool_in_spindle.data());
+        self.linuxCNCServer.vars.tool_in_spindle.data.subscribe(function(newval){self.tempToolNumber(newval);});
+
+        self.tempOffset = ko.observable(0);
+        self.curIdx = ko.observable(0);
+
+
         this.G54ZeroDRO = function(data,event,index){
             alert("Zero G54 " + index );
         };
@@ -42,38 +51,6 @@ define(function(require) {
         this.G54ClearAll = function(){
             alert("G54ClearAll");
         };
-
-
-        this.setG92Enable = function()
-        {
-            self.linuxCNCServer.setG92Enable( $( '#wo_g92_toggle', self.Panel.getJQueryElement() ).bootstrapSwitch('status'));
-        }
-
-        this.onG92ValChange = function(data,event,index)
-        {
-            if ($.isNumeric(event.currentTarget.value))
-            {
-                if ( parseFloat(event.currentTarget.value) != self.linuxCNCServer.vars.g92_offset.data()[index])
-                {
-                    alert("G92 Send data to server " + event.currentTarget.value );
-                    self.linuxCNCServer.g92Set( index, event.currentTarget.value );
-                }
-                return;
-            }
-            // default behavior: reset value
-            $(event.currentTarget).val( self.linuxCNCServer.vars.g92_offset.data()[index].toFixed(self.linuxCNCServer.DisplayPrecision()));
-        };
-
-        this.onG5xValChange = function(data,event,index)
-        {
-            alert("G5x Change on " + index + " data " + data );
-        };
-
-        this.onToolValChange = function(data,event,index)
-        {
-            alert("TLO Change on " + index + " data " + data );
-        };
-
 
 	};
 

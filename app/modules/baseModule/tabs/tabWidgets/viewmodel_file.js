@@ -67,11 +67,14 @@ define(function(require) {
                 self.linuxCNCServer.vars.file_content.data.subscribe( self.updateData );
                 self.linuxCNCServer.vars.motion_line.data.subscribe( self.updateDisplayLine );
 
-                self.updateData(self.linuxCNCServer.vars.file_content.data());
-                self.updateDisplayLine(self.linuxCNCServer.vars.motion_line.data());
-
                 self.fileListTable.dblclick( function(){ self.setMotionLineToSelected(); } );
             }
+
+            setTimeout( function() {
+                self.updateData(self.linuxCNCServer.vars.file_content.data());
+                self.updateDisplayLine(self.linuxCNCServer.vars.motion_line.data());
+            },2);
+
 		};
 
         this.setMotionLineToSelected = function()
@@ -93,8 +96,6 @@ define(function(require) {
             for (idx = 0; idx < rc; idx++)
                 rh.push(idx.toString());
             ht.updateSettings({rowHeaders: rh});
-
-
 
             ht.render();
         }

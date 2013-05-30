@@ -6,12 +6,12 @@
             <button class="btn btn-success width-button-larger" data-bind="click: run, disable: linuxCNCServer.RmtRunning"><i class="icon-play"></i> {{nls.RunFrom}}:</button>
             <input type="text" class="input width-line-number" data-bind="value: linuxCNCServer.vars.motion_line.data">
             <span>&nbsp;</span>
-            <button class="btn btn-warning width-button-larger" data-bind="click: linuxCNCServer.pause,  visible: !linuxCNCServer.vars.paused.data()"><i class="icon-pause"></i> {{nls.Pause}}</button>
-            <button class="btn btn-warning width-button-larger" data-bind="click: function(){resume();}, visible: linuxCNCServer.vars.paused.data">
+            <button class="btn btn-primary width-button-larger" data-bind="click: linuxCNCServer.pause,  visible: !linuxCNCServer.vars.paused.data()"><i class="icon-pause"></i> {{nls.Pause}}</button>
+            <button class="btn btn-primary width-button-larger" data-bind="click: function(){resume();}, visible: linuxCNCServer.vars.paused.data">
                 <span data-bind="visible: !singleStep()"><i class="icon-play-circle"></i> {{nls.Resume}}</span>
                 <span data-bind="visible: singleStep"><i class="icon-step-forward"></i> {{nls.Step}}</span>
             </button>
-            <button class="btn btn-danger width-button-larger" data-bind="click: function(){linuxCNCServer.stop();}"><i class="icon-stop"></i> {{nls.Stop}}</button>
+            <button class="btn btn-warning width-button-larger" data-bind="click: function(){linuxCNCServer.stop();}"><i class="icon-stop"></i> {{nls.Stop}}</button>
         </p>
 
 
@@ -25,7 +25,7 @@
 
                         <td>
                             <label for="run_opstop_toggle_cb"><h5>{{nls.OptionalStop}}:</h5></label>
-                            <span id="run_opstop_toggle" class="switch" data-on="success" data-off="warning" data-bind="event: { 'switch-change': setOptionalStop }">
+                            <span id="run_opstop_toggle" class="switch" data-on="success" data-off="primary" data-bind="event: { 'switch-change': setOptionalStop }">
                             <input id="run_opstop_toggle_cb" type="checkbox"> </span>
                         </td>
 
@@ -34,7 +34,7 @@
                         <td>
                             <!--Single Step-->
                             <label for="run_sstep_toggle_cb"><h5>{{nls.SingleStep}}:</h5></label>
-                            <span id="run_sstep_toggle" class="switch" data-on="success" data-off="warning"
+                            <span id="run_sstep_toggle" class="switch" data-on="success" data-off="primary"
                                   data-bind="event: { 'switch-change': function(){ singleStep($('#run_sstep_toggle').bootstrapSwitch('status')); }}">
                                 <input id="run_sstep_toggle_cb" type="checkbox">
                             </span>
@@ -42,11 +42,11 @@
 
                         <td style="width:110px;">
                             <div class="sliders-vertical">
-                                <span id="run_feed_rate_slider" class="slider-primary"></span>
+                                <span id="run_feed_rate_slider" class="slider-primary" data-bind="css: {'slider-primary': linuxCNCServer.vars.feedrate.data() <= 1, 'slider-warning': linuxCNCServer.vars.feedrate.data() > 1 }"></span>
                             </div>
                             <div>
-                                <p><h5>Feed Rate</h5></p>
-                                <p><span><span data-bind="text: feedRateText"></span>% </span><button class="btn btn-mini" data-bind="click: function(){linuxCNCServer.setFeedrate(1)}"><i class="icon-remove-sign"></i></button></p>
+                                <p><h5>{{nls.FeedRateLine1}}<br>{{nls.FeedRateLine2}}</h5></p>
+                                <p><span><span data-bind="text: feedRateText"></span>% </span><button class="btn btn-mini" data-bind="click: function(){linuxCNCServer.setFeedrate(1)}"><i class="icon-refresh"></i></button></p>
                                 <p>
                                 <button class="btn btn-mini" data-bind="click: function(){linuxCNCServer.incrementFeedrate(0.05)} " type="button"><i class="icon-arrow-up"></i></button>
                                 <button class="btn btn-mini" data-bind="click: function(){linuxCNCServer.incrementFeedrate(-0.05)} " type="button"><i class="icon-arrow-down"></i></button>
@@ -54,13 +54,13 @@
                             </div>
                         </td>
 
-                        <td style="width:130px;">
+                        <td style="width:110px;">
                             <div class="sliders-vertical">
-                                <span id="run_spindle_rate_slider" class="slider-primary"></span>
+                                <span id="run_spindle_rate_slider" class="slider-primary" data-bind="css: {'slider-primary': linuxCNCServer.vars.spindlerate.data() <= 1, 'slider-warning': linuxCNCServer.vars.spindlerate.data() > 1 }"></span>
                             </div>
                             <div>
-                                <p><h5>Spindle Rate</h5></p>
-                                <p><span><span data-bind="text: spindleRateText"></span>% </span><button class="btn btn-mini" data-bind="click: function(){linuxCNCServer.setSpindleOverride(1)}"><i class="icon-remove-sign"></i></button></p>
+                                <p><h5>{{nls.SpindleRateLine1}}<br>{{nls.SpindleRateLine2}}</h5></p>
+                                <p><span><span data-bind="text: spindleRateText"></span>% </span><button class="btn btn-mini" data-bind="click: function(){linuxCNCServer.setSpindleOverride(1)}"><i class="icon-refresh"></i></button></p>
                                 <p>
                                 <button class="btn btn-mini" data-bind="click: function(){linuxCNCServer.incrementSpindleOverride(0.05)} " type="button"><i class="icon-arrow-up"></i></button>
                                 <button class="btn btn-mini" data-bind="click: function(){linuxCNCServer.incrementSpindleOverride(-0.05)}" type="button"><i class="icon-arrow-down"></i></button>

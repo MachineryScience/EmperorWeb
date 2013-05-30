@@ -8,7 +8,7 @@
 
             <ul class="nav">
                 <li>
-                    <a href="#help_network" >
+                    <a href="#" >
                         <span class="label larger-label" data-bind="css: {'label-important': !linuxCNCServer.server_logged_in(), 'label-info': linuxCNCServer.server_logged_in }">
                         <span data-bind="visible: linuxCNCServer.server_logged_in">{{nls.connected}}</span>
                         <span data-bind="visible: !linuxCNCServer.server_logged_in()">{{nls.not_connected}}</span>
@@ -17,7 +17,7 @@
                 </li>
 
                 <li>
-                    <a href="#help_file">
+                    <a href="#">
                         <span class="label larger-label label-info">
                         <span data-bind="text: linuxCNCServer.filename_nopath"></span>
                             </span>
@@ -25,11 +25,21 @@
                 </li>
 
                 <li>
-                    <a href="#help_units">
-                        <span class="label larger-label label-info">
+                    <a href="#">
+                        <span class="label larger-label" data-bind="css: {'label-info': (linuxCNCServer.DisplayUnitsPerMM() == linuxCNCServer.ProgramUnitsPerMM()), 'label-warning': (linuxCNCServer.DisplayUnitsPerMM() != linuxCNCServer.ProgramUnitsPerMM())}"><span>{{nls.program_units}}</span>
                         <span data-bind="visible: linuxCNCServer.vars.program_units.data() == 1">{{nls.inch}}</span>
                         <span data-bind="visible: linuxCNCServer.vars.program_units.data() == 2">{{nls.mm}}</span>
                         <span data-bind="visible: linuxCNCServer.vars.program_units.data() == 3">{{nls.cm}}</span>
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="#">
+                        <span class="label larger-label label-info"><span>{{nls.display_units}}</span>
+                        <span data-bind="visible: linuxCNCServer.DisplayUnitsPerMM() == 1/25.4">{{nls.inch}}</span>
+                        <span data-bind="visible: linuxCNCServer.DisplayUnitsPerMM() == 1">{{nls.mm}}</span>
+                        <span data-bind="visible: linuxCNCServer.DisplayUnitsPerMM() == 1/10">{{nls.cm}}</span>
                         </span>
                     </a>
                 </li>
@@ -42,7 +52,7 @@
                                 <span class="caret white-caret" style=></span>
                             </button>
                             <button class="btn btn-primary" data-bind="click: mdiExecute">{{nls.mdiExecute}}</button>
-                            <ul class="dropdown-menu" data-bind="foreach: settings.mdiHistory">
+                            <ul class="dropdown-menu" data-bind="foreach: settings.persist.MDIHistory">
                                 <li><a data-bind="text: $data, click: $root.currentMDITextSetAndFocus.bind($data)"></a></li>
                             </ul>
                             <input type="text" data-bind="value: currentMDIText, event: {keypress: mdiInputKeyPress }" id="navBottomMDIInput">
