@@ -347,6 +347,9 @@ a.badge:focus {
 .btn-mini .badge {
   top: 0;
 }
+.fill-height {
+  overflow-x: hidden;
+}
 .well-label {
   display: inline-block;
   padding: 2px 4px;

@@ -361,6 +361,8 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		}
 
+        event.preventDefault()
+
 	}
 
 	function onKeyDown( event ) {

@@ -63,9 +63,11 @@ define(function(require) {
                     if ($(el).is(":visible"))
                     {
                         var val = $(window).height() - $(el).offset().top - parseInt($('body').css('padding-bottom')) -  ( $(el).outerHeight(true) - $(el).height() ) - 20 ;
-                        $(el).height( val  );
+//                        if ($(el).height() != val)
+                            $(el).height( val  );
                     }
                 });
+
             };
 
             $(window).resize( resizeFuncWithContext );
@@ -74,6 +76,13 @@ define(function(require) {
             context.listen("ActivatedTabNeedsResize", resizeFuncWithContext);
 
             setInterval( resizeFuncWithContext, 1000 );
+
+            // GLOBAL KEYBOARD BINDINGS
+            $(document).bind('keydown', 'up', function(){ console.log("UP"); });
+            $(document).bind('keyup', 'up', function(){ console.log("^UP"); });
+            $(document).bind('keydown', 'ctrl+up', function(){ console.log("CTRL-UP"); });
+            $(document).bind('keyup', 'ctrl+up', function(){ console.log("^CTRL-UP"); });
+
         }
         
     }

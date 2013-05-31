@@ -85,9 +85,14 @@ define({
 
         "ConfigTitle"   : "Configuration",
         "NetworkSettingsTabTitle" : "Network",
-        "BackplotSettingsTabTitle": "Backplot",
         "OffsetsSettingsTabTitle" : "Offsets",
         "DisplaySettingsTabTitle": "Display",
+        "BackplotSettingsTabTitle" : "Backplot",
+
+        "DisplayTabLegend" : "Settings for Display of Information",
+        "NetworkTabLegend" : "Settings for Connecting to LinuxCNC Server over the Network",
+        "OffsetsTabLegend" : "Settings for Measuring Work Coordinates and Probing",
+        "BackplotTabLegend": "Settings for Backplot Colors and Display",
 
         "HostIP" : "Host IP Address",
         "HostPort" : "Host Port",
@@ -103,7 +108,15 @@ define({
 
         "ProbeRadiusLabel" : "Probe Radius",
         "GaugeHeightLabel" : "Gauge Height",
-        "BackplotBackgroundColorLabel" : "Backplot Background",
+        "BackplotBackgroundColorLabel" : "Background Color",
+
+        "BackplotTraverseExecutedColorLabel" : "Rapid Move Color - Executed Lines",
+        "BackplotFeedExecutedColorLabel" : "Feed Move Color - Executed Lines",
+        "BackplotTraverseColorLabel" : "Rapid Move Color",
+        "BackplotFeedColorLabel" : "Feed Move Color",
+        "BackplotGridColorLabel" : "Minor Grid Color",
+        "BackplotGridMajorColorLabel" : "Major Grid Color",
+        "BackplotGridVisible": "Grid Visible",
 
         "DialogClose" : "Close"
 

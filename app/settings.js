@@ -47,13 +47,25 @@ define(['/app/linuxCNCInterface.js', '/app/core/helpers/utility.js'], function(l
     settings.addPersistentSetting("ProbeRadius",  0.1,  true );
     settings.addPersistentSetting("GaugeHeight",    1,  true );
     settings.addPersistentSetting("MDIHistory",    [],  true );
+    settings.addPersistentSetting("DisplayUnitsPerMM",   settings.linuxCNCServer.DisplayUnitsPerMM(),  true );
+    settings.addPersistentSetting("ChangeDisplayUnitsToProgramUnits",  settings.linuxCNCServer.ChangeDisplayUnitsToProgramUnits(),  true );
     settings.addPersistentSetting("BPShowGrid",  true,  true );
-    settings.addPersistentSetting("BPBGColor",     [],  true );
+    settings.addPersistentSetting("BPBGColor",       {r:159,g:159,b:159},  true );
+    settings.addPersistentSetting("BPGridColor",     {r:128,g:128,b:128},  true );
+    settings.addPersistentSetting("BPGridMajorColor",{r:51,g:51,b:51},     true );
+    settings.addPersistentSetting("BPFeedColor",     {r:255,g:255,b:100},  true );
+    settings.addPersistentSetting("BPTraverseColor", {r:0,g:0,b:255},      true );
+    settings.addPersistentSetting("BPFeedExecutedColor",    {r:0,g:255,b:0},true );
+    settings.addPersistentSetting("BPTraverseExecutedColor",{r:100,g:255,b:255},true );
+
 
     // update settings from the server
     settings.updatePersistentSettings(settings.linuxCNCServer.vars.client_config.data());
     settings.linuxCNCServer.vars.client_config.data.subscribe( settings.updatePersistentSettings );
 
+    // these settings need to be pushed to the linuxCNCServer
+    settings.persist.DisplayUnitsPerMM.subscribe(function(newval){ settings.linuxCNCServer.DisplayUnitsPerMM(newval); });
+    settings.persist.ChangeDisplayUnitsToProgramUnits.subscribe(function(newval){ settings.linuxCNCServer.ChangeDisplayUnitsToProgramUnits(newval)});
 
     // *** NETWORK SETTINGS ***
     // these settings are special, because they relate to the network and need to be stored locally

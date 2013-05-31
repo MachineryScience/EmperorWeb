@@ -1,18 +1,23 @@
-<div class="well well-with-label fill-height">
+<div id="mainConfig" class="well well-with-label fill-height">
+
+    <div id="scrollRegion">
 
         <span class="well-label"><span>{{nls.ConfigTitle}}</span></span>
 
         <ul class="nav nav-tabs" id="myTab">
-            <li><a href="#NetworkSettings" data-toggle="tab">{{nls.NetworkSettingsTabTitle}}</a></li>
-            <li><a href="#DisplaySettings" data-toggle="tab">{{nls.DisplaySettingsTabTitle}}</a></li>
+            <li><a id="NetworkTab" href="#NetworkSettings" data-toggle="tab">{{nls.NetworkSettingsTabTitle}}</a></li>
+            <li><a id="DisplayTab" href="#DisplaySettings" data-toggle="tab">{{nls.DisplaySettingsTabTitle}}</a></li>
+            <li><a id="BackplotTab" href="#BackplotSettings" data-toggle="tab">{{nls.BackplotSettingsTabTitle}}</a></li>
             <li><a id="OffsetsTab" href="#OffsetSettings" data-toggle="tab">{{nls.OffsetsSettingsTabTitle}}</a></li>
-            <li><a href="#BackplotSettings" data-toggle="tab">{{nls.BackplotSettingsTabTitle}}</a></li>
+
         </ul>
 
         <div class="tab-content">
 
             <!--************* NETWORK SETTINGS **************-->
             <div class="tab-pane" id="NetworkSettings">
+
+                <legend>{{nls.NetworkTabLegend}}</legend>
 
                 <form class="form-horizontal">
                     <div class="control-group">
@@ -55,7 +60,10 @@
             <!--************************ DISPLAY SETTINGS ************************-->
             <div class="tab-pane" id="DisplaySettings">
 
+                <legend>{{nls.DisplayTabLegend}}</legend>
+
                 <form class="form-horizontal">
+
                     <div class="control-group">
                         <label class="control-label" for="inputDisplayUnits">{{nls.DisplayUnits}}</label>
                         <div class="controls">
@@ -67,22 +75,17 @@
                             </select>
 
                         </div>
+                    </div>
 
-                        <div class="control-group">
-                            <div class="controls">
-                                &nbsp;
-                            </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn" data-bind="click: refreshDisplaySettings">{{nls.Refresh}}</button>
+                            <button class="btn" data-bind="click: saveDisplaySettings">{{nls.Save}}</button>
                         </div>
-                        <div class="control-group">
-                            <div class="controls">
-                                <button class="btn" data-bind="click: refreshSettings">{{nls.Refresh}}</button>
-                                <button class="btn" data-bind="click: saveDisplaySettings">{{nls.Save}}</button>
-                            </div>
-                        </div>
-
                     </div>
 
                 </form>
+
 
             </div>
 
@@ -90,11 +93,72 @@
             <!--************************ BACKPLOT SETTINGS ************************-->
             <div class="tab-pane" id="BackplotSettings">
 
+                <legend>{{nls.BackplotTabLegend}}</legend>
+
                 <form class="form-horizontal">
                     <div class="control-group">
-                            <label class="control-label" for="inputBackplotBackgroundColor">{{nls.BackplotBackgroundColorLabel}}</label>
+                        <label class="control-label" for="config_bpgrid_toggle_cb">{{nls.BackplotGridVisible}}</label>
                         <div class="controls">
-                            <input id="inputBackplotBackgroundColor" class="" value="#8fff00" id="cp1" type="text">
+                            <span id="config_bpgrid_toggle" class="switch" data-on="success" data-off="primary" data-bind="event: { 'switch-change': setBackplotGrid }">
+                            <input id="config_bpgrid_toggle_cb" type="checkbox"> </span>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="inputBackplotBackgroundColor">{{nls.BackplotBackgroundColorLabel}}</label>
+                        <div class="controls">
+                            <input id="inputBackplotBackgroundColor" class="" data-bind="value: getBPColorText(settings.persist.BPBGColor)" type="text">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="inputBackplotFeedColor">{{nls.BackplotFeedColorLabel}}</label>
+                        <div class="controls">
+                            <input id="inputBackplotFeedColor" class="" data-bind="value: getBPColorText(settings.persist.BPFeedColor)" type="text">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="inputBackplotTraverseColor">{{nls.BackplotTraverseColorLabel}}</label>
+                        <div class="controls">
+                            <input id="inputBackplotTraverseColor" class="" data-bind="value: getBPColorText(settings.persist.BPTraverseColor)" type="text">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="inputBackplotFeedExecutedColor">{{nls.BackplotFeedExecutedColorLabel}}</label>
+                        <div class="controls">
+                            <input id="inputBackplotFeedExecutedColor" class="" data-bind="value: getBPColorText(settings.persist.BPFeedExecutedColor)" type="text">
+                        </div>
+                    </div>
+
+
+                    <div class="control-group">
+                        <label class="control-label" for="inputBackplotTraverseExecutedColor">{{nls.BackplotTraverseExecutedColorLabel}}</label>
+                        <div class="controls">
+                            <input id="inputBackplotTraverseExecutedColor" class="" data-bind="value: getBPColorText(settings.persist.BPTraverseExecutedColor)" type="text">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="inputBackplotGridColor">{{nls.BackplotGridColorLabel}}</label>
+                        <div class="controls">
+                            <input id="inputBackplotGridColor" class="" data-bind="value: getBPColorText(settings.persist.BPGridColor)" type="text">
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="inputBackplotGridMajorColor">{{nls.BackplotGridMajorColorLabel}}</label>
+                        <div class="controls">
+                            <input id="inputBackplotGridMajorColor" class="" data-bind="value: getBPColorText(settings.persist.BPGridMajorColor)" type="text">
+                        </div>
+                    </div>
+
+
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn" data-bind="click: refreshBackplotSettings">{{nls.Refresh}}</button>
+                            <button class="btn" data-bind="click: saveBackplotSettings">{{nls.Save}}</button>
                         </div>
                     </div>
                 </form>
@@ -104,6 +168,8 @@
 
             <!--************************ OFFSET SETTINGS ************************-->
             <div class="tab-pane" id="OffsetSettings">
+
+                <legend>{{nls.OffsetsTabLegend}}</legend>
 
                 <form class="form-horizontal">
 
@@ -129,13 +195,13 @@
                             </div>
                         </div>
 
-                    </div>
-
                 </form>
 
             </div>
 
 
         </div>
+
+    </div>
 
 </div>

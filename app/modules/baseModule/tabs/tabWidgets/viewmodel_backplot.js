@@ -8,6 +8,7 @@ define(function(require) {
         var self = this;
         self.panel = null;
 
+
         this.getTemplate = function()
         {
             return template;
@@ -18,22 +19,35 @@ define(function(require) {
         }
 
         self.linuxCNCServer = moduleContext.getSettings().linuxCNCServer;
+        self.settings = moduleContext.getSettings();
 
-        self.BGCOLOR = new THREE.Color().setRGB( 159/255, 159/255, 159/255 );
 
-        self.GRID_COLOR = new THREE.Color().setRGB(.8,.8,.8);
-        self.GRID_COLOR_MAJOR = new THREE.Color().setRGB(1,1,1);
-        self.GRID_COLOR = new THREE.Color().setRGB(.5,.5,.5);
-        self.GRID_COLOR_MAJOR = new THREE.Color().setRGB(.2,.2,.2);
+        // utility function for connecting a color to persistent storage in settings
+        var setupPersistColor = function(obs)
+        {
+            var ret = new THREE.Color().setRGB( obs().r/255, obs().g/255, obs().b/255 );
+            obs.subscribe(function(newval){
+                try{
+                    ret.setRGB(obs().r/255,obs().g/255,obs().b/255);
+                    self.refreshBackplot();
+                } catch(ex){}
+            });
+            return ret;
+        }
 
-        self.FEED_COLOR = new THREE.Color().setRGB(255/255, 255/255, 100/255);
-        self.TRAVERSE_COLOR = new THREE.Color().setRGB(0/255, 0/255, 255/255);
-
-        self.EXECUTED_COLOR = new THREE.Color().setRGB(0/255, 255/255, 0/255);
-        self.EXECUTED_COLOR_TRAVERSE = new THREE.Color().setRGB(100/255, 255/255, 255/255);
+        self.BGCOLOR = setupPersistColor(self.settings.persist.BPBGColor);
+        self.GRID_COLOR = setupPersistColor(self.settings.persist.BPGridColor);
+        self.GRID_COLOR_MAJOR = setupPersistColor(self.settings.persist.BPGridMajorColor);
+        self.FEED_COLOR = setupPersistColor(self.settings.persist.BPFeedColor);
+        self.TRAVERSE_COLOR = setupPersistColor(self.settings.persist.BPTraverseColor);
+        self.EXECUTED_COLOR = setupPersistColor(self.settings.persist.BPFeedExecutedColor);
+        self.EXECUTED_COLOR_TRAVERSE = setupPersistColor(self.settings.persist.BPTraverseExecutedColor);
 
         self.GRID_COLOR_Y = new THREE.Color().setRGB(150/255, 75/255, 75/255);
         self.GRID_COLOR_X = new THREE.Color().setRGB(75/255, 150/255, 75/255);
+
+        self.GRID_VISIBLE = self.settings.persist.BPShowGrid;
+        self.GRID_VISIBLE.subscribe(function(newval){self.refreshBackplot();});
 
         var gridopacity = 0.23
         var forgroundopacity = 1;
@@ -216,43 +230,47 @@ define(function(require) {
             var span = Math.max(maxx-minx, maxy-miny, maxz-minz, 0.1 );
             self.span = Math.ceil(span);
             var span = self.span;
-            var minorGridCount = 10;
-            if (span > 100)
-                minorGridCount = 1;
-            var itr = 0;
-            for (idx = (-span); idx <= (span); idx += 1/minorGridCount)
+
+            if (self.GRID_VISIBLE())
             {
-                if (Math.abs(idx - Math.round(idx)) > 0.5/minorGridCount)
+                var minorGridCount = 10;
+                if (span > 100)
+                    minorGridCount = 1;
+                var itr = 0;
+                for (idx = (-span); idx <= (span); idx += 1/minorGridCount)
                 {
-                    gridGeometry1.vertices.push( new THREE.Vector3( idx, -span, 0 ));
-                    gridGeometry1.vertices.push( new THREE.Vector3( idx,  span, 0 ));
-                    gridGeometry1.vertices.push( new THREE.Vector3( -span, idx, 0 ));
-                    gridGeometry1.vertices.push( new THREE.Vector3(  span, idx, 0 ));
+                    if (Math.abs(idx - Math.round(idx)) > 0.5/minorGridCount)
+                    {
+                        gridGeometry1.vertices.push( new THREE.Vector3( idx, -span, 0 ));
+                        gridGeometry1.vertices.push( new THREE.Vector3( idx,  span, 0 ));
+                        gridGeometry1.vertices.push( new THREE.Vector3( -span, idx, 0 ));
+                        gridGeometry1.vertices.push( new THREE.Vector3(  span, idx, 0 ));
+                    }
                 }
-            }
-            scene.add( new THREE.Line(gridGeometry1, materialMinorGrid, THREE.LinePieces ));
+                scene.add( new THREE.Line(gridGeometry1, materialMinorGrid, THREE.LinePieces ));
 
-            var gridGeometry2 = new THREE.Geometry();
-            var materialMinorGrid2 = new THREE.LineBasicMaterial( { vertexColors: THREE.NoColors, color:self.GRID_COLOR_MAJOR, transparent: true } );
-            materialMinorGrid2.opacity = gridopacity;
-            for (idx = (-span); idx <= (span); idx += 1)
-            {
-
-                if (idx != 0)
+                var gridGeometry2 = new THREE.Geometry();
+                var materialMinorGrid2 = new THREE.LineBasicMaterial( { vertexColors: THREE.NoColors, color:self.GRID_COLOR_MAJOR, transparent: true } );
+                materialMinorGrid2.opacity = gridopacity;
+                for (idx = (-span); idx <= (span); idx += 1)
                 {
-                    gridGeometry2.vertices.push( new THREE.Vector3( idx, -span, 0 ));
-                    gridGeometry2.vertices.push( new THREE.Vector3( idx,  span, 0 ));
-                    gridGeometry2.vertices.push( new THREE.Vector3( -span, idx, 0 ));
-                    gridGeometry2.vertices.push( new THREE.Vector3(  span, idx, 0 ));
-                } else {
-                    gridGeometry2.vertices.push( new THREE.Vector3( idx, -span, 0 ));
-                    gridGeometry2.vertices.push( new THREE.Vector3( idx,  0, 0 ));
-                    gridGeometry2.vertices.push( new THREE.Vector3( -span, idx, 0 ));
-                    gridGeometry2.vertices.push( new THREE.Vector3(  0, idx, 0 ));
-                }
 
+                    if (idx != 0)
+                    {
+                        gridGeometry2.vertices.push( new THREE.Vector3( idx, -span, 0 ));
+                        gridGeometry2.vertices.push( new THREE.Vector3( idx,  span, 0 ));
+                        gridGeometry2.vertices.push( new THREE.Vector3( -span, idx, 0 ));
+                        gridGeometry2.vertices.push( new THREE.Vector3(  span, idx, 0 ));
+                    } else {
+                        gridGeometry2.vertices.push( new THREE.Vector3( idx, -span, 0 ));
+                        gridGeometry2.vertices.push( new THREE.Vector3( idx,  0, 0 ));
+                        gridGeometry2.vertices.push( new THREE.Vector3( -span, idx, 0 ));
+                        gridGeometry2.vertices.push( new THREE.Vector3(  0, idx, 0 ));
+                    }
+
+                }
+                scene.add( new THREE.Line(gridGeometry2, materialMinorGrid2, THREE.LinePieces ));
             }
-            scene.add( new THREE.Line(gridGeometry2, materialMinorGrid2, THREE.LinePieces ));
 
             var gridGeometry3 = new THREE.Geometry();
             var materialMinorGrid3 = new THREE.LineBasicMaterial( { vertexColors: THREE.NoColors, color: self.GRID_COLOR_X  } );
@@ -363,7 +381,7 @@ define(function(require) {
             try {
 
                 var height_of_bp_area = $("#BACKPLOT_INNER_WRAP",self.panel.getJQueryElement()).height() -
-                    ( $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).offset().top - $("#BACKPLOT_INNER_WRAP",self.panel.getJQueryElement()).offset().top ) - 25;
+                    ( $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).offset().top - $("#BACKPLOT_INNER_WRAP",self.panel.getJQueryElement()).offset().top ) - 30;
 
                 if (height_of_bp_area < 100)
                     height_of_bp_area = 100;
@@ -384,6 +402,7 @@ define(function(require) {
 
             } catch (ex){  };
         }
+
 
         self.refreshBackplot = _.debounce( function(event) {
             self.onNewData(self.linuxCNCServer.vars.backplot_async.data());
