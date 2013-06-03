@@ -58,14 +58,26 @@ define(['/app/linuxCNCInterface.js', '/app/core/helpers/utility.js'], function(l
     settings.addPersistentSetting("BPFeedExecutedColor",    {r:0,g:255,b:0},true );
     settings.addPersistentSetting("BPTraverseExecutedColor",{r:100,g:255,b:255},true );
 
-
-    // update settings from the server
-    settings.updatePersistentSettings(settings.linuxCNCServer.vars.client_config.data());
-    settings.linuxCNCServer.vars.client_config.data.subscribe( settings.updatePersistentSettings );
+    settings.addPersistentSetting("JogFeedSlow", 1,true );
+    settings.addPersistentSetting("JogFeedFast", 10,true );
+    settings.addPersistentSetting("JogStep",  0.001,true );
+    settings.addPersistentSetting("JogStep1", 0.001,true );
+    settings.addPersistentSetting("JogStep2", 0.01,true );
+    settings.addPersistentSetting("JogStep3", 0.1,true );
 
     // these settings need to be pushed to the linuxCNCServer
     settings.persist.DisplayUnitsPerMM.subscribe(function(newval){ settings.linuxCNCServer.DisplayUnitsPerMM(newval); });
     settings.persist.ChangeDisplayUnitsToProgramUnits.subscribe(function(newval){ settings.linuxCNCServer.ChangeDisplayUnitsToProgramUnits(newval)});
+    settings.persist.JogStep.subscribe(function(newval){settings.linuxCNCServer.jog_step(newval) });
+    settings.persist.JogFeedSlow.subscribe(function(newval){settings.linuxCNCServer.jog_speed_slow(newval) });
+    settings.persist.JogFeedFast.subscribe(function(newval){settings.linuxCNCServer.jog_speed_fast(newval); console.log("Setting Jog Fast Speed to " + newval) });
+    settings.linuxCNCServer.jog_speed_slow(settings.persist.JogFeedSlow());
+    settings.linuxCNCServer.jog_speed_fast(settings.persist.JogFeedFast());
+    settings.linuxCNCServer.jog_step(settings.persist.JogStep());
+
+    // update settings from the server
+    settings.updatePersistentSettings(settings.linuxCNCServer.vars.client_config.data());
+    settings.linuxCNCServer.vars.client_config.data.subscribe( settings.updatePersistentSettings );
 
     // *** NETWORK SETTINGS ***
     // these settings are special, because they relate to the network and need to be stored locally

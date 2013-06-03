@@ -32,6 +32,26 @@ define(function(require) {
             self.settings.persist.GaugeHeight.ResetScratch();
         }
 
+        // *** Jog settings
+        this.saveJogSettings = function()
+        {
+            self.settings.persist.JogFeedFast.SaveScratch();
+            self.settings.persist.JogFeedSlow.SaveScratch();
+            self.settings.persist.JogStep1.SaveScratch();
+            self.settings.persist.JogStep2.SaveScratch();
+            self.settings.persist.JogStep3.SaveScratch();
+
+        }
+
+        this.refreshJogSettings = function()
+        {
+            self.settings.persist.JogFeedFast.ResetScratch();
+            self.settings.persist.JogFeedSlow.ResetScratch();
+            self.settings.persist.JogStep1.ResetScratch();
+            self.settings.persist.JogStep2.ResetScratch();
+            self.settings.persist.JogStep3.ResetScratch();
+        }
+
         // *** Display Settings
         this.getBPColorText = (function(obs)
         {
@@ -76,12 +96,14 @@ define(function(require) {
             if (_.isUndefined(self.Panel))
             {
                 self.Panel = Panel;
-                $('#myTab a:first', self.Panel.getJQueryElement() ).tab('show');
 
+                // initialize individual tab values
                 $('#OffsetsTab', self.Panel.getJQueryElement()).on('shown', this.refreshOffsetSettings );
                 $('#DisplayTab', self.Panel.getJQueryElement()).on('shown', this.refreshDisplaySettings );
                 $('#BackplotTab', self.Panel.getJQueryElement()).on('shown', this.refreshBackplotSettings );
+                $('#JogTab', self.Panel.getJQueryElement()).on('shown', this.refreshBackplotSettings );
 
+                $('#myTab a:first', self.Panel.getJQueryElement() ).tab('show');
 
                 // setup colorpickers
                 var setupColorPicker = function( element_name, observable ) {

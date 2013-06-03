@@ -20,7 +20,10 @@ define({
         "program_units": "Program: ",
         "display_units": "Display: ",
 
-        "mdiExecute": "MDI"
+        "mdiExecute": "MDI",
+        "jogging" : "Jog",
+        "jog_step" : "Set Jog Step To "
+
     }
 //    "sv" : true
 });

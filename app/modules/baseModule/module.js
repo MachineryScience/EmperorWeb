@@ -9,6 +9,8 @@ define(function(require) {
         NavBarTopComponent = require('./mainShell/navBarTop/component'),
         NavBarBottomComponent = require('./mainShell/navBarBottom/component'),
         OverviewTab = require('./tabs/overviewTab/component'),
+        ProductionTab = require('./tabs/productionTab/component'),
+        FileTab = require('./tabs/fileTab/component'),
         WorkSetupTab = require('./tabs/workSetupTab/component'),
         ConfigTab = require('./tabs/configTab/component');
 
@@ -29,12 +31,15 @@ define(function(require) {
 
             var controller = new Boiler.UrlController($("#main-content"));
             var myOverviewTab = new OverviewTab(context);
+            var myFileTab = new FileTab(context);
             var myWorkSetupTab = new WorkSetupTab(context);
+            var myProductionTab = new ProductionTab(context);
             var myConfigTab = new ConfigTab(context);
             controller.addRoutes({
                 "/" : myOverviewTab,      // DEFAULT landing page
-                "1" : myOverviewTab,
+                "1" : myFileTab,
                 "2" : myWorkSetupTab,
+                "4" : myProductionTab,
                 "5" : myConfigTab
             });
             controller.start();
@@ -63,7 +68,7 @@ define(function(require) {
                     if ($(el).is(":visible"))
                     {
                         var val = $(window).height() - $(el).offset().top - parseInt($('body').css('padding-bottom')) -  ( $(el).outerHeight(true) - $(el).height() ) - 20 ;
-//                        if ($(el).height() != val)
+                        if ($(el).height() != val)
                             $(el).height( val  );
                     }
                 });
@@ -76,12 +81,6 @@ define(function(require) {
             context.listen("ActivatedTabNeedsResize", resizeFuncWithContext);
 
             setInterval( resizeFuncWithContext, 1000 );
-
-            // GLOBAL KEYBOARD BINDINGS
-            $(document).bind('keydown', 'up', function(){ console.log("UP"); });
-            $(document).bind('keyup', 'up', function(){ console.log("^UP"); });
-            $(document).bind('keydown', 'ctrl+up', function(){ console.log("CTRL-UP"); });
-            $(document).bind('keyup', 'ctrl+up', function(){ console.log("^CTRL-UP"); });
 
         }
         

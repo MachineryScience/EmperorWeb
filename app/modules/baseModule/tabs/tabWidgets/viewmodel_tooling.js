@@ -26,41 +26,19 @@ define(function(require) {
                 // var data = self.linuxCNCServer.vars.file_content.data().split('\n');
                 var data = [  ];
 
-                self.fileListTable = $("#FileListTable", self.Panel.getJQueryElement());
-                self.fileListTable.handsontable({
+                self.toolListTable = $("#FileListTable", self.Panel.getJQueryElement());
+                self.toolListTable.handsontable({
                     data: data,
                     stretchH: "last",
                     rowHeaders: true,
                     height: 254,
-                    startCols: 1,
+                    startCols: 7,
                     outsideClickDeselects: false,
                     columns: [
                         {
-                            readOnly: true
+                            //readOnly: true
                         }
-                    ],
-                    contextMenu: {
-                        callback: function (key, options) {
-                            if (key === 'set_line') {
-                                self.setMotionLineToSelected();
-                            } else if (key === 'goto_line' )
-                            {
-                                self.updateDisplayLine(self.linuxCNCServer.vars.motion_line.data());
-                            }
-                        },
-                        items: {
-                            "set_line": {
-                                name: nls.SetLine,
-                                disabled: function () {
-                                    return self.linuxCNCServer.RmtRunning() || (self.fileListTable.handsontable('getSelected')[0] === self.linuxCNCServer.vars.motion_line.data() );
-                                }
-                            },
-                            "goto_line": {
-                                name: nls.GotoCurrentLine
-                            }
-                        }
-                    }
-
+                    ]
                 });
 
                 // monitor file contents

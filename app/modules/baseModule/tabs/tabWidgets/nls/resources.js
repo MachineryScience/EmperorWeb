@@ -28,7 +28,7 @@ define({
         "SpindleRateLine2" : "Rate",
 
         "FileOpenTitle": "File Open",
-        "Load": "Load",
+        "SelectNew": "Upload New File",
         "File": "File:",
 
         // work offset table titles
@@ -88,11 +88,13 @@ define({
         "OffsetsSettingsTabTitle" : "Offsets",
         "DisplaySettingsTabTitle": "Display",
         "BackplotSettingsTabTitle" : "Backplot",
+        "JogSettingsTabTitle" : "Jogging",
 
         "DisplayTabLegend" : "Settings for Display of Information",
         "NetworkTabLegend" : "Settings for Connecting to LinuxCNC Server over the Network",
         "OffsetsTabLegend" : "Settings for Measuring Work Coordinates and Probing",
         "BackplotTabLegend": "Settings for Backplot Colors and Display",
+        "JogTabLegend"     : "Settings for Keyboard Controlled Jogging",
 
         "HostIP" : "Host IP Address",
         "HostPort" : "Host Port",
@@ -117,6 +119,12 @@ define({
         "BackplotGridColorLabel" : "Minor Grid Color",
         "BackplotGridMajorColorLabel" : "Major Grid Color",
         "BackplotGridVisible": "Grid Visible",
+
+        "JogFastLabel" : "Fast Jog Speed",
+        "JogSlowLabel" : "Slow Jog Speed",
+        "JogStep1Label" : "Incremental Jog Distance 1",
+        "JogStep2Label" : "Incremental Jog Distance 2",
+        "JogStep3Label" : "Incremental Jog Distance 3",
 
         "DialogClose" : "Close"
 

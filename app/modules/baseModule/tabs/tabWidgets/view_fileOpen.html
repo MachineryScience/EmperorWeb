@@ -3,7 +3,7 @@
     <span class="well-label">{{nls.FileOpenTitle}}</span>
 
     <div class="fileupload fileupload-new" data-provides="fileupload">
-        <div class="input-append">
+        <div class="input-appendx">
 
             <table class="table table-condensed">
                 <tbody>
@@ -13,16 +13,25 @@
                     </td>
 
                     <td>
-                        <div class="uneditable-input" style="width:350px;">
-                            <i class="icon-file"></i>
-                            <span class="" data-bind="text: linuxCNCServer.filename_short"></span>
+
+                        <div class="dropdown" >
+                            <div class="btn-group">
+                                <a id="file_list_dropdown" class="btn span12 dropdown-toggle text-center" role="button" data-toggle="dropdown" href="#"><i class="icon-file"></i><span data-bind="text: linuxCNCServer.filename_short"></span></a>
+                                <ul class="dropdown-menu text-left" role="menu" aria-labelledby="file_list_dropdown" data-bind="foreach: linuxCNCServer.vars.ls">
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="text: $data, click: function(d){$root.linuxCNCServer.openFile(d);}" ></a></li>
+                                </ul>
+                            </div>
                         </div>
 
-                        <span class="btn btn-file">
-                            <span class="">{{nls.Load}}</span>
+                    <td>
+
+                    <td>
+                        <span class="btn btn-file width-button-larger">
+                            <span class="">{{nls.SelectNew}}</span>
                             <input id="file_input" type="file"/>
                         </span>
-                    <td>
+
+                </td>
                 </tr>
                 </tbody>
             </table>

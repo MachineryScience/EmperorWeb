@@ -1,4 +1,3 @@
-@import url(//fonts.googleapis.com/css?family=Telex);
 /*!
  * Bootstrap v2.3.1
  *
@@ -5253,6 +5252,12 @@ a.badge:focus {
 }
 .affix {
   position: fixed;
+}
+@font-face {
+  font-family: 'Telex';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Telex-Regular'), url(/themes/bootstrap/css/QBUn5F7b-9Ulki7K75J1Bw.woff) format('woff');
 }
 .navbar .brand {
   padding: 14px 20px 16px;

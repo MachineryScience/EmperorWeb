@@ -28,8 +28,11 @@ define(function(require) {
             var ret = new THREE.Color().setRGB( obs().r/255, obs().g/255, obs().b/255 );
             obs.subscribe(function(newval){
                 try{
-                    ret.setRGB(obs().r/255,obs().g/255,obs().b/255);
-                    self.refreshBackplot();
+                    if (newval.r/255 != ret.r || newval.g/255 != ret.g || newval.b/255 != ret.b )
+                    {
+                        ret.setRGB(newval.r/255,newval.g/255,newval.b/255);
+                        self.refreshBackplot();
+                    }
                 } catch(ex){}
             });
             return ret;
@@ -418,10 +421,13 @@ define(function(require) {
         self.animate = _.throttle( function() {
             requestAnimationFrame( self.animate );
             try {
-                self.controls.update();
-                if (self.needRender) {
-                    self.needRender = false;
-                    self.renderer.render( self.scene, self.camera );
+                //if (self.panel.getJQueryElement().is(":visible"))
+                {
+                    self.controls.update();
+                    if (self.needRender) {
+                        self.needRender = false;
+                        self.renderer.render( self.scene, self.camera );
+                    }
                 }
             } catch (ex) {}
         } , 100 );

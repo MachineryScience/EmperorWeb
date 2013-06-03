@@ -46,6 +46,10 @@ define(function (require) {
     lcncsvr.serverReconnectCheckInterval = 2000;
     lcncsvr.serverReconnectHBTimeoutInterval = 5000;
 
+    lcncsvr.jog_step = ko.observable(0.001);
+    lcncsvr.jog_speed_fast = ko.observable(1);
+    lcncsvr.jog_speed_slow = ko.observable(1);
+
     lcncsvr.vars = {};
     lcncsvr.vars.client_config = { data: ko.observable({invalid:true}), watched: true, convert_to_json: true };
     lcncsvr.vars.linear_units = { data: ko.observable(1), watched: true };
@@ -211,6 +215,7 @@ define(function (require) {
     lcncsvr.vars.error = { data: ko.observable(""), watched: true };
     lcncsvr.vars.spindlerate = { data: ko.observable(1), watched: true };
     lcncsvr.vars.feedrate = { data: ko.observable(1), watched: true };
+    lcncsvr.vars.ls = { data: ko.observableArray([]), watched: true };
 
     lcncsvr.settings = ko.observable({});
 
@@ -296,8 +301,8 @@ define(function (require) {
 
     lcncsvr.filename_short = ko.computed( function() {
         var str = lcncsvr.vars.file.data();
-        if (str.length > 45)
-            return "..." + str.substr( str.length - 42 );
+        if (str.length > 35)
+            return "..." + str.substr( str.length - 32 );
         return str;
     });
 
@@ -568,8 +573,8 @@ define(function (require) {
 
     lcncsvr.openFile = function( filename )
     {
-        lcncsvr.setRmtMode(TaskMode.MODE_MDI);
-        lcncsvr.setRmtMode(TaskMode.MODE_AUTO);
+        lcncsvr.setRmtMode(lcncsvr.TASK_MODE_MDI);
+        lcncsvr.setRmtMode(lcncsvr.TASK_MODE_AUTO);
         lcncsvr.sendCommand("program_open","program_open",[filename]);
         return;
     }
@@ -657,12 +662,12 @@ define(function (require) {
     lcncsvr.isAnyAxisAvailable = function()
     {
         return (lcncsvr.vars.axis_mask.data()) != 0;
-    }
+    };
 
     lcncsvr.clearG92 = function()
     {
         return lcncsvr.mdi("G92.1");
-    }
+    };
 
     lcncsvr.g92Set = function( axis, offset )
     {
@@ -671,7 +676,7 @@ define(function (require) {
 
         var cmd = "G92 " + lcncsvr.axisNames[axis] + offset;
         return lcncsvr.mdi(cmd);
-    }
+    };
 
     lcncsvr.g92SetDisplay = function( axis, offset )
     {
@@ -683,7 +688,7 @@ define(function (require) {
 
         var cmd = "G92 " + lcncsvr.axisNames[axis] + offset;
         return lcncsvr.mdi(cmd);
-    }
+    };
 
     lcncsvr.setG92Enable = function( onoff )
     {
@@ -691,25 +696,55 @@ define(function (require) {
             lcncsvr.mdi("G92.3");
         else
             lcncsvr.mdi("G92.2");
-    }
+    };
+
+    lcncsvr.jogIncr = function( axisNumber, dist )
+    {
+        try {
+            dist = dist.toFixed(5);
+        } catch(ex){}
+        try {
+            lcncsvr.setRmtMode(lcncsvr.TASK_MODE_MANUAL);
+            lcncsvr.sendCommand( "JOG", "jog", ["JOG_INCREMENT", axisNumber, lcncsvr.jog_speed_fast(), dist ])
+        } catch(ex){}
+    };
+
+    lcncsvr.jogCont = function( axisNumber, speed )
+    {
+        try {
+            speed = speed / 60;
+            speed = speed.toFixed(3);
+        } catch(ex){}
+
+        try {
+            lcncsvr.setRmtMode(lcncsvr.TASK_MODE_MANUAL);
+            lcncsvr.sendCommand( "JOG", "jog", ["JOG_CONTINUOUS", axisNumber, speed ])
+        } catch(ex){}
+    };
+
+    lcncsvr.jogStop = function( axisNumber )
+    {
+        lcncsvr.setRmtMode(lcncsvr.TASK_MODE_MANUAL);
+        lcncsvr.sendCommand( "JOG", "jog", ["JOG_STOP", axisNumber])
+    };
 
     lcncsvr.homeAll = function()
     {
         lcncsvr.setRmtMode(lcncsvr.TASK_MODE_MANUAL);
         lcncsvr.sendCommand("home","home",["-1"]);
-    }
+    };
 
     lcncsvr.homeAxis = function( axis )
     {
         lcncsvr.setRmtMode(lcncsvr.TASK_MODE_MANUAL);
         lcncsvr.sendCommand("home","home",[axis.toString()]);
-    }
+    };
 
     lcncsvr.home = function( axis )
     {
         lcncsvr.setRmtMode(lcncsvr.TASK_MODE_MANUAL);
         lcncsvr.sendCommand("home","home",[ axis.toString() ]);
-    }
+    };
 
     lcncsvr.overrideLimits = function()
     {

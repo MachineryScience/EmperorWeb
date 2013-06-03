@@ -9,6 +9,7 @@
             <li><a id="DisplayTab" href="#DisplaySettings" data-toggle="tab">{{nls.DisplaySettingsTabTitle}}</a></li>
             <li><a id="BackplotTab" href="#BackplotSettings" data-toggle="tab">{{nls.BackplotSettingsTabTitle}}</a></li>
             <li><a id="OffsetsTab" href="#OffsetSettings" data-toggle="tab">{{nls.OffsetsSettingsTabTitle}}</a></li>
+            <li><a id="JogTab" href="#JogSettings" data-toggle="tab">{{nls.JogSettingsTabTitle}}</a></li>
 
         </ul>
 
@@ -23,25 +24,25 @@
                     <div class="control-group">
                         <label class="control-label" for="inputHostIP">{{nls.HostIP}}</label>
                         <div class="controls">
-                            <input data-bind="value: linuxCNCServer.server_address" type="text" id="inputHostIP" placeholder="192.168.1.1">
+                            <input spellcheck='false' data-bind="value: linuxCNCServer.server_address" type="text" id="inputHostIP" placeholder="192.168.1.1">
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="inputHostPort">{{nls.HostPort}}</label>
                         <div class="controls">
-                            <input data-bind="value: linuxCNCServer.server_port" type="text" id="inputHostPort" placeholder="8000">
+                            <input spellcheck='false' data-bind="value: linuxCNCServer.server_port" type="text" id="inputHostPort" placeholder="8000">
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="inputUsername">{{nls.Username}}</label>
                         <div class="controls">
-                            <input data-bind="value: linuxCNCServer.server_username" type="text" id="inputUsername" placeholder="default">
+                            <input spellcheck='false' data-bind="value: linuxCNCServer.server_username" type="text" id="inputUsername" placeholder="default">
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="inputPassword">{{nls.Password}}</label>
                         <div class="controls">
-                            <input data-bind="value: linuxCNCServer.server_password" type="password" id="inputPassword" placeholder="Password">
+                            <input spellcheck='false' data-bind="value: linuxCNCServer.server_password" type="password" id="inputPassword" placeholder="Password">
                         </div>
                     </div>
 
@@ -100,35 +101,35 @@
                         <label class="control-label" for="config_bpgrid_toggle_cb">{{nls.BackplotGridVisible}}</label>
                         <div class="controls">
                             <span id="config_bpgrid_toggle" class="switch" data-on="success" data-off="primary" data-bind="event: { 'switch-change': setBackplotGrid }">
-                            <input id="config_bpgrid_toggle_cb" type="checkbox"> </span>
+                            <input spellcheck='false' id="config_bpgrid_toggle_cb" type="checkbox"> </span>
                         </div>
                     </div>
 
                     <div class="control-group">
                         <label class="control-label" for="inputBackplotBackgroundColor">{{nls.BackplotBackgroundColorLabel}}</label>
                         <div class="controls">
-                            <input id="inputBackplotBackgroundColor" class="" data-bind="value: getBPColorText(settings.persist.BPBGColor)" type="text">
+                            <input spellcheck='false' id="inputBackplotBackgroundColor" class="" data-bind="value: getBPColorText(settings.persist.BPBGColor)" type="text">
                         </div>
                     </div>
 
                     <div class="control-group">
                         <label class="control-label" for="inputBackplotFeedColor">{{nls.BackplotFeedColorLabel}}</label>
                         <div class="controls">
-                            <input id="inputBackplotFeedColor" class="" data-bind="value: getBPColorText(settings.persist.BPFeedColor)" type="text">
+                            <input spellcheck='false' id="inputBackplotFeedColor" class="" data-bind="value: getBPColorText(settings.persist.BPFeedColor)" type="text">
                         </div>
                     </div>
 
                     <div class="control-group">
                         <label class="control-label" for="inputBackplotTraverseColor">{{nls.BackplotTraverseColorLabel}}</label>
                         <div class="controls">
-                            <input id="inputBackplotTraverseColor" class="" data-bind="value: getBPColorText(settings.persist.BPTraverseColor)" type="text">
+                            <input spellcheck='false' id="inputBackplotTraverseColor" class="" data-bind="value: getBPColorText(settings.persist.BPTraverseColor)" type="text">
                         </div>
                     </div>
 
                     <div class="control-group">
                         <label class="control-label" for="inputBackplotFeedExecutedColor">{{nls.BackplotFeedExecutedColorLabel}}</label>
                         <div class="controls">
-                            <input id="inputBackplotFeedExecutedColor" class="" data-bind="value: getBPColorText(settings.persist.BPFeedExecutedColor)" type="text">
+                            <input spellcheck='false' id="inputBackplotFeedExecutedColor" class="" data-bind="value: getBPColorText(settings.persist.BPFeedExecutedColor)" type="text">
                         </div>
                     </div>
 
@@ -136,21 +137,21 @@
                     <div class="control-group">
                         <label class="control-label" for="inputBackplotTraverseExecutedColor">{{nls.BackplotTraverseExecutedColorLabel}}</label>
                         <div class="controls">
-                            <input id="inputBackplotTraverseExecutedColor" class="" data-bind="value: getBPColorText(settings.persist.BPTraverseExecutedColor)" type="text">
+                            <input spellcheck='false' id="inputBackplotTraverseExecutedColor" class="" data-bind="value: getBPColorText(settings.persist.BPTraverseExecutedColor)" type="text">
                         </div>
                     </div>
 
                     <div class="control-group">
                         <label class="control-label" for="inputBackplotGridColor">{{nls.BackplotGridColorLabel}}</label>
                         <div class="controls">
-                            <input id="inputBackplotGridColor" class="" data-bind="value: getBPColorText(settings.persist.BPGridColor)" type="text">
+                            <input spellcheck='false' id="inputBackplotGridColor" class="" data-bind="value: getBPColorText(settings.persist.BPGridColor)" type="text">
                         </div>
                     </div>
 
                     <div class="control-group">
                         <label class="control-label" for="inputBackplotGridMajorColor">{{nls.BackplotGridMajorColorLabel}}</label>
                         <div class="controls">
-                            <input id="inputBackplotGridMajorColor" class="" data-bind="value: getBPColorText(settings.persist.BPGridMajorColor)" type="text">
+                            <input spellcheck='false' id="inputBackplotGridMajorColor" class="" data-bind="value: getBPColorText(settings.persist.BPGridMajorColor)" type="text">
                         </div>
                     </div>
 
@@ -173,27 +174,83 @@
 
                 <form class="form-horizontal">
 
-                        <div class="control-group">
-                            <label class="control-label" for="inputProbeRadius">{{nls.ProbeRadiusLabel}}</label>
-                            <div class="controls">
-                                <input id="inputProbeRadius" type="text" data-bind="value: settings.persist.ProbeRadius.Scratch" >
-                            </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputProbeRadius">{{nls.ProbeRadiusLabel}}</label>
+                        <div class="controls">
+                            <input spellcheck='false' id="inputProbeRadius" type="text" data-bind="value: settings.persist.ProbeRadius.Scratch" >
                         </div>
+                    </div>
 
-                        <div class="control-group">
-                            <label class="control-label" for="inputGaugeHeight">{{nls.GaugeHeightLabel}}</label>
-                            <div class="controls">
-                                <input id="inputGaugeHeight" type="text" data-bind="value: settings.persist.GaugeHeight.Scratch" >
-                            </div>
+                    <div class="control-group">
+                        <label class="control-label" for="inputGaugeHeight">{{nls.GaugeHeightLabel}}</label>
+                        <div class="controls">
+                            <input spellcheck='false' id="inputGaugeHeight" type="text" data-bind="value: settings.persist.GaugeHeight.Scratch" >
                         </div>
+                    </div>
 
 
-                        <div class="control-group">
-                            <div class="controls">
-                                <button class="btn" data-bind="click: refreshOffsetSettings">{{nls.Refresh}}</button>
-                                <button class="btn" data-bind="click: saveOffsetSettings">{{nls.Save}}</button>
-                            </div>
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn" data-bind="click: refreshOffsetSettings">{{nls.Refresh}}</button>
+                            <button class="btn" data-bind="click: saveOffsetSettings">{{nls.Save}}</button>
                         </div>
+                    </div>
+
+                </form>
+
+            </div>
+
+
+
+            <!--************************ JOG SETTINGS ************************-->
+            <div class="tab-pane" id="JogSettings">
+
+                <legend>{{nls.JogTabLegend}}</legend>
+
+                <form class="form-horizontal">
+
+                    <div class="control-group">
+                        <label class="control-label" for="inputJogSlow">{{nls.JogSlowLabel}}</label>
+                        <div class="controls">
+                            <input spellcheck='false' id="inputJogSlow" type="text" data-bind="value: settings.persist.JogFeedSlow.Scratch" >
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="inputJogFast">{{nls.JogFastLabel}}</label>
+                        <div class="controls">
+                            <input spellcheck='false' id="inputJogFast" type="text" data-bind="value: settings.persist.JogFeedFast.Scratch" >
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="inputJogStep1">{{nls.JogStep1Label}}</label>
+                        <div class="controls">
+                            <input spellcheck='false' id="inputJogStep1" type="text" data-bind="value: settings.persist.JogStep1.Scratch" >
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="inputJogStep2">{{nls.JogStep2Label}}</label>
+                        <div class="controls">
+                            <input spellcheck='false' id="inputJogStep2" type="text" data-bind="value: settings.persist.JogStep2.Scratch" >
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="inputJogStep3">{{nls.JogStep3Label}}</label>
+                        <div class="controls">
+                            <input spellcheck='false' id="inputJogStep3" type="text" data-bind="value: settings.persist.JogStep3.Scratch" >
+                        </div>
+                    </div>
+
+
+                    <div class="control-group">
+                        <div class="controls">
+                            <button class="btn" data-bind="click: refreshJogSettings">{{nls.Refresh}}</button>
+                            <button class="btn" data-bind="click: saveJogSettings">{{nls.Save}}</button>
+                        </div>
+                    </div>
 
                 </form>
 
