@@ -80,13 +80,13 @@ define(function (require) {
     });
 
     lcncsvr.vars.client_config.data.subscribe( function(newval){
-        if ("DisplayUnitsPerMM" in lcncsvr.vars.client_config.data())
-            lcncsvr.DisplayUnitsPerMM(lcncsvr.vars.client_config.data().DisplayUnitsPerMM);
         if ("ChangeDisplayUnitsToProgramUnits" in lcncsvr.vars.client_config.data())
         {
             lcncsvr.ChangeDisplayUnitsToProgramUnits(lcncsvr.vars.client_config.data().ChangeDisplayUnitsToProgramUnits);
             lcncsvr.vars.program_units.data.valueHasMutated();
-        }
+        } else
+        if ("DisplayUnitsPerMM" in lcncsvr.vars.client_config.data())
+            lcncsvr.DisplayUnitsPerMM(lcncsvr.vars.client_config.data().DisplayUnitsPerMM);
     });
 
     // UNIT CONVERSION
@@ -216,6 +216,7 @@ define(function (require) {
     lcncsvr.vars.spindlerate = { data: ko.observable(1), watched: true };
     lcncsvr.vars.feedrate = { data: ko.observable(1), watched: true };
     lcncsvr.vars.ls = { data: ko.observableArray([]), watched: true };
+    lcncsvr.vars.tool_table = {data: ko.observableArray([]), watched: true, indexed:true, max_index:55 };
 
     lcncsvr.settings = ko.observable({});
 
@@ -822,6 +823,13 @@ define(function (require) {
         return lcncsvr.sendCommand("spindle_brake_set","brake",[val]);
     }
 
+    lcncsvr.setToolTableFull = function( toolnum, zofs, xofs, diam, front, back, orient )
+    {
+        try {
+            lcncsvr.mdi("G10 L1 P" + toolnum + " Z" + zofs + " X" + xofs + " R" + (parseFloat(diam)/2).toFixed(5) + " I" + front + " J" + back + " Q" + orient );
+        } catch (ex) {}
+    }
+
     lcncsvr.setToolTableZ = function( zOffset )
     {
         if (_.isNumber(zOffset))
@@ -891,12 +899,28 @@ define(function (require) {
                     else
                         id = key;
 
-                    // delay each request by an increasing amount, just to make sure these don't all spam the server at once
-                    (function(k,i,d){
-                        _.delay( function(key,id){
-                            lcncsvr.socket.send(JSON.stringify({"id": id, "command": "watch", "name": key}));
-                        }, d, k, i  );
-                    })(key,id,delayval);
+                    if (val.indexed)
+                    {
+                        var idx;
+                        for (idx = 0; idx <= val.max_index; idx++)
+                        {
+                            id = key + ":" + idx;
+                            // delay each request by an increasing amount, just to make sure these don't all spam the server at once
+                            (function(k,i,d,index){
+                                _.delay( function(key,id, index){
+                                    lcncsvr.socket.send(JSON.stringify({"id": id, "command": "watch", "name": key, "index":index }));
+                                }, d, k, i, index );
+                            })(key,id,delayval,idx);
+                        }
+                    } else
+                    {
+                        // delay each request by an increasing amount, just to make sure these don't all spam the server at once
+                        (function(k,i,d){
+                            _.delay( function(key,id){
+                                lcncsvr.socket.send(JSON.stringify({"id": id, "command": "watch", "name": key}));
+                            }, d, k, i  );
+                        })(key,id,delayval);
+                    }
                     delayval = delayval + 5;
 
                 } else {
@@ -978,14 +1002,25 @@ define(function (require) {
                     if (lcncsvr.server_logged_in())
                         lcncsvr.hbTimeout();
 
-                    if (lcncsvr.vars.hasOwnProperty(data.id)) {
-                        if (lcncsvr.vars[data.id].convert_to_json)
-                            lcncsvr.vars[data.id].data(JSON.parse(data.data));
-                        else
-                            lcncsvr.vars[data.id].data(data.data);
+                    var curID = data.id.split(":");
+
+                    if (lcncsvr.vars.hasOwnProperty(curID[0])) {
+                        if (lcncsvr.vars[curID[0]].indexed)
+                        {
+                            if (lcncsvr.vars[curID[0]].convert_to_json)
+                                lcncsvr.vars[curID[0]].data()[curID[1]] = JSON.parse(data.data);
+                            else
+                                lcncsvr.vars[curID[0]].data()[curID[1]] = data.data;
+                            lcncsvr.vars[curID[0]].data.valueHasMutated();
+                        } else {
+                            if (lcncsvr.vars[curID[0]].convert_to_json)
+                                lcncsvr.vars[curID[0]].data(JSON.parse(data.data));
+                            else
+                                lcncsvr.vars[curID[0]].data(data.data);
+                        }
                     }
                 } catch (ex) {
-
+//                    console.debug(ex);
                 }
             }
 

@@ -1,12 +1,12 @@
 define(function(require) {
 
-    var template = require('text!./view_file.html');
+    var template = require('text!./view_tooling.html');
     var nls = require('i18n!./nls/resources');
 
 	var ViewModel = function(moduleContext) {
 
 		var self = this;
-        self.Panel = null;
+        self.panel = null;
         self.linuxCNCServer = moduleContext.getSettings().linuxCNCServer;
 
         this.getTemplate = function()
@@ -19,54 +19,70 @@ define(function(require) {
         }
 
 		this.initialize = function( Panel ) {
-            if (_.isNull( self.Panel ))
+            if (_.isNull( self.panel ))
             {
-                self.Panel = Panel;
+                self.panel = Panel;
 
                 // var data = self.linuxCNCServer.vars.file_content.data().split('\n');
-                var data = [  ];
+                var data = [[0,0,0,0,0,0,0]];
 
-                self.toolListTable = $("#FileListTable", self.Panel.getJQueryElement());
+                self.toolListTable = $("#ToolListTable", self.panel.getJQueryElement());
                 self.toolListTable.handsontable({
-                    data: data,
-                    stretchH: "last",
+
+                    stretchH: "all",
                     rowHeaders: true,
-                    height: 254,
+                    colHeaders: ["ID", "Z Offset", "X Offset", "Diameter", "Front Angle", "Back Angle", "Orientation"],
+                    height: 255,
                     startCols: 7,
                     outsideClickDeselects: false,
-                    columns: [
-                        {
-                            //readOnly: true
-                        }
-                    ]
+
+                    afterChange: function(changes, source){
+                        if (!_.isArray(changes))
+                            return;
+
+                        var ht = self.toolListTable.handsontable('getInstance');
+
+                        changes.forEach( function(change) {
+                            try {
+
+                                var row = change[0];
+                                var col = change[1];
+                                var oldVal = change[2];
+                                var newVal = change[3];
+
+                                if (source == "edit")
+                                    if (col == 0)
+                                        ht.setDataAtCell(row,col, parseFloat(newVal.toString()).toFixed(0), "update" );
+                                    else
+                                        ht.setDataAtCell(row,col, parseFloat(newVal.toString()).toFixed(5), "update" );
+                                else
+                                {
+                                    var rowDat = ht.getDataAtRow(row);
+                                    self.linuxCNCServer.setToolTableFull( rowDat[0],rowDat[1],rowDat[2],rowDat[3],rowDat[4],rowDat[5],rowDat[6] );
+                                }
+                            } catch(ex){
+                                console.log(ex);
+                            };
+                        })
+                    }
                 });
 
                 // monitor file contents
-                self.linuxCNCServer.vars.file_content.data.subscribe( self.updateData );
-                self.linuxCNCServer.vars.motion_line.data.subscribe( self.updateDisplayLine );
-
-                self.fileListTable.dblclick( function(){ self.setMotionLineToSelected(); } );
+                self.linuxCNCServer.vars.tool_table.data.subscribe( self.updateData );
             }
 
             setTimeout( function() {
-                self.updateData(self.linuxCNCServer.vars.file_content.data());
-                self.updateDisplayLine(self.linuxCNCServer.vars.motion_line.data());
+                self.updateData(self.linuxCNCServer.vars.tool_table.data());
             },2);
 
 		};
 
-        this.setMotionLineToSelected = function()
-        {
-            if (!self.linuxCNCServer.RmtRunning())
-                self.linuxCNCServer.vars.motion_line.data(self.fileListTable.handsontable('getSelected')[0]);
-
-        }
-
         this.updateData = function( newfilecontent )
         {
-            var ht = self.fileListTable.handsontable('getInstance');
+            var ht = self.toolListTable.handsontable('getInstance');
 
-            var dat = _.zip(newfilecontent.split('\n'));
+            var dat = [];
+            newfilecontent.forEach( function(d,idx){ dat.push( [ d[0].toFixed(0), d[3].toFixed(5), d[1].toFixed(5), d[10].toFixed(5), d[11].toFixed(5), d[12].toFixed(5), d[13].toFixed(5) ] ); } );
             ht.loadData(dat);
 
             var rh = [];
@@ -75,30 +91,27 @@ define(function(require) {
                 rh.push(idx.toString());
             ht.updateSettings({rowHeaders: rh});
 
+            self.resize();
+
             ht.render();
-
-            $("#jog_focus_handler").focus();
-
-
         }
 
-        this.updateDisplayLine = function( lineNum )
-        {
-            var ht = self.fileListTable.handsontable('getInstance');
+        self.resize = function(event){
+            try {
 
-            ht.selectCell(lineNum,0);
+                var height_of_tool_table_area = $("#TOOLING_INNER_WRAP",self.panel.getJQueryElement()).height() -
+                    ( $("#TOOLING_CONTENT",self.panel.getJQueryElement()).offset().top - $("#TOOLING_INNER_WRAP",self.panel.getJQueryElement()).offset().top ) - 0;
 
-            if (ht.countRows() > lineNum+4)
-            {
-                ht.view.scrollViewport({row: lineNum+4, col: 0});
-                ht.view.wt.draw(true); //these two lines are needed to fix scrolling viewport when cell dimensions are significantly bigger than assumed by Walkontable
-                ht.view.scrollViewport({row: lineNum+4, col: 0});
-            }
+                if (height_of_tool_table_area < 100)
+                    height_of_tool_table_area = 100;
 
-            $("#jog_focus_handler").focus();
+                var ht = self.toolListTable.handsontable('getInstance');
+                ht.updateSettings({height: height_of_tool_table_area});
+
+            } catch (ex){  };
         }
 
-
+        $(window).resize( _.throttle(self.resize, 100 ) );
 
 	};
 

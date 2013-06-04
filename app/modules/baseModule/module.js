@@ -12,6 +12,7 @@ define(function(require) {
         ProductionTab = require('./tabs/productionTab/component'),
         FileTab = require('./tabs/fileTab/component'),
         WorkSetupTab = require('./tabs/workSetupTab/component'),
+        ToolingTab = require('./tabs/toolingTab/component'),
         ConfigTab = require('./tabs/configTab/component');
 
     // Definition of the base Module as an object, this is the return value of this AMD script
@@ -33,12 +34,14 @@ define(function(require) {
             var myOverviewTab = new OverviewTab(context);
             var myFileTab = new FileTab(context);
             var myWorkSetupTab = new WorkSetupTab(context);
+            var myToolingTab = new ToolingTab(context);
             var myProductionTab = new ProductionTab(context);
             var myConfigTab = new ConfigTab(context);
             controller.addRoutes({
                 "/" : myOverviewTab,      // DEFAULT landing page
                 "1" : myFileTab,
                 "2" : myWorkSetupTab,
+                "3" : myToolingTab,
                 "4" : myProductionTab,
                 "5" : myConfigTab
             });

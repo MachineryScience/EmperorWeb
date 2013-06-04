@@ -65,7 +65,7 @@ define(function(require) {
         {
             self.linuxCNCServer.vars.backplot_async.data.subscribe( function(){ self.refreshBackplot();  } );
 
-            self.linuxCNCServer.DisplayUnitsPerMM.subscribe( function(){ self.refreshBackplot();  } );
+            self.linuxCNCServer.DisplayUnitsPerMM.subscribe( function(newval){ console.log("DISPLAY UNITS PER MM CHANGED TO " + newval); self.refreshBackplot();  } );
             self.linuxCNCServer.ChangeDisplayUnitsToProgramUnits.subscribe( function(){ self.refreshBackplot();  } );
 
             self.linuxCNCServer.RmtDRO.subscribe( self.toolPositionChange );

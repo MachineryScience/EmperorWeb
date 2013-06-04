@@ -126,7 +126,9 @@ define({
         "JogStep2Label" : "Incremental Jog Distance 2",
         "JogStep3Label" : "Incremental Jog Distance 3",
 
-        "DialogClose" : "Close"
+        "DialogClose" : "Close",
+
+        "ToolingTitle": "Tool Table"
 
     }
 //    "sv" : true

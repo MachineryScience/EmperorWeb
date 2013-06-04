@@ -25,7 +25,8 @@ define(['/app/linuxCNCInterface.js', '/app/core/helpers/utility.js'], function(l
 
         if (_.has(settings.persist,name))
         {
-            settings.persist[name](value);
+            if (settings.persist[name]() != value)
+                settings.persist[name](value);
         }
         else
         {
@@ -66,7 +67,7 @@ define(['/app/linuxCNCInterface.js', '/app/core/helpers/utility.js'], function(l
     settings.addPersistentSetting("JogStep3", 0.1,true );
 
     // these settings need to be pushed to the linuxCNCServer
-    settings.persist.DisplayUnitsPerMM.subscribe(function(newval){ settings.linuxCNCServer.DisplayUnitsPerMM(newval); });
+    settings.persist.DisplayUnitsPerMM.subscribe(function(newval){ console.log("Persist Display Units changed to " + newval ); settings.linuxCNCServer.DisplayUnitsPerMM(newval); });
     settings.persist.ChangeDisplayUnitsToProgramUnits.subscribe(function(newval){ settings.linuxCNCServer.ChangeDisplayUnitsToProgramUnits(newval)});
     settings.persist.JogStep.subscribe(function(newval){settings.linuxCNCServer.jog_step(newval) });
     settings.persist.JogFeedSlow.subscribe(function(newval){settings.linuxCNCServer.jog_speed_slow(newval) });
