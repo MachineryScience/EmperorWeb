@@ -228,12 +228,18 @@ define(function(require) {
             var gridGeometry1 = new THREE.Geometry();
             var materialMinorGrid = new THREE.LineBasicMaterial( { vertexColors: THREE.NoColors, color:self.GRID_COLOR, linewidth: 0.5, transparent: true } );
             materialMinorGrid.opacity = gridopacity;
-            var minx = Math.min(0,self.feedGeometry.boundingBox.min.x,self.traverseGeometry.boundingBox.min.x);
-            var miny = Math.min(0,self.feedGeometry.boundingBox.min.y,self.traverseGeometry.boundingBox.min.y);
-            var minz = Math.min(0,self.feedGeometry.boundingBox.min.z,self.traverseGeometry.boundingBox.min.z);
-            var maxx = Math.max(0,self.feedGeometry.boundingBox.max.x,self.traverseGeometry.boundingBox.max.x);
-            var maxy = Math.max(0,self.feedGeometry.boundingBox.max.y,self.traverseGeometry.boundingBox.max.y);
-            var maxz = Math.max(0,self.feedGeometry.boundingBox.max.z,self.traverseGeometry.boundingBox.max.z);
+            var minxRaw = Math.min(self.feedGeometry.boundingBox.min.x,self.traverseGeometry.boundingBox.min.x);
+            var minyRaw = Math.min(self.feedGeometry.boundingBox.min.y,self.traverseGeometry.boundingBox.min.y);
+            var minzRaw = Math.min(self.feedGeometry.boundingBox.min.z,self.traverseGeometry.boundingBox.min.z);
+            var minx = Math.min(0,minxRaw);
+            var miny = Math.min(0,minyRaw);
+            var minz = Math.min(0,minzRaw);
+            var maxxRaw = Math.max(self.feedGeometry.boundingBox.max.x,self.traverseGeometry.boundingBox.max.x);
+            var maxyRaw = Math.max(self.feedGeometry.boundingBox.max.y,self.traverseGeometry.boundingBox.max.y);
+            var maxzRaw = Math.max(self.feedGeometry.boundingBox.max.z,self.traverseGeometry.boundingBox.max.z);
+            var maxx = Math.max(0,maxxRaw);
+            var maxy = Math.max(0,maxyRaw);
+            var maxz = Math.max(0,maxzRaw);
             var span = Math.max(maxx-minx, maxy-miny, maxz-minz, 0.1 );
             self.span = Math.ceil(span);
             var span = self.span;
@@ -292,9 +298,9 @@ define(function(require) {
             gridGeometry4.computeLineDistances();
             scene.add( new THREE.Line(gridGeometry4, materialMinorGrid4, THREE.LinePieces ));
 
-            var infoStr1 = (" X from " + minx.toFixed(3) + " to " + maxx.toFixed(3) + " = span of " + (maxx-minx).toFixed(3));
-            var infoStr2 = (" Y from " + miny.toFixed(3) + " to " + maxy.toFixed(3) + " = span of " + (maxx-miny).toFixed(3));
-            var infoStr3 = (" Z from " + minz.toFixed(3) + " to " + maxz.toFixed(3) + " = span of " + (maxz-minz).toFixed(3));
+            var infoStr1 = (" X from " + minxRaw.toFixed(3) + " to " + maxxRaw.toFixed(3) + " = span of " + (maxxRaw-minxRaw).toFixed(3));
+            var infoStr2 = (" Y from " + minyRaw.toFixed(3) + " to " + maxyRaw.toFixed(3) + " = span of " + (maxxRaw-minyRaw).toFixed(3));
+            var infoStr3 = (" Z from " + minzRaw.toFixed(3) + " to " + maxzRaw.toFixed(3) + " = span of " + (maxzRaw-minzRaw).toFixed(3));
 
             self.infoText1(infoStr1);
             self.infoText2(infoStr2);

@@ -19,12 +19,12 @@
 
                 <ul class="nav">
                     <!--<li data-bind="css: {'active' : activeTab0}, click: tabChange.bind(0)"><a href="#0"><i class="icon-plane"></i> xxx{{nls.overview}}</a></li>-->
-                    <li data-bind="css: {'active' : activeTab1}, click: tabChange.bind(1)"><a href="#1"><i class="icon-folder-open"></i> {{nls.file}}</a></li>
-                    <li data-bind="css: {'active' : activeTab2}, click: tabChange.bind(2)"><a href="#2"><i class="icon-signin"></i> {{nls.work_setup}}</a></li>
-                    <li data-bind="css: {'active' : activeTab3}, click: tabChange.bind(3)"><a href="#3"><i class="icon-filter"></i> {{nls.tooling}}</a></li>
-                    <li data-bind="css: {'active' : activeTab4}, click: tabChange.bind(4)"><a href="#4"><i class="icon-play-circle"></i> {{nls.run}}</a></li>
-                    <li data-bind="css: {'active' : activeTab5}, click: tabChange.bind(5)"><a href="#5"><i class="icon-cogs"></i> {{nls.config}}</a></li>
-                    <li data-bind="css: {'active' : activeTab6}, click: tabChange.bind(6)"><a href="#6"><i class="icon-question-sign"></i> {{nls.help}}</a></li>
+                    <li data-bind="css: {'active' : activeTab1}, click: function(){tabChange(1); return true;}"><a href="#1"><i class="icon-folder-open"></i> {{nls.file}}</a></li>
+                    <li data-bind="css: {'active' : activeTab2}, click: function(){tabChange(2); return true;}"><a href="#2"><i class="icon-signin"></i> {{nls.work_setup}}</a></li>
+                    <li data-bind="css: {'active' : activeTab3}, click: function(){tabChange(3); return true;}"><a href="#3"><i class="icon-filter"></i> {{nls.tooling}}</a></li>
+                    <li data-bind="css: {'active' : activeTab4}, click: function(){tabChange(4); return true;}"><a href="#4"><i class="icon-play-circle"></i> {{nls.run}}</a></li>
+                    <li data-bind="css: {'active' : activeTab5}, click: function(){tabChange(5); return true;}"><a href="#5"><i class="icon-cogs"></i> {{nls.config}}</a></li>
+                    <li data-bind="css: {'active' : activeTab6}, click: function(){tabChange(6); return true;}"><a href="#6"><i class="icon-question-sign"></i> {{nls.help}}</a></li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div>

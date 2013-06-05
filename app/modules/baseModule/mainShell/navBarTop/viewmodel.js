@@ -23,7 +23,6 @@ define(function(require) {
         self.tabChange = function(newTabNum)
         {
             self.currentTabNum(newTabNum);
-            return true;
         }
 
         this.getTemplate = function()

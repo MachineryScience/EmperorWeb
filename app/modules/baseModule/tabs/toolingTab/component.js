@@ -35,7 +35,6 @@ define(function(require) {
                 vm_dro.initialize(panel_dro);
 
                 if (!panel_work) {
-                    console.log("Calling Viewmodel_work tooling tab");
                     vm_work = new ViewModel_work(moduleContext);
                     panel_work = new Boiler.ViewTemplate(panel.getJQueryElement().find("#WORK_OFFSETS_PANEL"), vm_work.getTemplate(), vm_work.getNls());
                     ko.applyBindings( vm_work, panel_work.getDomElement());
