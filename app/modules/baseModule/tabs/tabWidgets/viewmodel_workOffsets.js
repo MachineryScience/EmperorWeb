@@ -17,8 +17,6 @@ define(function(require) {
         }
         this.getNls = function()
         {
-            nls.counter = nls.counter + 1;
-            console.log(nls.counter);
             return nls;
         }
 

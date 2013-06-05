@@ -61,6 +61,10 @@ define(function(require) {
 
         self.needRender = true;
 
+        self.infoText1 = ko.observable("");
+        self.infoText2 = ko.observable("");
+        self.infoText3 = ko.observable("");
+
         self.initSubscription = _.once(function()
         {
             self.linuxCNCServer.vars.backplot_async.data.subscribe( function(){ self.refreshBackplot();  } );
@@ -287,6 +291,14 @@ define(function(require) {
             gridGeometry4.vertices.push( new THREE.Vector3( span, 0, 0 ));
             gridGeometry4.computeLineDistances();
             scene.add( new THREE.Line(gridGeometry4, materialMinorGrid4, THREE.LinePieces ));
+
+            var infoStr1 = (" X from " + minx.toFixed(3) + " to " + maxx.toFixed(3) + " = span of " + (maxx-minx).toFixed(3));
+            var infoStr2 = (" Y from " + miny.toFixed(3) + " to " + maxy.toFixed(3) + " = span of " + (maxx-miny).toFixed(3));
+            var infoStr3 = (" Z from " + minz.toFixed(3) + " to " + maxz.toFixed(3) + " = span of " + (maxz-minz).toFixed(3));
+
+            self.infoText1(infoStr1);
+            self.infoText2(infoStr2);
+            self.infoText3(infoStr3);
 
         }
 

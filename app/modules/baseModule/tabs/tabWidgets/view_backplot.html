@@ -4,7 +4,15 @@
 
         <div class="with-small-padding"></div>
         <div class="" id="BACKPLOT_SIZER">
-            <div id="BACKPLOT_CONTENT" class="box-shadow" style="overflow:hidden; height: 300px; margin-top:-10px;" data-bind="event: { 'dblclick': setTopView }"></div>
+            <div id="BACKPLOT_CONTENT" class="box-shadow" style="overflow:hidden; height: 300px; margin-top:-10px;" data-bind="event: { 'dblclick': setTopView }">
+                <div style="position: relative;">
+                    <p style="background-color:rgba(0,0,0,0); position:absolute; top:0px; left:0px;  font-family: 'Lucida Console', Monaco, monospace;" class="pull-left">
+                        <span data-bind="text: infoText1"></span><br>
+                        <span data-bind="text: infoText2"></span><br>
+                        <span data-bind="text: infoText3"></span>
+                    </p>
+                </div>
+            </div>
         </div>
 
         <!--<i class="icon-arrow-down align-center normal_cursor" style="margin-top: -7px; display:block; width:100%; overflow:visible;"></i>-->
