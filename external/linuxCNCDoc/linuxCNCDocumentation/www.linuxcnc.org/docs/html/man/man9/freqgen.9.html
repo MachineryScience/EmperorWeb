@@ -1,0 +1,407 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:25 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/freqgen.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>FREQGEN</title>
+
+</head>
+<body>
+
+<h1 align="center">FREQGEN</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">freqgen &minus;
+software step pulse generation</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>OBSOLETE</b>
+- see <b>stepgen</b>&rsquo;s &rsquo;ctrl_type=v&rsquo;
+option.</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+freqgen step_type=</b><i>type0</i>[,<i>type1</i>...]</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>freqgen</b>
+is used to control stepper motors. The maximum step rate
+depends on the CPU and other factors, and is usually in the
+range of 10KHz to 50KHz. If higher rates are needed, a
+hardware step generator is a better choice.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>freqgen</b>
+runs the motor at a commanded velocity, subject to
+acceleration and velocity limits. It does not directly
+control position.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>freqgen</b>
+can control a maximum of eight motors. The number of
+motors/channels actually loaded depends on the number of
+<i>type</i> values given. The value of each <i>type</i>
+determines the outputs for that channel. <b>freqgen</b>
+supports 15 possible step types.</p>
+
+<p style="margin-left:11%; margin-top: 1em">By far the most
+common step type is &rsquo;0&rsquo;, standard step and
+direction. Others include up/down, quadrature, and a wide
+variety of three, four, and five phase patterns that can be
+used to directly control some types of motor windings. (When
+used with appropriate buffers of course.)</p>
+
+<p style="margin-left:11%; margin-top: 1em">Some of the
+stepping types are described below, but for more details
+(including timing diagrams) see the <b>stepgen</b> section
+of the HAL reference manual. <br>
+type 0: step/dir</p>
+
+<p style="margin-left:22%;">Two pins, one for step and one
+for direction. <b>make-pulses</b> must run at least twice
+for each step (once to set the step pin true, once to clear
+it). This limits the maximum step rate to half (or less) of
+the rate that can be reached by types 2-14. The parameters
+<b>steplen</b> and <b>stepspace</b> can further lower the
+maximum step rate. Parameters <b>dirsetup</b> and
+<b>dirhold</b> also apply to this step type.</p>
+
+<p style="margin-left:11%;">type 1: up/down</p>
+
+<p style="margin-left:22%;">Two pins, one for &rsquo;step
+up&rsquo; and one for &rsquo;step down&rsquo;. Like type 0,
+<b>make-pulses</b> must run twice per step, which limits the
+maximum speed.</p>
+
+<p style="margin-left:11%;">type 2: quadrature</p>
+
+<p style="margin-left:22%;">Two pins, phase-A and phase-B.
+For forward motion, A leads B. Can advance by one step every
+time <b>make-pulses</b> runs.</p>
+
+<p style="margin-left:11%;">type 3: three phase, full
+step</p>
+
+<p style="margin-left:22%;">Three pins, phase-A, phase-B,
+and phase-C. Three steps per full cycle, then repeats. Only
+one phase is high at a time - for forward motion the pattern
+is A, then B, then C, then A again.</p>
+
+<p style="margin-left:11%;">type 4: three phase, half
+step</p>
+
+<p style="margin-left:22%;">Three pins, phases A through C.
+Six steps per full cycle. First A is high alone, then A and
+B together, then B alone, then B and C together, etc.</p>
+
+<p style="margin-left:11%;">types 5 through 8: four phase,
+full step</p>
+
+<p style="margin-left:22%;">Four pins, phases A through D.
+Four steps per full cycle. Types 5 and 6 are suitable for
+use with unipolar steppers, where power is applied to the
+center tap of each winding, and four open-collector
+transistors drive the ends. Types 7 and 8 are suitable for
+bipolar steppers, driven by two H-bridges.</p>
+
+<p style="margin-left:11%;">types 9 and 10: four phase,
+half step</p>
+
+<p style="margin-left:22%;">Four pins, phases A through D.
+Eight steps per full cycle. Type 9 is suitable for unipolar
+drive, and type 10 for bipolar drive.</p>
+
+<p style="margin-left:11%;">types 11 and 12: five phase,
+full step</p>
+
+<p style="margin-left:22%;">Five pins, phases A through E.
+Five steps per full cycle. See HAL reference manual for the
+patterns.</p>
+
+<p style="margin-left:11%;">types 13 and 14: five phase,
+half step</p>
+
+<p style="margin-left:22%;">Five pins, phases A through E.
+Ten steps per full cycle. See HAL reference manual for the
+patterns.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>freqgen.make-pulses</b>
+(no floating-point)</p>
+
+<p style="margin-left:22%;">Generates the step pulses,
+using information computed by <b>update-freq</b>. Must be
+called as frequently as possible, to maximize the attainable
+step rate and minimize jitter. Operates on all channels at
+once.</p>
+
+
+<p style="margin-left:11%;"><b>freqgen.capture-position</b>
+(uses floating point)</p>
+
+<p style="margin-left:22%;">Captures position feedback
+value from the high speed code and makes it available on a
+pin for use elsewhere in the system. Operates on all
+channels at once.</p>
+
+<p style="margin-left:11%;"><b>freqgen.update-freq</b>
+(uses floating point)</p>
+
+<p style="margin-left:22%;">Accepts a velocity command and
+converts it into a form usable by <b>make-pulses</b> for
+step generation. Operates on all channels at once.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>freqgen.</b><i>N</i><b>.counts</b>
+s32 out</p>
+
+<p style="margin-left:22%;">The current position, in
+counts, for channel <i>N</i>. Updated by
+<b>capture-position</b>.</p>
+
+
+<p style="margin-left:11%;"><b>freqgen.</b><i>N</i><b>.position-fb</b>
+float out</p>
+
+<p style="margin-left:22%;">The current position, in length
+units (see parameter <b>position-scale</b>). Updated by
+<b>capture-position</b>.</p>
+
+
+<p style="margin-left:11%;"><b>freqgen.</b><i>N</i><b>.velocity</b>
+float in (<b>freqgen</b> only)</p>
+
+<p style="margin-left:22%;">Commanded velocity, in length
+units per second (see parameter <b>velocity-scale</b>).</p>
+
+
+<p style="margin-left:11%;"><b>freqgen.</b><i>N</i><b>.step</b>
+bit out (step type 0 only)</p>
+
+<p style="margin-left:22%;">Step pulse output.</p>
+
+
+<p style="margin-left:11%;"><b>freqgen.</b><i>N</i><b>.dir</b>
+bit out (step type 0 only)</p>
+
+<p style="margin-left:22%;">Direction output: low for
+forward, high for reverse.</p>
+
+
+<p style="margin-left:11%;"><b>freqgen.</b><i>N</i><b>.up</b>
+bit out (step type 1 only)</p>
+
+<p style="margin-left:22%;">Count up output, pulses for
+forward steps.</p>
+
+
+<p style="margin-left:11%;"><b>freqgen.</b><i>N</i><b>.down</b>
+bit out (step type 1 only)</p>
+
+<p style="margin-left:22%;">Count down output, pulses for
+reverse steps.</p>
+
+
+<p style="margin-left:11%;"><b>freqgen.</b><i>N</i><b>.phase-A</b>
+thru <b>phase-E</b> bit out (step types 2-14 only)</p>
+
+<p style="margin-left:22%;">Output bits. <b>phase-A</b> and
+<b>phase-B</b> are present for step types 2-14,
+<b>phase-C</b> for types 3-14, <b>phase-D</b> for types
+5-14, and <b>phase-E</b> for types 11-14. Behavior depends
+on selected stepping type.</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>freqgen.</b><i>N</i><b>.frequency</b>
+float ro</p>
+
+<p style="margin-left:22%;">The current step rate, in steps
+per second, for channel <i>N</i>.</p>
+
+
+<p style="margin-left:11%;"><b>freqgen.</b><i>N</i><b>.maxaccel</b>
+float rw</p>
+
+<p style="margin-left:22%;">The acceleration/deceleration
+limit, in steps per second squared.</p>
+
+
+<p style="margin-left:11%;"><b>freqgen.</b><i>N</i><b>.maxfreq</b>
+float rw (<b>freqgen</b> only)</p>
+
+<p style="margin-left:22%;">The maximum allowable velocity,
+in steps per second. If the requested maximum velocity
+cannot be reached with the current <b>make-pulses</b> thread
+period, it will be reset to the highest attainable
+value.</p>
+
+
+<p style="margin-left:11%;"><b>freqgen.</b><i>N</i><b>.position-scale</b>
+float rw</p>
+
+<p style="margin-left:22%;">The scaling for position
+feedback, in steps per length unit.</p>
+
+
+<p style="margin-left:11%;"><b>freqgen.</b><i>N</i><b>.velocity-scale</b>
+float rw</p>
+
+<p style="margin-left:22%;">The scaling for the velocity
+command, in steps per length unit.</p>
+
+
+<p style="margin-left:11%;"><b>freqgen.</b><i>N</i><b>.rawcounts</b>
+s32 ro</p>
+
+<p style="margin-left:22%;">The position in counts, as
+updated by <b>make-pulses</b>. (Note: this is updated more
+frequently than the <b>counts</b> pin.)</p>
+
+
+<p style="margin-left:11%;"><b>freqgen.</b><i>N</i><b>.steplen</b>
+u32 rw (step type 0 only)</p>
+
+<p style="margin-left:22%;">The length of the step pulses,
+in <b>make-pulses</b> periods. Measured from rising edge to
+falling edge.</p>
+
+
+<p style="margin-left:11%;"><b>freqgen.</b><i>N</i><b>.stepspace</b>
+u32 rw (step type 0 only)</p>
+
+<p style="margin-left:22%;">The minimum space between step
+pulses, in <b>make-pulses</b> periods. Measured from falling
+edge to rising edge. The actual time depends on the step
+rate and can be much longer.</p>
+
+
+<p style="margin-left:11%;"><b>freqgen.</b><i>N</i><b>.dirsetup</b>
+u32 rw (step type 0 only)</p>
+
+<p style="margin-left:22%;">The minimum setup time from
+direction to step, in <b>make-pulses</b> periods. Measured
+from change of direction to rising edge of step.</p>
+
+
+<p style="margin-left:11%;"><b>freqgen.</b><i>N</i><b>.dirhold</b>
+u32 rw (step type 0 only)</p>
+
+<p style="margin-left:22%;">The minimum hold time of
+direction after step, in <b>make-pulses</b> periods.
+Measured from falling edge of step to change of
+direction.</p>
+
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>freqgen</b>
+should have an <b>enable</b> pin.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>freqgen</b>&rsquo;s
+command pin should be called <b>velocity-cmd</b>, not
+<b>velocity</b>, for clarity and consistency with
+<b>stepgen</b>.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>freqgen</b>
+should use <b>maxvel</b>, not <b>maxfreq</b>. (In other
+words, the velocity limit should be scaled in length units
+per second, not steps per second. The scale parameter can be
+set to 1.0 if it is desired to work in steps instead of
+length units.)</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>freqgen</b>&rsquo;s
+maxaccel parameter should be in length units per second
+squared, not steps per second squared, for consistency with
+<b>stepgen</b>.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>freqgen</b>
+should use <b>position-scale</b> for scaling both command
+and feedback, <b>velocity-scale</b> is redundant and should
+be eliminated.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Step type 1
+(up/down) should respect the <b>steplen</b> and
+<b>stepspace</b> limits.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Timing
+parameters <b>steplen</b>, <b>stepspace</b>,
+<b>dirsetup</b>, and <b>dirhold</b> should be in
+nano-seconds, not <b>make-pulses</b> periods. That would
+allow the period to be changed without requiring the
+parameters to be recalculated.</p>
+
+<p style="margin-left:11%; margin-top: 1em">All of these
+bugs have been fixed in <b>stepgen</b>. Only <b>stepgen</b>
+will continue to be maintained, since <b>freqgen</b>
+contains large amounts of code that duplicates code in
+<b>stepgen</b>. Since <b>stepgen</b> can provide the same
+functionality, there is no reason to maintain the duplicate
+code. <b>freqgen</b> may be eliminated at any time, and
+almost certainly <b>will</b> be eliminated for the version
+2.2 release of EMC.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>stepgen(9)</b></p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/freqgen.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

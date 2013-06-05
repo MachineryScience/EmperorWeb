@@ -1,0 +1,1720 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/ini_config_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:25 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Configuration de LinuxCNC</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Configuration de LinuxCNC</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:ini-configuration"></a> </p></div>
+</div>
+</div>
+<h2 id="_script_de_lancement">1. Script de lancement</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>LinuxCNC est lancé par le fichier de script <em>linuxcnc</em>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>linuxcnc [options] [&lt;ini-file&gt;]</tt></pre>
+</div></div>
+<div class="paragraph"><p>Avec les options suivantes:
+* <em>-v</em> = verbose - informations de fonctionnement
+* <em>-d</em> = commande d'écho à l'écran pour le débogage</p></div>
+<div class="paragraph"><p>Le fichier de script <em>linuxcnc</em> lit le fichier ini puis lance LinuxCNC.
+La section [HAL] du fichier ini, spécifie l&#8217;ordre de chargement des fichiers
+de HAL, si plusieurs sont utilisés. Après que les fichiers HAL soient chargés,
+l&#8217;interface graphique est chargée à son tour puis le fichier HAL POSTGUI.
+Si des objets pyvcp ont été créés avec des pins de HAL, le fichier <em>postgui.hal</em>
+doit effectuer les raccordements à ces pins, se reporter à la section
+<a href="#sub:Section-HAL">HAL</a> pour plus de détails.</p></div>
+<div class="paragraph"><p>Si aucun fichier ini n&#8217;est passé en argument au script <em>linuxcnc</em>, le sélecteur
+de configuration est lancé pour permettre à l&#8217;utilisateur de choisir parmi les
+exemples de configuration existants.</p></div>
+<div class="imageblock" id="fig:selecteur-de-configuration" style="text-align:center;">
+<div class="content">
+<img src="../common/images/configuration-selector1_fr.png" alt="../common/images/configuration-selector1_fr.png" />
+</div>
+<div class="title">Figure 1. Sélecteur de configuration</div>
+</div>
+</div>
+<h2 id="_fichiers_utilis_s_pour_la_configuration">2. Fichiers utilisés pour la configuration</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>LinuxCNC est entièrement configuré avec des fichiers textes classiques.
+Tous ces fichiers peuvent être lus et modifiés dans n&#8217;importe quel
+éditeur de texte disponible dans toute distribution Linux.<span class="footnote"><br />[Ne
+pas confondre un éditeur de texte et un traitement de texte. Un
+éditeur de texte comme gedit ou kwrite produisent des fichiers
+uniquement en texte. Les lignes de textes sont séparées les unes des
+autres. Un traitement de texte comme Open Office produit des fichiers
+avec des paragraphes, des mises en formes des mots. Ils ajoutent des
+codes de contrôles, des polices de formes et de tailles variées etc. Un
+éditeur de texte n&#8217;a rien de tout cela.]<br /></span>
+Soyez prudent lorsque vous modifierez ces fichiers, certaines
+erreurs pourraient empêcher le démarrage de LinuxCNC. Ces fichiers sont lus à
+chaque fois que le logiciel démarre. Certains d&#8217;entre eux sont lus de
+nombreuses fois pendant l&#8217;exécution de LinuxCNC.</p></div>
+<div class="paragraph"><p>Les fichiers de configuration inclus:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>INI</em>  Le fichier ini écrase les valeurs par défaut compilées dans
+    le code de LinuxCNC. Il contient également des sections qui sont lues
+    directement par HAL (Hardware Abstraction Layer, couche
+    d&#8217;abstraction matérielle).
+</p>
+</li>
+<li>
+<p>
+<em>HAL</em>  Les fichiers hal installent les modules de process, ils
+    créent les liens entre les signaux de LinuxCNC et les broches spécifiques du
+    matériel.
+</p>
+</li>
+<li>
+<p>
+<em>VAR</em>  Ce fichier contient une suite de numéros de variables. Ces
+    variables contiennent les paramètres qui seront utilisés par
+    l&#8217;interpréteur. Ces valeurs sont enregistrées et réutilisées d&#8217;une
+    exécution à l&#8217;autre.
+</p>
+</li>
+<li>
+<p>
+<em>TBL</em>  Ce fichier contient les informations relatives aux outils.
+    Voir la section <em>Fichier d&#8217;outils</em> du Manuel de l&#8217;utilisateur pour plus
+    d&#8217;infos.
+</p>
+</li>
+<li>
+<p>
+<em>NML</em>  Ce fichier configure les voies de communication utilisées
+    par LinuxCNC. Il est normalement réglé pour lancer toutes les communications
+    avec un seul ordinateur, peut être modifié pour communiquer entre
+    plusieurs ordinateurs.
+</p>
+</li>
+<li>
+<p>
+<em>.linuxcncrc</em>  Ce fichier enregistre des informations
+    spécifiques à l&#8217;utilisateur, il a été créé pour enregistrer le nom du
+    répertoire lorsque l&#8217;utilisateur choisit sa première configuration
+    de LinuxCNC.<span class="footnote"><br />[Habituellement, ce fichier est dans le répertoire home
+    de l&#8217;utilisateur (ex: <em>/home/robert/</em> )]<br /></span>
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Les éléments avec le repère <em>(hal)</em> sont utilisés seulement pour les
+fichiers de HAL en exemples. C&#8217;est
+une bonne convention. D&#8217;autres éléments sont utilisés directement par
+LinuxCNC et doivent toujours avoir la section et le nom donné à l&#8217;item.</p></div>
+</div>
+<h2 id="_double_passe_twopass">3. Double passe (TWOPASS)</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>LinuxCNC 2.5 supporte le processus dit TWOPASS des fichiers de configuration hal,
+ce qui aide à la modularité des fichiers hal et améliore leur lisibilité.
+(les fichiers Hal sont spécifiés dans le fichier ini de LinuxCNC, dans
+l&#8217;instance HAL sous la forme <em>[HAL]HALFILE=nomdufichier</em>.</p></div>
+<div class="paragraph"><p>Normalement, un jeu de un ou plusieurs fichiers de configuration HAL doivent
+utiliser une seule et unique ligne loadrt pour charger le module du kernel qui
+pourra gérer de multiples instances d&#8217;un même composant. Par exemple: si vous
+utilisez une portes AND à deux entrées, composant (and2), à trois endroits
+différents de votre configuration, vous ne devez avoir que cette seule ligne
+quelque part pour le spécifier:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt and2 count=3</tt></pre>
+</div></div>
+<div class="paragraph"><p>Ce qui fournira finalement les composants and2.0, and2.1, and2.2.</p></div>
+<div class="paragraph"><p>Les configurations seront plus lisibles si vous spécifiez les composants sous
+la forme names=option quand c&#8217;est supporté, par exemple:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt and2 names=aa,ab,ac</tt></pre>
+</div></div>
+<div class="paragraph"><p>Ce qui nommera les composants aa, ab, ac.</p></div>
+<div class="paragraph"><p>Il pourrait apparaitre un problème de maintenance pour garder la trace des
+composants et de leur noms après avoir ajouté (ou enlevé) un composant,
+vous devrez trouver et mettre à jour, la ligne de directives de loadrt,
+applicable à ce composant.</p></div>
+<div class="paragraph"><p>Le processus TWOPASS est activé par inclusion d&#8217;un paramètre dans le fichier ini:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[HAL]TWOPASS=anything</tt></pre>
+</div></div>
+<div class="paragraph"><p>Avec ce réglage, vous pouvez avoir de multiples spécifications comme:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt and2 names=aa
+ ...
+loadrt and2 names=ab,ac
+ ...
+loadrt and2 names=ad</tt></pre>
+</div></div>
+<div class="paragraph"><p>Ces commandes peuvent être placées dans différents fichiers HALFILES. Les
+HALFILES sont traités dans leur ordre d&#8217;apparition dans le fichier ini.</p></div>
+<div class="paragraph"><p>Avec le processus double passe, tous les [HAL]HALFILES sont lus une première
+fois et les multiples apparitions de la directive loadrt sont cumulées pour
+chaque module. Aucune commande hal n&#8217;est exécutée lors de cette passe initiale.</p></div>
+<div class="paragraph"><p>Après la passe initiale, les modules sont automatiquement chargés
+en nombre égal au nombre total lors de l&#8217;utilisation de count=option ou
+de tous les noms spécifiés individuellement lors de l&#8217;utilisation de
+names=option.</p></div>
+<div class="paragraph"><p>Une seconde passe est alors faite pour exécuter toutes les autres instructions
+de hal spécifiées dans les HALFILES.  Les commandes addf qui associent les
+fonctions de composants avec l&#8217;exécution du thread sont exécutées selon leur
+ordre d&#8217;apparition avec les autres commandes dans cette seconde passe.</p></div>
+<div class="paragraph"><p>Bien que vous puissiez utiliser indifféremment les options avec count= ou names=,
+elles sont toutefois exclusives. Un seul type peut être utilisé pour un même
+module.</p></div>
+<div class="paragraph"><p>Le processus TWOPASS n&#8217;est pas effectif lors de l&#8217;usage de names=option.
+Cette option permet d&#8217;avoir un nom unique qui soit mnémonique ou plus pertinent
+avec la configuration. Par exemple: si vous utilisez un composant <em>dérivé</em> pour
+estimer la vitesse et l&#8217;accélération de chacun des coordonnées (x,y,z), utiliser
+la méthode count= donnera un composant au nom ésotérique comme ddt.0, ddt.1,
+ddt.2, etc.</p></div>
+<div class="paragraph"><p>Alternativement, l&#8217;utilisation de names=option comme:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt ddt names=xvit,yvit,zvit
+ ...
+loadrt ddt names=xaccel,yaccel,zaccel</tt></pre>
+</div></div>
+<div class="paragraph"><p>donnera des composants plus parlants, nommés xvit,yvit,zvit, xaccel,yaccel,
+zaccel.</p></div>
+<div class="paragraph"><p>Beaucoup de composants fournis avec la distribution ont été créés avec
+<em>comp utility</em> et supportent la méthode names=option. Il s&#8217;agit notamment de
+composants logiques qui sont les briques de beaucoup de configurations HAL.</p></div>
+<div class="paragraph"><p>Exemples d&#8217;inclusions:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>and2,ddt,deadzone,flipflop,or2,or4,mux2,mux4,scale,sum2,timedelay,lowpass</tt></pre>
+</div></div>
+<div class="paragraph"><p>et beaucoup d&#8217;autres.</p></div>
+<div class="paragraph"><p>Les composants utilisateur créés avec <em>comp utility</em> supportent également
+automatiquement la méthode names=option.  En plus des composants générés
+avec <em>comp utility</em>, quelques autres composants comme <em>encoder</em> et
+<em>pid</em> supportent aussi names=option.</p></div>
+</div>
+<h2 id="_organisation_du_fichier_ini">4. Organisation du fichier ini</h2>
+<div class="sectionbody">
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Organisation du fichier ini
+</dt>
+<dd>
+<p>
+
+Un fichier ini typique suit une organisation simple;
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+les commentaires.
+</p>
+</li>
+<li>
+<p>
+les sections.
+</p>
+</li>
+<li>
+<p>
+les variables.
+</p>
+</li>
+</ul></div>
+</dd>
+</dl></div>
+<div class="paragraph"><p>Chacun de ces éléments est séparé, sur une seule ligne. Chaque fin de
+ligne ou retour chariot crée un nouvel élément.</p></div>
+<h3 id="_les_commentaires">4.1. Les commentaires </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Une ligne de commentaires débute avec un <strong>;</strong> ou un <strong>#</strong>. Si le logiciel qui
+analyse le fichier ini rencontre l&#8217;un ou l&#8217;autre de ces caractères, le
+reste de la ligne est ignoré. Les commentaires peuvent être utilisés
+pour décrire ce que font les éléments du fichier ini.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>; Ceci est le fichier de configuration de ma petite fraiseuse.</tt></pre>
+</div></div>
+<div class="paragraph"><p>Des commentaires peuvent également être utilisés pour choisir entre
+plusieurs valeurs d&#8217;une seule variable.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>DISPLAY = axis
+# DISPLAY = touchy</tt></pre>
+</div></div>
+<div class="paragraph"><p>Dans cette liste, la variable DISPLAY est positionnée sur
+axis puisque l&#8217;autre est commentée. Si quelqu&#8217;un édite une
+liste comme celle-ci et par erreur, dé-commente deux lignes, c&#8217;est la
+première rencontrée qui sera utilisée.</p></div>
+<div class="paragraph"><p>Noter que dans une ligne de variables, les caractères <strong>#</strong> et <strong>;</strong>
+n&#8217;indiquent pas un commentaire.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>INCORRECT = valeur     # et un commentaire
+
+# Commentaire correct
+CORRECT = valeur</tt></pre>
+</div></div>
+<h3 id="_les_sections">4.2. Les sections </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les différentes parties d&#8217;un fichier .ini sont regroupées en sections.
+Une section commence par son nom en majuscules entre crochets [UNE_SECTION].
+L&#8217;ordre des sections est sans importance.</p></div>
+<div class="paragraph"><p>Les sections suivantes sont utilisées par LinuxCNC:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>[<a href="#sub:Section-EMC">EMC</a>]</em> informations générales.
+</p>
+</li>
+<li>
+<p>
+<em>[<a href="#sub:Section-DISPLAY">DISPLAY</a>]</em> sélection du type d&#8217;interface graphique.
+</p>
+</li>
+<li>
+<p>
+<em>[<a href="#sub:Section-FILTER">FILTER</a>]</em> sélection d&#8217;un programme de filtrage.
+</p>
+</li>
+<li>
+<p>
+<em>[<a href="#sub:Section-RS274NGC">RS274NGC</a>]</em> ajustements utilisés par l&#8217;interpréteur
+de g-code.
+</p>
+</li>
+<li>
+<p>
+<em>[<a href="#sub:Section-EMCMOT">EMCMOT</a>]</em> réglages utilisés par le contrôleur
+de mouvements temps réel.
+</p>
+</li>
+<li>
+<p>
+<em>[<a href="#sub:Section-TASK">TASK</a>]</em> réglages utilisés par le contrôleur de tâche.
+</p>
+</li>
+<li>
+<p>
+<em>[<a href="#sub:Section-HAL">HAL</a>]</em> spécifications des fichiers .hal.
+</p>
+</li>
+<li>
+<p>
+<em>[<a href="#sub:Section-HALUI">HALUI</a>]</em> commandes MDI utilisées par HALUI.
+</p>
+</li>
+<li>
+<p>
+<em>[<a href="#sub:Section-TRAJ">TRAJ</a>]</em> réglages additionnels utilisés par le contrôleur
+de mouvements temps réel.
+</p>
+</li>
+<li>
+<p>
+<em>[<a href="#sub:Sections-AXIS">AXIS_n</a>]</em> groupes de variables relatives à chaque axe.
+</p>
+</li>
+<li>
+<p>
+<em>[<a href="#sub:Section-EMCIO">EMCIO</a>]</em> réglages utilisés par le contrôleur
+d&#8217;entrées/sorties.
+</p>
+</li>
+</ul></div>
+<h3 id="_les_variables">4.3. Les variables </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Une ligne de variables est composée d&#8217;un nom de variable, du signe
+égal (=) et d&#8217;une valeur. Tout, du premier caractère non blanc qui suit
+le signe = jusqu'à la fin de la ligne, est passé comme valeur à la
+variable. Vous pouvez donc intercaler des espaces entre les symboles si
+besoin. Un nom de variable est souvent appelé un mot clé.</p></div>
+<div class="paragraph"><p>Les paragraphes suivants détaillent chaque section du fichier de
+configuration, en utilisant des exemples de variables dans les lignes
+de configuration.</p></div>
+<div class="paragraph"><p>Certaines de ces variables sont utilisées par LinuxCNC. Elles doivent
+toujours utiliser le nom de section et le nom de variable dans leur
+appellation. D&#8217;autres variables ne sont utilisées que par HAL. Les noms
+des sections et les noms des variables indiquées, sont ceux qui sont
+utilisés dans les exemples de fichiers de configuration.</p></div>
+<div class="paragraph"><p>Les variables personnalisées peuvent être utilisées dans vos fichiers
+HAL avec la syntaxe suivante:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>MACHINE = MaVariable</tt></pre>
+</div></div>
+<h3 id="_sections_et_variables_utilisateur_a_id_sub_variables_utilisateur_a">4.4. Sections et variables utilisateur<a id="sub:variables-utilisateur"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p>Certaines configurations utilisent des sections utilisateur et des variables
+personnalisées pour regrouper les paramètres en un seul emplacement pour
+améliorer la lisibilité du fichier ini.</p></div>
+<div class="paragraph"><p>Pour utiliser une section de variable utilisateur dans un fichier HAL, ajouter
+la section et la variable dans le fichier INI.</p></div>
+<div class="listingblock">
+<div class="title">Exemple de section utilisateur</div>
+<div class="content">
+<pre><tt>[OFFSETS]
+OFFSET_1 = 0.1234</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour ajouter une variable utilisateur à une section LinuxCNC, inclure simplement
+cette variable dans la section souhaitée.</p></div>
+<div class="listingblock">
+<div class="title">Exemple de variable utilisateur</div>
+<div class="content">
+<pre><tt>[AXIS_0]
+TYPE = LINEAR
+...
+SCALE = 16000</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour utiliser une variable utilisateur dans un fichier HAL, utiliser les noms
+de section et de variable en lieu et place de leurs valeurs.</p></div>
+<div class="listingblock">
+<div class="title">Exemple d&#8217;utilisation dans un fichier HAL</div>
+<div class="content">
+<pre><tt>setp offset.1.offset [OFFSETS]OFFSET_1
+setp stepgen.0.position-scale [AXIS_0]SCALE</tt></pre>
+</div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">La valeur stockée dans la variable doit correspondre au type spécifié pour la
+pin du composant.</td>
+</tr></table>
+</div>
+</div>
+<h2 id="sec:Details-fichier-INI">5. Détails des sections du fichier ini</h2>
+<div class="sectionbody">
+<h3 id="sub:Section-EMC">5.1. Section [EMC]</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>VERSION_ = $Revision: 1.5 $</em> - Le numéro de version du fichier INI.
+La valeur indiquée ici semble étrange, car elle est automatiquement mise
+à jour lors de l&#8217;utilisation du système de contrôle de révision.
+C&#8217;est une bonne idée de changer ce numéro à chaque fois que vous modifiez
+votre fichier. Si vous voulez le modifier manuellement, il suffit de
+changer le numéro sans toucher au reste.
+</p>
+</li>
+<li>
+<p>
+<em>MACHINE = ma machine</em> - C&#8217;est le nom du contrôleur, qui est imprimé dans
+le haut de la plupart des fenêtres. Vous pouvez insérer ce que vous voulez ici
+tant que ça reste sur une seule ligne.
+</p>
+</li>
+<li>
+<p>
+<em>DEBUG = 0</em> - Niveau de débogage 0 signifie qu&#8217;aucun message ne sera affiché
+dans le terminal pendant le fonctionnement de LinuxCNC. Les drapeaux de débogage
+ne sont généralement utiles que pour les développeurs.
+</p>
+</li>
+</ul></div>
+<h3 id="sub:Section-DISPLAY">5.2. Section [DISPLAY]</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Les différentes interfaces graphiques utilisent différentes options
+qui ne sont pas supportées par toutes les interfaces utilisateur.
+Les deux principales interfaces pour LinuxCNC sont <em>AXIS</em> et <em>Touchy</em>.
+Axis est une interface pour une utilisation avec un ordinateur classique et
+son moniteur, Touchy est à utiliser avec les ordinateurs à écran tactile.
+Pour plus d&#8217;informations, voire la section Interfaces du Manuel de l&#8217;utilisateur.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>DISPLAY = axis</em> - Le nom de l&#8217;interface graphique à utiliser. Les options
+disponibles sont les suivantes: <em>axis</em>, <em>touchy</em>,
+<em>keystick</em>,  <em>mini</em>, <em>tklinuxcnc</em>,
+<em>xlinuxcnc</em>, 
+</p>
+</li>
+<li>
+<p>
+<em>POSITION_OFFSET = RELATIVE</em> - Le système de coordonnées (RELATIVE ou MACHINE)
+à utiliser au démarrage de l&#8217;interface utilisateur. Le système de coordonnées
+RELATIVE reflète le G92 et le décalage d&#8217;origine G5x actuellement actifs.
+</p>
+</li>
+<li>
+<p>
+<em>POSITION_FEEDBACK = ACTUAL</em> - Valeur de la position (COMMANDED ou ACTUAL) à
+afficher au démarrage de l&#8217;interface utilisateur. La position COMMANDED est la
+position exacte requise par LinuxCNC. La position ACTUAL est la position
+retournée par l'électronique des moteurs.
+</p>
+</li>
+<li>
+<p>
+<em>MAX_FEED_OVERRIDE = 1.2</em> - La correction de vitesse maximum que l&#8217;opérateur
+peut utiliser. 1.2 signifie 120% de la vitesse programmée.
+</p>
+</li>
+<li>
+<p>
+<em>MIN_SPINDLE_OVERRIDE = 0.5</em> - Correction de vitesse minimum de broche que
+l&#8217;opérateur pourra utiliser. 0.5 signifie 50% de la vitesse de broche
+programmée. (utile si il est dangereux de démarrer un programme avec une
+vitesse de broche trop basse).
+</p>
+</li>
+<li>
+<p>
+<em>MAX_SPINDLE_OVERRIDE = 1.0</em> - Correction de vitesse maximum de broche que
+l&#8217;opérateur pourra utiliser. 1.0 signifie 100% de la vitesse de broche programmée.
+</p>
+</li>
+<li>
+<p>
+<em>PROGRAM_PREFIX = ~/linuxcnc/nc_files</em> - Répertoire par défaut des fichiers
+de g-codes et emplacement des M-codes définis par l&#8217;utilisateur.
+Les recherches de fichiers s&#8217;effectueront d&#8217;abords dans cet emplacement,
+avant les chemins des sous-programmes et des fichiers M utilisateur, si
+il est spécifié dans la section [RS274NGC].
+</p>
+</li>
+<li>
+<p>
+<em>INTRO_GRAPHIC = linuxcnc.gif</em> - L&#8217;image affichée sur l'écran d&#8217;accueil.
+</p>
+</li>
+<li>
+<p>
+<em>INTRO_TIME = 5</em> - Durée d&#8217;affichage de l'écran d&#8217;accueil.
+</p>
+</li>
+<li>
+<p>
+<em>CYCLE_TIME = 0.05</em> - Cycle time in seconds that display will sleep between
+polls.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Les éléments suivants sont utilisés uniquement si AXIS est sélectionné comme
+programme d&#8217;interface utilisateur.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>DEFAULT_LINEAR_VELOCITY = .25</em> - Vitesse minimum par défaut pour les jogs
+linéaires, en unités machine par seconde. Seulement utilisé dans l&#8217;interface
+AXIS.
+</p>
+</li>
+<li>
+<p>
+<em>MIN_VELOCITY = .01</em> - Valeur approximative minimale du curseur de vitesse de
+jog.
+</p>
+</li>
+<li>
+<p>
+<em>MAX_LINEAR_VELOCITY = 1.0</em> - Vitesse maximum par défaut pour les jogs
+linéaires, en unités machine par seconde. Seulement utilisé dans l&#8217;interface AXIS.
+</p>
+</li>
+<li>
+<p>
+<em>MIN_LINEAR_VELOCITY = .01</em> - Approximativement la valeur minimale du curseur
+de vitesse de jog.
+</p>
+</li>
+<li>
+<p>
+<em>DEFAULT_ANGULAR_VELOCITY = .25</em> - Vitesse minimum par défaut pour les jogs
+angulaires, en unités machine par seconde. Seulement utilisé dans l&#8217;interface AXIS.
+</p>
+</li>
+<li>
+<p>
+<em>MIN_ANGULAR_VELOCITY = .01</em> - Valeur approximative minimale du curseur de
+vitesse angulaire de jog.
+</p>
+</li>
+<li>
+<p>
+<em>MAX_ANGULAR_VELOCITY = 1.0</em> - Vitesse maximum par défaut pour les jogs
+angulaires, en unités machine par seconde. Seulement utilisé dans l&#8217;interface AXIS.
+</p>
+</li>
+<li>
+<p>
+<em>INCREMENTS = 1 mm, .5 mm, &#8230;</em> - Définit les incréments disponibles pour
+le jog incrémental. Les incréments peuvent être utilisés pour remplacer la
+valeur par défaut. Ces valeurs doivent contenir des nombres décimaux
+(ex. 0.1000) ou des nombres fractionnaires (ex. 1/16), éventuellement suivis
+par une unité parmi <em>cm</em>, <em>mm</em>, <em>um</em>, <em>inch</em>, <em>in</em> ou <em>mil</em>. Si aucune unité
+n&#8217;est spécifiée, les unités natives de la machine seront utilisées.
+</p>
+</li>
+<li>
+<p>
+Distances métriques et impériales peuvent être mélangées<br />
+<em>INCREMENTS = 1 inch, 1 mil, 1 cm, 1 mm, 1 um</em> sont des entrées valides.
+</p>
+</li>
+<li>
+<p>
+<em>OPEN_FILE = /chemin/complet/du/fichier.ngc</em>
+Le fichier ngc à utiliser au démarrage d&#8217;AXIS. Utilisez une chaîne vide ""
+et aucun fichier ne sera chargé au démarrage.
+</p>
+</li>
+<li>
+<p>
+<em>EDITOR = gedit</em> - L'éditeur à utiliser lors du choix <em>Éditer fichier</em> du
+menu d&#8217;AXIS, pour éditer le G-code. Ceci doit être configuré pour que cet item
+de menu s&#8217;active. Une autre possibilité valide est: <em>gnome-terminal -e nano</em>.
+</p>
+</li>
+<li>
+<p>
+<em>TOOL_EDITOR = tooledit</em> - L'éditeur de texte à utiliser pour éditer les
+tables d&#8217;outils. (par exemple en sélectionnant "Fichiers &gt; Éditer la table.
+d&#8217;outils" dans le menu d&#8217;Axis). D&#8217;autres entrées comme <em>gedit</em>,
+<em>gnome-terminal -e vim</em>, <em>gvim</em> ou <em>nano</em> sont valides.
+</p>
+</li>
+<li>
+<p>
+<em>PYVCP = /filename.xml</em> - Le fichier de description du panneau PyVCP. Voir
+la section PyVCP.
+</p>
+</li>
+<li>
+<p>
+<em>LATHE = 1</em> - Passe l&#8217;affichage en mode tour, avec vue de dessus et la visu
+soit en rayon, soit en diamètre.
+</p>
+</li>
+<li>
+<p>
+<em>GEOMETRY = XYZABCUVW</em> - Contrôle de prévisualisation du parcours d&#8217;outil
+d&#8217;un mouvement rotatif. Cet item consiste en une suite de lettre d&#8217;axe,
+optionnellement précédé d&#8217;un signe <strong>-</strong>. Seuls, les axes définis par
+<strong>[TRAJ]AXES</strong> peuvent être utilisés. Cette séquence spécifie l&#8217;ordre dans lequel
+l&#8217;effet de chaque axe est appliqué. Un signe <strong>-</strong> inverse le sens de la rotation.
+La chaine GEOMETRY correcte dépend de la configuration de la machine et
+de la cinématique utilisée pour la contrôler. La chaine exemple GEOMETRY=XYZBCUVW
+est pour une machine à 5 axes pour laquelle la cinématique déplace UVW
+en coordonnées système de l&#8217;outil et XYZ déplace la pièce en coordonnées
+système. L&#8217;ordre des lettres est important, parce qu&#8217;il donne expressément
+l&#8217;ordre dans lequel les différentes transformations seront appliquées.
+Par exemple: tourner autour de C puis de B est différent de tourner
+autour de B puis de C. La géométrie n&#8217;a pas d&#8217;effet sans rotation d&#8217;axes.
+</p>
+</li>
+<li>
+<p>
+<em>ARCDIVISION = 64</em> - Ajuste la valeur de prévisualisation des arcs. Les arcs
+sont visualisés en les divisant par un nombre de lignes droites; un semi-cercle
+est divisé en <em>ARCDIVISION</em> de tronçons. Les valeurs élevées donnent une
+meilleure précision à la pré-visualisation, mais sont plus lentes et donne un
+écran plus saccadé. Les petites valeurs sont moins précises mais plus rapides,
+l&#8217;affichage résultant est plus rapide. La valeur par défaut de 64
+signifie qu&#8217;un cercle de 3 pouces maximum sera affiché dans moins de 3
+centièmes de mm, (.03%).<span class="footnote"><br />[ Dans LinuxCNC 2.4 et précédents,
+la valeur par défaut était de 128.]<br /></span>
+</p>
+</li>
+<li>
+<p>
+<em>MDI_HISTORY_FILE =</em> - Le nom du fichier d&#8217;historique des commandes MDI.
+Si rien n&#8217;est spécifié, Axis enregistrera cet historique dans
+<em>.axis_mdi_history</em> dans le répertoire home de l&#8217;utilisateur. C&#8217;est très
+pratique dans le cas de multiples configurations sur la même machine.
+</p>
+</li>
+<li>
+<p>
+<em>HELP_FILE = tklinucnc.txt</em> - Chemin du fichier d&#8217;aide (non utilisé avec AXIS).
+</p>
+</li>
+</ul></div>
+<h3 id="sub:Section-FILTER">5.3. Section [FILTER]</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>AXIS a la possibilité d&#8217;envoyer les fichiers chargés au travers d&#8217;un programme de
+filtrage. Ce filtrage peut réaliser toutes sortes de tâches. Parfois aussi simple
+que s&#8217;assurer que le programme se termine bien par M2, ou parfois aussi compliqué
+que détecter si le fichier d&#8217;entrée est une image et en générer le G-code pour
+graver la forme qu&#8217;il à ainsi défini.
+La section <em>[FILTER]</em> du fichier ini, contrôle comment les filtres fonctionnent.
+Premièrement, pour chaque type de fichier, écrire une ligne <em>PROGRAM_EXTENSION</em>.
+Puis, spécifier le programme à exécuter pour chaque type de filtre. Ce
+programme reçoit le nom du fichier d&#8217;entrée dans son premier argument, il
+doit écrire le code RS274/NGC sur la sortie standard. C&#8217;est cette sortie qui
+sera affichée dans la zone de texte, pré-visualisée dans la zone du parcours
+d&#8217;outil et enfin, exécutée par LinuxCNC quand il sera mis en marche.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>PROGRAM_EXTENSION = .extension Description</tt></pre>
+</div></div>
+<div class="paragraph"><p>Si votre fichier de sortie est tout en majuscules, vous devez ajouter
+la ligne suivante:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>PROGRAM_EXTENSION = .NGC XYZ Post Processor</tt></pre>
+</div></div>
+<div class="paragraph"><p>Les lignes suivantes ajoutent le support pour le convertisseur <em>image-to-gcode</em>
+fourni avec LinuxCNC:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>PROGRAM_EXTENSION = .png,.gif,.jpg Greyscale Depth Image
+    png = image-to-gcode
+    gif = image-to-gcode
+    jpg = image-to-gcode</tt></pre>
+</div></div>
+<div class="paragraph"><p>Il est également possible de spécifier un interpréteur:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>PROGRAM_EXTENSION = .py Python Script
+    py = python</tt></pre>
+</div></div>
+<div class="paragraph"><p>De cette façon, n&#8217;importe quel script Python pourra être ouvert et ses sorties
+seront traitées comme du g-code. Un exemple de script de ce genre est disponible:
+nc_files/holecircle.py.
+Ce script crée le G-code pour percer une série de trous séquents à la
+périphérie d&#8217;un cercle.
+De nombreux générateurs de G-code sont par ailleurs disponibles sur le wiki:
+<a href="http://wiki.linuxcnc.org/cgi-bin/wiki.pl?Simple_LinuxCNC_G-Code_Generators">à la
+page des générateurs de G-code</a>.</p></div>
+<div class="paragraph"><p>Si la variable d&#8217;environnement AXIS_PROGRESS_BAR est activée, alors les lignes
+écrites sur stderr de la forme</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>FILTER_PROGRESS=%d</tt></pre>
+</div></div>
+<div class="paragraph"><p>activeront la barre de progression d&#8217;AXIS qui donnera le pourcentage. Cette
+fonctionnalité devrait être utilisée par tous les filtres susceptibles de
+fonctionner pendant un long moment.</p></div>
+<div class="paragraph"><p>Les filtres Python doivent utiliser la fonction <em>print</em> pour sortir le résultat
+dans Axis.</p></div>
+<div class="paragraph"><p>Cet exemple de programme filtre un fichier et ajoute un axe W correspondant à
+l&#8217;axe Z. Il marchera selon la présence d&#8217;un espace entre chaque mot d&#8217;axe.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>#! /usr/bin/env python
+
+import sys
+
+def main(argv):
+
+  openfile = open(argv[0], 'r')
+  file_in = openfile.readlines()
+  openfile.close()
+
+  file_out = []
+  for line in file_in:
+    # print line
+    if line.find('Z') != -1:
+      words = line.rstrip('\n')
+      words = words.split(' ')
+      newword = ''
+      for i in words:
+        if i[0] == 'Z':
+          newword = 'W'+ i[1:]
+      if len(newword) &gt; 0:
+        words.append(newword)
+        newline = ' '.join(words)
+        file_out.append(newline)
+    else:
+      file_out.append(line)
+  for item in file_out:
+    print "%s" % item
+
+if __name__ == "__main__":
+   main(sys.argv[1:])</tt></pre>
+</div></div>
+<h3 id="sub:Section-RS274NGC">5.4. Section [RS274NGC]</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>PARAMETER_FILE = monfichier.var</em> -  Le fichier situé
+dans le même répertoire que le fichier ini qui contiendra les paramètres
+utilisés par l&#8217;interpréteur (enregistré entre chaque lancement).
+</p>
+</li>
+<li>
+<p>
+<em>RS274NGC_STARTUP_CODE = G01 G17 G20 G40 G49 G64 P0.001 G80 G90 G92 G94 G97 G98</em> -
+  Une chaine de codes NGC qui sera utilisée
+pour initialiser l&#8217;interpréteur. Elle ne se substitue pas à la
+spécification des G-codes modaux du début de chaque fichier ngc. Les
+codes modaux des machines diffèrent, ils pourraient être modifiés par
+les G-codes interprétés plutôt dans la session.
+</p>
+</li>
+<li>
+<p>
+<em>SUBROUTINE_PATH = ncsubroutines:/tmp/testsubs:lathesubs:millsubs</em> -
+  Spécifie une liste, séparée par (:) d&#8217;au maximum 10
+répertoires dans lesquels seront cherchés les fichier de sous-programme
+spécifiés dans le g-code. Ces répertoires sont inspectés après que ne le
+soit [DISPLAY]PROGRAM_PREFIX (si il est spécifié) et avant que ne le soit
+[WIZARD]WIZARD_ROOT (si il est spécifié). les recherches s&#8217;effectuent dans
+l&#8217;ordre dans lequel les chemins sont listés. La première occurrence avec le
+sous-programme recherché est utilisée. Les répertoires sont spécifiés
+relativement au répertoire courant du fichier ini ou par des chemins
+absolus. La liste ne doit contenir aucun espace blanc.
+</p>
+</li>
+<li>
+<p>
+<em>USER_M_PATH = myfuncs:/tmp/mcodes:experimentalmcodes</em> -
+  Spécifie une liste de répertoires, séparés par (:) (sans
+aucun espace blanc) pour les fonctions définies par l&#8217;utilisateur. Les
+répertoires sont spécifiés par rapport au répertoire courant pour les
+fichiers ini ou en chemins absolus. La liste ne doit contenir aucun
+espace blanc.
+</p>
+</li>
+<li>
+<p>
+<em>USER_DEFINED_FUNCTION_MAX_DIRS=5</em> - Défini le nombre maximum de répertoires
+au moment de la compilation. Une recherche est faite pour chaque fonction
+utilisateur définie possible, typiquement <em>M100</em> à <em>M199</em>.<br />
+L&#8217;ordre de recherche est le suivant:<br />
+</p>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+[DISPLAY]PROGRAM_PREFIX (si il est spécifié)
+</p>
+</li>
+<li>
+<p>
+Si [DISPLAY]PROGRAM_PREFIX n&#8217;est pas spécifié, cherche dans le répertoire
+par défaut: nc_files
+</p>
+</li>
+<li>
+<p>
+Recherche ensuite dans chaque répertoire de la liste [RS274NGC]USER_M_PATH
+Le premier M1xx trouvé au cours de la recherche est utilisé pour chaque M1xx.
+</p>
+</li>
+</ol></div>
+</li>
+</ul></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">[WIZARD]WIZARD_ROOT est un chemin de recherche valide mais l&#8217;assistant n&#8217;est
+pas encore complétement implémenté et les résultats, découlant de son
+utilisation, sont imprévisibles.</td>
+</tr></table>
+</div>
+<h3 id="sub:Section-EMCMOT">5.5. Section [EMCMOT]</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>D&#8217;autres entrées peuvent être rencontrées dans cette section, elles ne doivent
+pas être modifiées.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>BASE_PERIOD = 50000</em> -  (HAL) Période de base des tâches,
+exprimée en ns.C&#8217;est la plus rapide des horloges de la machine.
+Avec un système à servomoteurs, il n&#8217;y a généralement pas de raison
+pour que <em>BASE_PERIOD</em> soit plus petite que <em>SERVO_PERIOD</em>.
+Sur une machine de type <em>step&amp;direction</em> avec génération logicielle
+des impulsions de pas, c&#8217;est <em>BASE_PERIOD</em>  qui détermine le nombre
+maximum de pas par seconde. Si de longues
+impulsions de pas ou de longs espaces entre les impulsions ne sont pas
+requis par l'électronique, la fréquence maximum absolue est de un pas
+par <em>BASE_PERIOD</em>. Ainsi, la <em>BASE_PERIOD</em>  utilisée ici donnera une
+fréquence de pas maximum absolue de 20000
+pas par seconde. 50000ns est une valeur assez large. La plus petite
+valeur utilisable est liée au résultat <a href="../install/Latency_Test_fr.html#cha:test-de-latence">du test de latence</a>, à la longueur des impulsions de pas nécessaire et à la vitesse du µP.
+Choisir une BASE_PERIOD trop basse peut amener à des messages
+<em>Unexpected realtime delay</em>, des blocages ou des reboots spontanés.
+</p>
+</li>
+<li>
+<p>
+<em>SERVO_PERIOD = 1000000</em> -  (hal) Période de la tâche
+<em>Servo</em>, exprimée également en nanosecondes.
+Cette valeur sera arrondie à un multiple entier de <em>BASE_PERIOD</em>.
+Elle est utilisée aussi sur des systèmes basés sur des moteurs pas à pas.
+C&#8217;est la vitesse avec laquelle la nouvelle position des moteurs est
+traitée, les erreurs de suivi vérifiées, les valeurs des sorties PID
+sont rafraichies etc.
+Sur la plupart des systèmes cette valeur n&#8217;est pas à modifier. Il
+s&#8217;agit du taux de mise à jour du planificateur de mouvement de bas niveau.
+</p>
+</li>
+<li>
+<p>
+<em>TRAJ_PERIOD = 1000000</em> -  (hal) Période du planificateur
+de trajectoire, exprimée en nanosecondes.
+Cette valeur sera arrondie à un multiple entier de <em>SERVO_PERIOD</em>.
+Excepté pour les machines avec une cinématique particulière
+(ex: hexapodes) Il n&#8217;y a aucune raison de rendre cette valeur supérieure à
+<em>SERVO_PERIOD</em>.
+</p>
+</li>
+</ul></div>
+<h3 id="sub:Section-TASK">5.6. Section [TASK]</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>TASK = milltask</em> - Indique le nom de la <em>tâche</em> exécutable. La tâche réalise
+différentes actions, telles que communiquer avec les interfaces utilisateur au
+dessus de NML, communiquer avec le planificateur de mouvements temps réel dans
+la mémoire partagée non-HAL, et interpréter le g-code.
+Actuellement il n&#8217;y a qu&#8217;une seule tâche exécutable qui fait sens pour
+99,9% des utilisateurs, milltask.
+</p>
+</li>
+<li>
+<p>
+<em>CYCLE_TIME = 0.010</em> - Période exprimée en secondes, à laquelle TASK
+va tourner. Ce paramètre affecte l&#8217;intervalle de polling lors de l&#8217;attente de
+la fin d&#8217;un mouvement, lors de l&#8217;exécution d&#8217;une pause d&#8217;instruction et quand
+une commande provenant d&#8217;une interface utilisateur est acceptée. Il
+n&#8217;est généralement pas nécessaire de modifier cette valeur.
+</p>
+</li>
+</ul></div>
+<h3 id="sub:Section-HAL">5.7. Section [HAL]</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>TWOPASS=ON</em> - Utilise le processus <em>twopass</em> (double passe) pour charger
+les composants HAL. Avec le processus TWOPASS, tous les fichiers [HAL]HALFILES
+sont premièrement lus et les occurrences multiples des directives à loadrt
+pour chaque module sont cumulées. Aucune commande HAL n&#8217;est exécutée à
+la première passe.
+</p>
+</li>
+<li>
+<p>
+<em>HALFILE = example.hal</em> - Exécute le fichier <em>example.hal</em> au démarrage.
+Si <em>HALFILE</em>  est spécifié plusieurs fois, les fichiers sont exécutés dans
+l&#8217;ordre de leur apparition dans le fichier ini. Presque toutes les
+configurations auront au moins un <em>HALFILE</em> . Les systèmes à moteurs
+pas à pas ont généralement deux de ces fichiers, un qui spécifie la
+configuration générale des moteurs <em>core_stepper.hal</em> et un qui spécifie le
+brochage des sorties <em>xxx_pinout.hal</em>.
+</p>
+</li>
+<li>
+<p>
+<em>HAL = command</em> - Exécute <em>command</em> comme étant une simple commande hal.
+Si <em>HAL</em> est spécifié plusieurs fois, les commandes sont exécutées dans
+l&#8217;ordre où elles apparaissent dans le fichier ini. Les lignes <em>HAL</em>
+sont exécutées après toutes les lignes <em>HALFILE</em>.
+</p>
+</li>
+<li>
+<p>
+<em>SHUTDOWN = shutdown.hal</em> - Exécute le fichier <em>shutdown.hal</em> quand LinuxCNC
+s&#8217;arrête. Selon les pilotes de matériel utilisés, il est ainsi possible de
+positionner les sorties sur des valeurs définies quand LinuxCNC s&#8217;arrête
+normalement. Cependant, parce qu&#8217;il n&#8217;y a aucune garantie que ce fichier sera
+exécuté (par exemple, dans le cas d&#8217;une panne de l&#8217;ordinateur), il ne
+remplace pas une véritable chaîne physique d&#8217;arrêt d&#8217;urgence ou
+d&#8217;autres dispositifs logiciels de protection des défauts de fonctionnement comme
+la pompe de charge ou le watchdog.
+</p>
+</li>
+<li>
+<p>
+<em>POSTGUI_HALFILE = example2.hal</em> - (Seulement avec les interfaces TOUCHY et
+AXIS) Exécute <em>example2.hal</em> après que l&#8217;interface graphique ait créé ses HAL
+pins.
+</p>
+</li>
+</ul></div>
+<h3 id="sub:Section-HALUI">5.8. Section [HALUI]</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>MDI_COMMAND = G53 G0 X0 Y0 Z0</em> - Une commande MDI peut être exécuté en
+utilisant <em>halui.mdi-command-00</em>. Incrémente le nombre pour chaque commande
+énumérée dans la section [HALUI].
+</p>
+</li>
+</ul></div>
+<h3 id="sub:Section-TRAJ">5.9. Section [TRAJ]</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>La section [TRAJ] contient les paramètres généraux du module
+planificateur de trajectoires de EMCMOT. Vous n&#8217;aurez pas à modifier
+ces valeurs si vous utilisez LinuxCNC avec une machine à trois axes en
+provenance des USA. Si vous êtes dans une zone métrique, utilisant des
+éléments matériels métriques, vous pourrez utiliser le fichier
+<em>stepper_mm.ini</em> dans lequel les valeurs sont déjà configurées dans cette
+unité.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>COORDINATES = X Y Z</em> - Les noms des axes à contrôler. X, Y, Z, A, B, C, U, V
+et W sont valides. Seuls les axes nommés dans <em>COORDINATES</em> seront acceptés dans
+le G-code. Cela n&#8217;a aucun effet sur l&#8217;ordonnancement des noms d&#8217;axes depuis
+le G-code (X- Y- Z-) jusqu&#8217;aux numéros d&#8217;articulations. Pour une <em>cinématique
+triviale</em>, X est toujours l&#8217;articulation 0, A est toujours l&#8217;articulation 3,
+U est toujours l&#8217;articulation 6 et ainsi de suite. Il est permis d'écrire les
+noms d&#8217;axe par paire (ex: X Y Y Z pour une machine à portique) mais
+cela n&#8217;a aucun effet.
+</p>
+</li>
+<li>
+<p>
+<em>AXES = 3</em> - Une unité de plus que le plus grand numéro d&#8217;articulation du
+système. Pour une machine XYZ, les articulations sont numérotées 0, 1 et 2. Dans
+ce cas, les AXES sont 3. Pour un système XYUV utilisant une
+<em>cinématique triviale</em>, l&#8217;articulation V est numérotée 7 et donc les
+AXES devraient être 8. Pour une machine à cinématique non triviale (ex:
+scarakins) ce sera généralement le nombre d&#8217;articulations contrôlées.
+</p>
+</li>
+<li>
+<p>
+<em>JOINTS = 3</em> - (Cette variable de configuration est utilisée seulement par
+Axis et non par le planificateur de trajectoire du contrôleur de
+mouvement.) Elle spécifie le nombre d&#8217;articulations (moteurs) que
+comporte le système. Par exemple, une machine XYZ avec un seul moteur
+pour chacun des 3 axes, comporte 3 articulations (joints). Une machine
+à portique avec un seul moteur sur deux de ses axes et deux moteurs
+sur le troisième axe, comporte 4 articulations (joints).
+</p>
+</li>
+<li>
+<p>
+<em>HOME = 0 0 0</em> - Coordonnées de l&#8217;origine machine de chaque axe. De nouveau,
+pour une machine 4 axes, vous devrez avoir 0 0 0 0. Cette valeur est utilisée
+uniquement pour les machines à cinématique non triviale. Sur les
+machines avec cinématique triviale, cette valeur est ignorée.
+</p>
+</li>
+<li>
+<p>
+<em>LINEAR_UNITS=&lt;units&gt;</em> - Le nom des unités utilisées dans
+le fichier INI. Les choix possibles sont <em>in</em>, <em>inch</em>, <em>imperial</em>, <em>metric</em>,
+<em>mm</em>. Cela n&#8217;affecte pas les unités linéaires du code NC (pour cela il y a
+les mots G20 et G21).
+</p>
+</li>
+<li>
+<p>
+<em>ANGULAR_UNITS=&lt;units&gt;</em> - Le nom des unités utilisées
+dans le fichier INI. Les choix possibles sont <em>deg</em>, <em>degree</em> (360 pour un
+cercle), <em>rad</em>, <em>radian</em> (2pi pour un cercle), <em>grad</em>, ou <em>gon</em> (400 pour un
+cercle). Cela n&#8217;affecte pas les unités angulaires du code NC. Dans le code
+RS274NGC, les mots A-, B- et C- sont toujours exprimés en degrés.
+</p>
+</li>
+<li>
+<p>
+<em>DEFAULT_VELOCITY = 0.0167</em> - La vitesse initiale de jog des axes linéaires,
+en unités par seconde. La valeur indiquée ici correspond à une unité par minute.
+</p>
+</li>
+<li>
+<p>
+<em>DEFAULT_ACCELERATION = 2.0</em> - Dans les machines à cinématique non triviale,
+l&#8217;accélération utilisée pour <em>teleop</em> jog (espace cartésien), en unités machine
+par seconde par seconde.
+</p>
+</li>
+<li>
+<p>
+<em>MAX_VELOCITY = 5.0</em> -  Vitesse maximale de déplacement
+pour les axes, exprimée en unités machine par seconde. La valeur indiquée est
+égale à 300 unités par minute.
+</p>
+</li>
+<li>
+<p>
+<em>MAX_ACCELERATION = 20.0</em> -  Accélération maximale pour
+les axes, exprimée en unités machine par seconde par seconde.
+</p>
+</li>
+<li>
+<p>
+<em>POSITION_FILE = position.txt</em> - Si réglée à une valeur non vide, les
+positions des axes (joins) sont enregistrées dans ce fichier. Cela permet donc
+de redémarrer avec les mêmes coordonnées que lors de l&#8217;arrêt, ce qui suppose,
+que hors puissance, la machine ne fera aucun mouvement pendant tout son arrêt.
+C&#8217;est utile pour les petites machines sans contact d&#8217;origine machine.
+Si vide, les positions ne seront pas enregistrées et commenceront à 0 à
+chaque fois que LinuxCNC démarrera.
+</p>
+</li>
+<li>
+<p>
+<em>NO_FORCE_HOMING = 1</em> - LinuxCNC oblige implicitement l&#8217;utilisateur à
+référencer la machine par une prise d&#8217;origine machine avant de pouvoir lancer
+un programme ou exécuter une commande dans le MDI, seuls les mouvements de Jog
+sont autorisés avant les prises d&#8217;origines. Mettre NO_FORCE_HOMING = 1
+permet à l&#8217;opérateur averti de s&#8217;affranchir de cette restriction de
+sécurité lors de la phase de mise au point de la machine.
+</p>
+</li>
+</ul></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Attention</div>
+</td>
+<td class="content"><em>NO_FORCE_HOMING</em> mise à 1 permettra à la machine de franchir les
+limites logicielles pendant les mouvements ce qui n&#8217;est pas souhaitable
+pour un fonctionnement normal!</td>
+</tr></table>
+</div>
+<h3 id="sub:Sections-AXIS">5.10. Sections [AXIS_n]</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Les sections [AXIS_0], [AXIS_1], etc. contiennent les paramètres
+généraux des composants individuels du module de contrôle. La
+numérotation des sections axis commence à 0 et augmente jusqu&#8217;au nombre
+d&#8217;axes spécifiés dans la variable [TRAJ] AXES, moins 1.</p></div>
+<div class="paragraph"><p>Généralement (mais pas toujours):</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+AXIS_0 = X
+</p>
+</li>
+<li>
+<p>
+AXIS_1 = Y
+</p>
+</li>
+<li>
+<p>
+AXIS_2 = Z
+</p>
+</li>
+<li>
+<p>
+AXIS_3 = A
+</p>
+</li>
+<li>
+<p>
+AXIS_4 = B
+</p>
+</li>
+<li>
+<p>
+AXIS_5 = C
+</p>
+</li>
+<li>
+<p>
+AXIS_6 = U
+</p>
+</li>
+<li>
+<p>
+AXIS_7 = V
+</p>
+</li>
+<li>
+<p>
+AXIS_8 = W
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>TYPE = LINEAR</em> - Type des axes, soit LINEAR, soit ANGULAR.
+</p>
+</li>
+<li>
+<p>
+<em>WRAPPED_ROTARY = 1</em> - Lorsque ce paramètre est réglé à 1 pour un axe angulaire
+l&#8217;axe se déplace de 0 à 359.999 degrés. Les nombres positifs déplacent
+l&#8217;axe dans le sens positif et les nombres négatifs dans le sens négatif.
+</p>
+</li>
+<li>
+<p>
+<em>LOCKING_INDEXER = 1</em> - Quand ce paramètre est mis à 1, un mouvement en G0
+sur cet axe va produire un signal de déblocage sur la pin <em>axis.N.unlock</em>, puis
+attendre le signal <em>axis.N.is-unlocked</em> de cet axe pour déplacer l&#8217;axe à la
+vitesse rapide prévue pour cet axe. Après ce mouvement, le signal
+<em>axis.N.unlock</em> retombera à false et les mouvements attendront que
+<em>axis.N.is-unlocked</em> redevienne false. Le mouvement des autres axes n&#8217;est pas
+autorisé lors du mouvement d&#8217;un axe rotatif à verrou.
+</p>
+</li>
+<li>
+<p>
+<em>UNITS = inch</em> -  Ce réglage écrase celui des variables
+[TRAJ] UNITS si il est spécifié. (ex: [TRAJ]LINEAR_UNITS si le TYPE de cet axe
+est LINEAR, [TRAJ]ANGULAR_UNITS si le TYPE de cet axe est ANGULAR)
+</p>
+</li>
+<li>
+<p>
+<em>MAX_VELOCITY = 1.2</em> - Vitesse maximum pour cet axe en unités machine par
+seconde.
+</p>
+</li>
+<li>
+<p>
+<em>MAX_ACCELERATION = 20.0</em> - Accélération maximum pour cet axe en unités
+machine par seconde au carré.
+</p>
+</li>
+<li>
+<p>
+<em>BACKLASH = 0.000</em> - Valeur de compensation du jeu en unités machine.
+Peut être utilisée pour atténuer de petites déficiences du matériel utilisé
+pour piloter cet axe. Si un backlash est ajouté à un axe et que des moteurs
+pas à pas sont utilisés, la valeur de STEPGEN_MAXACCEL doit être 1.5 à 2
+fois plus grande que celle de MAX_ACCELERATION pour cet axe.
+</p>
+</li>
+<li>
+<p>
+<em>COMP_FILE = file.extension</em> - Fichier dans lequel est enregistrée une
+structure de compensation spécifique à cet axe. Le fichier peut être nommé
+<em>xscrew.comp</em>, par exemple, pour l&#8217;axe X. Les noms de fichiers sont sensibles
+à la casse et peuvent contenir des lettres et/ou des chiffres. Les valeurs
+sont des triplets par ligne séparés par un espace. La première valeur
+est nominale (où elle devrait l'être). Les deuxième et troisième valeurs
+dépendront du réglage de  COMP_FILE_TYPE. Actuellement la
+limite de LinuxCNC est de 256 triplets par axe. Si COMP_FILE est spécifié,
+BACKLASH est ignoré. Les valeurs sont en unités machine.
+</p>
+</li>
+<li>
+<p>
+<em>COMP_FILE_TYPE = 0 ou 1</em> -
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Si 0:</em> Les deuxième et troisième valeurs spécifient la position en avant
+(de combien l&#8217;axe est en avance) et la position en arrière (de combien l&#8217;axe
+est en retard), positions qui correspondent à la position nominale.
+</p>
+</li>
+<li>
+<p>
+<em>Si 1:</em> Les deuxième et troisième valeurs spécifient l&#8217;ajustement avant
+(à quelle distance de la valeur nominale lors d&#8217;un déplacement vers l&#8217;avant)
+et l&#8217;ajustement arrière (à quelle distance de la valeur nominale lors d&#8217;un
+déplacement vers l&#8217;arrière), positions qui correspondent à la position
+nominale.
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</li>
+</ul></div>
+<div class="paragraph"><p>Exemple de triplet avec COMP_FILE_TYPE = 0: 1.00 1.01 0.99<br />
+Exemple de triplet avec COMP_FILE_TYPE = 1: 1.00 0.01 -0.01</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>MIN_LIMIT = -1000</em> -  Limite minimale des mouvements de cet
+axe (limite logicielle), en unités machine. Quand cette limite tend à être
+dépassée, le contrôleur arrête le mouvement.
+</p>
+</li>
+<li>
+<p>
+<em>MAX_LIMIT = 1000</em> -  Limite maximale des mouvements de cet
+axe (limite logicielle), en unités machine. Quand cette limite tend à être
+dépassée, le contrôleur arrête le mouvement.
+</p>
+</li>
+<li>
+<p>
+<em>MIN_FERROR = 0.010</em> -  Valeur indiquant, en unités machine,
+de combien le mobile peut dévier à très petite vitesse de la position commandée.
+Si MIN_FERROR est plus petit que FERROR, les deux produisent une rampe de
+points de dérive. Vous pouvez imaginer un graphe sur lequel une
+dimension représente la vitesse et l&#8217;autre, l&#8217;erreur tolérée. Quand la
+vitesse augmente, la quantité d&#8217;erreurs de suivi augmente également et
+tend vers la valeur FERROR.
+</p>
+</li>
+<li>
+<p>
+<em>FERROR = 1.0</em> -  FERROR est le maximum d&#8217;erreur de suivi
+tolérable, en unités machine. Si la différence entre la position commandée et la
+position retournée excède cette valeur, le contrôleur désactive les
+calculs des servomoteurs, positionne toutes les sorties à 0.0 et coupe
+les amplis des moteurs. Si MIN_FERROR est présent dans le fichier .ini,
+une vitesse proportionnelle aux erreurs de suivi est utilisée. Ici, le
+maximum d&#8217;erreur de suivi est proportionnel à la vitesse, quand FERROR
+est appliqué à la vitesse rapide définie dans [TRAJ]MAX_VELOCITY et
+proportionnel aux erreurs de suivi pour les petites vitesses. L&#8217;erreur
+maximale admissible sera toujours supérieure à MIN_FERROR. Cela permet
+d'éviter que de petites erreurs de suivi sur les axes stationnaires
+arrêtent les mouvements de manière impromptue. Des petites erreurs de
+suivi seront toujours présentes à cause des vibrations, etc. La
+polarité des valeurs de suivi détermine comment les entrées sont
+interprétées et comment les résultats sont appliqués aux sorties. Elles
+peuvent généralement être réglées par tâtonnement car il n&#8217;y a que deux
+possibilités. L&#8217;utilitaire de calibration peut être utilisé pour les
+ajuster interactivement et vérifier les résultats, de sorte que les
+valeurs puissent être mises dans le fichier INI avec un minimum de
+difficultés. Cet utilitaire est accessible dans Axis depuis le menu
+<em>Machine</em> puis <em>Calibration</em> et dans TkLinuxCNC depuis le menu <em>Réglages</em>
+puis <em>Calibration</em>.
+</p>
+</li>
+</ul></div>
+<h3 id="sub:Section-HOMING">5.11. Section [HOMING]</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les paramètres suivants sont relatifs aux prises d&#8217;origine, pour plus
+d&#8217;informations, lire <a href="ini_homing_fr.html#sec:Prises-d-origine">le chapitre sur la POM</a>.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>HOME = 0.0</em> - La position à laquelle le mobile ira à la fin de la séquence
+de prise d&#8217;origine.
+</p>
+</li>
+<li>
+<p>
+<em>HOME_OFFSET = 0.0</em> - Position du contact d&#8217;origine machine de l&#8217;axe ou
+de l&#8217;impulsion d&#8217;index, en <a href="#sub:Section-TRAJ">unités machine</a>. Lorsque le point
+d&#8217;origine est détecté pendant le processus de prise d&#8217;origine, c&#8217;est cette
+position qui est assignée à ce point. Dans le cas du partage de capteur entre
+l&#8217;origine et les limites d&#8217;axe et de l&#8217;utilisation d&#8217;une séquence de prise
+d&#8217;origine qui laisse le capteur dans l'état activé, la valeur de HOME_OFFSET
+peut être utilisée pour définir une position du capteur différente du 0 utilisé
+alors pour l&#8217;origine.
+</p>
+</li>
+<li>
+<p>
+<em>HOME_SEARCH_VEL = 0.0</em> -  Vitesse du mouvement initial
+de prise d&#8217;origine, en unités machine par seconde. Une valeur de zéro suppose
+que la position courante est l&#8217;origine machine. Si la machine n&#8217;a pas de
+contact d&#8217;origine, laisser cette valeur à zéro.
+</p>
+</li>
+<li>
+<p>
+<em>HOME_LATCH_VEL = 0.0</em> - Vitesse du mouvement de dégagement du contact
+d&#8217;origine, en unités machine par seconde.
+</p>
+</li>
+<li>
+<p>
+<em>HOME_FINAL_VEL = 0.0</em> - Vitesse du mouvement final entre le contact d&#8217;origine
+et la position d&#8217;origine, en unités machine par seconde. Si cette variable est
+laissée à 0 ou absente, la vitesse de déplacement rapide est utilisée. Doit
+avoir une valeur positive.
+</p>
+</li>
+<li>
+<p>
+<em>HOME_USE_INDEX = NO</em> - Si l&#8217;encodeur utilisé pour cet axe fournit une
+impulsion d&#8217;index et qu&#8217;elle est gérée par la carte contrôleur, il est possible
+de mettre sur Yes. Quand il est sur yes, il aura une incidence sur le type de
+séquence de prise d&#8217;origine utilisée.
+</p>
+</li>
+<li>
+<p>
+<em>HOME_IGNORE_LIMITS = NO</em> - Si la machine utilise un seul et même
+contact comme limite d&#8217;axe et origine machine de l&#8217;axe. Cette variable devra
+alors être positionnée sur yes. Dans ce cas le contact de limite de cet axe est
+ignoré pendant la séquence de prise d&#8217;origines. Il est nécessaire de configurer
+la séquence pour qu'à la fin du mouvement le capteur ne reste pas dans l'état
+activé qui aboutirait finalement à un message d&#8217;erreur du capteur de limite.
+</p>
+</li>
+<li>
+<p>
+<em>HOME_IS_SHARED = &lt;n&gt;</em> - Si l&#8217;entrée du contact d&#8217;origine est partagée par
+plusieurs axes, mettre &lt;n&gt; à 0 pour permettre la POM même si un des contacts
+partagés est déjà attaqué. Le mettre à 1 pour interdire la prise d&#8217;origine dans
+ce cas.
+</p>
+</li>
+<li>
+<p>
+<em>HOME_SEQUENCE = &lt;n&gt;</em> - Utilisé pour définir l&#8217;ordre dans lequel les axes se
+succéderont lors d&#8217;une séquence de <em>POM générale</em>. <strong>&lt;n&gt;</strong> commence à 0, aucun
+numéro ne peut être sauté. Si cette variable est absente ou à -1, la POM de l&#8217;axe
+ne pourra pas être exécutée par la commande <em>POM générale</em>. La POM de
+plusieurs axes peut se dérouler simultanément.
+</p>
+</li>
+<li>
+<p>
+<em>VOLATILE_HOME = 0</em> - Lorsqu&#8217;il est activé (mis à 1), l&#8217;origine machine de
+cette articulation sera effacée si la machine est en marche et que l&#8217;arrêt
+d&#8217;urgence est activé. Ceci est utile si la machine possède des contacts
+d&#8217;origine mais n&#8217;a pas de retour de position comme une machine à moteur pas à
+pas de type pas/direction.
+</p>
+</li>
+</ul></div>
+<h3 id="sub:Variables-relatives-aux-servomoteurs">5.12. Variables relatives aux servomoteurs</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les éléments suivants sont pour les systèmes à servomoteurs et à pseudos
+servomoteurs. Cette description suppose que les unités en sortie du
+composant PID sont des Volts.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>DEADBAND = 0.000015</em> - (dans HAL) Quelle distance est assez proche de la
+consigne pour considérer le moteur en position, en unités machine. Cette
+variable est fréquemment réglée pour une distance équivalente à 1, 1.5, 2, ou
+3 impulsions de comptage du codeur, mais cela n&#8217;a rien d&#8217;une règle stricte. Un
+réglage lâche (large) permet de moins solliciter le servo au détriment de la
+précision. Un réglage serré (petit) permettra d&#8217;atteindre une grande précision
+mais le servo sera plus sollicité.
+Est-ce vraiment plus précis si c&#8217;est plus incertain ? En règle générale, il est
+préférable d'éviter le plus possible de solliciter le servo,  si c&#8217;est possible.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Ayez la prudence de ne pas chercher à aller en dessous d&#8217;une impulsion de codeur,
+sinon vous enverrez votre servo quelque part où il ne sera pas heureux ! Cela
+peut arriver entre réglage lent et réglage nerveux et même un réglage impropre
+peut provoquer des couinements, des grincements dus aux oscillations provoquées
+par ce mauvais réglage. Il est préférable de perdre une ou deux impulsions au
+début des réglages, au moins jusqu'à avoir bien dégrossi les réglages.</p></div>
+<div class="paragraph"><p>Exemple de calcul en unités machine par top de codeur à utiliser pour décider de
+la valeur de DEADBAND (bande morte):</p></div>
+<div class="paragraph"><p><strong><tt>X pouces / top de codeur =</tt></strong>
+<strong><tt>1 tour / 1000 top de codeur * 1 top de codeur / 4 top en quadrature * 0.2
+pouce / tour =</tt></strong>
+<strong><tt>0.200 pouce / 4000 top de codeur = 0.000050 pouce / top de codeur.</tt></strong></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>BIAS = 0.000</em> - (dans HAL) (Parfois appelé <em>offset</em>) il est utilisé par
+hm2-servo et quelques autres.
+Le Bias est une valeur constante qui est ajoutée sur la sortie.
+Dans la plupart des cas, elle peut rester à zéro.
+Toutefois, il peut être intéressant pour compenser un décalage de l&#8217;ampli
+du servo, ou équilibrer le poids d&#8217;un objet se déplaçant verticalement.
+Le bias est mis à zéro quand la boucle PID est désactivée, comme
+tous les autres composants de la sortie.
+</p>
+</li>
+<li>
+<p>
+<em>P = 50</em> - (hal) La composante Proportionnelle du gain de l&#8217;ampli moteur de
+cet axe. Cette valeur multiplie l&#8217;erreur entre la position commandée et la
+position actuelle en unités machine, elle entre dans le calcul de la tension
+appliquée à l&#8217;ampli moteur. Les unités du gain <strong>P</strong>  sont des Volts sur des unités
+machine, par exemple: <strong><tt>Volt/mm</tt></strong> si l&#8217;unité machine est le millimètre.
+</p>
+</li>
+<li>
+<p>
+<em>I = 0</em> - (hal) La composante Intégrale du gain de l&#8217;ampli moteur de cet
+axe. Cette valeur multiplie l&#8217;erreur cumulative entre la position commandée et
+la position actuelle en unités machine, elle entre dans le calcul de la tension
+appliquée à l&#8217;ampli moteur. Les unités du gain <strong>I</strong> sont des Volts sur des unités
+machine par seconde, exemple: <strong><tt>Volt/mm*s</tt></strong> si l&#8217;unité machine est le
+millimètre.
+</p>
+</li>
+<li>
+<p>
+<em>D = 0</em> - (hal) La composante Dérivée du gain de l&#8217;ampli moteur de cet axe.
+Cette valeur multiplie la différence entre l&#8217;erreur courante et les précédentes,
+elle entre dans le calcul de la tension appliquée à l&#8217;ampli moteur. Les unités
+du gain <strong>D</strong> sont des Volts sur des unités machine sur des secondes, exemple:
+<strong><tt>Volt/(mm/s)</tt></strong> si l&#8217;unité machine est le millimètre.
+</p>
+</li>
+<li>
+<p>
+<em>FF0 = 0</em> - (hal) Gain à priori (retour vitesse) d&#8217;ordre 0. Cette valeur est
+multipliée par la position commandée, elle entre dans le calcul de la tension
+appliquée à l&#8217;ampli moteur. Les unités du gain FF0 sont des Volts sur des unités
+machine, exemple: <strong><tt>Volt/mm</tt></strong> si l&#8217;unité machine est le millimètre.
+</p>
+</li>
+<li>
+<p>
+<em>FF1 = 0</em> - (hal) Gain à priori (retour vitesse) de premier ordre. Cette
+valeur est multipliée par l'écart de la position commandée par seconde, elle entre
+dans le calcul de la tension appliquée à l&#8217;ampli moteur. Les unités du
+gain FF1 sont des Volts sur des unités machine par seconde, exemple:
+<strong><tt>Volt/(mm/s)</tt></strong> si l&#8217;unité machine est le millimètre.
+</p>
+</li>
+<li>
+<p>
+<em>FF2 = 0</em> - (hal)  Gain à priori (retour vitesse) de second ordre. Cette
+valeur est multipliée par l'écart de la position commandée par seconde au carré,
+elle entre dans le calcul de la tension appliquée à l&#8217;ampli moteur. Les
+unités du gain FF2 sont des Volts sur des unités machine par des
+secondes au carré, exemple: <strong><tt>Volt/mm/s<sup>2</sup></tt></strong> si l&#8217;unité machine est le
+millimètre.
+</p>
+</li>
+<li>
+<p>
+<em>OUTPUT_SCALE = 1.000</em> -
+</p>
+</li>
+<li>
+<p>
+<em>OUTPUT_OFFSET = 0.000</em> - (hal)  Ces deux valeurs sont les facteurs d'échelle
+et offset pour la sortie de l&#8217;axe à l&#8217;amplificateurs moteur.
+La seconde valeur (offset) est soustraite de la
+valeur de sortie calculée (en Volts) puis divisée par la première
+valeur (facteur d'échelle), avant d'être écrite dans le convertisseur
+D/A. Les unités du facteur d'échelle sont des Volts réels par Volts en
+sortie de DAC. Les unités de la valeur d&#8217;offset sont en Volts. Ces
+valeurs peuvent être utilisées pour linéariser un DAC.
+Plus précisément, quand les sorties sont écrites, LinuxCNC converti d&#8217;abord
+les unités quasi-SI des sorties concernées en valeurs brutes, exemple:
+Volts pour un amplificateur DAC. Cette mise à l'échelle ressemble à cela:<br />
+<strong><tt>raw = output-offset/scale</tt></strong> la valeur d'échelle peut être obtenue par analyse
+des unités, exemple: les unités sont [unités SI en sortie]/[unités de
+l&#8217;actuateur]. Par exemple, sur une machine sur laquelle une tension de consigne
+de l&#8217;ampli de 1 Volt donne une vitesse de 250 mm/s :<br />
+<strong><tt>amplifier [volts] = (output[mm/s] - offset[mm/s]) / 250mm/(s/Volt)</tt></strong>
+</p>
+<div class="paragraph"><p>Notez que les unités d&#8217;offset sont en unités machine, exemple:
+mm/s et qu&#8217;elles sont déjà soustraites depuis la sonde de lecture. La
+valeur de cet offset est obtenue en prenant la valeur de votre sortie
+qui donne 0,0 sur la sortie de l&#8217;actuateur. Si le DAC est linéarisé,
+cet offset est normalement de 0.0.</p></div>
+</li>
+</ul></div>
+<div class="paragraph"><p>L'échelle et l&#8217;offset peuvent être utilisés pour linéariser les DAC,
+d&#8217;où des valeurs qui reflètent les effets combinés du gain de l&#8217;ampli,
+de la non linéarité du DAC, des unités du DAC, etc. Pour ce faire,
+suivez cette procédure:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Construire un tableau de calibrage pour la sortie, piloter le DAC
+   avec la tension souhaitée et mesurer le résultat. Voir le tableau
+   ci-dessous pour un exemple de mesures de tension.
+</p>
+</li>
+<li>
+<p>
+Par la méthode des moindres carrés, obtenir les coefficients <strong>a</strong>,<strong>b</strong>
+   tels que: <strong><tt>mesure = a*raw+b</tt></strong>
+</p>
+</li>
+<li>
+<p>
+Noter que nous voulons des sorties brutes de sorte que nos résultats
+   mesurés soient identiques à la sortie commandée. Ce qui signifie:
+</p>
+</li>
+<li>
+<p>
+<strong><tt>cmd = a*raw+b</tt></strong>
+</p>
+</li>
+<li>
+<p>
+<strong><tt>raw = (cmd-b)/a</tt></strong>
+</p>
+</li>
+<li>
+<p>
+En conséquence, les coefficients <strong>a</strong> et <strong>b</strong> d&#8217;ajustement linéaire
+   peuvent être directement utilisés comme valeurs d'échelle et
+   d&#8217;offset pour le contrôleur.
+
+</p>
+</li>
+</ul></div>
+<div class="tableblock">
+<table rules="all"
+width="50%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="50%" />
+<col width="50%" />
+<thead>
+<tr>
+<th align="center" valign="top">Brutes (Raw) </th>
+<th align="center" valign="top"> Mesurées</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">-10</p></td>
+<td align="center" valign="top"><p class="table">-9.93</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-9</p></td>
+<td align="center" valign="top"><p class="table">-8.83</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">-0.03</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0.96</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">9</p></td>
+<td align="center" valign="top"><p class="table">9.87</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">10</p></td>
+<td align="center" valign="top"><p class="table">10.87</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>MAX_OUTPUT = 10</em> - (hal) La valeur maximale pour la sortie de la
+compensation PID pouvant être envoyée sur l&#8217;ampli moteur, en Volts. La valeur
+calculée de la sortie sera fixée à cette valeur limite. La limite est appliquée
+avant la mise à l'échelle de la sortie en unités brutes. La valeur est appliquée
+de manière symétrique aux deux côtés, le positif et le négatif.
+</p>
+</li>
+<li>
+<p>
+<em>INPUT_SCALE = 20000</em> -  (hal) Spécifie le nombre
+d&#8217;impulsions qui correspond à un mouvement de une unité machine telle que fixée
+dans la section TRAJ.
+Pour un axe linéaire, une unité machine sera égale à la valeur de LINEAR_UNITS.
+Pour un axe angulaire, une unité machine sera égale à la valeur de ANGULAR_UNITS.
+Un second chiffre, si spécifié, sera ignoré.
+Par exemple, sur un codeur de 2000 impulsions par tour, un
+réducteur de 10 tours/pouce et des unités demandées en pouces, nous avons:<br />
+<strong><tt>INPUT_SCALE = 2000 top/tour * 10 tour/pouce = 20000 top/pouce</tt></strong>
+</p>
+</li>
+</ul></div>
+<h3 id="sub:Variables-relatives-aux-moteurs-pas-a-pas">5.13. Variables relatives aux moteurs pas à pas</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>SCALE = 4000</em> -  (hal) Spécifie le nombre d&#8217;impulsions qui
+correspond à un mouvement d&#8217;une unité machine comme indiqué dans la section [TRAJ].
+Pour les systèmes à moteurs pas à pas, c&#8217;est le nombre d&#8217;impulsions de pas
+nécessaires pour avancer d&#8217;une unité machine. Pour un axe linéaire, une unité
+machine sera égale à la valeur de LINEAR_UNITS.
+Pour un axe angulaire, une unité machine sera égale à la valeur de ANGULAR_UNITS.
+Pour les systèmes à servomoteurs, c&#8217;est le nombre d&#8217;impulsions
+de retour signifiant que le mobile a avancé d&#8217;une unité machine.
+Un second nombre, si spécifié, sera ignoré.
+Par exemple, un pas moteur de 1.8 degré, en mode demi-pas, avec une
+réduction de 10 tours/pouce et des unités souhaitées en pouces, nous avons:<br />
+<strong><tt>scale = 2 pas/1.8 degrés * 360 degrés/tour * 10 tour/pouce = 4000 pas/pouce</tt></strong>
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>(D&#8217;anciens fichiers .ini et .hal utilisaient INPUT_SCALE pour cette valeur.)</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>STEPGEN_MAXACCEL = 21.0</em> - (hal) Limite d&#8217;accélération pour le générateur
+de pas. Elle doit être 1% à 10% supérieure à celle de l&#8217;axe MAX_ACCELERATION.
+Cette valeur améliore les réglages de la <em>boucle de position</em> de stepgen. Si
+une correction de jeu a été appliquée sur un axe, alors STEPGEN_MAXACCEL doit
+être 1,5 à 2 fois plus grande que MAX_ACCELERATION.
+</p>
+</li>
+<li>
+<p>
+<em>STEPGEN_MAXVEL = 1.4</em> - (hal) Les anciens fichiers de configuration avaient
+également une limite de vitesse du générateur de pas. Si spécifiée, elle doit
+aussi être 1% à 10% supérieure à celle de l&#8217;axe MAX_VELOCITY. Des tests
+ultérieurs ont montré que l&#8217;utilisation de STEPGEN_MAXVEL n&#8217;améliore pas le
+réglage de la boucle de position de stepgen.
+</p>
+</li>
+</ul></div>
+<h3 id="sub:Section-EMCIO">5.14. Section [EMCIO]</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>CYCLE_TIME = 0.100</em> - La période en secondes, à laquelle EMCIO va tourner.
+La mettre à 0.0 ou à une valeur négative fera que EMCIO tournera en permanence.
+Il est préférable de ne pas modifier cette valeur.
+</p>
+</li>
+<li>
+<p>
+<em>TOOL_TABLE = tool.tbl</em> - Ce fichier contient les informations des outils,
+décrites dans le Manuel de l&#8217;utilisateur.
+</p>
+</li>
+<li>
+<p>
+<em>TOOL_CHANGE_POSITION = 0 0 2</em> - Quand trois digits sont utilisés, spécifie
+la position XYZ ou le mobile sera déplacé pour le changement d&#8217;outil.
+Si six digits sont utilisés, spécifie l&#8217;emplacement ou sera envoyé
+le mobile pour réaliser le changement d&#8217;outil sur une machine de type XYZABC et
+de même, sur une machine de type XYZABCUVW lorsque 9 digits sont utilisés.
+Les variables relatives à la position du changement d&#8217;outil peuvent être
+combinées, par exemple; en combinant TOOL_CHANGE_POSITION avec
+TOOL_CHANGE_QUILL_UP il est possible de déplacer d&#8217;abord Z puis X et Y.
+</p>
+</li>
+<li>
+<p>
+<em>TOOL_CHANGE_WITH_SPINDLE_ON = 1</em> - Avec cette valeur à 1, la broche reste en
+marche pendant le changement d&#8217;outil. Particulièrement utile sur les tours.
+</p>
+</li>
+<li>
+<p>
+<em>TOOL_CHANGE_QUILL_UP = 1</em> - Avec cette valeur à 1, l&#8217;axe Z sera déplacé sur
+son origine machine avant le changement d&#8217;outil. C&#8217;est l'équivalent d&#8217;un G0 G53 Z0.
+</p>
+</li>
+<li>
+<p>
+<em>TOOL_CHANGE_AT_G30 = 1</em> - Avec cette valeur à 1, le mobile sera envoyé sur
+un point de référence prédéfini par G30 dans les paramètres 5181-5186. Pour
+plus de détails sur les paramètres de G30, voir le chapitre relatif au G-code
+dans le Manuel de l&#8217;utilisateur.
+</p>
+</li>
+<li>
+<p>
+<em>RANDOM_TOOLCHANGER = 1</em> - C&#8217;est pour des machines qui ne peuvent pas placer
+l&#8217;outil dans la poche il vient. Par exemple, les machines qui change l&#8217;outil
+dans la poche active avec l&#8217;outil dans la broche.
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-04-01 03:36:22 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/ini_config_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:25 GMT -->
+</html>

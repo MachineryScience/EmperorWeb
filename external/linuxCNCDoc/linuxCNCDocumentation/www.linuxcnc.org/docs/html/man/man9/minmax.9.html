@@ -1,0 +1,98 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:46 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/minmax.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>MINMAX</title>
+
+</head>
+<body>
+
+<h1 align="center">MINMAX</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">minmax &minus;
+Track the minimum and maximum values of the input to the
+outputs</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="71%">
+
+
+<p style="margin-top: 1em"><b>loadrt minmax
+[count=</b><i>N</i><b>|names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p> </td>
+<td width="18%">
+</td></tr>
+</table>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>minmax.</b><i>N</i>
+(requires a floating-point thread)</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>minmax.</b><i>N</i><b>.in</b>
+float in <b><br>
+minmax.</b><i>N</i><b>.reset</b> bit in</p>
+
+<p style="margin-left:22%;">When reset is asserted,
+&rsquo;in&rsquo; is copied to the outputs</p>
+
+
+<p style="margin-left:11%;"><b>minmax.</b><i>N</i><b>.max</b>
+float out <b><br>
+minmax.</b><i>N</i><b>.min</b> float out</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/minmax.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

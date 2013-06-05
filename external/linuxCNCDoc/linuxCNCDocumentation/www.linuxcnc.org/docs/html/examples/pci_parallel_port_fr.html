@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/examples/pci_parallel_port_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Deuxième port parallèle sur port PCI</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Deuxième port parallèle sur port PCI</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>Lors de l&#8217;ajout d&#8217;un deuxième port parallèle placé dans un slot PCI il
+est indispensable de connaître son adresse avant de pouvoir l&#8217;utiliser
+avec LinuxCNC. Pour trouver l&#8217;adresse de ce port, ouvrez un terminal et
+tapez:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>lspci -v</tt></pre>
+</div></div>
+<div class="paragraph"><p>Vous devriez voir quelques choses comme ci-dessous parmi la liste du
+matériel installé en PCI:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Communication controller: NetMos Technology PCI 1 port parallel adapter (rev 01)
+LSI Logic / Symbios Logic: Unknown device 0010
+    medium devsel, IRQ 11
+    ports at a800 [size=8]
+    ports at ac00 [size=8]
+    ports at b000 [size=8]
+    ports at b400 [size=8]
+    ports at b800 [size=8]
+    ports at bc00 [size=16]</tt></pre>
+</div></div>
+<div class="paragraph"><p>Dans notre cas, l&#8217;adresse était la première, nous avons donc modifié le
+fichier .hal pour passer de</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt hal_parport cfg=0x378</tt></pre>
+</div></div>
+<div class="paragraph"><p>à</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt hal_parport cfg="0x378 0xa800 in"</tt></pre>
+</div></div>
+<div class="paragraph"><p>Noter les guillemets obligatoires encadrant les adresses.</p></div>
+<div class="paragraph"><p>Nous avons également ajouté:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>addf parport.1.read base-thread
+addf parport.1.write base-thread</tt></pre>
+</div></div>
+<div class="paragraph"><p>pour que le second port parallèle soit lu et écrit.</p></div>
+<div class="paragraph"><p>Par défaut les 8 premières broches des ports parallèles sont des
+sorties. Le drapeau <em>in</em> situé derrière l&#8217;adresse d&#8217;un port permet de
+les positionner comme étant 8 entrées sur ce port.</p></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-02-04 09:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/examples/pci_parallel_port_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+</html>

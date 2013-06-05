@@ -1,0 +1,199 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 15:36:07 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/hm2_7i43.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>HM2_7I43</title>
+
+</head>
+<body>
+
+<h1 align="center">HM2_7I43</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#Jumper settings">Jumper settings</a><br>
+<a href="#Communicating with the board">Communicating with the board</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">hm2_7i43
+&minus; LinuxCNC HAL driver for the Mesa Electronics 7i43
+EPP Anything IO board with HostMot2 firmware.</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="89%">
+
+
+<p style="margin-top: 1em"><b>loadrt hm2_7i43
+[ioaddr=</b><i>N</i><b>] [ioaddr_hi=</b><i>N</i><b>]
+[epp_wide=</b><i>N</i><b>]
+[config=</b><i>&quot;str[,str...]&quot;</i><b>]
+[debug_epp=</b><i>N</i><b>]</b></p> </td></tr>
+</table>
+
+<p style="margin-left:17%;"><b>ioaddr</b> [default:
+0x378]</p>
+
+<p style="margin-left:28%;">The base address of the
+parallel port.</p>
+
+<p style="margin-left:17%;"><b>ioaddr_hi</b> [default:
+0]</p>
+
+<p style="margin-left:28%;">The secondary address of the
+parallel port, used to set EPP mode. 0 means to use ioaddr +
+0x400.</p>
+
+<p style="margin-left:17%;"><b>epp_wide</b> [default:
+1]</p>
+
+<p style="margin-left:28%;">Set to zero to disable the
+&quot;wide EPP mode&quot;. &quot;Wide&quot; mode allows a
+16- and 32-bit EPP transfers, which can reduce the time
+spent in the read and write functions. However, this may not
+work on all EPP parallel ports.</p>
+
+<p style="margin-left:17%;"><b>config</b> [default:
+&quot;&quot;]</p>
+
+<p style="margin-left:28%;">HostMot2 config strings,
+described in the hostmot2(9) manpage.</p>
+
+<p style="margin-left:17%;"><b>debug_epp</b> [default:
+0]</p>
+
+<p style="margin-left:28%;">Developer/debug use only!
+Enable debug logging of most EPP transfers.</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">hm2_7i43 is a
+device driver that interfaces the Mesa 7i43 board with the
+HostMot2 firmware to the LinuxCNC HAL. Both the 200K and the
+400K FPGAs are supported.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The driver
+talks with the 7i43 over the parallel port, not over USB.
+USB can be used to power the 7i43, but not to talk to it.
+USB communication with the 7i43 will not be supported any
+time soon, since USB has poor real-time qualities.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The driver
+programs the board&rsquo;s FPGA with firmware when it
+registers the board with the hostmot2 driver. The old
+bfload(1) firmware loading method is not used anymore.
+Instead the firmware to load is specified in the
+<b>config</b> modparam, as described in the hostmot2(9)
+manpage, in the <i>config modparam</i> section.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Some parallel
+ports require special initialization before they can be
+used. LinuxCNC provides a kernel driver that does this
+initialization called probe_parport. Load this driver before
+loading hm2_7i43, by putting &quot;loadrt
+probe_parport&quot; in your .hal file.</p>
+
+<h2>Jumper settings
+<a name="Jumper settings"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">To send the
+FPGA configuration from the PC, the board must be configured
+to get its firmware from the EPP port. To do this, jumpers
+W4 and W5 must both be down, ie toward the USB
+connector.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The board must
+be configured to power on whether or not the USB interface
+is active. This is done by setting jumper W7 up, ie away
+from the edge of the board.</p>
+
+<h2>Communicating with the board
+<a name="Communicating with the board"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The 7i43
+communicates with the LinuxCNC computer over EPP, the
+Enhanced Parallel Port. This provides about 1 MBps of
+throughput, and the communication latency is very
+predictable and reasonably low.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The parallel
+port must support EPP 1.7 or EPP 1.9. EPP 1.9 is prefered,
+but EPP 1.7 will work too. The EPP mode of the parallel port
+is sometimes a setting in the BIOS.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Note that the
+popular &quot;NetMOS&quot; aka &quot;MosChip 9805&quot; PCI
+parport cards <b>do not work</b>. They do not meet the EPP
+spec, and cannot be reliably used with the 7i43. You have to
+find another card, sorry.</p>
+
+<p style="margin-left:11%; margin-top: 1em">EPP is very
+reliable under normal circumstances, but bad cabling or
+excessively long cabling runs may cause communication
+timeouts. The driver exports a parameter named
+hm2_7i43.&lt;BoardNum&gt;.io_error to inform HAL of this
+condition. When the driver detects an EPP timeout, it sets
+io_error to True and stops communicating with the 7i43
+board. Setting io_error back to False makes the driver start
+trying to communicate with the 7i43 again.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Access to the
+EPP bus is not threadsafe: only one realtime thread may
+access the EPP bus.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em">hostmot2(9)</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/hm2_7i43.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

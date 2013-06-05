@@ -1,0 +1,1488 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/pncconf.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:10:26 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Mesa Configuration Wizard</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Mesa Configuration Wizard</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph" id="cha:PNCconf-wizard"><p></p></div>
+<div class="paragraph"><p>PNCconf is made to help build configurations that utilize specific Mesa
+<em>Anything I/O</em> products.</p></div>
+<div class="paragraph"><p>It can configure closed loop servo systems or hardware stepper systems.
+It uses a similar <em>wizard</em> approach as Stepconf (used for software stepping,
+parallel port driven systems).</p></div>
+<div class="paragraph"><p>PNCconf is still in a development stage (Beta) so there are some bugs and
+ lacking features.
+Please report bugs and suggestions to the LinuxCNC forum page or mail-list.</p></div>
+<div class="paragraph"><p>There are two trains of thought when using PNCconf:</p></div>
+<div class="paragraph"><p>One is to use PNCconf to always configure your system - if you decide to change
+options, reload PNCconf and allow it to configure the new options. This will
+work well if your machine is fairly standard and you can use custom files to add
+ non standard features. PNCconf tries to work with you in this regard.</p></div>
+<div class="paragraph"><p>The other is to use PNCconf to build a config that is close to what you want and
+ then hand edit everything to tailor it to your needs. This would be the choice
+if you need extensive modifications beyond PNCconf&#8217;s scope or just want to
+tinker with / learn about LinuxCNC</p></div>
+<div class="paragraph"><p>You navigate the wizard pages with the forward, back, and cancel buttons there
+is also a help button that gives some help information about the pages, diagrams
+ and an output page.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">PNCconf&#8217;s help page should have the most up to date info and has additional
+ details.</td>
+</tr></table>
+</div>
+<h id="_step_by_step_instructions" class="float">Step by Step Instructions</h>
+<div class="imageblock">
+<div class="content">
+<img src="images/pncconf-splash.png" alt="images/pncconf-splash.png" />
+</div>
+<div class="title">Figure 1. PnCConf Splash</div>
+</div>
+</div>
+</div>
+<h2 id="_create_or_edit">1. Create or Edit</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This allows you to select a previously saved configuration or create a new one.
+If you pick <em>Modify a configuration</em> and then press next a file selection box
+will show. Pncconf preselects your last saved file. Choose the the config you
+wish to edit. It also allows you to select desktop shortcut / launcher options.
+A desktop shortcut will place a folder icon on the desktop that points to your
+new configuration files. Otherwise you would have to look in your home folder
+under emc2/configs.</p></div>
+<div class="paragraph"><p>A Desktop launcher will add an icon to the desktop for starting your config
+directly. You can also launch it under Applications/cnc/emc2 and selecting your
+config name.</p></div>
+</div>
+<h2 id="_basic_machine_information">2. Basic Machine Information</h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="images/pncconf-basic.png" alt="images/pncconf-basic.png" />
+</div>
+<div class="title">Figure 2. PnCConf Basic</div>
+</div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Machine Basics
+</dt>
+<dd>
+<p>
+If you use a name with spaces PNCconf will replace the spaces with underscore
+(as a loose rule Linux doesn&#8217;t like spaces in names)
+Pick an axis configuration - this selects what type of machine you are building
+and what axes are available. The Machine units selector allows data entry of
+metric or imperial units in the following pages.
+</p>
+</dd>
+</dl></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">Defaults are not converted when using metric so make sure they are sane
+values!</td>
+</tr></table>
+</div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Computer Response Time
+</dt>
+<dd>
+<p>
+The servo period sets the heart beat of the system. Latency refers to the amount
+of time the computer can be longer then that period. Just like a railroad, LinuxCNC
+requires everything on a very tight and consistent time line or bad things
+happen. LinuxCNC requires and uses a <em>real time</em> operating system, which just means
+it has a low latency ( lateness ) response time when LinuxCNC requires its
+calculations and when doing LinuxCNCs calculations it cannot be interrupted by lower
+priority requests (such as user input to screen buttons or drawing etc).
+</p>
+<div class="paragraph"><p>Testing the latency is very important and a key thing to check early. Luckily by
+using the Mesa card to do the work that requires the fastest response time
+(encoder counting and PWM generation) we can endure a lot more latency then if
+we used the parallel port for these things. The standard test in LinuxCNC is checking
+the BASE period latency (even though we are not using a base period). If you
+press the <em>test base period jitter</em> button, this launches the latency test
+window ( you can also load this directly from the applications/cnc panel ). The
+test mentions to run it for a few minutes but the longer the better. consider 15
+minutes a bare minimum and overnight even better. At this time use the computer
+to load things, use the net, use USB etc we want to know the worst case
+latency and to find out if any particular activity hurts our latency. We need to
+look at base period jitter.
+Anything under 20000 is excellent - you could even do fast software stepping
+with the machine
+20000 - 50000 is still good for software stepping and fine for us.
+50000 - 100000 is really not that great but could still be used with hardware
+cards doing the fast response stuff.
+So anything under 100000 is useable to us.
+If the latency is disappointing or you get a bad hiccup periodically you may
+still be able to improve it.</p></div>
+</dd>
+</dl></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">There is a user compiled list of equipment and the
+latency obtained on the LinuxCNC wiki :
+<a href="http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?Latency-Test">http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?Latency-Test</a>
+Please consider adding your info to the list. Also on that page are links to
+info about fixing some latency problems.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Now we are happy with the latency and
+must pick a servo period. In most cases a servo period of 1000000 ns is
+fine ( that gives a 1 kHz servo calculation rate - 1000 calculations a second)
+if you are building a closed loop servo system that controls torque (current)
+rather then velocity (voltage) a faster rate would be better - something like
+200000 (5 kHz calculation rate). The problem with lowering the servo rate is
+that it leaves less time available for the computer to do other things besides
+LinuxCNC&#8217;s calculations. Typically the display (GUI) becomes less responsive. You
+ must decide on a balance. Keep in mind that if you tune your closed loop servo
+system then change the servo period you probably will need to tune them again.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+I/O Control Ports/Boards
+</dt>
+<dd>
+<p>
+PNCconf is capable of configuring machines that have up to two Mesa boards and
+three parallel ports. Parallel ports can only be used for simple low speed
+(servo rate) I/O.
+</p>
+</dd>
+<dt class="hdlist1">
+Mesa
+</dt>
+<dd>
+<p>
+You must choose at least one Mesa board as PNCconf will not configure the
+parallel ports to count encoders or output step or PWM signals.
+The mesa cards available in the selection box are based on what PNCconf finds
+for firmware on the systems. There are options to add custom firmware and/or
+<em>blacklist</em> (ignore) some firmware or boards using a preference file.
+If no firmware is found PNCconf will show a warning and use internal sample
+firmware - no testing will be possible. One point to note is that if you choose
+two PCI Mesa cards there currently is no way to predict which card is 0 and
+which is 1 - you must test - moving the cards could change their order. If you
+configure with two cards both cards must be installed for tests to function.
+</p>
+</dd>
+<dt class="hdlist1">
+Parallel Port
+</dt>
+<dd>
+<p>
+Up to 3 parallel ports (referred to as parports) can be used as simple I/O. You
+must set the address of the parport. You can either enter the Linux parallel
+port numbering system (0,1,or 2) or enter the actual address. The address for an
+ on board parport is often 0x0278 or 0x0378 (written in hexadecimal) but can be
+found in the BIOS page. The BIOS page is found when you first start your
+computer you must press a key to enter it (such as F2). On the BIOS page you can
+ find the parallel port address and set the mode such as SPP, EPP, etc on some
+computers this info is displayed for a few seconds during start up. For PCI
+parallel port cards the address can be found by pressing the <em>parport address
+search</em> button. This pops up the help output page with a list of all the PCI
+devices that can be found. In there should be a reference to a parallel port
+device with a list of addresses. One of those addresses should work. Not all
+PCI parallel ports work properly. Either type can be selected as <em>in</em> (maximum
+amount of input pins) or <em>out</em> (maximum amount of output pins)
+</p>
+</dd>
+<dt class="hdlist1">
+GUI Frontend list
+</dt>
+<dd>
+<p>
+This specifies the graphical display screens LinuxCNC will use.
+Each one has different option.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>AXIS</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+fully supports lathes.
+</p>
+</li>
+<li>
+<p>
+is the most developed and used frontend
+</p>
+</li>
+<li>
+<p>
+is designed to be used with mouse and keyboard
+</p>
+</li>
+<li>
+<p>
+is tkinter based so integrates PYVCP (python based virtual control
+                panels)  naturally.
+</p>
+</li>
+<li>
+<p>
+has a 3D graphical window.
+</p>
+</li>
+<li>
+<p>
+allows VCP integrated on the side or in center tab
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>TOUCHY</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Touchy was designed to be used with a touchscreen, some minimal
+                physical switches and a MPG wheel.
+</p>
+</li>
+<li>
+<p>
+requires cycle-start, abort, and single-step signals and buttons
+</p>
+</li>
+<li>
+<p>
+It also requires shared axis MPG jogging to be selected.
+</p>
+</li>
+<li>
+<p>
+is GTK based so integrates GLADE VCP (virtual control panels) naturally.
+</p>
+</li>
+<li>
+<p>
+allows VCP panels integrated in the center Tab
+</p>
+</li>
+<li>
+<p>
+has no graphical window
+</p>
+</li>
+<li>
+<p>
+look can be changed with custom themes
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>MINI</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+standard on OEM Sherline machines
+</p>
+</li>
+<li>
+<p>
+does not use Estop
+</p>
+</li>
+<li>
+<p>
+no VCP integration
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>TkLinuxCNC</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+hi contrast bright blue screen
+</p>
+</li>
+<li>
+<p>
+separate graphics window
+</p>
+</li>
+<li>
+<p>
+no VCP integration
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_external_configuration">3. External Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This page allows you to select external controls such as for jogging or
+overrides.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pncconf-external.png" alt="images/pncconf-external.png" />
+</div>
+<div class="title">Figure 3. GUI External</div>
+</div>
+<div class="paragraph"><p>If you select a Joystick for jogging, You will need it always connected for LinuxCNC
+to load. To use the analog sticks for useful jogging you probably need to add
+some custom HAL code. MPG jogging requires a pulse generator connected to a MESA
+ encoder counter. Override controls can either use a pulse generator (MPG) or
+switches (such as a rotary dial). External buttons might be used with a switch
+based OEM joystick.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Joystick jogging
+</dt>
+<dd>
+<p>
+Requires a custom <em>device rule</em> to be installed in the system. This is a file
+that LinuxCNC uses to connect to LINUX&#8217;s device list. PNCconf will help to make this
+file.
+</p>
+<div class="paragraph"><p><em>Search for device rule</em> will search the system for rules, you can use this to
+find the name of devices you have already built with PNCconf.</p></div>
+<div class="paragraph"><p><em>Add a device rule</em> will allow you to configure a new device by following the
+prompts. You will need your device available.</p></div>
+<div class="paragraph"><p><em>test device</em> allows you to load a device, see its pin names and check its
+functions with halmeter.</p></div>
+<div class="paragraph"><p>joystick jogging uses HALUI and hal_input components.</p></div>
+</dd>
+<dt class="hdlist1">
+External buttons
+</dt>
+<dd>
+<p>
+allows jogging the axis with simple buttons at a specified jog rate. Probably
+best for rapid jogging.
+</p>
+</dd>
+<dt class="hdlist1">
+MPG Jogging
+</dt>
+<dd>
+<p>
+Allows you to use a Manual Pulse Generator to jog the machine&#8217;s axis.
+</p>
+<div class="paragraph"><p>MPG&#8217;s are often found on commercial grade machines. They output quadrature
+pulses that can be counted with a MESA encoder counter. PNCconf allows for an
+MPG per axis or one MPG shared with all axis. It allows for selection of jog
+speeds using switches or a single speed.</p></div>
+<div class="paragraph"><p>The selectable increments option uses the mux16 component. This component
+has options such as debounce and gray code to help filter the raw switch input.</p></div>
+</dd>
+<dt class="hdlist1">
+Overrides
+</dt>
+<dd>
+<p>
+PNCconf allows overrides of feedrates and/or spindle speed using a pulse
+generator (MPG) or switches (eg. rotary).
+</p>
+</dd>
+</dl></div>
+</div>
+<h2 id="_gui_configuration">4. GUI Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Here you can set defaults for the display screens, add virtual control panels
+(VCP), and set some LinuxCNC options..</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pncconf-gui.png" alt="images/pncconf-gui.png" />
+</div>
+<div class="title">Figure 4. GUI Configuration</div>
+</div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Frontend GUI Options
+</dt>
+<dd>
+<p>
+The default options allows general defaults to be chosen for any display screen.
+</p>
+<div class="paragraph"><p>AXIS defaults are options specific to AXIS. If you choose size , position or
+force maximize options then PNCconf will ask if it&#8217;s alright to overwrite a
+preference file (.axisrc). Unless you have manually added commands to this file
+it is fine to allow it. Position and force max can be used to move AXIS to a
+second monitor if the system is capable.</p></div>
+<div class="paragraph"><p>Touchy defaults are options specific to Touchy. Most of Touchy&#8217;s options can be
+changed while Touchy is running using the preference page. Touchy uses GTK to
+draw its screen, and GTK supports themes. Themes controls the basic look and
+feel of a program. You can download themes from the net or edit them yourself.
+There are a list of the current themes on the computer that you can pick from.
+To help some of the text to stand out PNCconf allows you to override the
+Themes&#8217;s defaults. The position and force max options can be used to move Touchy
+to a second monitor if the system is capable.</p></div>
+</dd>
+<dt class="hdlist1">
+VCP options
+</dt>
+<dd>
+<p>
+Virtual Control Panels allow one to add custom controls and displays to the
+screen. AXIS and Touchy can integrate these controls inside the screen in
+designated positions. There are two kinds of VCPs -
+pyVCP which uses <em>Tkinter</em> to draw the screen and GLADE VCP that uses <em>GTK</em> to
+draw the screen.
+</p>
+</dd>
+<dt class="hdlist1">
+PyVCP
+</dt>
+<dd>
+<p>
+PyVCPs screen XML file can only be hand built. PyVCPs fit naturally in with AXIS
+as they both use TKinter.
+</p>
+<div class="paragraph"><p>HAL pins are created for the user to connect to inside their custom HAL file.
+There is a sample spindle display panel for the user to use as-is or build on.
+You may select a blank file that you can later add your controls <em>widgets</em> to
+or select a spindle display sample that will display spindle speed and indicate
+if the spindle is at requested speed.</p></div>
+<div class="paragraph"><p>PNCconf will connect the proper spindle display HAL pins for you.
+If you are using AXIS then the panel will be integrated on the right side.
+If not using AXIS then the panel will be separate <em>stand-alone</em> from the
+frontend screen.</p></div>
+<div class="paragraph"><p>You can use the geometry options to size and move the panel, for instance to
+move it to a second screen if the system is capable. If you press the <em>Display
+sample panel</em> button the size and placement options will be honoured.</p></div>
+</dd>
+<dt class="hdlist1">
+GLADE VCP
+</dt>
+<dd>
+<p>
+GLADE VCPs fit naturally inside of TOUCHY screen as they both use GTK to draw
+them, but by changing GLADE VCP&#8217;s theme it can be made to blend pretty well in
+AXIS. (try Redmond)
+</p>
+<div class="paragraph"><p>It uses a graphical editor to build its XML files.
+HAL pins are created for the user to connect to, inside of their custom HAL
+file.</p></div>
+<div class="paragraph"><p>GLADE VCP also allows much more sophisticated (and complicated) programming
+interaction, which PNCconf currently doesn&#8217;t leverage. (see GLADE VCP in the
+manual)</p></div>
+<div class="paragraph"><p>PNCconf has sample panels for the user to use as-is or build on.
+With GLADE VCP PNCconf will allow you to select different options on your
+sample display.</p></div>
+<div class="paragraph"><p>Under <em>sample options</em> select which ones you would like.
+The zero buttons use HALUI commands which you could edit later in the HALUI
+section.</p></div>
+<div class="paragraph"><p>Auto Z touch-off also requires the classicladder touch-off program and a probe
+input selected. It requires a conductive touch-off plate and a grounded
+conductive tool. For an idea on how it works see:</p></div>
+<div class="paragraph"><p><a href="http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?ClassicLadderExamples#Single_button_probe_touchoff">http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?ClassicLadderExamples#Single_button_probe_touchoff</a></p></div>
+<div class="paragraph"><p>Under <em>Display Options</em>, size, position, and force max can be used on a
+<em>stand-alone</em> panel for such things as placing the screen on a second monitor if
+the system is capable.</p></div>
+<div class="paragraph"><p>You can select a GTK theme which sets the  basic look and feel of the panel.
+You Usually want this to match the frontend screen.
+These options will be used if you press the <em>Display sample button</em>.
+With GLADE VCP depending on the frontend screen, you can select where the panel
+will display.</p></div>
+<div class="paragraph"><p>You can force it to be stand-alone or with AXIS it can be in the center or on
+the right side, with Touchy it can be in the center.</p></div>
+</dd>
+<dt class="hdlist1">
+Defaults and Options
+</dt>
+<dd>
+<div class="ulist"><ul>
+<li>
+<p>
+Require homing before MDI / Running
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+If you want to be able to move the machine before homing uncheck
+                this checkbox.
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Popup Tool Prompt
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+Choose between an on screen prompt for tool changes or export standard signal
+   names for a User supplied custom tool changer Hal file
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Leave spindle on during tool change:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+Used for lathes
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Force individual manual homing
+</p>
+</li>
+<li>
+<p>
+Move spindle up before tool change
+</p>
+</li>
+<li>
+<p>
+Restore joint position after shutdown
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+Used for non-trivial kinematics machines
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Random position toolchangers
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+Used for toolchangers that do not return the tool to the same
+  pocket. You will need to add custom HAL code to support toolchangers.
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</dd>
+</dl></div>
+</div>
+<h2 id="_mesa_configuration">5. Mesa Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The Mesa configuration pages allow one to utilize different firmwares.
+On the basic page you selected a Mesa card here you pick the available firmware
+and select what and how many components are available.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pncconf-mesa-config.png" alt="images/pncconf-mesa-config.png" />
+</div>
+<div class="title">Figure 5. Mesa Configuration</div>
+</div>
+<div class="paragraph"><p>Parport address is used only with Mesa parport card, the 7i43. An onboard
+parallel port usually uses 0x278 or 0x378 though you should be able to find the
+address from the BIOS page. The 7i43 requires the parallel port to use the EPP
+mode, again set in the BIOS page. If using a PCI parallel port the address can
+be searched for by using the search button on the basic page.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">Many PCI cards do not support the EPP protocol properly.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>PDM PWM and 3PWM base frequency sets the balance between ripple and linearity.
+If using Mesa daughter boards the docs for the board should give recommendations</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">It&#8217;s important to follow these to avoid damage and get the best performance.</td>
+</tr></table>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>The 7i33 requires PDM and a PDM base frequency of 6 mHz
+The 7i29 requires PWM and a PWM base frequency of 20 Khz
+The 7i30 requires PWM and a PWM base frequency of 20 Khz
+The 7i40 requires PWM and a PWM base frequency of 50 Khz
+The 7i48 requires UDM and a PWM base frequency of 24 Khz</tt></pre>
+</div></div>
+<div class="paragraph"><p>Watchdog time out is used to set how long the MESA board will wait before
+killing outputs if communication is interrupted from the computer. Please
+remember Mesa uses <em>active low</em> outputs meaning that when the output pin is on,
+it is low (approx 0 volts) and if it&#8217;s off the output in high (approx 5 volts)
+make sure your equipment is safe when in the off (watchdog bitten) state.</p></div>
+<div class="paragraph"><p>You may choose the number of available components by deselecting unused ones.
+Not all component types are available with all firmware.</p></div>
+<div class="paragraph"><p>Choosing less then the maximum number of components allows one to gain more GPIO
+ pins. If using daughter boards keep in mind you must not deselect pins that the
+ card uses. For instance some firmware supports two 7i33 cards, If you only have
+ one you may deselect enough components to utilize the connector that supported
+the second 7i33. Components are deselected numerically by the highest number
+first then down with out skipping a number. If by doing this the components are
+not where you want them then you must use a different firmware. The firmware
+dictates where, what and the max amounts of the components. Custom firmware is
+possible, ask nicely when contacting the LinuxCNC developers and Mesa. Using custom
+firmware in PNCconf requires special procedures and is not always possible -
+Though I try to make PNCconf as flexible as possible.</p></div>
+<div class="paragraph"><p>After choosing all these options press the <em>Accept Component Changes</em> button and
+ PNCconf will update the I/O setup pages. Only I/O tabs will be shown for
+available connectors, depending on the Mesa board.</p></div>
+</div>
+<h2 id="_mesa_i_o_setup">6. Mesa I/O Setup</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The tabs are used to configure the input and output pins of the Mesa boards.
+PNCconf allows one to create custom signal names for use in custom HAL files.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pncconf-mesa-io2.png" alt="images/pncconf-mesa-io2.png" />
+</div>
+<div class="title">Figure 6. Mesa I/O C2</div>
+</div>
+<div class="paragraph"><p>On this tab with this firmware the components are setup for a 7i33 daughter
+board, usually used with closed loop servos. Note the component numbers of the
+encoder counters and PWM drivers are not in numerical order. This follows the
+daughter board requirements.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pncconf-mesa-io3.png" alt="images/pncconf-mesa-io3.png" />
+</div>
+<div class="title">Figure 7. Mesa I/O C3</div>
+</div>
+<div class="paragraph"><p>On this tab all the pins are GPIO. Note the 3 digit numbers - they will match
+the HAL pin number. GPIO pins can be selected as input or output and can be
+inverted.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pncconf-mesa-io4.png" alt="images/pncconf-mesa-io4.png" />
+</div>
+<div class="title">Figure 8. Mesa I/O C4</div>
+</div>
+<div class="paragraph"><p>On this tab there are a mix of step generators and GPIO.
+Step generators output and direction pins can be inverted. Note that inverting a
+ Step Gen-A pin (the step output pin) changes the step timing. It should match
+what your controller expects.</p></div>
+</div>
+<h2 id="_parport_configuration">7. Parport configuration</h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="images/pncconf-parport.png" alt="images/pncconf-parport.png" />
+</div>
+</div>
+<div class="paragraph"><p>The parallel port can be used for simple I/O similar to Mesa&#8217;s GPIO pins.</p></div>
+</div>
+<h2 id="_axis_configuration">8. Axis Configuration</h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="images/pncconf-axis-drive.png" alt="images/pncconf-axis-drive.png" />
+</div>
+<div class="title">Figure 9. Axis Drive Configuration</div>
+</div>
+<div class="paragraph"><p>This page allows configuring and testing of the motor and/or encoder combination
+. If using a servo motor an open loop test is available, if using a stepper a
+tuning test is available.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Open Loop Test
+</dt>
+<dd>
+<p>
+An open loop test is important as it confirms the direction of the motor and
+encoder. The motor should move the axis in the positive direction when the
+positive button is pushed and also the encoder should count in the postie
+direction. The axis movement should follow the Machinery&#8217;s Handbook
+<span class="footnote"><br />["axis nomenclature" in the chapter "Numerical Control" in the
+"Machinery&#8217;s Handbook" published by Industrial Press.]<br /></span> standards or
+AXIS graphical display will not make much sense. Hopefully the help page and
+diagrams can help figure this out. Note that axis directions are based on TOOL
+movement not table movement. There is no acceleration ramping with the open loop
+ test so start with lower DAC numbers. By moving the axis a known distance one
+can confirm the encoder scaling. The encoder should count even without the amp
+enabled depending on how power is supplied to the encoder.
+</p>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">If the motor and encoder do not agree on counting direction then the
+servo will run away when using PID control.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Since at the moment PID settings can not be tested in PNCconf the settings are
+really for when you re-edit a config - enter your tested PID settings.</p></div>
+<div class="paragraph"><p>DAC scaling, max output and offset are used to tailor the DAC output.</p></div>
+</dd>
+<dt class="hdlist1">
+Compute DAC
+</dt>
+<dd>
+<p>
+These two values are the scale and offset factors for the axis output to the
+motor amplifiers. The second value (offset) is subtracted from the computed
+output (in volts), and divided by the first value (scale factor), before being
+written to the D/A converters. The units on the scale value are in true volts
+per DAC output volts. The units on the offset value are in volts. These can be
+used to linearize a DAC.
+</p>
+<div class="paragraph"><p>Specifically, when writing outputs, the LinuxCNC first converts the desired
+output in quasi-SI units to raw actuator values, e.g., volts for an amplifier
+ DAC. This scaling looks like: The value for scale can be obtained analytically
+by doing a unit analysis, i.e., units are [output SI units]/[actuator units].
+For example, on a machine with a velocity mode amplifier such that 1 volt
+results in 250 mm/sec velocity, Note that the units of the offset are in machine
+ units, e.g., mm/sec, and they are pre-subtracted from the sensor readings. The
+value for this offset is obtained by finding the value of your output which
+yields 0.0 for the actuator output. If the DAC is linearized, this offset is
+normally 0.0.</p></div>
+<div class="paragraph"><p>The scale and offset can be used to linearize the DAC as well, resulting in
+values that reflect the combined effects of amplifier gain, DAC non-linearity,
+DAC units, etc. To do this, follow this procedure:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Build a calibration table for the output, driving the DAC with a
+            desired voltage and measuring the result:
+</p>
+</li>
+</ul></div>
+</dd>
+</dl></div>
+<div class="tableblock">
+<table rules="all"
+width="50%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 1. Output Voltage Measurements</caption>
+<col width="50%" />
+<col width="50%" />
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table"><strong>Raw</strong></p></td>
+<td align="center" valign="top"><p class="table"><strong>Measured</strong></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-10</p></td>
+<td align="center" valign="top"><p class="table"><strong>-9.93</strong></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">-9</p></td>
+<td align="center" valign="top"><p class="table"><strong>-8.83</strong></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table"><strong>-0.96</strong></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table"><strong>-0.03</strong></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">9</p></td>
+<td align="center" valign="top"><p class="table"><strong>9.87</strong></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">10</p></td>
+<td align="center" valign="top"><p class="table"><strong>10.07</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+Do a least-squares linear fit to get coefficients a, b such that meas=a*raw+b
+</p>
+</li>
+<li>
+<p>
+Note that we want raw output such that our measured result is
+            identical to the commanded output. This means
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+cmd=a*raw+b
+</p>
+</li>
+<li>
+<p>
+raw=(cmd-b)/a
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+As a result, the a and b coefficients from the linear fit can be used
+            as the scale and offset for the controller directly.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>MAX OUTPUT:
+The maximum value for the output of the PID compensation that is written to the
+motor amplifier, in volts. The computed output value is clamped to this limit.
+The limit is applied before scaling to raw output units. The value is applied
+symmetrically to both the plus and the minus side.</p></div>
+<div class="paragraph"><p><strong>Tuning Test</strong>
+The tuning test unfortunately only works with stepper based systems. Again
+confirm the directions on the axis is correct. Then test the system by running
+ the axis back and forth, If the acceleration or max speed is too high you will
+lose steps. While jogging, Keep in mind it can take a while for an axis with low
+acceleration to stop. Limit switches are not functional during this test. You
+can set a pause time so each end of the test movement. This would allow you to
+set up and read a dial indicator to see if you are loosing steps.</p></div>
+<div class="paragraph"><p><strong>Stepper Timing</strong>
+Stepper timing needs to be tailored to the step controller&#8217;s requirements.
+Pncconf supplies some default controller timing or allows custom timing settings
+. See <a href="http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?Stepper_Drive_Timing">http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?Stepper_Drive_Timing</a> for
+some more known timing numbers (feel free to add ones you have figured out). If
+in doubt use large numbers such as 5000 this will only limit max speed.</p></div>
+<div class="paragraph"><p><strong>Brushless Motor Control</strong>
+These options are used to allow low level control of brushless motors using
+special firmware and daughter boards. It also allows conversion of HALL sensors
+from one manufacturer to another. It is only partially supported and will
+require one to finish the HAL connections. Contact the mail-list or forum for
+more help.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pncconf-scale-calc.png" alt="images/pncconf-scale-calc.png" />
+</div>
+<div class="title">Figure 10. Axis Scale Calculation</div>
+</div>
+<div class="paragraph"><p>The scale settings can be directly entered or one can use the <em>calculate scale</em>
+button to assist. Use the check boxes to select appropriate calculations. Note
+that <em>pulley teeth</em> requires the number of teeth not the gear ratio. Worm turn
+ratio is just the opposite it requires the gear ratio. If your happy with the
+scale press apply otherwise push cancel and enter the scale directly.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pncconf-axis-config.png" alt="images/pncconf-axis-config.png" />
+</div>
+<div class="title">Figure 11. Axis Configuration</div>
+</div>
+<div class="paragraph"><p>Also refer to the diagram tab for two examples of
+home and limit switches. These are two examples of
+many different ways to set homing and limits.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">It is very important to start with the axis moving in the right
+direction or else getting homing right is very difficult!</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Remember positive and negative directions
+refer to the TOOL not the table as per the Machinists handbook.</p></div>
+<div class="ulist"><div class="title">On a typical knee or bed mill</div><ul>
+<li>
+<p>
+when the TABLE moves out that is the positive Y direction
+</p>
+</li>
+<li>
+<p>
+when the TABLE moves left that is the positive X direction
+</p>
+</li>
+<li>
+<p>
+when the TABLE moves down that is the positive Z direction
+</p>
+</li>
+<li>
+<p>
+when the HEAD moves up that is the positive Z direction
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">On a typical lathe</div><ul>
+<li>
+<p>
+when the TOOL moves right, away from the chuck
+</p>
+</li>
+<li>
+<p>
+that is the positive Z direction
+</p>
+</li>
+<li>
+<p>
+when the TOOL moves toward the operator
+</p>
+</li>
+<li>
+<p>
+that is the positive X direction. Some lathes have X
+</p>
+</li>
+<li>
+<p>
+opposite (eg tool on back side), that will work fine but
+</p>
+</li>
+<li>
+<p>
+AXIS graphical display can not be made to reflect this.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>When using homing and / or limit switches
+LinuxCNC expects the HAL signals to be true when
+the switch is being pressed / tripped.
+If the signal is wrong for a limit switch then
+LinuxCNC will think the machine is on end of limit
+all the time. If the home switch search logic is wrong
+LinuxCNC will seem to home in the wrong direction.
+What it actually is doing is trying to BACK off
+the home switch.</p></div>
+<div class="paragraph"><p>Decide on limit switch location.</p></div>
+<div class="paragraph"><p>Limit switches are the back up for software limits in case
+something electrical goes wrong eg. servo runaway.
+Limit switches should be placed so that the machine does not
+hit the physical end of the axis movement. Remember the axis
+will coast past the contact point if moving fast. Limit switches
+should be <em>active low</em> on the machine. eg. power runs through
+the switches all the time - a loss of power (open switch) trips.
+While one could wire them the other way, this is fail safe.
+This may need to be inverted so that the HAL signal in LinuxCNC
+in <em>active high</em> - a TRUE means the switch was tripped. When
+starting LinuxCNC if you get an on-limit warning, and axis is NOT
+tripping the switch, inverting the signal is probably the
+solution. (use HALMETER to check the corresponding HAL signal
+eg. axis.0.pos-lim-sw-in  X axis positive limit switch)</p></div>
+<div class="paragraph"><p>Decide on the home switch location.</p></div>
+<div class="paragraph"><p>If you are using limit switches You may as well use one as a
+home switch. A separate home switch is useful if you have a long
+axis that in use is usually a long way from the limit switches or
+moving the axis to the ends presents problems of interference
+with material.
+eg a long shaft in a lathe makes it hard to home to limits with out
+the tool hitting the shaft, so a separate home switch closer to the
+middle may be better.
+If you have an encoder with index then the home switch acts as a
+course home and the index will be the actual home location.</p></div>
+<div class="paragraph"><p>Decide on the MACHINE ORIGIN position.</p></div>
+<div class="paragraph"><p>MACHINE ORIGIN is what LinuxCNC uses to reference all user coordinate
+systems from.
+I can think of little reason it would need to be in any particular
+spot. There are only a few G codes that can access the
+MACHINE COORDINATE system.( G53, G30 and G28 )
+If using tool-change-at-G30 option having the Origin at the tool
+change position may be convenient. By convention, it may be easiest
+to have the ORIGIN at the home switch.</p></div>
+<div class="paragraph"><p>Decide on the (final) HOME POSITION.</p></div>
+<div class="paragraph"><p>this just places the carriage at a consistent and convenient position
+after LinuxCNC figures out where the ORIGIN is.</p></div>
+<div class="paragraph"><p>Measure / calculate the positive / negative axis travel distances.</p></div>
+<div class="paragraph"><p>Move the axis to the origin. Mark a reference on the movable
+slide and the non-moveable support (so they are in line) move
+the machine to the end of limits. Measure between the marks that is one
+of the travel distances. Move the table to the other end of travel.
+Measure the marks again. That is the other travel distance. If the ORIGIN
+is at one of the limits then that travel distance will be zero.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+(machine) ORIGIN
+</dt>
+<dd>
+<p>
+    The Origin is the MACHINE zero point. (not
+    the zero point you set your cutter / material at).
+    LinuxCNC uses this point to reference everything else
+    from. It should be inside the software limits.
+    LinuxCNC uses the home switch location to calculate
+    the origin position (when using home switches
+    or must be manually set if not using home switches.
+</p>
+</dd>
+<dt class="hdlist1">
+Travel distance
+</dt>
+<dd>
+<p>
+    This is the maximum distance the axis can
+    travel in each direction. This may
+    or may not be able to be measured directly
+    from origin to limit switch. The positive and
+    negative travel distances should add up to the
+    total travel distance.
+</p>
+</dd>
+<dt class="hdlist1">
+POSITIVE TRAVEL DISTANCE
+</dt>
+<dd>
+<p>
+    This is the distance the Axis travels from
+    the Origin to the positive travel distance or
+    the total travel minus the negative travel
+    distance. You would set this to zero if the
+    origin is positioned at the positive limit.
+    The will always be zero or a positive number.
+</p>
+</dd>
+<dt class="hdlist1">
+NEGATIVE TRAVEL DISTANCE
+</dt>
+<dd>
+<p>
+    This is the distance the Axis travels from
+    the Origin to the negative travel distance.
+    or the total travel minus the positive travel
+    distance. You would set this to zero if the
+    origin is positioned at the negative limit.
+    This will always be zero or a negative number.
+    If you forget to make this negative PNCconf
+    will do it internally.
+</p>
+</dd>
+<dt class="hdlist1">
+(Final) HOME POSITION
+</dt>
+<dd>
+<p>
+    This is the position the home sequence will
+    finish at. It is referenced from the Origin
+    so can be negative or positive depending on
+    what side of the Origin it is located.
+    When at the (final) home position if
+    you must move in the Positive direction to
+    get to the Origin, then the number will be
+    negative.
+</p>
+</dd>
+<dt class="hdlist1">
+HOME SWITCH LOCATION
+</dt>
+<dd>
+<p>
+    This is the distance from the home switch to
+    the Origin. It could be negative or positive
+    depending on what side of the Origin it is
+    located. When at the home switch location if
+    you must move in the Positive direction to
+    get to the Origin, then the number will be
+    negative. If you set this to zero then the
+    Origin will be at the location of the limit
+    switch (plus distance to find index if used)
+</p>
+</dd>
+<dt class="hdlist1">
+Home Search Velocity
+</dt>
+<dd>
+<p>
+    Course home search velocity in units per minute.
+</p>
+</dd>
+<dt class="hdlist1">
+Home Search Direction
+</dt>
+<dd>
+<p>
+    Sets the home switch search direction
+    either negative (ie. towards negative limit switch)
+    or positive (ie. towards positive limit switch)
+</p>
+</dd>
+<dt class="hdlist1">
+Home Latch Velocity
+</dt>
+<dd>
+<p>
+    Fine Home search velocity in units per minute
+</p>
+</dd>
+<dt class="hdlist1">
+Home Final Velocity
+</dt>
+<dd>
+<p>
+    Velocity used from latch position to (final) home position
+    in units per minute. Set to 0 for max rapid speed
+</p>
+</dd>
+<dt class="hdlist1">
+Home latch Direction
+</dt>
+<dd>
+<p>
+    Allows setting of the latch direction to the same
+    or opposite of the search direction.
+</p>
+</dd>
+<dt class="hdlist1">
+Use Encoder Index For Home
+</dt>
+<dd>
+<p>
+    LinuxCNC will search for an encoder index pulse while in
+    the latch stage of homing.
+</p>
+</dd>
+<dt class="hdlist1">
+Use Compensation File
+</dt>
+<dd>
+<p>
+    Allows specifying a Comp filename and type.
+    Allows sophisticated compensation. See Manual.
+</p>
+</dd>
+<dt class="hdlist1">
+Use Backlash Compensation
+</dt>
+<dd>
+<p>
+    Allows setting of simple backlash compensation. Can
+    not be used with Compensation File. See Manual.
+</p>
+</dd>
+</dl></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pncconf-diagram-lathe.png" alt="images/pncconf-diagram-lathe.png" />
+</div>
+<div class="title">Figure 12. AXIS Help Diagram</div>
+</div>
+<div class="paragraph"><p>The diagrams should help to demonstrate an example of limit switches and
+standard axis movement directions.
+In this example the Z axis was two limit switches, the positive switch is shared
+ as a home switch.
+The MACHINE ORIGIN (zero point) is located at the negative limit.
+The left edge of the carriage is the negative trip pin and the right the
+positive trip pin.
+We wish the FINAL HOME POSITION to be 4 inches away from the ORIGIN on the
+positive side.
+If the carriage was moved to the positive limit we would measure 10 inches
+between the negative limit and the negative trip pin.</p></div>
+</div>
+<h2 id="_spindle_configuration">9. Spindle Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>If you select spindle signals then this page is available to configure spindle
+control.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">Many of the option on this page will not show unless the proper option was
+selected on previous pages!</td>
+</tr></table>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pncconf-spindle-config.png" alt="images/pncconf-spindle-config.png" />
+</div>
+<div class="title">Figure 13. Spindle Configuration</div>
+</div>
+<div class="paragraph"><p>This page is similar to the axis motor configuration page.</p></div>
+<div class="paragraph"><p>There are some differences:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Unless one has chosen a stepper driven spindle there is no acceleration or
+velocity limiting.
+</p>
+</li>
+<li>
+<p>
+There is no support for gear changes or ranges.
+</p>
+</li>
+<li>
+<p>
+If you picked a VCP spindle display option then spindle-at-speed scale and
+filter settings may be shown.
+</p>
+</li>
+<li>
+<p>
+Spindle-at-speed allows LinuxCNC to wait till the spindle is at the requested speed
+before moving the axis. This is particularly handy on lathes with constant
+surface feed and large speed diameter changes. It requires either encoder
+feedback or a digital spindle-at-speed signal typically connected to a VFD
+drive.
+</p>
+</li>
+<li>
+<p>
+If using encoder feedback, you may select a spindle-at-speed scale setting that
+specifies how close the actual speed must be to the requested speed to be
+considered at-speed.
+</p>
+</li>
+<li>
+<p>
+If using encoder feedback, the VCP speed display can be erratic - the
+filter setting can be used to smooth out the display. The encoder scale must be
+set for the encoder count / gearing used.
+</p>
+</li>
+<li>
+<p>
+If you are using a single input for a spindle encoder you must add the line:
+setp    hm2_7i43.0.encoder.00.counter-mode 1
+(changing the board name and encoder number to your requirements) into a custom
+HAL file. See the Hostmot2 section on encoders for more info about counter mode.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_advanced_options">10. Advanced Options</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This allows setting of HALUI commands and loading of classicladder and sample
+ladder programs.
+If you selected GLADE VCP options such as for zeroing axis, there will be
+commands showing.
+See the manual about info on HALUI for using custom halcmds.
+There are several ladder program options.
+The Estop program allows an external ESTOP switch or the GUI frontend to throw
+an Estop. It also has a timed lube pump signal.
+The Z auto touch-off is with a touch-off plate, the GLADE VCP touch-off button
+and special HALUI commands to set the current
+user origin to zero and rapid clear.
+The serial modbus program is basically a blank template program that sets up
+classicladder for serial modbus. See the classicladder section in the manual.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pncconf-advanced.png" alt="images/pncconf-advanced.png" />
+</div>
+<div class="title">Figure 14. Advanced Options</div>
+</div>
+</div>
+<h2 id="_hal_components">11. HAL Components</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>On this page you can add additional HAL components you might need for custom
+HAL files.
+In this way one should not have to hand edit the main HAL file, while still
+allowing user needed components.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pncconf-hal.png" alt="images/pncconf-hal.png" />
+</div>
+<div class="title">Figure 15. HAL Components</div>
+</div>
+<div class="paragraph"><p>The first selection is components that pncconf uses internally.
+You may configure pncconf to load extra instances of the components for your
+custom HAL file.</p></div>
+<div class="paragraph"><p>Select the number of instances your custom file will need, pncconf will add
+what it needs after them.</p></div>
+<div class="paragraph"><p>Meaning if you need 2 and pncconf needs 1 pncconf will load 3 instances and use
+the last one.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Custom Component Commands
+</dt>
+<dd>
+<p>
+This selection will allow you to load HAL components that pncconf does not use.
+Add the loadrt or loadusr command, under the heading <em>loading command</em>
+Add the addf command under the heading <em>Thread command</em>.
+The components will be added to the thread between reading of inputs and writing
+of outputs, in the order you write them in the <em>thread command</em>.
+</p>
+</dd>
+</dl></div>
+</div>
+<h2 id="_advanced_usage_of_pncconf">12. Advanced Usage Of PNCconf</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>PNCconf does its best to allow flexible customization by the user.
+PNCconf has support for custom signal names, custom loading of components,
+custom HAL files and custom firmware.</p></div>
+<div class="paragraph"><p>There are also signal names that PNCconf always provides regardless of options
+selected, for user&#8217;s custom HAL files
+With some thought most customizations should work regardless if you later select
+different options in PNCconf.</p></div>
+<div class="paragraph"><p>Eventually if the customizations are beyond the scope of PNCconf&#8217;s frame work
+you can use PNCconf to build a base config or use one of LinuxCNC&#8217;s sample
+configurations and just hand edit it to what ever you want.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Custom Signal Names
+</dt>
+<dd>
+<p>
+If you wish to connect a component to something in a custom HAL file write a
+unique signal name in the combo entry box. Certain components will add endings
+to your custom signal name:
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>Encoders will add &lt; customname &gt; +:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+position
+</p>
+</li>
+<li>
+<p>
+count
+</p>
+</li>
+<li>
+<p>
+velocity
+</p>
+</li>
+<li>
+<p>
+index-enable
+</p>
+</li>
+<li>
+<p>
+reset
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Steppers add:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+enable
+</p>
+</li>
+<li>
+<p>
+counts
+</p>
+</li>
+<li>
+<p>
+position-cmd
+</p>
+</li>
+<li>
+<p>
+position-fb
+</p>
+</li>
+<li>
+<p>
+velocity-fb
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>PWM add:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+enable
+</p>
+</li>
+<li>
+<p>
+value
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>GPIO pins will just have the entered signal name connected to it</p></div>
+<div class="paragraph"><p>In this way one can connect to these signals in the custom HAL files and still
+have the option to move them around later.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Custom Signal Names
+</dt>
+<dd>
+<p>
+The Hal Components page can be used to load components needed by a user for
+customization.
+</p>
+</dd>
+<dt class="hdlist1">
+Loading Custom Firmware
+</dt>
+<dd>
+<p>
+PNCconf searches for firmware on the system and then looks for the XML file that
+it can convert to what it understands. These XML files are only supplied for
+officially released firmware from the LinuxCNC team. To utilize custom firmware one
+must convert it to an array that PNCconf understands and add its filepath
+to PNCconf&#8217;s preference file. By default this path searches the desktop for
+a folder named custom_firmware and a file named firmware.py.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>The hidden preference file is in the user&#8217;s home file, is
+named .pncconf-preferences and require one to select <em>show hidden files</em> to see
+and edit it. The contents of this file can be seen when you first load PNCconf -
+press the help button and look at the output page.</p></div>
+<div class="paragraph"><p>Ask on the LinuxCNC mail-list or forum for info about converting custom firmware.
+Not all firmware can be utilized with PNCconf.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Custom HAL Files
+</dt>
+<dd>
+<p>
+There are four custom files that you can use to add HAL commands to:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+custom.hal is for HAL commands that don&#8217;t have to be run after the GUI frontend
+loads. It is run after the configuration-named HAL file.
+</p>
+</li>
+<li>
+<p>
+custom_postgui.hal is for commands that must be run after AXIS loads or a
+standalone PYVCP display loads.
+</p>
+</li>
+<li>
+<p>
+custom_gvcp.hal is for commands that must be run after glade VCP is loaded.
+</p>
+</li>
+<li>
+<p>
+shutdown.hal is for commands to run when LinuxCNC shuts down in a controlled manner.
+</p>
+</li>
+</ul></div>
+</dd>
+</dl></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-18 12:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/pncconf.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:11:15 GMT -->
+</html>

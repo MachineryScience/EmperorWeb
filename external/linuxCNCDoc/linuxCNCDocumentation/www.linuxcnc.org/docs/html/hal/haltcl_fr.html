@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/haltcl_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:26 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Fichiers TCL pour HAL</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Fichiers TCL pour HAL</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:hal-tcl"></a> </p></div>
+<div class="paragraph"><p>Le langage de halcmd excelle pour spécifier des composants et des connexions
+mais il n&#8217;offre aucune possibilité de calcul.
+Par conséquent, les fichiers ini sont limités en clarté et n&#8217;ont pas la
+concision qu&#8217;ils pourraient  avoir avec un langage de haut niveau.</p></div>
+<div class="paragraph"><p>Haltcl fourni un moyen facile d&#8217;utiliser les scripts tcl et leurs fonctions
+pour les calculs, les boucles, les branchements, les procédures, etc dans les
+fichiers ini. Pour utiliser cette fonctionnalité, il est nécessaire d&#8217;utiliser
+le langage TCL ainsi que l&#8217;extension .tcl pour les fichiers de HAL.</p></div>
+<div class="paragraph"><p>L&#8217;extension .tcl est comprise par le script principal (linuxcnc) qui traite
+les fichiers ini. Les fichiers haltcl sont identifiés dans la section [HAL]
+des fichiers ini (comme les fichiers .hal).</p></div>
+<div class="listingblock">
+<div class="title">Exemple</div>
+<div class="content">
+<pre><tt>[HAL]
+HALFILE = fichier_conventionnel.hal
+HALFILE = fichier_tcl.tcl</tt></pre>
+</div></div>
+<div class="paragraph"><p>Avec quelques précautions appropriées, les fichiers .hal et .tcl peuvent être
+mélangés.</p></div>
+</div>
+</div>
+<h2 id="_compatibilit">1. Compatibilité</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Le langage utilisé dans les fichiers .tcl a une syntaxe simple qui est un
+sous-ensemble du puissant et polyvalent langage de script Tcl.</p></div>
+</div>
+<h2 id="_commandes_haltcl">2. Commandes haltcl</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Les fichiers haltcl utilisent le langage de script Tcl, auquel s&#8217;ajoutent
+les commandes spécifiques de la couche d&#8217;abstraction matériel de LinuxCNC (HAL).
+Les commandes spécifiques sont les suivantes:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>addf, alias,
+delf, delsig,
+getp, gets
+ptype,
+stype,
+help,
+linkpp, linkps, linksp, list, loadrt, loadusr, lock,
+net, newsig,
+save, setp, sets, show, source, start, status, stop,
+unalias, unlinkp, unload, unloadrt, unloadusr, unlock,
+waitusr</tt></pre>
+</div></div>
+<div class="paragraph"><p>Il existe deux cas particuliers, les commandes <em>gets</em> et <em>list</em> en raison
+de conflits avec les commandes internes de Tcl. Pour haltcl, ces commandes
+doivent être précédées du mot clé <em>hal</em>, comme ci-dessous:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>halcmd   haltcl
+------   ------
+gets     hal gets
+list     hal list</tt></pre>
+</div></div>
+</div>
+<h2 id="_variables_du_fichier_ini_et_haltcl">3. Variables du fichier ini et haltcl</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Les variables du fichier ini sont accessibles par halcmd comme par haltcl
+mais avec une syntaxe différente.</p></div>
+<div class="paragraph"><p>Les fichiers ini de LinuxCNC utilisent des spécificateurs <em>SECTION</em> et <em>ITEM</em>
+pour identifier les items de configuration:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[SECTION_A]
+ITEM1 = value_1
+ITEM2 = value_2
+...
+[SECTION_B]
+...</tt></pre>
+</div></div>
+<div class="paragraph"><p>Les valeurs du fichier ini sont accessibles par substitution de texte dans
+les fichiers .hal en utilisant la forme:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[SECTION]ITEM</tt></pre>
+</div></div>
+<div class="paragraph"><p>Les mêmes valeurs de fichiers ini sont accessibles dans les fichiers .tcl sous
+la forme de tableau de variables globales.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$::SECTION(ITEM)</tt></pre>
+</div></div>
+<div class="paragraph"><p>Par exemple, un item de fichier ini comme:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[AXIS_0]
+MAX_VELOCITY = 4</tt></pre>
+</div></div>
+<div class="paragraph"><p>est exprimé comme   [AXIS_0]MAX_VELOCITY dans les fichiers .hal pour halcmd
+et comme            $::AXIS_0(MAX_VELOCITY) dans les fichiers .tcl pour haltcl.</p></div>
+</div>
+<h2 id="_conversion_des_fichiers_hal_en_fichiers_tcl">4. Conversion des fichiers .hal en fichiers .tcl</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Les fichiers .hal existants peuvent être convertis manuellement en
+fichiers .tcl en les éditant pour adapter les différences mentionnées
+précédemment. Ce processus peut être automatisé à l&#8217;aide de scripts de
+conversion procédant à ces substitutions:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[SECTION]ITEM ---&gt; $::SECTION(ITEM)
+gets          ---&gt; hal gets
+list          ---&gt; hal list</tt></pre>
+</div></div>
+</div>
+<h2 id="_notes_propos_de_haltcl">5. Notes à propos de haltcl</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Dans haltcl, la valeur de l&#8217;argument pour les commandes <em>sets</em> et <em>setp</em>
+est implicitement traitée comme une expression dans le langage Tcl.</p></div>
+<div class="listingblock">
+<div class="title">exemple</div>
+<div class="content">
+<pre><tt># set gain to convert deg/sec to units/min for AXIS_0 radius
+setp scale.0.gain 6.28/360.0*$::AXIS_0(radius)*60.0</tt></pre>
+</div></div>
+<div class="paragraph"><p>Les espaces blancs ne sont pas autorisés dans les expressions, utiliser des
+guillemets doubles pour s&#8217;en affranchir:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>setp scale.0.gain "6.28 / 360.0 * $::AXIS_0(radius) * 60.0"</tt></pre>
+</div></div>
+<div class="paragraph"><p>Dans d&#8217;autres contextes, tels que <em>loadrt</em>, il est nécessaire d&#8217;utiliser
+explicitement la commande Tcl expr ([expr {}]) pour des expressions
+de calcul.</p></div>
+<div class="listingblock">
+<div class="title">exemple</div>
+<div class="content">
+<pre><tt>loadrt motion base_period=[expr {500000000/$::TRAJ(MAX_PULSE_RATE)}]</tt></pre>
+</div></div>
+</div>
+<h2 id="_exemples_pour_haltcl">6. Exemples pour haltcl</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Prenons la question de la marge haute de stepgen (<em>stepgen headroom</em>).
+Le générateur de pas logiciel stepgen fonctionne mieux avec une contrainte
+d&#8217;accélération légèrement supérieure à celle du planificateur de mouvement.
+Ainsi, lorsqu&#8217;on utilise des fichiers halcmd, on force une valeur calculée
+manuellement dans le fichier ini.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[AXIS_0]
+MAXACCEL = 10.0
+STEPGEN_MAXACCEL = 10.5</tt></pre>
+</div></div>
+<div class="paragraph"><p>Avec haltcl, il est possible d&#8217;utiliser des commandes Tcl pour effectuer le
+calcul et éliminer totalement l&#8217;item STEPGEN_MAXACCEL du fichier ini.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>setp stepgen.0.maxaccel $::AXIS_0(MAXACCEL)*1.05</tt></pre>
+</div></div>
+<div class="paragraph"><p>Autres caractéristiques de haltcl, les boucles et les tests.
+Par exemple, beaucoup de configurations utilisent les fichiers .hal
+<em>core_sim.hal</em> ou <em>core_sim9.hal</em>. Ceux-ci diffèrent du fait de la nécessité
+de connecter plus ou moins d&#8217;axes. Le code haltcl suivant devrait fonctionner
+pour n&#8217;importe quelle combinaison d&#8217;axes dans une machine à cinématique
+triviale (trivkins).</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt># Crée les signaux position, vitesse et accélération pour chaque axe
+set ddt 0
+foreach axis {X Y Z A B C U V W} axno {0 1 2 3 4 5 6 7 8} {
+  # 'list pin' retourne une liste vide si la pin n'existe pas
+  if {[hal list pin axis.$axno.motor-pos-cmd] == {}} {
+    continue
+  }
+  net ${axis}pos axis.$axno.motor-pos-cmd =&gt; axis.$axno.motor-pos-fb \
+                                          =&gt; ddt.$ddt.in
+  net ${axis}vel &lt;= ddt.$ddt.out
+  incr ddt
+  net ${axis}vel =&gt; ddt.$ddt.in
+  net ${axis}acc &lt;= ddt.$ddt.out
+  incr ddt
+}
+puts [show sig *vel]
+puts [show sig *acc]</tt></pre>
+</div></div>
+</div>
+<h2 id="_interactivit_de_haltcl">7. Interactivité de haltcl</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>La commande halrun reconnaît les fichiers halctl. Avec l&#8217;option -T,
+haltcl peut être exécuté interactivement comme un interpréteur Tcl.
+Cette fonctionnalité est utile pour les tests et pour les applications hal
+autonomes.</p></div>
+<div class="listingblock">
+<div class="title">exemple</div>
+<div class="content">
+<pre><tt>$ halrun -T fichierhaltcl.tcl</tt></pre>
+</div></div>
+</div>
+<h2 id="_exemples_pour_haltcl_fournis_avec_la_distribution_sim">8. Exemples pour haltcl fournis avec la distribution (sim)</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Le répertoire <em>configs/sim/simtcl</em> contient un fichier ini qui utilise un
+fichier .tcl pour démontrer une configuration haltcl en conjonction avec
+l&#8217;utilisation du processus "twopass". L&#8217;exemple montre l&#8217;utilisation des
+procédures Tcl, les boucles, l&#8217;utilisation des commentaires avec sortie
+sur le terminal.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-30 13:36:08 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/haltcl_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:26 GMT -->
+</html>

@@ -1,0 +1,152 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:44 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/ilowpass.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>ILOWPASS</title>
+
+</head>
+<body>
+
+<h1 align="center">ILOWPASS</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">ilowpass
+&minus; Low-pass filter with integer inputs and outputs</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="74%">
+
+
+<p style="margin-top: 1em"><b>loadrt ilowpass
+[count=</b><i>N</i><b>|names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p> </td>
+<td width="15%">
+</td></tr>
+</table>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">While it may
+find other applications, this component was written to
+create smoother motion while jogging with an MPG.</p>
+
+<p style="margin-left:11%; margin-top: 1em">In a machine
+with high acceleration, a short jog can behave almost like a
+step function. By putting the <b>ilowpass</b> component
+between the MPG encoder <b>counts</b> output and the axis
+jog-counts input, this can be smoothed.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Choose
+<b>scale</b> conservatively so that during a single session
+there will never be more than about 2e9/<b>scale</b> pulses
+seen on the MPG. Choose <b>gain</b> according to the
+smoothing level desired. Divide the axis.<i>N</i>.jog-scale
+values by <b>scale</b>.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>ilowpass.</b><i>N</i>
+(requires a floating-point thread)</p>
+
+<p style="margin-left:22%;">Update the output based on the
+input and parameters</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>ilowpass.</b><i>N</i><b>.in</b>
+s32 in <b><br>
+ilowpass.</b><i>N</i><b>.out</b> s32 out</p>
+
+<p style="margin-left:22%;"><b>out</b> tracks
+<b>in</b>*<b>scale</b> through a low-pass filter of
+<b>gain</b> per period.</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>ilowpass.</b><i>N</i><b>.scale</b>
+float rw (default: <i>1024</i>)</p>
+
+<p style="margin-left:22%;">A scale factor applied to the
+output value of the low-pass filter.</p>
+
+
+<p style="margin-left:11%;"><b>ilowpass.</b><i>N</i><b>.gain</b>
+float rw (default: <i>.5</i>)</p>
+
+<p style="margin-left:22%;">Together with the period, sets
+the rate at which the output changes. Useful range is
+between 0 and 1, with higher values causing the input value
+to be tracked more quickly. For instance, a setting of 0.9
+causes the output value to go 90% of the way towards the
+input value in each period</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Jeff Epler
+&lt;jepler@unpythonic.net&gt;</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/ilowpass.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

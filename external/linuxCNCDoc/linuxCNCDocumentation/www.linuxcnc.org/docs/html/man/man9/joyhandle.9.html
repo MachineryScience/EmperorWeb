@@ -1,0 +1,151 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:45 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/joyhandle.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>JOYHANDLE</title>
+
+</head>
+<body>
+
+<h1 align="center">JOYHANDLE</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">joyhandle
+&minus; sets nonlinear joypad movements, deadbands and
+scales</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="75%">
+
+
+<p style="margin-top: 1em"><b>loadrt joyhandle
+[count=</b><i>N</i><b>|names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p> </td>
+<td width="14%">
+</td></tr>
+</table>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The component
+<b>joyhandle</b> uses the following formula for a non linear
+joypad movements:</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>y = (scale *
+(a*x^power + b*x)) + offset</b></p>
+
+<p style="margin-left:11%; margin-top: 1em">The parameters
+a and b are adjusted in such a way, that the function starts
+at (deadband,offset) and ends at (1,scale+offset).</p>
+
+<p style="margin-left:11%; margin-top: 1em">Negative values
+will be treated point symetrically to origin. Values
+-deadband &lt; x &lt; +deadband will be set to zero.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Values x &gt; 1
+and x &lt; -1 will be skipped to &plusmn;(scale+offset).
+Invert transforms the function to a progressive
+movement.</p>
+
+<p style="margin-left:11%; margin-top: 1em">With power one
+can adjust the nonlinearity (default = 2). Default for
+deadband is 0.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Valid values
+are: power &gt;= 1.0 (reasonable values are 1.x .. 4-5, take
+higher power-values for higher deadbands (&gt;0.5), if you
+want to start with a nearly horizontal slope), 0 &lt;=
+deadband &lt; 0.99 (reasonable 0.1).</p>
+
+<p style="margin-left:11%; margin-top: 1em">An additional
+offset component can be set in special cases (default =
+0).</p>
+
+<p style="margin-left:11%; margin-top: 1em">All values can
+be adjusted for each instance separately.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>joyhandle.</b><i>N</i>
+(requires a floating-point thread)</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>joyhandle.</b><i>N</i><b>.in</b>
+float in <b><br>
+joyhandle.</b><i>N</i><b>.out</b> float out</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>joyhandle.</b><i>N</i><b>.power</b>
+float rw (default: <i>2.0</i>) <b><br>
+joyhandle.</b><i>N</i><b>.deadband</b> float rw (default:
+<i>0.</i>) <b><br>
+joyhandle.</b><i>N</i><b>.scale</b> float rw (default:
+<i>1.</i>) <b><br>
+joyhandle.</b><i>N</i><b>.offset</b> float rw (default:
+<i>0.</i>) <b><br>
+joyhandle.</b><i>N</i><b>.inverse</b> bit rw (default:
+<i>0</i>)</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/joyhandle.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

@@ -1,0 +1,226 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:21 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/hal_type_t.3hal.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>hal_type_t</title>
+
+</head>
+<body>
+
+<h1 align="center">hal_type_t</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#DESRCIPTION">DESRCIPTION</a><br>
+<a href="#NOTES">NOTES</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">hal_type_t
+&minus; typedefs for HAL datatypes</p>
+
+<h2>DESRCIPTION
+<a name="DESRCIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">typedef ...
+<b>hal_bit_t;</b></p>
+
+<p style="margin-left:22%;">A volatile type which may have
+a value of 0 or nonzero.</p>
+
+<p style="margin-left:11%;">typedef ...
+<b>hal_s32_t</b>;</p>
+
+<p style="margin-left:22%;">A volatile type which may have
+a value from -2147483648 to 2147483647.</p>
+
+<p style="margin-left:11%;">typedef ...
+<b>hal_u32_t</b>;</p>
+
+<p style="margin-left:22%;">A volatile type which may have
+a value from 0 to 4294967295.</p>
+
+<p style="margin-left:11%;">typedef ...
+<b>hal_float_t</b>;</p>
+
+<p style="margin-left:22%;">A volatile floating-point type,
+which typically has the same precision and range as the C
+type <b>double</b>.</p>
+
+<p style="margin-left:11%;">typedef ... <b>real_t</b>;</p>
+
+<p style="margin-left:22%;">A nonvolatile floating-point
+type with at least as much precision as
+<b>hal_float_t</b>.</p>
+
+<p style="margin-left:11%;">typedef ... <b>ireal_t</b>;</p>
+
+<p style="margin-left:22%;">A nonvolatile unsigned integral
+type the same size as <b>hal_float_t</b>.</p>
+
+<p style="margin-left:11%;">typedef enum
+<b>hal_type_t</b>;</p>
+
+<p style="margin-left:22%;"><b>HAL_BIT</b></p>
+
+<p style="margin-left:32%;">Corresponds to the type
+<b>hal_bit_t</b>.</p>
+
+<p style="margin-left:22%;"><b>HAL_FLOAT</b></p>
+
+<p style="margin-left:32%;">Corresponds to the type
+<b>hal_float_t</b>.</p>
+
+<p style="margin-left:22%;"><b>HAL_S32</b></p>
+
+<p style="margin-left:32%;">Corresponds to the type
+<b>hal_s32_t</b>.</p>
+
+<p style="margin-left:22%;"><b>HAL_U32</b></p>
+
+<p style="margin-left:32%;">Corresponds to the type
+<b>hal_u32_t</b>.</p>
+
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>hal_bit_t</b>
+is typically a typedef to an integer type whose range is
+larger than just 0 and 1. When testing the value of a
+<b>hal_bit_t</b>, never compare it to 1. Prefer one of the
+following:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="15%">
+
+
+<p>if(b)</p></td>
+<td width="57%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="15%">
+
+
+<p>if(b != 0)</p></td>
+<td width="57%">
+</td></tr>
+</table>
+
+<p style="margin-left:11%; margin-top: 1em">It is often
+useful to refer to a type that can represent all the values
+as a hal type, but without the volatile qualifier. The
+following types correspond with the hal types:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="16%">
+
+
+<p style="margin-top: 1em">hal_bit_t</p></td>
+<td width="8%"></td>
+<td width="16%">
+
+
+<p style="margin-top: 1em">int</p></td>
+<td width="38%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="16%">
+
+
+<p>hal_s32_t</p></td>
+<td width="8%"></td>
+<td width="16%">
+
+
+<p>__s32</p></td>
+<td width="38%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="16%">
+
+
+<p>hal_u32_t</p></td>
+<td width="8%"></td>
+<td width="16%">
+
+
+<p>__u32</p></td>
+<td width="38%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="16%">
+
+
+<p>hal_float_t</p></td>
+<td width="8%"></td>
+<td width="16%">
+
+
+<p>hal_real_t</p></td>
+<td width="38%">
+</td></tr>
+</table>
+
+<p style="margin-left:11%; margin-top: 1em">Take care not
+to use the types <b>s32</b> and <b>u32</b>. These will
+compile in kernel modules but not in userspace, and not for
+&quot;realtime components&quot; when using simulated
+(userspace) realtime.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>hal_pin_new(3hal)</b>,
+<b>hal_param_new(3hal)</b></p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/hal_type_t.3hal.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+</html>

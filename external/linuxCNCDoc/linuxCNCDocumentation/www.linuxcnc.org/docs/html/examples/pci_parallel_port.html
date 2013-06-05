@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/examples/pci_parallel_port.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:15:16 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>PCI Parallel Port</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>PCI Parallel Port</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:pci-parallel-port"></a> </p></div>
+<div class="paragraph"><p>When you add a second parallel port to your PCI bus you have to find
+out the address before you can use it with LinuxCNC.</p></div>
+<div class="paragraph"><p>To find the address of your parallel port card open a terminal window
+and type</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>lspci -v</tt></pre>
+</div></div>
+<div class="paragraph"><p>You will see something similar to this as well as info on everything
+else on the PCI bus:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>0000:00:10.0 Communication controller: \
+        NetMos Technology PCI 1 port parallel adapter (rev 01)
+        Subsystem: LSI Logic / Symbios Logic: Unknown device 0010
+        Flags: medium devsel, IRQ 11
+        I/O ports at a800 [size=8]
+        I/O ports at ac00 [size=8]
+        I/O ports at b000 [size=8]
+        I/O ports at b400 [size=8]
+        I/O ports at b800 [size=8]
+        I/O ports at bc00 [size=16]</tt></pre>
+</div></div>
+<div class="paragraph"><p>In my case the address was the first one so I changed my .hal file from</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt hal_parport cfg=0x378</tt></pre>
+</div></div>
+<div class="paragraph"><p>to</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt hal_parport cfg="0x378 0xa800 in"</tt></pre>
+</div></div>
+<div class="paragraph"><p>(Note the double quotes surrounding the addresses.)</p></div>
+<div class="paragraph"><p>and then added the following lines so the parport will be read and written:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>addf parport.1.read base-thread
+addf parport.1.write base-thread</tt></pre>
+</div></div>
+<div class="paragraph"><p>After doing the above then run your config and verify that the
+parallel port got loaded in Machine/Show HAL Configuration window.</p></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-18 14:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/examples/pci_parallel_port.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:15:16 GMT -->
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gcode/machining_center_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:54 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Aperçu global d&#8217;une machine CNC</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Aperçu global d&#8217;une machine CNC</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:Apercu-machine-CNC"></a> </p></div>
+<div class="paragraph"><p>Cette section donne une description des différents organes constituant une
+machine à commande numérique (CNC).</p></div>
+</div>
+</div>
+<h2 id="_composants_m_caniques">1. Composants mécaniques</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Une machine à commande numérique dispose de beaucoup de composants mécaniques
+pouvant être contrôlés, ou qui peuvent avoir une incidence sur la façon
+dont le contrôle de la machine s&#8217;effectue. Cette section décrit les
+composants qui interagissent avec l&#8217;interpréteur. Les autres composants
+mécaniques, comme les boutons de jog, ne seront pas décrits ici, même si
+ils affectent le contrôle.</p></div>
+<h3 id="_axes">1.1. Axes </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Toute machine à commande numérique dispose d&#8217;un ou de plusieurs axes. Les
+différents types de machines ont différentes combinaisons d&#8217;axes. Par
+exemple, une fraiseuse 4 axes peut avoir la combinaison d&#8217;axes XYZA ou
+XYZB. Un tour classique aura les axes XZ. Une machine de découpe à fil
+chaud aura les axes XYUV.<span class="footnote"><br />[Si le mouvement des composants
+mécaniques n&#8217;est pas indépendant, comme
+sur une machine hexapode, le langage RS274/NGC et les fonctions
+standards seront quand même utilisables, tant que le contrôle de bas
+niveau sait comment contrôler les mécanismes actuels pour produire le
+mouvement relatif de l&#8217;outil et de la pièce qui auraient été produits
+par des axes indépendants. C&#8217;est appelé, la cinématique.]<br /></span>
+<span class="footnote"><br />[Avec LinuxCNC, le cas de la machine à portique XYYZ avec deux
+moteurs pour un axe est mieux traité par la cinématique que par un
+axe linéaire supplémentaire.]<br /></span></p></div>
+<h4 id="_axes_lin_aires_primaires">1.1.1. Axes linéaires primaires </h4>
+<div class="paragraph"><p>Les axes X, Y et Z produisent des mouvements linéaires dans trois
+directions, mutuellement orthogonales.</p></div>
+<h4 id="_axes_lin_aires_secondaires">1.1.2. Axes linéaires secondaires </h4>
+<div class="paragraph"><p>Les axes U, V et W produisent des mouvements linéaires dans trois
+directions, mutuellement orthogonales. Habituellement, X et U sont
+parallèles, Y et V sont parallèles et Z et W sont parallèles.</p></div>
+<h4 id="_axes_rotatifs">1.1.3. Axes rotatifs </h4>
+<div class="paragraph"><p>Les axes A, B et C produisent des mouvements angulaires (rotations).
+Habituellement, l&#8217;axe de rotation de A est parallèle à X, l&#8217;axe de
+rotation de B est parallèle à Y et l&#8217;axe de rotation de C est parallèle
+à Z.</p></div>
+<h3 id="_broche">1.2. Broche </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Une machine à commande numérique est équipée d&#8217;une broche qui maintient un outil
+coupant, un palpeur ou d&#8217;autres outils. La broche peut tourner dans les
+deux sens. Elle peut être conçue pour tourner à vitesse constante mais
+réglable. Excepté sur les machines dont la broche est montée sur un axe
+rotatif, l&#8217;axe de la broche est maintenu parallèle à l&#8217;axe Z et il est
+coïncident avec l&#8217;axe Z quand X et Y sont à zéro. La broche peut être
+stoppée sur une position fixée ou non.</p></div>
+<h3 id="_arrosages">1.3. Arrosages </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Une machine à commande numérique peut être équipée d&#8217;un système fournissant
+l&#8217;arrosage fluide ou un arrosage par gouttelettes.</p></div>
+<h3 id="_correcteurs_de_vitesse_d_8217_avance_et_de_broche">1.4. Correcteurs de vitesse d&#8217;avance et de broche</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Une machine à commande numérique est équipée de boutons de réglage de la vitesse
+d&#8217;avance et de la vitesse de rotation de la broche, ils laissent
+l&#8217;opérateur corriger les vitesses nécessaires pour la broche et
+l&#8217;avance travail, il peut ainsi augmenter ou réduire les vitesses
+programmées.</p></div>
+<h3 id="_bouton_d_8217_effacement_de_bloc_a_id_sec_bouton_effacement_de_block_a">1.5. Bouton d&#8217;effacement de bloc<a id="sec:Bouton-effacement-de-block"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Une machine à commande numérique peut être équipée d&#8217;un bouton d&#8217;effacement de
+bloc. Voir la section <a href="machining_center_fr.html#sec:Interaction-effacement-de-bloc">effacement de bloc</a>.</p></div>
+<h3 id="_bouton_d_8217_arr_t_optionnel_du_programme_a_id_sec_arret_optionnel_a">1.6. Bouton d&#8217;arrêt optionnel du programme<a id="sec:arret-optionnel"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Une machine à commande numérique peut être équipée d&#8217;un bouton d&#8217;arrêt du programme.
+Voir la section <a href="machining_center_fr.html#sec:Interaction-arrets-optionnels">arrêts optionnels</a>.</p></div>
+</div>
+<h2 id="_composants_de_contr_le_et_de_donn_es">2. Composants de contrôle et de données</h2>
+<div class="sectionbody">
+<h3 id="_axes_lin_aires">2.1. Axes linéaires</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les axes X, Y et Z forment un système de coordonnées orthogonales
+standard. La position d&#8217;un axe s&#8217;exprime en utilisant ses coordonnées.</p></div>
+<h3 id="_axes_lin_aires_secondaires_2">2.2. Axes linéaires secondaires</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les axes U, V et W forment également un système de coordonnées
+standard. X et U sont parallèles, Y et V sont parallèles enfin Z et W
+sont parallèles.</p></div>
+<h3 id="_axes_rotatifs_2">2.3. Axes rotatifs</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les axes rotatifs se mesurent en degrés. Leur sens de rotation positif
+est le sens anti-horaire quand l&#8217;observateur est placé face à l&#8217;axe.
+<span class="footnote"><br />[Si les parallélismes sont particuliers, le constructeur du
+système devra indiquer à quels sens de rotation correspondent
+horaire et anti-horaire.]<br /></span></p></div>
+<h3 id="_point_contr_l_a_id_sec_point_controle_a">2.4. Point contrôlé<a id="sec:Point-controle"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Le point contrôlé est le point dont la position et la vitesse de
+déplacement sont contrôlés. Quand la compensation de longueur d&#8217;outil
+est à zéro (valeur par défaut), c&#8217;est un point situé sur l&#8217;axe de la
+broche et proche de la fin de celle-ci. Cette position peut être
+déplacée le long de l&#8217;axe de la broche en spécifiant une compensation
+de longueur d&#8217;outil. Cette compensation correspond généralement à la
+longueur de l&#8217;outil coupant courant. Ainsi, le point contrôlé est à la
+pointe de l&#8217;outil. Sur un tour, les correcteurs d&#8217;outil peuvent être
+spécifiés pour les axes X et Z, le point contrôlé est à la pointe de
+l&#8217;outil ou (correction du rayon de bec) légèrement en retrait du point
+d&#8217;intersection des droites perpendiculaires formées par l&#8217;axe des
+points de tangence à la pièce, de face et sur le côté de l&#8217;outil.</p></div>
+<h3 id="sec:Mouvement-lineaire-coordonne">2.5. Mouvement linéaire coordonné</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Pour mener un outil sur une trajectoire spécifiée, une machine à commande
+numérique doit coordonner les mouvements de plusieurs axes. Nous utilisons le
+terme <em>mouvement linéaire coordonné</em> pour décrire une situation dans
+laquelle, nominalement, chacun des axes se déplace à vitesse constante
+et tous les axes se déplacent de leur point de départ à leur point
+d&#8217;arrivée en même temps. Si deux des axes X, Y, Z (ou les trois) se
+déplacent, ceci produit un mouvement en ligne droite, d&#8217;où le mot
+<em>linéaire</em> dans le terme. Dans les véritables mouvements, ce n&#8217;est
+souvent pas possible de maintenir la vitesse constante à cause des
+accélérations et décélérations nécessaires en début et fin de
+mouvement. C&#8217;est faisable, cependant, de contrôler les axes ainsi,
+chaque axe doit en permanence faire la même fraction du mouvement
+requis que les autres axes. Ceci déplace l&#8217;outil le long du même
+parcours et nous appelons aussi ce genre de mouvement, mouvement
+linéaire coordonné.</p></div>
+<div class="paragraph"><p>Un mouvement linéaire coordonné peut être exécuté soit en vitesse
+travail, soit en vitesse rapide, ou il peut être synchronisé à la
+rotation de la broche. Si les limites physiques de l&#8217;axe rendent le
+déplacement impossible, tous les axes seront ralentis pour maintenir
+le parcours prévu.</p></div>
+<h3 id="_a_id_sub_vitesse_d_avance_a_vitesse_d_8217_avance">2.6. <a id="sub:Vitesse-d-avance"></a>Vitesse d&#8217;avance</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>La vitesse à laquelle le point contrôlé se déplace est ajustable par
+l&#8217;opérateur. Sauf cas particulier, vitesse inverse du temps, vitesse
+par tour, voir la section <a href="#sec:G93-G94-G95-Set">sur les modes de vitesse</a>, dans
+l&#8217;interpréteur, l&#8217;interprétation des vitesses est la suivante:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Si le déplacement concerne un des axes XYZ, F est en unités machine
+   par minute dans le système Cartésien XYZ et les mouvements des autres
+   axes (UVWABC) sont également dans un même mode de coordonnées.
+</p>
+</li>
+<li>
+<p>
+Autrement, si le déplacement concerne un des axes UVW, F est en unités
+   machine par minute dans le système Cartésien UVW, tous les autres axes
+   (ABC) se déplacent dans un même mode de coordonnées.
+</p>
+</li>
+<li>
+<p>
+Autrement, le mouvement est purement rotatif et le mot F est en unités
+   de rotation dans le système pseudo-Cartésien ABC.
+</p>
+</li>
+</ol></div>
+<h3 id="_arrosage">2.7. Arrosage </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Arrosage fluide ou par gouttelettes peuvent être activés
+séparément. Le langage RS274/NGC les arrête ensemble, voir la section
+<a href="m-code_fr.html#sec:M7-M8-M9">des contrôles d&#8217;arrosage</a>.</p></div>
+<h3 id="_temporisation">2.8. Temporisation </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Une temporisation peut être commandée (ex: pour immobiliser tous les
+axes) pendant une durée spécifique. La broche n&#8217;est pas arrêtée pendant
+une temporisation! Sans s&#8217;occuper <a href="machining_center_fr.html#sec:Modes-de-controle-trajectoires">du mode de contrôle de trajectoire</a> la machine s&#8217;arrêtera exactement à la fin du
+dernier mouvement avant la temporisation.</p></div>
+<h3 id="_unit_s">2.9. Unités </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les unités utilisées pour les distances le long des axes X, Y et Z
+peuvent être les pouces ou les millimètres. La vitesse de rotation de
+la broche est en tours par minute. Les positions des axes rotatifs sont
+exprimées en degrés. Les vitesses d&#8217;avance sont exprimées en unités
+machine par minute ou en degrés par minute ou en unités de longueur par
+tour de broche, comme décrit dans la section
+<a href="machining_center_fr.html#sub:Vitesse-d-avance">des vitesses</a>.</p></div>
+<h3 id="_position_courante">2.10. Position courante</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le point contrôlé est toujours à un emplacement appelé la <em>position
+courante</em>, et le contrôleur sait toujours où est cette position. Les
+valeurs représentant la position courante doivent être ajustées en
+l&#8217;absence de tout mouvement des axes si un de ces événements a lieu:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Les unités de longueur ont changé.
+</p>
+</li>
+<li>
+<p>
+La compensation de longueur d&#8217;outil a changé.
+</p>
+</li>
+<li>
+<p>
+Le décalage d&#8217;origine a changé.
+</p>
+</li>
+</ol></div>
+<h3 id="_choix_du_plan_de_travail_a_id_sec_choix_du_plan_de_travail_a">2.11. Choix du plan de travail<a id="sec:Choix-du-plan-de-travail"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p>Il y a toujours un plan sélectionné, qui doit être le plan XY, le plan
+YZ, ou le plan XZ de la machine. L&#8217;axe Z est, bien sûr, perpendiculaire
+au plan XY, l&#8217;axe X perpendiculaire au plan YZ et l&#8217;axe Y
+perpendiculaire au plan XZ.</p></div>
+<h3 id="_carrousel_d_8217_outils">2.12. carrousel d&#8217;outils</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Aucun ou un outil est assigné à chaque emplacement dans le carrousel.</p></div>
+<h3 id="_changeur_d_8217_outil">2.13. Changeur d&#8217;outil</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Une machine à commande numérique peut commander un changeur d&#8217;outils.</p></div>
+<h3 id="_chargeur_de_pi_ce">2.14. Chargeur de pièce</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les deux porte-pièces peuvent être intervertis par commande.</p></div>
+<h3 id="_chargeur_de_pi_ces">2.15. Chargeur de pièces </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Une machine à commande numérique peut être équipée d&#8217;un système de chargement des
+pièces. Le système se compose de deux porte-pièces sur lesquels sont
+fixés les bruts des pièces à usiner. Un seul porte-pièce à la fois est
+en position d&#8217;usinage.</p></div>
+<h3 id="_boutons_des_correcteurs_de_vitesses">2.16. Boutons des correcteurs de vitesses</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les boutons des correcteurs de vitesses peuvent être activés (ils
+fonctionnent normalement) ou rendus inopérants (Ils n&#8217;ont plus aucun
+effet). Le langage RS274/NGC dispose d&#8217;une commande qui active tous les
+boutons et une autre qui les désactive. Voir l&#8217;inhibition et l&#8217;activation
+<a href="m-code_fr.html#sec:M48-M49">des correcteurs de vitesse</a>.
+Voir également <a href="machining_center_fr.html#sec:Interaction-vitesses">ici pour d&#8217;autres détails</a>.</p></div>
+<h3 id="_modes_de_contr_le_de_trajectoire_a_id_sec_modes_de_controle_trajectoires_a">2.17. Modes de contrôle de trajectoire<a id="sec:Modes-de-controle-trajectoires"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p>La machine peut être placée dans un de ces trois modes de contrôle de
+trajectoire:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+mode arrêt exact::
+    En mode arrêt exact, le mobile s&#8217;arrête brièvement à la fin de chaque mouvement
+    programmé.
+</p>
+</li>
+<li>
+<p>
+mode trajectoire exacte::
+    En mode trajectoire exacte, le mobile suit la trajectoire
+    programmée aussi précisément que possible, ralentissant ou s&#8217;arrêtant
+    si nécessaire aux angles vifs du parcours.
+</p>
+</li>
+<li>
+<p>
+mode trajectoire continue avec tolérance optionnelle::
+    En mode trajectoire continue, les angles vifs du parcours peuvent être
+    légèrement arrondis pour que la vitesse soit maintenue (sans dépasser la
+    tolérance, si elle est spécifiée).
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Voir également les G-codes <a href="gcode_fr.html#sec:G61-G61_1">G61/G61.1</a> et <a href="gcode_fr.html#sec:G64">G64</a> des
+contrôles de trajectoire.</p></div>
+<div class="paragraph"><p><a id="sec:Interaction-vitesses"></a> 
+<a id="sec:Interaction-effacement-de-bloc"></a> 
+<a id="sec:Interaction-arrets-optionnels"></a> </p></div>
+</div>
+<h2 id="_interaction_de_l_8217_interpr_teur_avec_les_boutons">3. Interaction de l&#8217;interpréteur avec les boutons</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>L&#8217;interpréteur interagit avec plusieurs boutons de commande. Cette
+section décrit ces interactions plus en détail. En aucun cas
+l&#8217;interpréteur ne connait ce que sont les réglages de ces boutons.</p></div>
+<h3 id="_boutons_de_correction_de_vitesses">3.1. Boutons de correction de vitesses</h3><div style="clear:left"></div>
+<div class="paragraph"><p>L&#8217;interpréteur de commande RS274/NGC autorise (M48) ou interdit (M49)
+l&#8217;action des boutons d&#8217;ajustement des vitesses. Pour certains
+mouvements, tels que la sortie de filet à la fin d&#8217;un cycle de
+filetage, les boutons sont neutralisés automatiquement.</p></div>
+<div class="paragraph"><p>LinuxCNC réagit aux réglages de ces boutons seulement quand ils sont
+autorisés.</p></div>
+<h3 id="_bouton_d_8217_effacement_de_bloc">3.2. Bouton d&#8217;effacement de bloc</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si le bouton <em>Effacement de bloc</em> est actif, les lignes de code
+RS274/NGC commençant par le caractère barre de fraction (caractère
+d&#8217;effacement de bloc) ne sont pas interprétées. Si le bouton est
+désactivé, ces mêmes lignes sont interprétées. Normalement le bouton
+d&#8217;effacement de bloc doit être positionné avant de lancer le programme G-code.</p></div>
+<h3 id="_bouton_d_8217_arr_t_optionnel_du_programme">3.3. Bouton d&#8217;arrêt optionnel du programme</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si ce bouton est actif et qu&#8217;un code M1 est rencontré, le programme
+est mis en pause.</p></div>
+<div class="paragraph"><p><a id="sec:Fichier-Outils"></a> 
+== Fichier d&#8217;outils</p></div>
+<div class="paragraph"><p>Un fichier d&#8217;outils est requis par l&#8217;interpréteur. Le fichier indique
+dans quels emplacements du carrousel sont placés les outils, la
+longueur et le diamètre de chacun des outils.
+Le nom de la table d&#8217;outils est défini sous cette forme dans le fichier ini:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[EMCIO]
+
+# tool table file
+TOOL_TABLE = tooltable.tbl</tt></pre>
+</div></div>
+<div class="paragraph"><p>Il est également possible de donner à la table d&#8217;outils le même nom que le
+fichier ini, mais avec une extension tbl, par exemple:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>TOOL_TABLE = acme_300.tbl</tt></pre>
+</div></div>
+<div class="paragraph"><p>ou encore:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>TOOL_TABLE = EMC-AXIS-SIM.tbl</tt></pre>
+</div></div>
+<div class="paragraph"><p>D&#8217;autres informations sont disponibles sur les spécificités du
+<a href="tool_compensation_fr.html#sec:Tool-Table-Format">format de la table d&#8217;outils</a>.</p></div>
+<div class="paragraph"><p><a id="sec:Parametres"></a> 
+== Paramètres</p></div>
+<div class="paragraph"><p>Dans le langage RS274/NGC, la machine maintient un tableau
+de 5400 paramètres numériques. La plupart d&#8217;entre eux ont un usage
+spécifique. Le tableau de paramètres est persistant, même quand la
+machine est mise hors tension. LinuxCNC utilise un fichier de paramètres et
+assure sa persistance, il donne à l&#8217;interpréteur la responsabilité
+d&#8217;actualiser le fichier. L&#8217;interpréteur lit le fichier quand il démarre
+et l'écrit juste avant de s&#8217;arrêter.</p></div>
+<div class="paragraph"><p>Tous les paramètres sont disponibles pour une utilisation dans les
+programmes de G-code.</p></div>
+<div class="paragraph"><p>Un fichier de paramètres est composé d&#8217;un certain nombre de lignes d&#8217;en-tête,
+suivies par une ligne vide, suivie d&#8217;un nombre quelconque de lignes de données.
+Les lignes d&#8217;en-tête sont ignorées par l&#8217;interpréteur. Il est important qu&#8217;il y
+ait une ligne vide (sans espace ni tabulation), avant les données. La ligne
+d&#8217;en-tête montrée dans le tableau ci-dessous, décrit
+les colonnes de données, il est donc proposé (mais pas obligatoire) que
+cette ligne soit toujours présente.</p></div>
+<div class="paragraph"><p>L&#8217;interpréteur lit seulement les deux premières colonnes du tableau.
+Il ignore la troisième colonne, Commentaire.</p></div>
+<div class="paragraph"><p>Chaque ligne du fichier contient le numéro d&#8217;index d&#8217;un paramètre dans
+la première colonne et la valeur attribuée à ce paramètre, dans la
+deuxième colonne. La valeur est représentée par une nombre flottant en
+double précision à l&#8217;intérieur de l&#8217;interpréteur, mais le point décimal
+n&#8217;est pas exigé dans le fichier. Le format des paramètres décrit ci-dessous,
+est obligatoire et doit être utilisé pour tous les
+fichiers de paramètres, à l&#8217;exception des paramètres représentant une valeur sur
+un axe rotatif inutilisé, qui peuvent être omis. Une erreur sera signalée si un
+paramètre requis est absent. Un fichier de paramètres peut inclure tout autre
+paramètre, tant que son numéro est compris dans une fourchette de 1 à 5400. Les
+numéros de paramètre doivent être disposés dans l&#8217;ordre croissant.
+Sinon, une erreur sera signalée. Le fichier original est copié comme
+fichier de sauvegarde lorsque le nouveau fichier est écrit. Les
+commentaires ne sont pas conservés lorsque le fichier est écrit.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="90%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Tableau 1. Format d&#8217;un fichier de paramètres<a id="sec:Format-fichier-de-parametres"></a></caption>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+<thead>
+<tr>
+<th align="left" valign="top">Numéro d&#8217;index </th>
+<th align="left" valign="top"> Valeur </th>
+<th align="left" valign="top"> Commentaire</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">5161</p></td>
+<td align="left" valign="top"><p class="table">0.0</p></td>
+<td align="left" valign="top"><p class="table">G28 pom X</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">5162</p></td>
+<td align="left" valign="top"><p class="table">0.0</p></td>
+<td align="left" valign="top"><p class="table">G28 pom Y</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-01-26 09:36:07 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gcode/machining_center_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:54 GMT -->
+</html>

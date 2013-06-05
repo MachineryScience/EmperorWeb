@@ -1,0 +1,122 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:47 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/sphereprobe.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SPHEREPROBE</title>
+
+</head>
+<body>
+
+<h1 align="center">SPHEREPROBE</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">sphereprobe
+&minus; Probe a pretend hemisphere</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em"><b>loadrt sphereprobe
+[count=</b><i>N</i><b>|names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p> </td>
+<td width="11%">
+</td></tr>
+</table>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>sphereprobe.</b><i>N</i></p>
+
+<p style="margin-left:22%;">update probe-out based on
+inputs</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>sphereprobe.</b><i>N</i><b>.px</b>
+s32 in <b><br>
+sphereprobe.</b><i>N</i><b>.py</b> s32 in <b><br>
+sphereprobe.</b><i>N</i><b>.pz</b> s32 in</p>
+
+<p style="margin-left:22%;"><b>rawcounts</b> position from
+software encoder</p>
+
+
+<p style="margin-left:11%;"><b>sphereprobe.</b><i>N</i><b>.cx</b>
+s32 in <b><br>
+sphereprobe.</b><i>N</i><b>.cy</b> s32 in <b><br>
+sphereprobe.</b><i>N</i><b>.cz</b> s32 in</p>
+
+<p style="margin-left:22%;">Center of sphere in counts</p>
+
+
+<p style="margin-left:11%;"><b>sphereprobe.</b><i>N</i><b>.r</b>
+s32 in</p>
+
+<p style="margin-left:22%;">Radius of hemisphere in
+counts</p>
+
+
+<p style="margin-left:11%;"><b>sphereprobe.</b><i>N</i><b>.probe-out</b>
+bit out</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Jeff Epler</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/sphereprobe.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

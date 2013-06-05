@@ -1,0 +1,164 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:19 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/hal_create_thread.3hal.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>hal_create_thread</title>
+
+</head>
+<body>
+
+<h1 align="center">hal_create_thread</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNTAX">SYNTAX</a><br>
+<a href="#ARGUMENTS">ARGUMENTS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#REALTIME CONSIDERATIONS">REALTIME CONSIDERATIONS</a><br>
+<a href="#RETURN VALUE">RETURN VALUE</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em">hal_create_thread
+&minus; Create a HAL thread</p>
+
+<h2>SYNTAX
+<a name="SYNTAX"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="89%">
+
+
+<p style="margin-top: 1em">int hal_create_thread(const char
+*<i>name</i>, unsigned long <i>period</i>, int
+<i>uses_fp</i>)</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="89%">
+
+
+<p style="margin-top: 1em">int hal_thread_delete(const char
+*<i>name</i>)</p> </td></tr>
+</table>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+
+
+<h2>ARGUMENTS
+<a name="ARGUMENTS"></a>
+</h2>
+<td width="11%"></td>
+<td width="9%"></td>
+<td width="2%"></td>
+<td width="78%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p><i>name</i></p></td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p>The name of the thread</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p><i>period</i></p></td>
+<td width="2%"></td>
+<td width="78%">
+
+
+<p>The interval, in nanoseconds, between iterations of the
+thread</p> </td></tr>
+</table>
+
+<p style="margin-left:11%;"><i>uses_fp</i></p>
+
+<p style="margin-left:22%;">Must be nonzero if a function
+which uses floating-point will be attached to this
+thread.</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>hal_create_thread</b>
+establishes a realtime thread that will execute one or more
+HAL functions periodically.</p>
+
+<p style="margin-left:11%; margin-top: 1em">All thread
+periods are rounded to integer multiples of the hardware
+timer period, and the timer period is based on the first
+thread created. Threads must be created in order, from the
+fastest to the slowest. HAL assigns decreasing priorities to
+threads that are created later, so creating them from
+fastest to slowest results in rate monotonic priority
+scheduling.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>hal_delete_thread</b>
+deletes a previously created thread.</p>
+
+<h2>REALTIME CONSIDERATIONS
+<a name="REALTIME CONSIDERATIONS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Call only from
+realtime init code, not from user space or realtime
+code.</p>
+
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Returns a HAL
+status code.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>hal_export_funct(3hal)</b></p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/hal_create_thread.3hal.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

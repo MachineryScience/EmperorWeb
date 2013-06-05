@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/halui_examples.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:14:29 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Halui Examples</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Halui Examples</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>For any Halui examples to work you need to add the following line to the [HAL]
+section of the ini file.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>HALUI = halui</tt></pre>
+</div></div>
+</div>
+</div>
+<h2 id="sec:Remote-Start-Example">1. Remote Start</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>To connect a remote program start button to LinuxCNC you use the
+<tt>halui.program.run</tt> pin and the <tt>halui.mode.auto</tt> pin.
+You have to insure that it is OK to run first by using the
+<tt>halui.mode.is-auto</tt> pin. You do this with an <tt>and2</tt>
+component. The following figure shows how this is done.
+When the Remote Run Button is pressed it is connected to
+both <tt>halui.mode.auto</tt> and <tt>and2.0.in0</tt>. If it is OK for
+auto mode the pin <tt>halui.mode.is-auto</tt> will be on.
+If both the inputs to the <tt>and2.0</tt> component are on the
+<tt>and2.0.out</tt> will be on and this will start the program.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/remote-start.png" alt="images/remote-start.png" />
+</div>
+<div class="title">Figure 1. Remote Start Example</div>
+</div>
+<div class="paragraph"><p>The hal commands needed to accomplish the above are:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>net program-start-btn halui.mode.auto and2.0.in0 &lt;= &lt;your input pin&gt;
+net program-run-ok and2.0.in1 &lt;= halui.mode.is-auto
+net remote-program-run halui.program.run &lt;= and2.0.out</tt></pre>
+</div></div>
+<div class="paragraph"><p>Notice on line one that there are two reader pins, this can also be split
+up to two lines like this:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>net program-start-btn halui.mode.auto &lt;= &lt;your input pin&gt;
+net program-start-btn and2.0.in0</tt></pre>
+</div></div>
+</div>
+<h2 id="_pause_amp_resume">2. Pause &amp; Resume</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This example was developed to allow LinuxCNC2 to move a
+rotary axis on a signal from an external machine.
+The coordination between the two systems will be
+provided by two Halui components:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+halui.program.is-paused
+</p>
+</li>
+<li>
+<p>
+halui.program.resume
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>In your customized hal file, add the following
+two lines that will be connected to your I/O to turn
+on the program pause or to resume when the external
+system wants LinuxCNC to continue.</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>net ispaused halui.program.is paused =&gt; "your output pin"
+net resume halui.program.resume &lt;= "your input pin"</tt></pre>
+</div></div>
+<div class="paragraph"><p>Your input and output pins are connected to the pins
+wired to the other controller. They may be parallel port
+pins or any other I/O pins that you have access to.</p></div>
+<div class="paragraph"><p>This system works in the following way. When an M0 is
+encountered in your G-code, the <tt>halui.program.is-paused</tt>
+signal goes true. This turns on your output pin so that
+the external controller knows that LinuxCNC is paused.</p></div>
+<div class="paragraph"><p>To resume the LinuxCNC gcode program, when the external controller
+is ready it will make its output true. This will signal
+LinuxCNC that it should resume executing Gcode.</p></div>
+<div class="paragraph"><p>Difficulties in timing</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+The "resume" input return signal should not be
+   longer than the time required to get the g-code
+   running again.
+</p>
+</li>
+<li>
+<p>
+The "is-paused" output should no longer be active
+   by the time the "resume" signal ends.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>These timing problems could be avoided by using
+ClassicLadder to activate the "is-paused" output via a
+monostable timer to deliver one narrow output pulse.
+The "resume" pulse could also be received via a monostable timer.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-05-30 07:36:13 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/halui_examples.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:14:29 GMT -->
+</html>

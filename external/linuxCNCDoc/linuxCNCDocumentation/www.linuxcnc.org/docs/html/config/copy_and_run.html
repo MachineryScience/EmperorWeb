@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/copy_and_run.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:11:15 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Running LinuxCNC</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Running LinuxCNC</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:running-emc"></a> </p></div>
+</div>
+</div>
+<h2 id="_invoking_linuxcnc">1. Invoking LinuxCNC</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>After installation, LinuxCNC starts just like any other Linux program:
+run it from the terminal by issuing the command <em>emc</em>,
+or select it in the Applications - CNC menu.</p></div>
+</div>
+<h2 id="_configuration_selector">2. Configuration Selector</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>By default, the Configuration Selector dialog
+is shown when you first run LinuxCNC.
+Your own personalized configurations are shown at the top of the list,
+followed by sample configurations.
+Because each sample configuration is for a different type of hardware interface,
+almost all will not run without the hardware installed.
+The configurations listed under the category <em>sim</em> run entirely
+without attached hardware.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/configuration-selector.png" alt="images/configuration-selector.png" />
+</div>
+<div class="title">Figure 1. LinuxCNC Configuration Selector<a id="cap:LinuxCNC-Configuration-Selector"></a></div>
+</div>
+<div class="paragraph"><p>Click any of the listed configurations
+to display specific information about it.
+Double-click a configuration or click OK
+to start the configuration.
+Select <em>Create Desktop Shortcut</em> and then click OK
+to add an icon on the Ubuntu desktop
+to directly launch this configuration
+without showing the Configuration Selector screen.</p></div>
+<div class="paragraph"><p>When you select a configuration from the Sample Configurations section,
+it will automaticly place a copy of that config in the
+emc/configs directory.</p></div>
+</div>
+<h2 id="_next_steps_in_configuration">3. Next steps in configuration</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>After finding the sample configuration that uses
+the same interface hardware as your machine,
+and saving a copy to your home directory,
+you can customize it according to the details of your machine.
+Refer to the Integrator Manual for topics on configuration.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-18 12:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/copy_and_run.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:11:17 GMT -->
+</html>

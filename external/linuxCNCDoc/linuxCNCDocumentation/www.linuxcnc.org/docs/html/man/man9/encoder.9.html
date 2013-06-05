@@ -1,0 +1,300 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:24 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/encoder.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>ENCODER</title>
+
+</head>
+<body>
+
+<h1 align="center">ENCODER</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#NAMING">NAMING</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">encoder &minus;
+software counting of quadrature encoder signals</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+encoder [num_chan=</b><i>num</i> <b>|
+names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>encoder</b>
+is used to measure position by counting the pulses generated
+by a quadrature encoder. As a software-based implementation
+it is much less expensive than hardware, but has a limited
+maximum count rate. The limit is in the range of 10KHz to
+50KHz, depending on the computer speed and other factors. If
+better performance is needed, a hardware encoder counter is
+a better choice. Some hardware-based systems can count at
+MHz rates.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>encoder</b>
+supports a maximum of eight channels. The number of channels
+actually loaded is set by the <b>num_chan</b> argument when
+the module is loaded. Alternatively, specify names= and
+unique names separated by commas.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The
+<b>num_chan=</b> and <b>names=</b> specifiers are mutually
+exclusive. If neither <b>num_chan=</b> nor <b>names=</b> are
+specified, the default value is three.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>encoder</b>
+has a one-phase, unidirectional mode called <i>counter</i>.
+In this mode, the <b>phase-B</b> input is ignored; the
+counts increase on each rising edge of <b>phase-A</b>. This
+mode may be useful for counting a unidirectional spindle
+with a single input line, though the noise-resistant
+characteristics of quadrature are lost.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>encoder.update-counters</b>
+(no floating-point)</p>
+
+<p style="margin-left:22%;">Does the actual counting, by
+sampling the encoder signals and decoding the quadrature
+waveforms. Must be called as frequently as possible,
+preferably twice as fast as the maximum desired count rate.
+Operates on all channels at once.</p>
+
+
+<p style="margin-left:11%;"><b>encoder.capture-position</b>
+(uses floating point)</p>
+
+<p style="margin-left:22%;">Captures the raw counts from
+<b>update-counters</b> and performs scaling and other
+necessary conversion, handles counter rollover, etc. Can
+(and should) be called less frequently than
+<b>update-counters</b>. Operates on all channels at
+once.</p>
+
+<h2>NAMING
+<a name="NAMING"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The names for
+pins and parameters are prefixed as: <b><br>
+encoder.N.</b> for N=0,1,...,num-1 when using
+<b>num_chan=num <br>
+nameN.</b> for nameN=name1,name2,... when using
+<b>names=name1,name2,...</b></p>
+
+<p style="margin-left:11%; margin-top: 1em">The
+<b>encoder.N.</b> format is shown in the following
+descriptions.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>encoder.</b><i>N</i><b>.counter-mode</b>
+bit i/o</p>
+
+<p style="margin-left:22%;">Enables counter mode. When
+true, the counter counts each rising edge of the phase-A
+input, ignoring the value on phase-B. This is useful for
+counting the output of a single channel (non-quadrature)
+sensor. When false (the default), it counts in quadrature
+mode.</p>
+
+
+<p style="margin-left:11%;"><b>encoder.</b><i>N</i><b>.counts</b>
+s32 out</p>
+
+<p style="margin-left:22%;">Position in encoder counts.</p>
+
+
+<p style="margin-left:11%;"><b>encoder.</b><i>N</i><b>.index-enable</b>
+bit i/o</p>
+
+<p style="margin-left:22%;">When true, <b>counts</b> and
+<b>position</b> are reset to zero on the next rising edge of
+<b>Phase-Z</b>. At the same time, <b>index-enable</b> is
+reset to zero to indicate that the rising edge has
+occurred.</p>
+
+
+<p style="margin-left:11%;"><b>encoder.</b><i>N</i><b>.phase-A</b>
+bit in</p>
+
+<p style="margin-left:22%;">Quadrature input for encoder
+channel <i>N</i>.</p>
+
+
+<p style="margin-left:11%;"><b>encoder.</b><i>N</i><b>.phase-B</b>
+bit in</p>
+
+<p style="margin-left:22%;">Quadrature input.</p>
+
+
+<p style="margin-left:11%;"><b>encoder.</b><i>N</i><b>.phase-Z</b>
+bit in</p>
+
+<p style="margin-left:22%;">Index pulse input.</p>
+
+
+<p style="margin-left:11%;"><b>encoder.</b><i>N</i><b>.position</b>
+float out</p>
+
+<p style="margin-left:22%;">Position in scaled units (see
+<b>position-scale</b>)</p>
+
+
+<p style="margin-left:11%;"><b>encoder.</b><i>N</i><b>.position-interpolated</b>
+float out</p>
+
+<p style="margin-left:22%;">Position in scaled units,
+interpolated between encoder counts. Only valid when
+velocity is approximately constant and above
+<b>min-velocity-estimate</b>. Do not use for position
+control.</p>
+
+
+<p style="margin-left:11%;"><b>encoder.</b><i>N</i><b>.position-scale</b>
+float i/o</p>
+
+<p style="margin-left:22%;">Scale factor, in counts per
+length unit. For example, if <b>position-scale</b> is 500,
+then 1000 counts of the encoder will be reported as a
+position of 2.0 units.</p>
+
+
+<p style="margin-left:11%;"><b>encoder.</b><i>N</i><b>.rawcounts</b>
+s32 out</p>
+
+<p style="margin-left:22%;">The raw count, as determined by
+<b>update-counters</b>. This value is updated more
+frequently than <b>counts</b> and <b>position</b>. It is
+also unaffected by <b>reset</b> or the index pulse.</p>
+
+
+<p style="margin-left:11%;"><b>encoder.</b><i>N</i><b>.reset</b>
+bit in</p>
+
+<p style="margin-left:22%;">When true, <b>counts</b> and
+<b>position</b> are reset to zero immediately.</p>
+
+
+<p style="margin-left:11%;"><b>encoder.</b><i>N</i><b>.velocity</b>
+float out</p>
+
+<p style="margin-left:22%;">Velocity in scaled units per
+second. <b>encoder</b> uses an algorithm that greatly
+reduces quantization noise as compared to simply
+differentiating the <b>position</b> output. When the
+magnitude of the true velocity is below
+min-velocity-estimate, the velocity output is 0.</p>
+
+
+<p style="margin-left:11%;"><b>encoder.</b><i>N</i><b>.x4-mode</b>
+bit i/o</p>
+
+<p style="margin-left:22%;">Enables times-4 mode. When true
+(the default), the counter counts each edge of the
+quadrature waveform (four counts per full cycle). When
+false, it only counts once per full cycle. In
+<b>counter-mode</b>, this parameter is ignored.</p>
+
+
+<p style="margin-left:11%;"><b>encoder.</b><i>N</i><b>.latch-input</b>
+bit in <b><br>
+encoder.</b><i>N</i><b>.latch-falling</b> bit in (default:
+<b>TRUE</b>) <b><br>
+encoder.</b><i>N</i><b>.latch-rising</b> bit in (default:
+<b>TRUE</b>) <b><br>
+encoder.</b><i>N</i><b>.counts-latched</b> s32 out <b><br>
+encoder.</b><i>N</i><b>.position-latched</b> float out</p>
+
+<p style="margin-left:22%;">Update <b>counts-latched</b>
+and <b>position-latched</b> on the rising and/or falling
+edges of <b>latch-input</b> as indicated by
+<b>latch-rising</b> and <b>latch-falling</b>.</p>
+
+
+<p style="margin-left:11%;"><b>encoder.</b><i>N</i><b>.counter-mode</b>
+bit rw</p>
+
+<p style="margin-left:22%;">Enables counter mode. When
+true, the counter counts each rising edge of the phase-A
+input, ignoring the value on phase-B. This is useful for
+counting the output of a single channel (non-quadrature)
+sensor. When false (the default), it counts in quadrature
+mode. <b>encoder.</b><i>N</i><b>.capture-position.tmax</b>
+s32 rw Maximum number of CPU cycles it took to execute this
+function.</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Parameter names
+for num_chan= specifier are: <b><br>
+encoder.</b><i>N</i><b>.the_parameter_name</b> <br>
+Parameter names for names= specifier are:</p>
+
+
+<p style="margin-left:22%;"><b>nameN.the_parameter_name</b></p>
+
+
+<p style="margin-left:11%;"><b>encoder.</b><i>N</i><b>.min-velocity-estimate</b>
+float rw (default: 1.0)</p>
+
+<p style="margin-left:22%;">Determine the minimum true
+velocity magnitude at which <b>velocity</b> will be
+estimated as nonzero and <b>postition-interpolated</b> will
+be interpolated. The units of <b>min-velocity-estimate</b>
+are the same as the units of <b>velocity</b>. Setting this
+parameter too low will cause it to take a long time for
+<b>velocity</b> to go to 0 after encoder pulses have stopped
+arriving.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/encoder.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

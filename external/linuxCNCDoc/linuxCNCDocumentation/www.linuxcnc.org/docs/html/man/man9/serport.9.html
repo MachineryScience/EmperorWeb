@@ -1,0 +1,185 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:47 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/serport.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SERPORT</title>
+
+</head>
+<body>
+
+<h1 align="center">SERPORT</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">serport &minus;
+Hardware driver for the digital I/O bits of the 8250 and
+16550 serial port.</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+serport io=</b><i>addr[,addr...]</i></p>
+
+<p style="margin-left:11%; margin-top: 1em">The pin numbers
+refer to the 9-pin serial pinout. Keep in mind that these
+ports generally use rs232 voltages, not 0/5V signals.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Specify the I/O
+address of the serial ports using the module parameter
+<b>io=</b><i>addr[,addr...]</i>. These ports must not be in
+use by the kernel. To free up the I/O ports after bootup,
+install setserial and execute a command like:</p>
+
+<p style="margin-left:22%;">sudo setserial /dev/ttyS0 uart
+none</p>
+
+<p style="margin-left:11%;">but it is best to ensure that
+the serial port is never used or configured by the Linux
+kernel by setting a kernel commandline parameter or not
+loading the serial kernel module if it is a modularized
+driver.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>serport.</b><i>N</i><b>.read
+<br>
+serport.</b><i>N</i><b>.write</b></p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>serport.</b><i>N</i><b>.pin-1-in</b>
+bit out</p>
+
+<p style="margin-left:22%;">Also called DCD (data carrier
+detect); pin 8 on the 25-pin serial pinout</p>
+
+
+<p style="margin-left:11%;"><b>serport.</b><i>N</i><b>.pin-6-in</b>
+bit out</p>
+
+<p style="margin-left:22%;">Also called DSR (data set
+ready); pin 6 on the 25-pin serial pinout</p>
+
+
+<p style="margin-left:11%;"><b>serport.</b><i>N</i><b>.pin-8-in</b>
+bit out</p>
+
+<p style="margin-left:22%;">Also called CTS (clear to
+send); pin 5 on the 25-pin serial pinout</p>
+
+
+<p style="margin-left:11%;"><b>serport.</b><i>N</i><b>.pin-9-in</b>
+bit out</p>
+
+<p style="margin-left:22%;">Also called RI (ring
+indicator); pin 22 on the 25-pin serial pinout</p>
+
+
+<p style="margin-left:11%;"><b>serport.</b><i>N</i><b>.pin-1-in-not</b>
+bit out</p>
+
+<p style="margin-left:22%;">Inverted version of
+pin-1-in</p>
+
+
+<p style="margin-left:11%;"><b>serport.</b><i>N</i><b>.pin-6-in-not</b>
+bit out</p>
+
+<p style="margin-left:22%;">Inverted version of
+pin-6-in</p>
+
+
+<p style="margin-left:11%;"><b>serport.</b><i>N</i><b>.pin-8-in-not</b>
+bit out</p>
+
+<p style="margin-left:22%;">Inverted version of
+pin-8-in</p>
+
+
+<p style="margin-left:11%;"><b>serport.</b><i>N</i><b>.pin-9-in-not</b>
+bit out</p>
+
+<p style="margin-left:22%;">Inverted version of
+pin-9-in</p>
+
+
+<p style="margin-left:11%;"><b>serport.</b><i>N</i><b>.pin-3-out</b>
+bit in</p>
+
+<p style="margin-left:22%;">Also called TX (transmit data);
+pin 2 on the 25-pin serial pinout</p>
+
+
+<p style="margin-left:11%;"><b>serport.</b><i>N</i><b>.pin-4-out</b>
+bit in</p>
+
+<p style="margin-left:22%;">Also called DTR (data terminal
+ready); pin 20 on the 25-pin serial pinout</p>
+
+
+<p style="margin-left:11%;"><b>serport.</b><i>N</i><b>.pin-7-out</b>
+bit in</p>
+
+<p style="margin-left:22%;">Also called RTS (request to
+send); pin 4 on the 25-pin serial pinout</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>serport.</b><i>N</i><b>.pin-3-out-invert</b>
+bit rw <b><br>
+serport.</b><i>N</i><b>.pin-4-out-invert</b> bit rw <b><br>
+serport.</b><i>N</i><b>.pin-7-out-invert</b> bit rw <b><br>
+serport.</b><i>N</i><b>.ioaddr</b> u32 r</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/serport.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

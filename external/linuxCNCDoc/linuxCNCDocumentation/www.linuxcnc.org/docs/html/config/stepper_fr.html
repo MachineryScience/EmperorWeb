@@ -1,0 +1,334 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/stepper_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:26 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Configuration d&#8217;un système pas/direction (dir/step)</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Configuration d&#8217;un système pas/direction (dir/step)</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:config-steppers"></a> </p></div>
+</div>
+</div>
+<h2 id="sec:Introduction">1. Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Ce chapitre décrit quelques uns des réglages les plus fréquents, sur
+lesquels l&#8217;utilisateur aura à agir lors de la mise au point de LinuxCNC. En
+raison de l&#8217;adaptabilité de LinuxCNC, il serait très difficile de les
+documenter tous en gardant ce document relativement concis.</p></div>
+<div class="paragraph"><p>Le système rencontré le plus fréquemment chez les utilisateurs de LinuxCNC
+est un système à moteurs pas à pas. Les interfaces de pilotage de ces
+moteurs recoivent de LinuxCNC des signaux de pas et de direction.</p></div>
+<div class="paragraph"><p>C&#8217;est le système le plus simple à mettre en oeuvre parce que les
+moteurs fonctionnent en boucle ouverte (pas d&#8217;information de retour des
+moteurs), le système nécessite donc d'être configuré correctement pour
+que les moteurs ne perdent pas de pas et ne calent pas.</p></div>
+<div class="paragraph"><p>Ce chapitre s&#8217;appuie sur la configuration fournie d&#8217;origine avec LinuxCNC
+appelée <em>stepper</em> et qui se trouve habituellement dans
+<em>/etc/linuxcnc/sample-configs/stepper</em>.</p></div>
+</div>
+<h2 id="sec:Maximum-step-rate">2. Fréquence de pas maximale</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Avec la génération logicielle des pas la fréquence maximale en sortie,
+pour les impulsions de pas et de direction, est de une impulsion pour
+deux BASE_PERIOD. La fréquence de pas maximale accessible pour un axe
+est le produit de MAX_VELOCITY et de INPUT_SCALE. Si la fréquence
+demandée est excessive, une erreur de suivi se produira (following
+error), particulièrement pendant les jog rapides et les mouvements en
+G0.</p></div>
+<div class="paragraph"><p>Si votre interface de pilotage des moteurs accepte des signaux
+d&#8217;entrée en quadrature, utilisez ce mode. Avec un signal en quadrature,
+un pas est possible pour chaque BASE_PERIOD, ce qui double la fréquence
+maximum admissible.</p></div>
+<div class="paragraph"><p>Les autres remèdes consistent à diminuer une ou plusieurs variables:
+BASE_PERIOD (une valeur trop faible peux causer un bloquage du PC),
+INPUT_SCALE (s&#8217;il est possible sur l&#8217;interface de pilotage de
+sélectionner une taille de pas différente, de changer le rapport des
+poulies ou le pas de la vis mère), ou enfin MAX_VELOCITY et
+STEPGEN_MAXVEL.</p></div>
+<div class="paragraph"><p>Si aucune combinaison entre BASE_PERIOD, INPUT_SCALE et MAX_VELOCITY
+n&#8217;est fonctionnelle, il faut alors envisager un générateur de pas
+externe (parmis les contrôleurs de moteurs pas à pas universels
+supportés par LinuxCNC)</p></div>
+</div>
+<h2 id="sec:Brochage">3. Brochage</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>LinuxCNC est très flexible et grâce à la couche d&#8217;abstraction de HAL
+(Hardware Abstraction Layer) il est facile de spécifier que tel signal
+ira sur telle broche.</p></div>
+<div class="paragraph"><p>Voir le tutoriel de HAL pour plus d&#8217;informations.</p></div>
+<div class="paragraph"><p>Comme décrit dans l&#8217;introduction et la manuel de HAL, il comporte des
+composants dont il fourni les signaux, les pins et les paramètres.</p></div>
+<div class="paragraph"><p>Les premiers signaux et pins relatifs au brochage sont:<span class="footnote"><br />[Note:
+pour rester concis, nous ne présenterons qu&#8217;un seul axe, tous
+les autres sont similaires.]<br /></span></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>signaux: Xstep, Xdir et Xen
+pins: parport.0.pin-XX-out &amp; parport.0.pin-XX-in</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour configurer le fichier ini, il est possible de choisir entre les
+deux brochages les plus fréquents, devenus des standards de fait, le
+brochage standard_pinout.hal ou le brochage xylotex_pinout.hal. Ces
+deux fichiers indiquent à HAL comment raccorder les différents signaux
+aux différentes pins. Dans la suite, nous nous concentrerons sur le
+brochage <em>standard_pinout.hal</em>.</p></div>
+</div>
+<h2 id="_le_fichier_standard_pinout_hal_a_id_sec_standard_pinout_hal_a">4. Le fichier standard_pinout.hal<a id="sec:standard-pinout.hal"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Ce fichier contient certaines commandes de HAL et habituellement
+ressemble à celà:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt># standard pinout config file for 3-axis steppers
+# using a parport for I/O
+#
+
+# first load the parport driver
+loadrt hal_parport cfg="0x0378"
+
+#
+# next connect the parport functions to threads
+# read inputs first
+addf parport.0.read base-thread 1
+
+# write outputs last
+addf parport.0.write base-thread -1
+
+#
+# finally connect physical pins to the signals
+net Xstep =&gt; parport.0.pin-03-out
+net Xdir  =&gt; parport.0.pin-02-out
+net Ystep =&gt; parport.0.pin-05-out
+net Ydir  =&gt; parport.0.pin-04-out
+net Zstep =&gt; parport.0.pin-07-out
+net Zdir  =&gt; parport.0.pin-06-out
+
+# create a signal for the estop loopback
+net estop-loop iocontrol.0.user-enable-out iocontrol.0.emc-enable-in
+
+# create signals for tool loading loopback
+net tool-prep-loop iocontrol.0.tool-prepare iocontrol.0.tool-prepared
+net tool-change-loop iocontrol.0.tool-change iocontrol.0.tool-changed
+
+# connect "spindle on" motion controller pin to a physical pin
+net spindle-on motion.spindle-on =&gt; parport.0.pin-09-out
+
+###
+### You might use something like this to enable chopper drives when machine ON
+### the Xen signal is defined in core_stepper.hal
+###
+# net Xen =&gt; parport.0.pin-01-out
+
+###
+### If you want active low for this pin, invert it like this:
+###
+# setp parport.0.pin-01-out-invert 1
+
+###
+### A sample home switch on the X axis (axis 0).  make a signal,
+### link the incoming parport pin to the signal, then link the signal
+### to LinuxCNC's axis 0 home switch input pin
+###
+# net Xhome parport.0.pin-10-in =&gt; axis.0.home-sw-in
+
+###
+### Shared home switches all on one parallel port pin?
+### that's ok, hook the same signal to all the axes, but be sure to
+### set HOME_IS_SHARED and HOME_SEQUENCE in the ini file.  See the
+### user manual!
+###
+# net homeswitches &lt;= parport.0.pin-10-in
+# net homeswitches =&gt; axis.0.home-sw-in
+# net homeswitches =&gt; axis.1.home-sw-in
+# net homeswitches =&gt; axis.2.home-sw-in
+
+###
+### Sample separate limit switches on the X axis (axis 0)
+###
+# net X-neg-limit parport.0.pin-11-in =&gt; axis.0.neg-lim-sw-in
+# net X-pos-limit parport.0.pin-12-in =&gt; axis.0.pos-lim-sw-in
+
+###
+### Just like the shared home switches example, you can wire together
+### limit switches.  Beware if you hit one, LinuxCNC will stop but can't tell
+### you which switch/axis has faulted.  Use caution when recovering from this.
+###
+# net Xlimits parport.0.pin-13-in =&gt; axis.0.neg-lim-sw-in axis.0.pos-lim-sw-in</tt></pre>
+</div></div>
+<div class="paragraph"><p>Les lignes commençant par <strong>#</strong> sont des commentaires, aident à la
+lecture du fichier.</p></div>
+</div>
+<h2 id="sec:Vue-d-ensemble-standard-pinout-hal">5. Vue d&#8217;ensemble du fichier standard_pinout.hal</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Voici les opérations qui sont exécutées quand le fichier
+standard_pinout.hal est lu par l&#8217;interpréteur:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Le pilote du port parallèle est chargé (voir le Parport section de
+   le Manuel de HAL pour plus de détails)
+</p>
+</li>
+<li>
+<p>
+Les fonctions de lecture/écriture du pilote sont assignée au thread
+   «Base thread» <span class="footnote"><br />[Le thread le plus rapide parmis les réglages
+   de LinuxCNC, habituellement il
+   n&#8217;y a que quelques microsecondes entre les exécutions de ce code.]<br /></span>
+</p>
+</li>
+<li>
+<p>
+Les signaux du générateur de pas et de direction des axes X,Y,Z&#8230;
+   sont raccordés aux broches du port parallèle
+</p>
+</li>
+<li>
+<p>
+D&#8217;autres signaux d&#8217;entrées/sorties sont connectés (boucle d&#8217;arrêt
+   d&#8217;urgence, boucle du changeur d&#8217;outil&#8230;)
+</p>
+</li>
+<li>
+<p>
+Un signal de marche broche est défini et raccordé à une broche du port
+   parallèle
+</p>
+</li>
+</ol></div>
+</div>
+<h2 id="sec:Modifier-standard-pinout-hal">6. Modifier le fichier standard_pinout.hal</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Pour modifier le fichier standard_pinout.hal, il suffit de l&#8217;ouvrir
+dans un éditeur de texte puis d&#8217;y localiser les parties à modifier.</p></div>
+<div class="paragraph"><p>Si vous voulez par exemple, modifier les broches de pas et de
+direction de l&#8217;axe X, il vous suffit de modifier le numéro de la
+variable nommée <em>parport.0.pin-XX-out</em>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net Xstep parport.0.pin-03-out
+net Xdir  parport.0.pin-02-out</tt></pre>
+</div></div>
+<div class="paragraph"><p>peut être modifiée pour devenir:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net Xstep parport.0.pin-02-out
+net Xdir  parport.0.pin-03-out</tt></pre>
+</div></div>
+<div class="paragraph"><p>ou de manière générale n&#8217;importe quel numéro que vous souhaiteriez.</p></div>
+<div class="paragraph"><p>Attention: il faut être certain de n&#8217;avoir qu&#8217;un seul signal connecté
+à une broche.</p></div>
+</div>
+<h2 id="sec:Modifier-la-polarite">7. Modifier la polarité d&#8217;un signal</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Si une interface attends un signal <em>actif bas</em>, ajouter une ligne avec
+le paramètre d&#8217;inversion de la sortie, <em>-invert</em>. Par exemple, pour
+inverser le signal de rotation de la broche:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>setp parport.0.pin-09-invert TRUE</tt></pre>
+</div></div>
+</div>
+<h2 id="sec:PWM-Vitesse-broche">8. Ajouter le contrôle de vitesse broche en PWM</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Si votre vitesse de broche peut être contrôlée par un signal de PWM,
+utilisez le composant <em>pwmgen</em> pour créer ce signal:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt pwmgen output_type=0
+addf pwmgen.update servo-thread
+addf pwmgen.make-pulses base-thread
+net spindle-speed-cmd motion.spindle-speed-out =&gt; pwmgen.0.value
+net spindle-on motion.spindle-on =&gt; pwmgen.0.enable
+net spindle-pwm pwmgen.0.pwm =&gt; parport.0.pin-09-out
+setp pwmgen.0.scale 1800 # Change to your spindle’s top speed in RPM</tt></pre>
+</div></div>
+<div class="paragraph"><p>Ce qui donnera le fonctionnement suivant, pour un signal PWM à: 0%
+donnera une vitesse de 0tr/mn, 10% une vitesse de 180tr/mn, etc. Si un
+signal PWM supérieur à 0% est requis pour que la broche commence à
+tourner, suivez l&#8217;exemple du fichier de configuration <em>nist-lathe</em> qui
+utilise un composant d'échelle (<em>scale</em>).</p></div>
+</div>
+<h2 id="sec:Ajouter-signal-enable">9. Ajouter un signal de validation <strong>enable</strong></h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Certains pilotes de moteurs requiert un signal de validation <em>enable</em>
+avant d&#8217;autoriser tout mouvement du moteur. Pour celà des signaux sont
+déjà définis et appelés <em>Xen</em>, <em>Yen</em>, <em>Zen</em>.</p></div>
+<div class="paragraph"><p>Pour les connecter vous pouvez utilisez l&#8217;exemple suivant:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net Xen parport.0.pin-08-out</tt></pre>
+</div></div>
+<div class="paragraph"><p>Il est possible d&#8217;avoir une seule pin de validation pour l&#8217;ensemble
+des pilotes, ou plusieurs selon la configuration que vous voulez. Notez
+toutefois qu&#8217;habituellement quand un axe est en défaut, tous les autres
+sont invalidés aussi de sorte que, n&#8217;avoir qu&#8217;un seul signal/pin de
+validation pour l&#8217;ensemble est parfaitement sécurisé.</p></div>
+</div>
+<h2 id="_ajouter_un_bouton_d_8217_arr_t_d_8217_urgence_externe">10. Ajouter un bouton d&#8217;Arrêt d&#8217;Urgence externe</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Comme vous pouvez <a href="stepper_fr.html#sec:standard-pinout.hal">le voir ici</a>,
+par défaut la configuration standard n&#8217;utilise pas de bouton d&#8217;Arrêt
+d&#8217;Urgence externe. footnote:[Une explication complète sur la manière de
+gérer les circuiteries d&#8217;Arrêt d&#8217;Urgence se trouve sur le
+<a href="http://wiki.linuxcnc.org/"> wiki(en)</a> et dans le Manuel de l&#8217;intégrateur.</p></div>
+<div class="paragraph"><p>Pour ajouter un simple bouton d&#8217;AU externe (ou plusieurs en série) vous
+devez remplacer la ligne suivante:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net estop-loop iocontrol.0.user-enable-out iocontrol.0.emc-enable-in</tt></pre>
+</div></div>
+<div class="paragraph"><p>par</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net estop-loop parport.0.pin-01-in iocontrol.0.emc-enable-in</tt></pre>
+</div></div>
+<div class="paragraph"><p>Ce qui implique qu&#8217;un bouton d&#8217;Arrêt d&#8217;Urgence soit connecté sur la
+broche 01 du port parallèle. Tant que le bouton est enfoncé (le contact
+ouvert)<span class="footnote"><br />[Utiliser exclusivement des contacts normalement fermés
+pour les A/U.]<br /></span>,
+LinuxCNC restera dans l'état <em>Arrêt d&#8217;Urgence</em> (ESTOP). Quand le bouton
+externe sera relâché, LinuxCNC passera immédiatement dans l'état
+<em>Arrêt d&#8217;Urgence Relâché</em> (ESTOP-RESET) vous pourrez ensuite mettre
+la machine en marche en pressant le bouton <em>Marche machine</em> 
+et vous êtes alors prêt à continuer votre travail avec LinuxCNC.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-01-25 16:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/stepper_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:26 GMT -->
+</html>

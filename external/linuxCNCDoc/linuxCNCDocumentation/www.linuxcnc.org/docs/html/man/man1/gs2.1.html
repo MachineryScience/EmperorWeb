@@ -1,0 +1,325 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue Jun  4 22:36:34 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/gs2.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>gs2_vfd</title>
+
+</head>
+<body>
+
+<h1 align="center">gs2_vfd</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>gs2_vfd</b>
+- HAL userspace component for Automation Direct GS2
+VFD&rsquo;s</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>gs2_vfd</b>
+[OPTIONS]</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">This manual
+page explains the <b>gs2_vfd</b> component. This component
+reads and writes to the GS2 via a modbus connection.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>gs2_vfd</b>
+is for use with LinuxCNC</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>-b,&nbsp;--bits&nbsp;&lt;n&gt;</b></p>
+
+<p style="margin-left:22%;">(default 8) Set number of data
+bits to &lt;n&gt;, where n must be from 5 to 8 inclusive</p>
+
+
+<p style="margin-left:11%;"><b>-d,&nbsp;--device&nbsp;&lt;path&gt;</b></p>
+
+<p style="margin-left:22%;">(default /dev/ttyS0) Set the
+name of the serial device node to use.</p>
+
+<p style="margin-left:11%;"><b>-g,&nbsp;--debug</b></p>
+
+<p style="margin-left:22%;">Turn on debugging messages.
+This will also set the verbose flag. Debug mode will cause
+all modbus messages to be printed in hex on the
+terminal.</p>
+
+
+<p style="margin-left:11%;"><b>-n,&nbsp;--name&nbsp;&lt;string&gt;</b></p>
+
+<p style="margin-left:22%;">(default gs2_vfd) Set the name
+of the HAL module. The HAL comp name will be set to
+&lt;string&gt;, and all pin and parameter names will begin
+with &lt;string&gt;.</p>
+
+
+<p style="margin-left:11%;"><b>-p,&nbsp;--parity&nbsp;[even,odd,none]</b></p>
+
+<p style="margin-left:22%;">(default odd) Set serial parity
+to even, odd, or none.</p>
+
+
+<p style="margin-left:11%;"><b>-r,&nbsp;--rate&nbsp;&lt;n&gt;</b></p>
+
+<p style="margin-left:22%;">(default 38400) Set baud rate
+to &lt;n&gt;. It is an error if the rate is not one of the
+following: 110, 300, 600, 1200, 2400, 4800, 9600, 19200,
+38400, 57600, 115200</p>
+
+
+<p style="margin-left:11%;"><b>-s,&nbsp;--stopbits&nbsp;[1,2]</b></p>
+
+<p style="margin-left:22%;">(default 1) Set serial stop
+bits to 1 or 2</p>
+
+
+<p style="margin-left:11%;"><b>-t,&nbsp;--target&nbsp;&lt;n&gt;</b></p>
+
+<p style="margin-left:22%;">(default 1) Set MODBUS target
+(slave) number. This must match the device number you set on
+the GS2.</p>
+
+<p style="margin-left:11%;"><b>-v,&nbsp;--verbose</b></p>
+
+<p style="margin-left:22%;">Turn on debug messages. Note
+that if there are serial errors, this may become annoying.
+At the moment it doesn&rsquo;t make much difference most of
+the time.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>&lt;name&gt;.DC-bus-volts&nbsp;(float,&nbsp;out)</b></p>
+
+<p style="margin-left:22%;">from the VFD</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.at-speed&nbsp;(bit,&nbsp;out)</b></p>
+
+<p style="margin-left:22%;">when drive is at commanded
+speed</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.err-reset&nbsp;(bit,&nbsp;in)</b></p>
+
+<p style="margin-left:22%;">reset errors sent to VFD</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.firmware-revision&nbsp;(s32,&nbsp;out)</b></p>
+
+<p style="margin-left:22%;">from the VFD</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.frequency-command&nbsp;(float,&nbsp;out)</b></p>
+
+<p style="margin-left:22%;">from the VFD</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.frequency-out&nbsp;(float,&nbsp;out)</b></p>
+
+<p style="margin-left:22%;">from the VFD</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.is-stopped&nbsp;(bit,&nbsp;out)</b></p>
+
+<p style="margin-left:22%;">when the VFD reports 0 Hz
+output</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.load-percentage&nbsp;(float,&nbsp;out)</b></p>
+
+<p style="margin-left:22%;">from the VFD</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.motor-RPM&nbsp;(float,&nbsp;out)</b></p>
+
+<p style="margin-left:22%;">from the VFD</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.output-current&nbsp;(float,&nbsp;out)</b></p>
+
+<p style="margin-left:22%;">from the VFD</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.output-voltage&nbsp;(float,&nbsp;out)</b></p>
+
+<p style="margin-left:22%;">from the VFD</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.power-factor&nbsp;(float,&nbsp;out)</b></p>
+
+<p style="margin-left:22%;">from the VFD</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.scale-frequency&nbsp;(float,&nbsp;out)</b></p>
+
+<p style="margin-left:22%;">from the VFD</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.speed-command&nbsp;(float,&nbsp;in)</b></p>
+
+<p style="margin-left:22%;">speed sent to VFD in RPM It is
+an error to send a speed faster than the Motor Max RPM as
+set in the VFD</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.spindle-fwd&nbsp;(bit,&nbsp;in)</b></p>
+
+<p style="margin-left:22%;">1 for FWD and 0 for REV sent to
+VFD</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.spindle-on&nbsp;(bit,&nbsp;in)</b></p>
+
+<p style="margin-left:22%;">1 for ON and 0 for OFF sent to
+VFD, only on when running</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.spindle-rev&nbsp;(bit,&nbsp;in)</b></p>
+
+<p style="margin-left:22%;">1 for ON and 0 for OFF, only on
+when running</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.status-1&nbsp;(s32,&nbsp;out)</b></p>
+
+<p style="margin-left:22%;">Drive Status of the VFD (see
+the GS2 manual)</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.status-2&nbsp;(s32,&nbsp;out)</b></p>
+
+<p style="margin-left:22%;">Drive Status of the VFD (see
+the GS2 manual) Note that the value is a sum of all the bits
+that are on. So a 163 which means the drive is in the run
+mode is the sum of 3 (run) + 32 (freq set by serial) + 128
+(operation set by serial).</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>&lt;name&gt;.error-count&nbsp;(s32,&nbsp;RW)
+<br>
+&lt;name&gt;.loop-time&nbsp;(float,&nbsp;RW)</b></p>
+
+<p style="margin-left:22%;">how often the modbus is polled
+(default 0.1)</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.nameplate-HZ&nbsp;(float,&nbsp;RW)</b></p>
+
+<p style="margin-left:22%;">Nameplate Hz of motor (default
+60)</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.nameplate-RPM&nbsp;(float,&nbsp;RW)</b></p>
+
+<p style="margin-left:22%;">Nameplate RPM of motor (default
+1730)</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.retval&nbsp;(s32,&nbsp;RW)</b></p>
+
+<p style="margin-left:22%;">the return value of an error in
+HAL</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.tolerance&nbsp;(float,&nbsp;RW)</b></p>
+
+<p style="margin-left:22%;">speed tolerance (default
+0.01)</p>
+
+
+<p style="margin-left:11%;"><b>&lt;name&gt;.ack-delay&nbsp;(s32,&nbsp;RW)</b></p>
+
+<p style="margin-left:22%;">number of read/write cycles
+before checking at-speed (default 2)</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><i>GS2
+Driver</i> in the LinuxCNC documentation for a full
+description of the <b>GS2</b> syntax</p>
+
+<p style="margin-left:11%; margin-top: 1em"><i>GS2
+Examples</i> in the LinuxCNC documentation for examples
+using the <b>GS2</b> component</p>
+
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">John
+Thornton</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/gs2.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

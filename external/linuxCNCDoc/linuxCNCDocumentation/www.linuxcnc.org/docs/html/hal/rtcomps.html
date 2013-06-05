@@ -1,0 +1,1575 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/rtcomps.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:15:19 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>HAL Component Descriptions</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>HAL Component Descriptions</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:realtime-components"></a> </p></div>
+</div>
+</div>
+<h2 id="_stepgen_a_id_sec_stepgen_a">1. Stepgen<a id="sec:Stepgen"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This component provides software based generation of step pulses in
+response to position or velocity commands. In position mode, it has a
+built in pre-tuned position loop, so PID tuning is not required. In
+velocity mode, it drives a motor at the commanded speed, while obeying
+velocity and acceleration limits. It is a realtime component only, and
+depending on CPU speed, etc, is capable of maximum step rates of 10kHz
+to perhaps 50kHz. Figure <a href="rtcomps.html#fig:Stepgen-Block-Diag">[fig:Stepgen-Block-Diag]</a> shows three block
+diagrams, each is a single step pulse generator. The first diagram is
+for step type <em>0</em>, (step and direction). The second is for step type
+<em>1</em> (up/down, or pseudo-PWM), and the third is for step types 2 through
+14 (various stepping patterns). The first two diagrams show position
+mode control, and the third one shows velocity mode. Control mode and
+step type are set independently, and any combination can be selected.</p></div>
+<div class="paragraph"><p></p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/stepgen-block-diag.png" alt=""align="center"" />
+</div>
+<div class="title">Figure 1. Step Pulse Generator Block Diagram position mode<a id="fig:Stepgen-Block-Diag"></a></div>
+</div>
+<div class="listingblock">
+<div class="title">Installing</div>
+<div class="content">
+<pre><tt>halcmd: loadrt stepgen step_type=&lt;type-array&gt; [ctrl_type=&lt;ctrl_array&gt;]</tt></pre>
+</div></div>
+<div class="paragraph"><p><em>&lt;type-array&gt;</em> is a series of comma separated decimal integers. Each
+number causes a
+single step pulse generator to be loaded, the value of the number
+ determines the stepping type. <em>&lt;ctrl_array&gt;</em> is a comma separated
+series of <em>p</em> or <em>v</em> characters, to specify position or velocity
+mode. <em>ctrl_type</em> is optional, if ommitted, all of the step generators
+will be position
+mode.</p></div>
+<div class="paragraph"><p>For example:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: loadrt stepgen step_type=0,0,2 ctrl_type=p,p,v</tt></pre>
+</div></div>
+<div class="paragraph"><p>will install three step generators. The first two use step type <em>0</em>
+(step and direction) and run in position mode. The last one uses step
+type <em>2</em> (quadrature) and runs in velocity mode. The default value for
+<em>&lt;config-array&gt;</em> is <em>0,0,0</em> which will install three type <em>0</em>
+(step/dir) generators. The maximum
+number of step generators is 8 (as defined by MAX_CHAN in stepgen.c).
+Each generator is independent, but all are updated by the same
+ function(s) at the same time. In the following descriptions, <em>&lt;chan&gt;</em>
+is the number of a specific generator. The first generator is number 0.</p></div>
+<div class="listingblock">
+<div class="title">Removing</div>
+<div class="content">
+<pre><tt>halcmd: unloadrt stepgen</tt></pre>
+</div></div>
+<div class="paragraph"><div class="title">Pins</div><p>Each step pulse generator will have only some of these pins, depending
+on the step type and control type selected.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(float) stepgen.&lt;chan&gt;.position-cmd</em> - Desired motor position, in
+   position units (position mode only).
+</p>
+</li>
+<li>
+<p>
+<em>(float) stepgen.&lt;chan&gt;.velocity-cmd</em> - Desired motor velocity, in
+   position units per second (velocity mode only).
+</p>
+</li>
+<li>
+<p>
+<em>(s32) stepgen.&lt;chan&gt;.counts</em> - Feedback position in counts,
+   updated by <em>capture_position()</em>.
+</p>
+</li>
+<li>
+<p>
+<em>(float) stepgen.&lt;chan&gt;.position-fb</em> - Feedback position in
+   position units, updated by <em>capture_position()</em>.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) stepgen.&lt;chan&gt;.enable</em> - Enables output steps - when false,
+   no steps are generated.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) stepgen.&lt;chan&gt;.step</em> - Step pulse output (step type 0 only).
+</p>
+</li>
+<li>
+<p>
+<em>(bit) stepgen.&lt;chan&gt;.dir</em> - Direction output (step type 0 only).
+</p>
+</li>
+<li>
+<p>
+<em>(bit) stepgen.&lt;chan&gt;.up</em> - UP pseudo-PWM output (step type 1 only).
+</p>
+</li>
+<li>
+<p>
+<em>(bit) stepgen.&lt;chan&gt;.down</em> - DOWN pseudo-PWM output (step type 1 only).
+</p>
+</li>
+<li>
+<p>
+<em>(bit) stepgen.&lt;chan&gt;.phase-A</em> - Phase A output (step types 2-14 only).
+</p>
+</li>
+<li>
+<p>
+<em>(bit) stepgen.&lt;chan&gt;.phase-B</em> - Phase B output (step types 2-14 only).
+</p>
+</li>
+<li>
+<p>
+<em>(bit) stepgen.&lt;chan&gt;.phase-C</em> - Phase C output (step types 3-14 only).
+</p>
+</li>
+<li>
+<p>
+<em>(bit) stepgen.&lt;chan&gt;.phase-D</em> - Phase D output (step types 5-14 only).
+</p>
+</li>
+<li>
+<p>
+<em>(bit) stepgen.&lt;chan&gt;.phase-E</em> - Phase E output (step types 11-14 only).
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Parameters <a id="stepgen-parameters"></a></div><ul>
+<li>
+<p>
+<em>(float) stepgen.&lt;chan&gt;.position-scale</em> - Steps per position unit.
+   This parameter is used for both output and feedback.
+</p>
+</li>
+<li>
+<p>
+<em>(float) stepgen.&lt;chan&gt;.maxvel</em> - Maximum velocity, in position
+   units per second. If 0.0, has no effect.
+</p>
+</li>
+<li>
+<p>
+<em>(float) stepgen.&lt;chan&gt;.maxaccel</em> - Maximum accel/decel rate, in
+   positions units per second squared.
+   If 0.0, has no effect.
+</p>
+</li>
+<li>
+<p>
+<em>(float) stepgen.&lt;chan&gt;.frequency</em> - The current step rate, in
+   steps per second.
+</p>
+</li>
+<li>
+<p>
+<em>(float) stepgen.&lt;chan&gt;.steplen</em> - Length of a step pulse (step
+   type 0 and 1) or minimum time in a
+   given state (step types 2-14), in nano-seconds.
+</p>
+</li>
+<li>
+<p>
+<em>(float) stepgen.&lt;chan&gt;.stepspace</em> - Minimum spacing between two
+   step pulses (step types 0 and 1 only), in nano-seconds. Set to 0 to
+   enable the stepgen <em>doublefreq</em> function. To use <em>doublefreq</em> the
+   <a href="parallel_port.html#parport-functions">parport reset function</a> must be enabled.
+</p>
+</li>
+<li>
+<p>
+<em>(float) stepgen.&lt;chan&gt;.dirsetup</em> - Minimum time from a direction
+   change to the beginning of the next
+   step pulse (step type 0 only), in nanoseconds.
+</p>
+</li>
+<li>
+<p>
+<em>(float) stepgen.&lt;chan&gt;.dirhold</em> - Minmum time from the end of a
+   step pulse to a direction change
+   (step type 0 only), in nanoseconds.
+</p>
+</li>
+<li>
+<p>
+<em>(float) stepgen.&lt;chan&gt;.dirdelay</em> - Minmum time any step to a step
+   in the opposite direction (step
+   types 1-14 only), in nano-seconds.
+</p>
+</li>
+<li>
+<p>
+<em>(s32) stepgen.&lt;chan&gt;.rawcounts</em> - The raw feedback count, updated
+   by <em>make_pulses()</em>.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>In position mode, the values of maxvel and maxaccel are used by the
+internal position loop to avoid generating step pulse trains that the
+motor cannot follow. When set to values that are appropriate for the
+motor, even a large instantaneous change in commanded position will
+result in a smooth trapezoidal move to the new location. The algorithm
+works by measuring both position error and velocity error, and
+calculating an acceleration that attempts to reduce both to zero at the
+same time. For more details, including the contents of the <em>control
+equation</em> box, consult the code.</p></div>
+<div class="paragraph"><p>In velocity mode, maxvel is a simple limit that is applied to the
+commanded velocity, and maxaccel is used to ramp the actual frequency
+if the commanded velocity changes abruptly. As in position mode, proper
+values for these parameters ensure that the motor can follow the
+generated pulse train.</p></div>
+<div class="paragraph"><div class="title">Step Type 0</div><p>Step type 0 is the standard step and direction type. When configured for
+step type 0, there are four extra parameters that determine the exact
+timing of the step and direction signals. In the following figure
+the meaning of these parameters is shown. The
+parameters are in nanoseconds, but will be rounded up to an integer
+multiple of the thread period for the threaed that calls
+<em>make_pulses()</em>. For example, if <em>make_pulses()</em> is called every 16 us,
+and steplen is 20000, then the step pulses will
+be 2 x 16 = 32 us long. The default value for all four of the parameters
+is 1ns, but the automatic rounding takes effect the first time the code
+ runs. Since one step requires <em>steplen</em> ns high and <em>stepspace</em> ns
+low, the maximum frequency is 1,000,000,000 divided by
+<em>(steplen+stepspace)</em>. If <em>maxfreq</em> is set higher than that limit, it
+will be lowered automatically. If
+maxfreq is zero, it will remain zero, but the output frequency will
+still be limited.</p></div>
+<div class="paragraph"><p>When using the parallel port driver the step frequency can be doubled using
+the <a href="parallel_port.html#parport-functions">parport reset</a> function together with stepgen&#8217;s
+<em>doublefreq</em> setting.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/stepgen-type0.png" alt=""align="center"" />
+</div>
+<div class="title">Figure 2. Step and Direction Timing<a id="fig:StepDir-timing"></a></div>
+</div>
+<div class="paragraph"><div class="title">Step Type 1</div><p>Step type 1 has two outputs, up and down. Pulses appear on one or the
+other, depending on the direction of travel. Each pulse is <em>steplen</em> ns
+long, and the pulses are separated by at least <em>stepspace</em> ns. The
+maximum frequency is the same as for step type 0. If <em>maxfreq</em> is set
+higher than the limit it will be lowered. If <em>maxfreq</em> is zero, it
+will remain zero but the output frequency will still be
+limited.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">Do not use the parport reset function with step types 2 - 14. Unexpected
+results can happen.</td>
+</tr></table>
+</div>
+<div class="paragraph"><div class="title">Step Type 2 - 14</div><p>Step types 2 through 14 are state based, and have from two to five
+outputs. On each step, a state counter is incremented or decremented.
+Figures <a href="rtcomps.html#fig:Two-and-Three-Phase">[fig:Two-and-Three-Phase]</a>, <a href="rtcomps.html#fig:Four-Phase">[fig:Four-Phase]</a>, and
+<a href="rtcomps.html#fig:Five-Phase">[fig:Five-Phase]</a> show the output patterns as a function of the state
+counter. The maximum frequency is 1,000,000,000 divided by <em>steplen</em>,
+and as in the other modes, <em>maxfreq</em> will be lowered if it is above the
+limit.</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/stepgen-type2-4.png" alt="images/stepgen-type2-4.png" />
+</div>
+<div class="title">Figure 3. Two-and-Three-Phase Step Types<a id="fig:Two-and-Three-Phase"></a></div>
+</div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/stepgen-type5-10.png" alt="images/stepgen-type5-10.png" width="800" />
+</div>
+<div class="title">Figure 4. Four-Phase Step Types<a id="fig:Four-Phase"></a></div>
+</div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/stepgen-type11-14.png" alt="images/stepgen-type11-14.png" />
+</div>
+<div class="title">Figure 5. Five-Phase Step Types<a id="fig:Five-Phase"></a></div>
+</div>
+<div class="paragraph"><div class="title">Functions</div><p>The component exports three functions. Each function acts on all of
+the step pulse generators - running different generators in different
+threads is not supported.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(funct) stepgen.make-pulses</em> - High speed function to generate
+   and count pulses (no floating point).
+</p>
+</li>
+<li>
+<p>
+<em>(funct) stepgen.update-freq</em> - Low speed function does position
+   to velocity conversion, scaling and limiting.
+</p>
+</li>
+<li>
+<p>
+<em>(funct) stepgen.capture-position</em> - Low speed function for
+   feedback, updates latches and scales position.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The high speed function <em>stepgen.make-pulses</em> should be run in a very
+fast thread, from 10 to 50 us depending on the
+capabilities of the computer. That thread&#8217;s period determines the
+ maximum step frequency, since <em>steplen</em>, <em>stepspace</em>, <em>dirsetup</em>,
+<em>dirhold</em>, and <em>dirdelay</em> are all rounded up to a integer multiple of
+the thread periond in
+nanoseconds. The other two functions can be called at a much lower
+rate.</p></div>
+</div>
+<h2 id="_pwmgen_a_id_sec_pwmgen_a">2. PWMgen<a id="sec:PWMgen"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This component provides software based generation of PWM (Pulse Width
+Modulation) and PDM (Pulse Density Modulation) waveforms. It is a
+realtime component only, and depending on CPU speed, etc, is capable of
+PWM frequencies from a few hundred Hertz at pretty good resolution, to
+perhaps 10KHz with limited resolution.</p></div>
+<div class="listingblock">
+<div class="title">Installing</div>
+<div class="content">
+<pre><tt>loadrt pwmgen output_type=&lt;config-array&gt;</tt></pre>
+</div></div>
+<div class="paragraph"><p>The <em>&lt;config-array&gt;</em> is a series of comma separated decimal integers. Each
+number causes a single PWM generator to be loaded, the value of the number
+determines the output type. The following example will install three PWM
+generators. There is no default value, if <em>&lt;config-array&gt;</em> is not specified,
+no PWM generators will be installed. The maximum number of frequency generators
+is 8 (as defined by MAX_CHAN in pwmgen.c). Each generator is independent,
+but all are updated by the same function(s) at the same time. In the following
+descriptions, <em>&lt;chan&gt;</em> is the number of a specific generator. The first
+generator is number 0.</p></div>
+<div class="listingblock">
+<div class="title">Example</div>
+<div class="content">
+<pre><tt>loadrt pwmgen output_type=0,1,2</tt></pre>
+</div></div>
+<div class="listingblock">
+<div class="title">Removing</div>
+<div class="content">
+<pre><tt>unloadrt pwmgen</tt></pre>
+</div></div>
+<div class="paragraph"><div class="title">Output Types</div><p>The PWM generator supports three different <em>output types</em>.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Output type 0</em> - PWM output pin only. Only positive commands are accepted,
+   negative values are treated as zero (and will be affected by the parameter
+   <em>min-dc</em> if it is non-zero).
+</p>
+</li>
+<li>
+<p>
+<em>Output type 1</em> - PWM/PDM and direction pins. Positive and negative inputs
+   will be output as positive and negative PWM. The direction pin is false
+   for positive commands, and true for negative commands. If your control
+   needs positive PWM for both CW and CCW use the <a href="components.html#sub:abs">abs</a> component
+   to convert your PWM signal to positive value when a negative input is input.
+</p>
+</li>
+<li>
+<p>
+<em>Output type 2</em> - UP and DOWN pins. For positive commands, the PWM signal
+   appears on the up output, and the down output remains false. For negative
+   commands, the PWM signal appears on the down output, and the up output
+   remains false. Output type 2 is suitable for driving most H-bridges.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><div class="title">Pins</div><p>Each PWM generator will have the following pins:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(float) pwmgen.&lt;chan&gt;.value</em> - Command value, in arbitrary units.
+   Will be scaled by the <em>scale</em> parameter (see below).
+</p>
+</li>
+<li>
+<p>
+<em>(bit) pwmgen.&lt;chan&gt;.enable</em> - Enables or disables the PWM
+   generator outputs.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Each PWM generator will also have some of these pins, depending on the
+output type selected:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(bit) pwmgen.&lt;chan&gt;.pwm</em> - PWM (or PDM) output, (output types 0
+   and 1 only).
+</p>
+</li>
+<li>
+<p>
+<em>(bit) pwmgen.&lt;chan&gt;.dir</em> - Direction output (output type 1 only).
+</p>
+</li>
+<li>
+<p>
+<em>(bit) pwmgen.&lt;chan&gt;.up</em> - PWM/PDM output for positive input value
+   (output type 2 only).
+</p>
+</li>
+<li>
+<p>
+<em>(bit) pwmgen.&lt;chan&gt;.down</em> - PWM/PDM output for negative input
+   value (output type 2 only).
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Parameters</div><ul>
+<li>
+<p>
+<em>(float) pwmgen.&lt;chan&gt;.scale</em> - Scaling factor to convert <em>value</em>
+   from arbitrary units to duty cycle.
+</p>
+</li>
+<li>
+<p>
+<em>(float) pwmgen.&lt;chan&gt;.pwm-freq</em> - Desired PWM frequency, in Hz.
+   If 0.0, generates PDM instead of
+    PWM. If set higher than internal limits, next call of <em>update_freq()</em>
+   will set it to the internal limit. If non-zero, and <em>dither</em> is false,
+   next call of <em>update_freq()</em> will set it to the nearest integer
+   multiple of the <em>make_pulses()</em> function period.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) pwmgen.&lt;chan&gt;.dither-pwm</em> - If true, enables dithering to
+   achieve average PWM frequencies or
+   duty cycles that are unobtainable with pure PWM. If false, both the PWM
+   frequency and the duty cycle will be rounded to values that can be
+   achieved exactly.
+</p>
+</li>
+<li>
+<p>
+<em>(float) pwmgen.&lt;chan&gt;.min-dc</em> - Minimum duty cycle, between 0.0
+   and 1.0 (duty cycle will go to
+   zero when disabled, regardless of this setting).
+</p>
+</li>
+<li>
+<p>
+<em>(float) pwmgen.&lt;chan&gt;.max-dc</em> - Maximum duty cycle, between 0.0
+   and 1.0.
+</p>
+</li>
+<li>
+<p>
+<em>(float) pwmgen.&lt;chan&gt;.curr-dc</em> - Current duty cycle - after all
+   limiting and rounding (read only).
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><div class="title">Functions</div><p>The component exports two functions. Each function acts on all of the
+PWM generators - running different generators in different threads is
+not supported.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(funct) pwmgen.make-pulses</em> - High speed function to generate PWM
+   waveforms (no floating point).
+</p>
+</li>
+<li>
+<p>
+<em>(funct) pwmgen.update</em> - Low speed function to scale and limit
+   value and handle other parameters.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The high speed function <em>pwmgen.make-pulses</em> should be run in a very
+fast thread, from 10 to 50 us depending on the
+capabilities of the computer. That thread&#8217;s period determines the
+maximum PWM carrier frequency, as well as the resolution of the PWM or
+PDM signals. The other function can be called at a much lower rate.</p></div>
+</div>
+<h2 id="_encoder_a_id_sec_encoder_a">3. Encoder<a id="sec:Encoder"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This component provides software based counting of signals from
+quadrature encoders. It is a realtime component only, and depending on
+CPU speed, latency, etc, is capable of maximum count rates of 10kHz to
+perhaps up to 50kHz. Figure <a href="rtcomps.html#fig:Encoder-Block-Diag">[fig:Encoder-Block-Diag]</a> is a block
+diagram of one channel of encoder counter.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/encoder-block-diag.png" alt=""align="center"" />
+</div>
+<div class="title">Figure 6. Encoder Counter Block Diagram<a id="fig:Encoder-Block-Diag"></a></div>
+</div>
+<div class="listingblock">
+<div class="title">Installing</div>
+<div class="content">
+<pre><tt>halcmd: loadrt encoder [num_chan=&lt;counters&gt;]</tt></pre>
+</div></div>
+<div class="paragraph"><p><em>&lt;counters&gt;</em> is the number of encoder counters that you want to
+install. If <em>numchan</em> is not specified, three counters will be
+installed. The maximum
+number of counters is 8 (as defined by MAX_CHAN in encoder.c). Each
+counter is independent, but all are updated by the same function(s) at
+ the same time. In the following descriptions, <em>&lt;chan&gt;</em> is the number
+of a specific counter. The first counter is number 0.</p></div>
+<div class="listingblock">
+<div class="title">Removing</div>
+<div class="content">
+<pre><tt>halcmd: unloadrt encoder</tt></pre>
+</div></div>
+<div class="ulist"><div class="title">Pins</div><ul>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.counter-mode</em> (bit, I/O) (default: FALSE) - Enables
+   counter mode. When true, the
+   counter counts each rising edge of the phase-A input, ignoring the
+   value on phase-B. This is useful for counting the output of a single
+   channel (non-quadrature) sensor. When false, it counts in quadrature
+   mode.
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.counts</em> (s32, Out) - Position in encoder counts.
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.counts-latched</em> (s32, Out) - Not used at this time.
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.index-enable</em> (bit, I/O) - When True, <em>counts</em> and
+   <em>position are</em> reset to zero on next rising edge of Phase Z. At the
+   same time, <em>index-enable</em> is reset to zero to indicate that the rising
+   edge has occoured. The <em>index-enable</em> pin is bi-directional. If
+   <em>index-enable</em> is False, the Phase Z channel of the encoder will be
+   ignored, and the
+    counter will count normally. The encoder driver will never set
+   <em>index-enable</em> True. However, some other component may do so.
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.latch-falling</em> (bit, In) (default: TRUE) - Not used
+   at this time.
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.latch-input</em> (bit, In) (default: TRUE) - Not used at
+   this time.
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.latch-rising</em> (bit, In) - Not used at this time.
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.min-speed-estimate</em> (float, in) - Determine the
+   minimum true velocity magnitude at which
+   velocity will be estimated as nonzero and postition-interpolated will
+   be interpolated. The units of <em>min-speed-estimate</em> are the same as the
+   units of <em>velocity</em> . Scale factor, in counts per length unit. Setting
+   this parameter too
+   low will cause it to take a long time for velocity to go to 0 after
+   encoder pulses have stopped arriving.
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.phase-A</em> (bit, In) - Phase A of the quadrature encoder signal.
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.phase-B</em> (bit, In) - Phase B of the quadrature encoder signal.
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.phase-Z</em> (bit, In) - Phase Z (index pulse) of the quadrature encoder signal.
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.position</em> (float, Out) - Position in scaled units (see <em>position-scale</em>).
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.position-interpolated</em> (float, Out) - Position in
+   scaled units, interpolated between
+   encoder counts. The <em>position-interpolated</em> attempts to interpolate
+   between encoder counts, based on the most
+   recently measured velocity. Only valid when velocity is approximately
+   constant and above <em>min-speed-estimate</em>. Do not use for position
+   control, since its value is incorrect at
+   low speeds, during direction reversals, and during speed changes.
+   However, it allows a low ppr encoder (including a one pulse per
+   revolution <em>encoder</em>) to be used for lathe threading, and may have
+   other uses as well.
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.position-latched (float, Out)</em> - Not used at this time.
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.position-scale (float, I/O)</em> - Scale factor, in
+   counts per length unit. For example, if
+   position-scale is 500, then 1000 counts of the encoder will be reported
+   as a position of 2.0 units.
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.rawcounts (s32, In)</em> - The raw count, as determined
+   by update-counters. This value is
+   updated more frequently than counts and position. It is also unaffected
+   by reset or the index pulse.
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.reset</em> (bit, In) - When True, force <em>counts</em> and
+   <em>position</em> to zero immediately.
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.velocity</em> (float, Out) - Velocity in scaled units per
+   second. <em>encoder</em> uses an algorithm that greatly reduces quantization
+   noise as compared
+   to simply differentiating the <em>position</em> output. When the magnitude
+   of the true velocity is below
+   min-velocity-estimate, the velocity output is 0.
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.x4-mode (bit, I/O) (default: TRUE)</em> - Enables
+   times-4 mode. When true, the counter counts each edge of
+   the quadrature waveform (four counts per full cycle). When false, it
+   only counts once per full cycle. In counter-mode, this parameter is
+   ignored. The 1x mode is useful for some jogwheels.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Parameters</div><ul>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.capture-position.time (s32, RO)</em>
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.capture-position.tmax (s32, RW)</em>
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.update-counters.time (s32, RO)</em>
+</p>
+</li>
+<li>
+<p>
+<em>encoder.&lt;chan&gt;.update-counter.tmax (s32, RW)</em>
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><div class="title">Functions</div><p>The component exports two functions. Each function acts on all of the
+encoder counters - running different counters in different threads is
+not supported.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(funct) encoder.update-counters</em> - High speed function to count
+   pulses (no floating point).
+</p>
+</li>
+<li>
+<p>
+<em>(funct) encoder.capture-position</em> - Low speed function to update
+   latches and scale position.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_pid_a_id_sec_pid_a">4. PID<a id="sec:PID"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This component provides Proportional/Integral/Derivative control
+loops. It is a realtime component only. For simplicity, this discussion
+assumes that we are talking about position loops, however this
+component can be used to implement other feedback loops such as speed,
+torch height, temperature, etc. Figure <a href="rtcomps.html#fig:PID-block-diag">[fig:PID-block-diag]</a> is a
+block diagram of a single PID loop.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pid-block-diag.png" alt=""align="center"" />
+</div>
+<div class="title">Figure 7. PID Loop Block Diagram<a id="fig:PID-block-diag"></a></div>
+</div>
+<div class="listingblock">
+<div class="title">Installing</div>
+<div class="content">
+<pre><tt>halcmd: loadrt pid [num_chan=&lt;loops&gt;] [debug=1]</tt></pre>
+</div></div>
+<div class="paragraph"><p><em>&lt;loops&gt;</em> is the number of PID loops that you want to install. If
+<em>numchan</em> is not specified, one loop will be installed. The maximum
+number of
+loops is 16 (as defined by MAX_CHAN in pid.c). Each loop is completely
+ independent. In the following descriptions, <em>&lt;loopnum&gt;</em> is the loop
+number of a specific loop. The first loop is number 0.</p></div>
+<div class="paragraph"><p>If <em>debug=1</em> is specified, the component will export a few extra
+parameters that
+may be useful during debugging and tuning. By default, the extra
+parameters are not exported, to save shared memory space and avoid
+cluttering the parameter list.</p></div>
+<div class="listingblock">
+<div class="title">Removing</div>
+<div class="content">
+<pre><tt>halcmd: unloadrt pid</tt></pre>
+</div></div>
+<div class="paragraph"><div class="title">Pins</div><p>The three most important pins are</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.command</em> - The desired position, as
+   commanded by another system component.
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.feedback</em> - The present position, as
+   measured by a feedback device such as an encoder.
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.output</em> - A velocity command that attempts
+   to move from the present position to the desired position.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>For a position loop, <em>command</em> and <em>feedback</em> are in position units.
+For a linear axis, this could be inches, mm, meters, or whatever is
+relevant. Likewise, for an angular axis, it could be degrees, radians,
+etc. The units of the <em>output</em> pin represent the change needed to make
+the feedback match the command. As such, for a position loop <em>Output</em>
+is a velocity, in inches/sec, mm/sec, degrees/sec, etc. Time units are
+always seconds, and the velocity units match the position units. If
+command and feedback are in meters, then output is in meters per
+second.</p></div>
+<div class="paragraph"><p>Each loop has two pins which are used to monitor or control the
+general operation of the component.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.error</em> - Equals <em>.command</em> minus <em>.feedback</em>.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) pid.&lt;loopnum&gt;.enable</em> - A bit that enables the loop. If
+   <em>.enable</em> is false, all integrators are reset, and the output is
+   forced to zero. If <em>.enable</em> is true, the loop operates normally.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Pins used to report saturation. Saturation occurs when the output of
+the PID block is at its maximum or minimum limit.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(bit) pid.&lt;loopnum&gt;.saturated</em> - True when output is saturated.
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.saturated_s</em> - The time the output has been saturated.
+</p>
+</li>
+<li>
+<p>
+<em>(s32) pid.&lt;loopnum&gt;.saturated_count</em> - The time the output has been saturated.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><div class="title">Parameters</div><p>The PID gains, limits, and other <em>tunable</em> features of the loop are
+implemented as parameters.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.Pgain</em> - Proportional gain
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.Igain</em> - Integral gain
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.Dgain</em> - Derivative gain
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.bias</em> - Constant offset on output
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.FF0</em> - Zeroth order feedforward - output
+   proportional to command (position).
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.FF1</em> - First order feedforward - output
+   proportional to derivative of command (velocity).
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.FF2</em> - Second order feedforward - output
+   proportional to 2nd derivative
+   of command (acceleration)<span class="footnote"><br />[FF2 is not currently implemented,
+   but it will be added. Consider this note a “FIXME” for the code]<br /></span>.
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.deadband</em> - Amount of error that will be ignored
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.maxerror</em> - Limit on error
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.maxerrorI</em> - Limit on error integrator
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.maxerrorD</em> - Limit on error derivative
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.maxcmdD</em> - Limit on command derivative
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.maxcmdDD</em> - Limit on command 2nd derivative
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.maxoutput</em> - Limit on output value
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>All of the <em>max</em> limits are implemented such that if the parameter
+value is zero, there is no limit.</p></div>
+<div class="paragraph"><p>If <em>debug=1</em> was specified when the component was installed, four
+additional parameters will be exported:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.errorI</em> - Integral of error.
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.errorD</em> - Derivative of error.
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.commandD</em> - Derivative of the command.
+</p>
+</li>
+<li>
+<p>
+<em>(float) pid.&lt;loopnum&gt;.commandDD</em> - 2nd derivative of the command.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><div class="title">Functions</div><p>The component exports one function for each PID loop. This function
+performs all the calculations needed for the loop. Since each loop has
+its own function, individual loops can be included in different threads
+and execute at different rates.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(funct) pid.&lt;loopnum&gt;.do_pid_calcs</em> - Performs all calculations
+   for a single PID loop.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>If you want to understand the exact algorithm used to compute the
+output of the PID loop, refer to figure <a href="rtcomps.html#fig:PID-block-diag">[fig:PID-block-diag]</a>, the
+comments at the beginning of <em>emc2/src/hal/components/pid.c</em> , and of
+course to the code itself. The loop calculations are in the C
+function <em>calc_pid()</em>.</p></div>
+</div>
+<h2 id="_simulated_encoder_a_id_sec_simulated_encoder_a">5. Simulated Encoder<a id="sec:Simulated-Encoder"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The simulated encoder is exactly that. It produces quadrature pulses
+with an index pulse, at a speed controlled by a HAL pin. Mostly useful
+for testing.</p></div>
+<div class="listingblock">
+<div class="title">Installing</div>
+<div class="content">
+<pre><tt>halcmd: loadrt sim-encoder num_chan=&lt;number&gt;</tt></pre>
+</div></div>
+<div class="paragraph"><p><em>&lt;number&gt;</em> is the number of encoders that you want to simulate. If not
+specified, one encoder will be installed. The maximum number is 8 (as
+defined by MAX_CHAN in sim_encoder.c).</p></div>
+<div class="listingblock">
+<div class="title">Removing</div>
+<div class="content">
+<pre><tt>halcmd: unloadrt sim-encoder</tt></pre>
+</div></div>
+<div class="ulist"><div class="title">Pins</div><ul>
+<li>
+<p>
+<em>(float) sim-encoder.&lt;chan-num&gt;.speed</em> - The speed command for the
+   simulated shaft.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) sim-encoder.&lt;chan-num&gt;.phase-A</em> - Quadrature output.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) sim-encoder.&lt;chan-num&gt;.phase-B</em> - Quadrature output.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) sim-encoder.&lt;chan-num&gt;.phase-Z</em> - Index pulse output.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>When <em>.speed</em> is positive, <em>.phase-A</em> leads <em>.phase-B</em>.</p></div>
+<div class="ulist"><div class="title">Parameters</div><ul>
+<li>
+<p>
+<em>(u32) sim-encoder.&lt;chan-num&gt;.ppr</em> - Pulses Per Revolution.
+</p>
+</li>
+<li>
+<p>
+<em>(float) sim-encoder.&lt;chan-num&gt;.scale</em> - Scale Factor for <em>speed</em>.
+   The default is 1.0, which means that <em>speed</em> is in revolutions per
+   second. Change to 60 for RPM, to 360 for
+   degrees per second, 6.283185 for radians per seconed, etc.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Note that pulses per revolution is not the same as counts per
+revolution. A pulse is a complete quadrature cycle. Most encoder
+counters will count four times during one complete cycle.</p></div>
+<div class="paragraph"><div class="title">Functions</div><p>The component exports two functions. Each function affects all
+simulated encoders.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(funct) sim-encoder.make-pulses</em> - High speed function to
+   generate quadrature pulses (no floating point).
+</p>
+</li>
+<li>
+<p>
+<em>(funct) sim-encoder.update-speed</em> - Low speed function to read
+   <em>speed</em>, do scaling, and set up <em>make-pulses</em>.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_debounce_a_id_sec_debounce_a">6. Debounce<a id="sec:Debounce"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Debounce is a realtime component that can filter the glitches created
+by mechanical switch contacts. It may also be useful in other
+applications where short pulses are to be rejected.</p></div>
+<div class="listingblock">
+<div class="title">Installing</div>
+<div class="content">
+<pre><tt>halcmd: loadrt debounce cfg=&lt;config-string&gt;</tt></pre>
+</div></div>
+<div class="paragraph"><p><em>&lt;config-string&gt;</em> is a series of comma separated decimal integers.
+Each number installs
+a group of identical debounce filters, the number determines how many
+filters are in the group.</p></div>
+<div class="paragraph"><p>For example:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: loadrt debounce cfg=1,4,2</tt></pre>
+</div></div>
+<div class="paragraph"><p>will install three groups of filters. Group 0 contains one filter,
+group 1 contains four, and group 2 contains two filters. The default
+value for <em>&lt;config-string&gt;</em> is <em>"1"</em> which will install a single group
+containing a single filter. The
+maximum number of groups 8 (as defined by MAX_GROUPS in debounce.c).
+The maximum number of filters in a group is limited only by shared
+memory space. Each group is completely independent. All filters in a
+single group are identical, and they are all updated by the same
+function at the same time. In the following descriptions, <em>&lt;G&gt;</em> is the
+group number and <em>&lt;F&gt;</em> is the filter number within the group. The
+first filter is group 0,
+filter 0.</p></div>
+<div class="listingblock">
+<div class="title">Removing</div>
+<div class="content">
+<pre><tt>halcmd: unloadrt debounce</tt></pre>
+</div></div>
+<div class="paragraph"><div class="title">Pins</div><p>Each individual filter has two pins.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(bit) debounce.&lt;G&gt;.&lt;F&gt;.in</em> - Input of filter <em>&lt;F&gt;</em> in group <em>&lt;G&gt;</em>.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) debounce.&lt;G&gt;.&lt;F&gt;.out</em> - Output of filter <em>&lt;F&gt;</em> in group <em>&lt;G&gt;</em>.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><div class="title">Parameters</div><p>Each group of filters has one parameter<span class="footnote"><br />[Each individual
+filter also has an internal state variable. There is a
+compile time switch that can export that variable as a parameter. This
+is intended for testing, and simply wastes shared memory under normal
+circumstances.]<br /></span>.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(s32) debounce.&lt;G&gt;.delay</em> - Filter delay for all filters in group <em>&lt;G&gt;</em>.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The filter delay is in units of thread periods. The minimum delay is
+zero. The output of a zero delay filter exactly follows its input - it
+doesn&#8217;t filter anything. As <em>delay</em> increases, longer and longer
+glitches are rejected. If <em>delay</em> is 4, all glitches less than or
+equal to four thread periods will be rejected.</p></div>
+<div class="paragraph"><div class="title">Functions</div><p>Each group of filters has one function, which updates all the filters
+in that group <em>simultaneously</em>. Different groups of filters can be
+updated from different threads at different periods.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(funct) debounce.&lt;G&gt;</em> - Updates all filters in group <em>&lt;G&gt;</em>.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_siggen_a_id_sec_siggen_a">7. Siggen<a id="sec:Siggen"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Siggen is a realtime component that generates square, triangle, and
+sine waves. It is primarily used for testing.</p></div>
+<div class="listingblock">
+<div class="title">Installing</div>
+<div class="content">
+<pre><tt>halcmd: loadrt siggen [num_chan=&lt;chans&gt;]</tt></pre>
+</div></div>
+<div class="paragraph"><p><em>&lt;chans&gt;</em> is the number of signal generators that you want to install.
+If <em>numchan</em> is not specified, one signal generator will be installed.
+The maximum
+number of generators is 16 (as defined by MAX_CHAN in siggen.c). Each
+ generator is completely independent. In the following descriptions,
+<em>&lt;chan&gt;</em> is the number of a specific signal generator (the numbers
+start at 0).</p></div>
+<div class="listingblock">
+<div class="title">Removing</div>
+<div class="content">
+<pre><tt>halcmd: unloadrt siggen</tt></pre>
+</div></div>
+<div class="paragraph"><div class="title">Pins</div><p>Each generator has five output pins.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(float) siggen.&lt;chan&gt;.sine</em> - Sine wave output.
+</p>
+</li>
+<li>
+<p>
+<em>(float) siggen.&lt;chan&gt;.cosine</em> - Cosine output.
+</p>
+</li>
+<li>
+<p>
+<em>(float) siggen.&lt;chan&gt;.sawtooth</em> - Sawtooth output.
+</p>
+</li>
+<li>
+<p>
+<em>(float) siggen.&lt;chan&gt;.triangle</em> - Triangle wave output.
+</p>
+</li>
+<li>
+<p>
+<em>(float) siggen.&lt;chan&gt;.square</em> - Square wave output.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>All five outputs have the same frequency, amplitude, and offset.</p></div>
+<div class="paragraph"><p>In addition to the output pins, there are three control pins:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(float) siggen.&lt;chan&gt;.frequency</em> - Sets the frequency in Hertz,
+   default value is 1 Hz.
+</p>
+</li>
+<li>
+<p>
+<em>(float) siggen.&lt;chan&gt;.amplitude</em> - Sets the peak amplitude of the
+   output waveforms, default is 1.
+</p>
+</li>
+<li>
+<p>
+<em>(float) siggen.&lt;chan&gt;.offset</em> - Sets DC offset of the output
+   waveforms, default is 0.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>For example, if <em>siggen.0.amplitude</em> is 1.0 and <em>siggen.0.offset</em> is
+0.0, the outputs will swing from -1.0 to +1.0. If <em>siggen.0.amplitude</em>
+is 2.5 and <em>siggen.0.offset</em> is 10.0, then the outputs will swing from
+7.5 to 12.5.</p></div>
+<div class="paragraph"><div class="title">Parameters</div><p>None. <span class="footnote"><br />[Prior to version 2.1, frequency, amplitude, and offset
+were parameters. They were changed to pins to allow control by other
+components.]<br /></span></p></div>
+<div class="ulist"><div class="title">Functions</div><ul>
+<li>
+<p>
+<em>(funct) siggen.&lt;chan&gt;.update</em> - Calculates new values for all five outputs.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_lut5_a_id_sec_lut5_a">8. lut5 <a id="sec:lut5"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The lut5 component is a 5 input logic component based on a look up table.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>lut5</em> does not require a floating point thread.
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">Installing</div>
+<div class="content">
+<pre><tt>loadrt lut5 [count=N|names=name1[,name2...]]
+addf lut5.N servo-thread | base-thread
+setp lut5.N.function 0xN</tt></pre>
+</div></div>
+<div class="paragraph"><div class="title">Computing Function</div><p>To compute the hexadecimal number for the function starting from the top put
+a 1 or 0 to indicate if that row would be true or false. Next write down every
+number in the output column starting from the top and writing them from right
+to left. This will be the binary number. Using a calculator with a program
+view like the one in Ubuntu enter the binary number and then convert it to
+hexadecimal and that will be the value for function.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="50%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 1. Look Up Table</caption>
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<thead>
+<tr>
+<th align="center" valign="top">Bit 4</th>
+<th align="center" valign="top">Bit 3</th>
+<th align="center" valign="top">Bit 2</th>
+<th align="center" valign="top">Bit 1</th>
+<th align="center" valign="top">Bit 0</th>
+<th align="center" valign="top">Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><div class="title">Two Input Example</div><p>In the following table we have selected the output state for each line
+that we wish to be true.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="50%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 2. Look Up Table</caption>
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<thead>
+<tr>
+<th align="center" valign="top">Bit 4</th>
+<th align="center" valign="top">Bit 3</th>
+<th align="center" valign="top">Bit 2</th>
+<th align="center" valign="top">Bit 1</th>
+<th align="center" valign="top">Bit 0</th>
+<th align="center" valign="top">Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Looking at the output column of our example we want the output to be on
+when Bit 0 or Bit 0 and Bit1 is on and nothing else. The binary number is
+<em>b1010</em> (rotate the output 90 degrees CW). Enter this number into the
+calculator then change the display to hexadecimal and the number needed for
+function is <em>0xa</em>. The hexadecimal prefix is <em>0x</em>.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-12-15 06:36:08 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/rtcomps.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:15:40 GMT -->
+</html>

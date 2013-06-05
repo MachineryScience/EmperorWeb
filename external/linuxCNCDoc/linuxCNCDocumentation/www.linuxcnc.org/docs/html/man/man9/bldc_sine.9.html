@@ -1,0 +1,207 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Mon Dec  5 07:46:18 2011 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/bldc_sine.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>BLDC_SINE</title>
+
+</head>
+<body>
+
+<h1 align="center">BLDC_SINE</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">bldc_sine
+&minus; Sinusoidal Brushless DC motor drive, with optional
+self-zeroing</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="75%">
+
+
+<p style="margin-top: 1em"><b>loadrt bldc_sine
+[count=</b><i>N</i><b>|names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p> </td>
+<td width="14%">
+</td></tr>
+</table>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>bldc-sine.</b><i>N</i>
+(requires a floating-point thread)</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>bldc-sine.</b><i>N</i><b>.rawcounts</b>
+s32 in</p>
+
+<p style="margin-left:22%;">Encoder counts input</p>
+
+
+<p style="margin-left:11%;"><b>bldc-sine.</b><i>N</i><b>.init</b>
+bit in</p>
+
+<p style="margin-left:22%;">A rising edge on this pin
+starts the motor alignment sequence. This pin should be
+connected in such a way that the motors re-align any time
+that encoder monitoring has been interrupted. Typically this
+will only be at machine power-off. The alignment process
+involves powering the motor phases in such a way as to put
+the motor in a known position. The encoder counts are then
+stored in the <b>offset</b> parameter. The alignement
+process will tend to cause a following error if it is
+triggered while the axis is enabled, so should be set before
+the matching axis.N.enable pin. The complementary
+<b>init-done</b> pin can be used to handle the required
+sequencing.</p>
+
+<p style="margin-left:22%; margin-top: 1em">Both pins can
+be ignored if the encoder offset is known explicitly, such
+as is the case with an absolute encoder. In that case the
+<b>offset</b> parameter can be set directly in the HAL
+file</p>
+
+
+<p style="margin-left:11%;"><b>bldc-sine.</b><i>N</i><b>.init-done</b>
+bit out (default: <i>0</i>)</p>
+
+<p style="margin-left:22%;">indicates that the motor
+alignment process is completed</p>
+
+
+<p style="margin-left:11%;"><b>bldc-sine.</b><i>N</i><b>.dir</b>
+float in (default: <i>1</i>)</p>
+
+<p style="margin-left:22%;">The peak output of the three
+<b>*-value</b> pins will be the product of the <b>value</b>
+pin and the <b>dir</b> pin. The main purpose of the pin is
+to invert the the motor direction sense using a scale of -1,
+but there is no restriction on the valid values. Typically
+the component will take a bipolar +/- fullscale input from a
+pid function and in that case this pin will not be wired</p>
+
+
+<p style="margin-left:11%;"><b>bldc-sine.</b><i>N</i><b>.value</b>
+float in</p>
+
+<p style="margin-left:22%;">PWM demand</p>
+
+
+<p style="margin-left:11%;"><b>bldc-sine.</b><i>N</i><b>.angle</b>
+float in (default: <i>90</i>)</p>
+
+<p style="margin-left:22%;">The phase lead between the
+electrical vector and the rotor position</p>
+
+
+<p style="margin-left:11%;"><b>bldc-sine.</b><i>N</i><b>.initvalue</b>
+float in (default: <i>.1</i>)</p>
+
+<p style="margin-left:22%;">The PWM demand to use for motor
+initialisation</p>
+
+
+<p style="margin-left:11%;"><b>bldc-sine.</b><i>N</i><b>.A-value</b>
+float out (default: <i>0</i>)</p>
+
+<p style="margin-left:22%;">Output amplitude for phase
+A</p>
+
+
+<p style="margin-left:11%;"><b>bldc-sine.</b><i>N</i><b>.B-value</b>
+float out (default: <i>0</i>)</p>
+
+<p style="margin-left:22%;">Output amplitude for phase
+B</p>
+
+
+<p style="margin-left:11%;"><b>bldc-sine.</b><i>N</i><b>.C-value</b>
+float out (default: <i>0</i>)</p>
+
+<p style="margin-left:22%;">Output amplitude for phase
+C</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>bldc-sine.</b><i>N</i><b>.offset</b>
+s32 rw (default: <i>0</i>)</p>
+
+<p style="margin-left:22%;">The offset in encoder counts
+between the encoder zero position and motor electrical zero.
+Can be set directly for use in absolute feedback systems or
+will be initialised by the <b>init</b> pin.</p>
+
+
+<p style="margin-left:11%;"><b>bldc-sine.</b><i>N</i><b>.scale</b>
+float rw (default: <i>512</i>)</p>
+
+<p style="margin-left:22%;">The number of encoder counts
+per electrical revolution. eg counts/2 for a 4-pole motor,
+counts/3 for a 6 pole etc. There is a 50% chance that this
+parameter will need to be negative for proper function.</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Andy Pugh</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/bldc_sine.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

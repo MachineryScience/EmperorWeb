@@ -1,0 +1,113 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue Mar 13 14:36:06 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/debounce.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>DEBOUNCE</title>
+
+</head>
+<body>
+
+<h1 align="center">DEBOUNCE</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">debounce
+&minus; filter noisy digital inputs</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+debounce cfg=</b><i>size[,size,...]</i></p>
+
+<p style="margin-left:11%; margin-top: 1em">Creates filter
+groups each with the given number of filters (<i>size</i>).
+Each filter group has the same sample rate and delay.</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The debounce
+filter works by incrementing a counter whenever the input is
+true, and decrementing the counter when it is false. If the
+counter decrements to zero, the output is set false and the
+counter ignores further decrements. If the counter
+increments up to a threshold, the output is set true and the
+counter ignores further increments. If the counter is
+between zero and the threshold, the output retains its
+previous state. The threshold determines the amount of
+filtering: a threshold of 1 does no filtering at all, and a
+threshold of N requires a signal to be present for N samples
+before the output changes state.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>debounce.</b><i>G</i></p>
+
+<p style="margin-left:22%;">Sample all the input pins in
+group G and update the output pins.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>debounce.</b><i>G</i><b>.</b><i>F</i><b>.in</b>
+bit in</p>
+
+<p style="margin-left:22%;">The F&rsquo;th input pin in
+group G.</p>
+
+
+<p style="margin-left:11%;"><b>debounce.</b><i>G</i><b>.</b><i>F</i><b>.out</b>
+bit out</p>
+
+<p style="margin-left:22%;">The F&rsquo;th output pin in
+group G. Reflects the last &quot;stable&quot; input seen on
+the corresponding input pin.</p>
+
+
+<p style="margin-left:11%;"><b>debounce.</b><i>G</i><b>.delay</b>
+signed rw</p>
+
+<p style="margin-left:22%;">Sets the amount of filtering
+for all pins in group G.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/debounce.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

@@ -1,0 +1,241 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:27 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/pwmgen.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>PWMGEN</title>
+
+</head>
+<body>
+
+<h1 align="center">PWMGEN</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">pwmgen &minus;
+software PWM/PDM generation</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+pwmgen output_type=</b><i>type0</i>[,<i>type1</i>...]</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>pwmgen</b>
+is used to generate PWM (pulse width modulation) or PDM
+(pulse density modulation) signals. The maximum PWM
+frequency and the resolution is quite limited compared to
+hardware-based approaches, but in many cases software PWM
+can be very useful. If better performance is needed, a
+hardware PWM generator is a better choice.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>pwmgen</b>
+supports a maximum of eight channels. The number of channels
+actually loaded depends on the number of <i>type</i> values
+given. The value of each <i>type</i> determines the outputs
+for that channel. <br>
+type 0: single output</p>
+
+<p style="margin-left:22%;">A single output pin,
+<b>pwm</b>, whose duty cycle is determined by the input
+value for positive inputs, and which is off (or at
+<b>min-dc</b>) for negative inputs. Suitable for single
+ended circuits.</p>
+
+<p style="margin-left:11%;">type 1: pwm/direction</p>
+
+<p style="margin-left:22%;">Two output pins, <b>pwm</b> and
+<b>dir</b>. The duty cycle on <b>pwm</b> varies as a
+function of the input value. <b>dir</b> is low for positive
+inputs and high for negative inputs.</p>
+
+<p style="margin-left:11%;">type 2: up/down</p>
+
+<p style="margin-left:22%;">Two output pins, <b>up</b> and
+<b>down</b>. For positive inputs, the PWM/PDM waveform
+appears on <b>up</b>, while <b>down</b> is low. For negative
+inputs, the waveform appears on <b>down</b>, while <b>up</b>
+is low. Suitable for driving the two sides of an H-bridge to
+generate a bipolar output.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>pwmgen.make-pulses</b>
+(no floating-point)</p>
+
+<p style="margin-left:22%;">Generates the actual PWM
+waveforms, using information computed by <b>update</b>. Must
+be called as frequently as possible, to maximize the
+attainable PWM frequency and resolution, and minimize
+jitter. Operates on all channels at once.</p>
+
+<p style="margin-left:11%;"><b>pwmgen.update</b> (uses
+floating point)</p>
+
+<p style="margin-left:22%;">Accepts an input value,
+performs scaling and limit checks, and converts it into a
+form usable by <b>make-pulses</b> for PWM/PDM generation.
+Can (and should) be called less frequently than
+<b>make-pulses</b>. Operates on all channels at once.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>pwmgen.</b><i>N</i><b>.enable</b>
+bit in</p>
+
+<p style="margin-left:22%;">Enables PWM generator <i>N</i>
+- when false, all <b>pwmgen.</b><i>N</i> output pins are
+low.</p>
+
+
+<p style="margin-left:11%;"><b>pwmgen.</b><i>N</i><b>.value</b>
+float in</p>
+
+<p style="margin-left:22%;">Commanded value. When
+<b>value</b> = 0.0, duty cycle is 0%, and when <b>value</b>
+= +/-<b>scale</b>, duty cycle is +/- 100%. (Subject to
+<b>min-dc</b> and <b>max-dc</b> limitations.)</p>
+
+
+<p style="margin-left:11%;"><b>pwmgen.</b><i>N</i><b>.pwm</b>
+bit out (output types 0 and 1 only)</p>
+
+<p style="margin-left:22%;">PWM/PDM waveform.</p>
+
+
+<p style="margin-left:11%;"><b>pwmgen.</b><i>N</i><b>.dir</b>
+bit out (output type 1 only)</p>
+
+<p style="margin-left:22%;">Direction output: low for
+forward, high for reverse.</p>
+
+
+<p style="margin-left:11%;"><b>pwmgen.</b><i>N</i><b>.up</b>
+bit out (output type 2 only)</p>
+
+<p style="margin-left:22%;">PWM/PDM waveform for positive
+input values, low for negative inputs.</p>
+
+
+<p style="margin-left:11%;"><b>pwmgen.</b><i>N</i><b>.down</b>
+bit out (output type 2 only)</p>
+
+<p style="margin-left:22%;">PWM/PDM waveform for negative
+input values, low for positive inputs.</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>pwmgen.</b><i>N</i><b>.curr-dc</b>
+float ro</p>
+
+<p style="margin-left:22%;">The current duty cycle, after
+all scaling and limits have been applied. Range is from -1.0
+to +1.0.</p>
+
+
+<p style="margin-left:11%;"><b>pwmgen.</b><i>N</i><b>.max-dc</b>
+float rw</p>
+
+<p style="margin-left:22%;">The maximum duty cycle. A value
+of 1.0 corresponds to 100%. This can be useful when using
+transistor drivers with bootstrapped power supplies, since
+the supply requires some low time to recharge.</p>
+
+
+<p style="margin-left:11%;"><b>pwmgen.</b><i>N</i><b>.min-dc</b>
+float rw</p>
+
+<p style="margin-left:22%;">The minimum duty cycle. A value
+of 1.0 corresponds to 100%. Note that when the pwm generator
+is disabled, the outputs are constantly low, regardless of
+the setting of <b>min-dc</b>.</p>
+
+
+<p style="margin-left:11%;"><b>pwmgen.</b><i>N</i><b>.scale</b>
+float rw <b><br>
+pwmgen.</b><i>N</i><b>.offset</b> float rw</p>
+
+<p style="margin-left:22%;">These parameters provide a
+scale and offset from the <b>value</b> pin to the actual
+duty cycle. The duty cycle is calculated according to <i>dc
+= (value/scale) + offset</i>, with 1.0 meaning 100%.</p>
+
+
+<p style="margin-left:11%;"><b>pwmgen.</b><i>N</i><b>.pwm-freq</b>
+float rw</p>
+
+<p style="margin-left:22%;">PWM frequency in Hz. The upper
+limit is half of the frequency at which <b>make-pulses</b>
+is invoked, and values above that limit will be changed to
+the limit. If <b>dither-pwm</b> is false, the value will be
+changed to the nearest integer submultiple of the
+<b>make-pulses</b> frequency. A value of zero produces Pulse
+Density Modulation instead of Pulse Width Modulation.</p>
+
+
+<p style="margin-left:11%;"><b>pwmgen.</b><i>N</i><b>.dither-pwm</b>
+bit rw</p>
+
+<p style="margin-left:22%;">Because software-generated PWM
+uses a fairly slow timebase (several to many microseconds),
+it has limited resolution. For example, if
+<b>make-pulses</b> is called at a 20KHz rate, and
+<b>pwm-freq</b> is 2KHz, there are only 10 possible duty
+cycles. If <b>dither-pwm</b> is false, the commanded duty
+cycle will be rounded to the nearest of those values.
+Assuming <b>value</b> remains constant, the same output will
+repeat every PWM cycle. If <b>dither-pwm</b> is true, the
+output duty cycle will be dithered between the two closest
+values, so that the long-term average is closer to the
+desired level. <b>dither-pwm</b> has no effect if
+<b>pwm-freq</b> is zero (PDM mode), since PDM is an
+inherently dithered process.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/pwmgen.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

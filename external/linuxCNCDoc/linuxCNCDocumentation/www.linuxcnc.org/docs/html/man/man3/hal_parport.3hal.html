@@ -1,0 +1,197 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:20 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/hal_parport.3hal.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>funct</title>
+
+</head>
+<body>
+
+<h1 align="center">funct</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNTAX">SYNTAX</a><br>
+<a href="#ARGUMENTS">ARGUMENTS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#HIGH ADDRESS PROBING">HIGH ADDRESS PROBING</a><br>
+<a href="#PARPORT STRUCTURE">PARPORT STRUCTURE</a><br>
+<a href="#RETURN VALUE">RETURN VALUE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">funct &minus;
+one-line description of funct</p>
+
+<h2>SYNTAX
+<a name="SYNTAX"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="89%">
+
+
+<p style="margin-top: 1em">#include
+&quot;hal_parport.h&quot;</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="89%">
+
+
+<p style="margin-top: 1em">int <b>hal_parport_get</b>(int
+<i>comp_id</i>, hal_parport_t *<i>port</i>, unsigned short
+<i>base</i>, unsigned short <i>base_hi</i>, unsigned int
+<i>modes</i>)</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="89%">
+
+
+<p style="margin-top: 1em">void
+<b>hal_parport_release</b>(hal_parport_t *<i>port</i>)</p></td></tr>
+</table>
+
+<h2>ARGUMENTS
+<a name="ARGUMENTS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><i>comp_id</i></p>
+
+<p style="margin-left:22%;">A HAL component identifier
+returned by an earlier call to <b>hal_init</b>.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><i>port</i></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>A pointer to a hal_parport_t structure</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><i>base</i></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>The base address of the port (if port &gt;= 16) or the
+linux port number of the port (if port &lt; 16)</p></td></tr>
+</table>
+
+<p style="margin-left:11%;"><i>base_hi</i></p>
+
+<p style="margin-left:22%;">The &quot;high&quot; address of
+the port (location of the ECP registers), 0 to use a probed
+high address, or -1 to disable the high address</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p><i>modes</i></p></td>
+<td width="4%"></td>
+<td width="78%">
+
+
+<p>Advise the driver of the desired port modes, from
+&lt;linux/parport.h&gt;. If a linux-detected port does not
+provide the requested modes, a warning is printed with
+rtapi_print_msg. This does not make the port request fail,
+because unfortunately, many systems that have working EPP
+parports are not detected as such by Linux.</p></td></tr>
+</table>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>hal_parport_get</b>
+allocates a parallel port for exclusive use of the named hal
+component. The port must be released with
+<b>hal_parport_release</b> before the component exits with
+<b>hal_exit</b>.</p>
+
+<h2>HIGH ADDRESS PROBING
+<a name="HIGH ADDRESS PROBING"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">If the port is
+a parallel port known to Linux, and Linux detected a high
+I/O address, this value is used. Otherwise, if base+0x400 is
+not registered to any device, it is used. Otherwise, no
+address is used. If no high address is detected,
+port-&gt;base_hi is 0.</p>
+
+<h2>PARPORT STRUCTURE
+<a name="PARPORT STRUCTURE"></a>
+</h2>
+
+
+<p style="margin-left:17%; margin-top: 1em">typedef struct
+<br>
+{ <br>
+unsigned short base; <br>
+unsigned short base_hi; <br>
+.... // and further unspecified fields <br>
+} hal_parport_t;</p>
+
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>hal_parport_get</b>
+returns a HAL status code. On success, <i>port</i> is filled
+out with information about the allocated port. On failure,
+the contents of <i>port</i> are undefined except that it is
+safe (but not required) to pass this port to
+<b>hal_parport_release</b>.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>hal_parport_release</b>
+does not return a value. It always succeeds.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/hal_parport.3hal.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

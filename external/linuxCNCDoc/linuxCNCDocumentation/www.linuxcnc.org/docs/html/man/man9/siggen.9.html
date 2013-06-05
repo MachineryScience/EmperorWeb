@@ -1,0 +1,196 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:27 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/siggen.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SIGGEN</title>
+
+</head>
+<body>
+
+<h1 align="center">SIGGEN</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#NAMING">NAMING</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">siggen &minus;
+signal generator</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+siggen [num_chan=</b><i>num</i> <b>|
+names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>siggen</b>
+is a signal generator that can be used for testing and other
+applications that need simple waveforms. It produces sine,
+cosine, triangle, sawtooth, and square waves of variable
+frequency, amplitude, and offset, which can be used as
+inputs to other HAL components.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>siggen</b>
+supports a maximum of sixteen channels. The number of
+channels actually loaded is set by the <b>num_chan</b>
+argument when the module is loaded. Alternatively, specify
+<b>names=</b> and unique names separated by commas.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The
+<b>num_chan=</b> and <b>names=</b> specifiers are mutually
+exclusive. If neither <b>num_chan=</b> nor <b>names=</b> are
+specified, the default value is one.</p>
+
+<h2>NAMING
+<a name="NAMING"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The names for
+pins, parameters, and functions are prefixed as: <b><br>
+siggen.N.</b> for N=0,1,...,num-1 when using <b>num_chan=num
+<br>
+nameN.</b> for nameN=name1,name2,... when using
+<b>names=name1,name2,...</b></p>
+
+<p style="margin-left:11%; margin-top: 1em">The
+<b>siggen.N.</b> format is shown in the following
+descriptions.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>siggen.</b><i>N</i><b>.update</b>
+(uses floating-point)</p>
+
+<p style="margin-left:22%;">Updates output pins for signal
+generator <i>N</i>. Each time it is called it calculates a
+new sample. It should be called many times faster than the
+desired signal frequency, to avoid distortion and
+aliasing.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>siggen.</b><i>N</i><b>.frequency</b>
+float in</p>
+
+<p style="margin-left:22%;">The output frequency for signal
+generator <i>N</i>, in Hertz. The default value is 1.0
+Hertz.</p>
+
+
+<p style="margin-left:11%;"><b>siggen.</b><i>N</i><b>.amplitude</b>
+float in</p>
+
+<p style="margin-left:22%;">The output amplitude for signal
+generator <i>N</i>. If <b>offset</b> is zero, the outputs
+will swing from -<b>amplitude</b> to +<b>amplitude</b>. The
+default value is 1.00.</p>
+
+
+<p style="margin-left:11%;"><b>siggen.</b><i>N</i><b>.offset</b>
+float in</p>
+
+<p style="margin-left:22%;">The output offset for signal
+generator <i>N</i>. This value is added directly to the
+output signal. The default value is zero.</p>
+
+
+<p style="margin-left:11%;"><b>siggen.</b><i>N</i><b>.clock</b>
+bit out</p>
+
+<p style="margin-left:22%;">The clock output. Bit type
+clock signal output at the commanded frequency.</p>
+
+
+<p style="margin-left:11%;"><b>siggen.</b><i>N</i><b>.square</b>
+float out</p>
+
+<p style="margin-left:22%;">The square wave output.
+Positive while <b>triangle</b> and <b>cosine</b> are ramping
+upwards, and while <b>sine</b> is negative.</p>
+
+
+<p style="margin-left:11%;"><b>siggen.</b><i>N</i><b>.sine</b>
+float out</p>
+
+<p style="margin-left:22%;">The sine output. Lags
+<b>cosine</b> by 90 degrees.</p>
+
+
+<p style="margin-left:11%;"><b>siggen.</b><i>N</i><b>.cosine</b>
+float out</p>
+
+<p style="margin-left:22%;">The cosine output. Leads
+<b>sine</b> by 90 degrees.</p>
+
+
+<p style="margin-left:11%;"><b>siggen.</b><i>N</i><b>.triangle</b>
+float out</p>
+
+<p style="margin-left:22%;">The triangle wave output. Ramps
+up while <b>square</b> is positive, and down while
+<b>square</b> is negative. Reaches its positive and negative
+peaks at the same time as <b>cosine</b>.</p>
+
+
+<p style="margin-left:11%;"><b>siggen.</b><i>N</i><b>.sawtooth</b>
+float out</p>
+
+<p style="margin-left:22%;">The sawtooth output. Ramps
+upwards to its positive peak, then instantly drops to its
+negative peak and starts ramping again. The drop occurs when
+<b>triangle</b> and <b>cosine</b> are at their positive
+peaks, and coincides with the falling edge of
+<b>square</b>.</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">None</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/siggen.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/motion/pid_theory_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Réglages d&#8217;une boucle PID</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Réglages d&#8217;une boucle PID</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:Regulation-PID"></a> </p></div>
+</div>
+</div>
+<h2 id="_r_gulation_pid">1. Régulation à PID</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Un régulateur Proportionnel Intégral Dérivé (PID) est un organe de
+contrôle qui permet d&#8217;effectuer une régulation en boucle fermée d&#8217;un
+procédé.</p></div>
+<div class="paragraph"><p>Le régulateur compare une valeur mesurée sur le procédé avec une
+valeur de consigne. La différence entre ces deux valeurs (le signal
+d'<em>erreur</em>) est alors utilisée pour calculer une nouvelle valeur
+d&#8217;entrée du procédé tendant à réduire au maximum l'écart entre la
+mesure et la consigne (signal d&#8217;erreur le plus faible possible).</p></div>
+<div class="paragraph"><p>Contrairement aux algorithmes de régulation simples, le contrôle par
+PID peut ajuster les sorties du procédé, en fonction de l&#8217;amplitude du
+signal d&#8217;erreur, et en fonction du temps. Il donne des résultats plus
+précis et un contrôle plus stable. (Il est montré mathématiquement
+qu&#8217;une boucle PID donne un contrôle plus stable qu&#8217;un contrôle
+proportionnel seul et qu&#8217;il est plus précis que ce dernier qui laissera
+le procédé osciller).</p></div>
+<h3 id="_les_bases_du_contr_le_en_boucle">1.1. Les bases du contrôle en boucle</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Intuitivement, une boucle PID essaye d&#8217;automatiser ce que fait un
+opérateur muni d&#8217;un multimètre et d&#8217;un potentiomètre de contrôle.
+L&#8217;opérateur lit la mesure de sortie du procédé, affichée sur le
+multimètre et utilise le bouton du potentiomètre pour ajuster l&#8217;entrée
+du procédé (l'<em>action</em>) jusqu'à stabiliser la mesure de la sortie
+souhaitée, affichée sur le multimètre.</p></div>
+<div class="paragraph"><p>Un boucle de régulation est composée de trois parties:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+La mesure, effectuée par un capteur connecté à un procédé, par
+exemple un codeur.
+</p>
+</li>
+<li>
+<p>
+La décision, prise par les éléments du régulateur.
+</p>
+</li>
+<li>
+<p>
+L&#8217;action sur le dispositif de sortie, par exemple: un moteur.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Quand le régulateur lit le capteur, il soustrait la valeur lue à la
+valeur de la consigne et ainsi, obtient l'«erreur de mesure». Il peut
+alors utiliser cette erreur pour calculer une correction à appliquer
+sur la variable d&#8217;entrée du procédé (l'<em>action</em>) de sorte que cette
+correction tende à supprimer l&#8217;erreur mesurée en sortie de procédé.</p></div>
+<div class="paragraph"><p>Dans une boucle PID, la correction à partir de l&#8217;erreur est calculée
+de trois façons: P) l&#8217;erreur de mesure courante est soustraite
+directement (effet proportionnel), I) l&#8217;erreur est intégrée pendant un
+laps de temps (effet intégral), D) l&#8217;erreur est dérivée pendant un laps
+de temps (effet dérivé).</p></div>
+<div class="paragraph"><p>Une régulation à PID peut être utilisée dans n&#8217;importe quel procédé
+pour contrôler une variable mesurable, en manipulant d&#8217;autres variables
+de ce procédé. Par exemple, elle peut être utilisée pour contrôler:
+température, pression, débit, composition chimique, vitesse et autres
+variables.</p></div>
+<div class="paragraph"><p>Dans certains systèmes de régulation, les régulateurs sont placés en
+série ou en parallèle. Dans ces cas, le régulateur <em>maître</em> produit les
+signaux utilisés par les régulateurs <em>esclaves</em>. Une situation courante
+dans le contrôle des moteurs, la régulation de vitesse, qui peut
+demander que la vitesse du moteur soit contrôlée par un régulateur
+<em>esclave</em> (souvent intégré dans le variateur de fréquence du moteur)
+recevant en entrée une valeur proportionnelle à la vitesse. Cette
+entrée de l'<em>esclave</em> est alors fournie par la sortie du régulateur
+<em>maître</em>, lequel reçoit la variable de consigne.</p></div>
+<h3 id="_th_orie">1.2. Théorie</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le <em>PID</em> représente les abréviations des trois actions qu&#8217;il utilise
+pour effectuer ses corrections, ce sont des ajouts d&#8217;un signal à un
+autre. Tous agissent sur la quantité régulée. Les actions aboutissent
+finalement à des <em>soustractions</em> de l&#8217;erreur de mesure, parce que le
+signal proportionnel est habituellement négatif.</p></div>
+<h4 id="_action_proportionnelle">1.2.1. Action Proportionnelle</h4>
+<div class="paragraph"><p>Pour cette action, l&#8217;erreur est multipliée par la constante P (pour
+Proportionnel) qui est négative, puis ajoutée (soustraction de l&#8217;erreur
+de mesure) à la quantité régulée. P est valide uniquement sur la bande
+dans laquelle le signal de sortie du régulateur est proportionnel à
+l&#8217;erreur du système. Noter que si l&#8217;erreur de mesure est égale à zéro,
+la partie proportionnelle de la sortie du régulateur est également à
+zéro.</p></div>
+<h4 id="_action_int_grale">1.2.2. Action Intégrale</h4>
+<div class="paragraph"><p>L&#8217;action intégrale fait intervenir la notion de temps. Elle tire
+profit du signal d&#8217;erreur passé qui est intégré (additionné) pendant un
+laps de temps, puis multiplié par la constante I (négative) ce qui en
+fait une moyenne, elle est enfin additionnée (soustraction de l&#8217;erreur
+de mesure) à la quantité régulée. La moyenne de l&#8217;erreur de mesure
+permet de trouver l&#8217;erreur moyenne entre la sortie du régulateur et la
+valeur de la consigne. Un système seulement proportionnel oscille en
+plus et en moins autour de la consigne du fait qu&#8217;en arrivant vers la
+consigne, l&#8217;erreur est à zéro, il n&#8217;enlève alors plus rien est dépasse
+la consigne, ou oscille et/ou se stabilise à une valeur trop basse ou
+trop élevée. L&#8217;addition sur l&#8217;entrée d&#8217;une proportion négative
+(soustraction) de l&#8217;erreur de mesure moyennée, permet toujours de
+réduire l'écart moyen entre la mesure en sortie et la consigne. Donc
+finalement, une boucle PI bien réglée verra sa sortie redescendre
+lentement à la valeur de la consigne.</p></div>
+<h4 id="_action_d_riv_e">1.2.3. Action Dérivée</h4>
+<div class="paragraph"><p>L&#8217;action dérivée utilise aussi la notion de temps. Elle cherche à
+anticiper l&#8217;erreur future. La dérivée première (la pente de l&#8217;erreur)
+est calculée pour un laps de temps et multipliée par la constante
+(négative) D, puis elle est additionnée (soustraction de l&#8217;erreur de
+mesure) à la quantité régulée. L&#8217;action dérivée de la régulation fourni
+une réponse aux perturbations agissant sur le système. Plus important
+est le terme dérivé, plus rapide sera la réponse en sortie à une
+perturbation sur l&#8217;entrée.</p></div>
+<div class="paragraph"><p>Plus techniquement, une boucle PID peut être caractérisée comme un
+filtre appliqué sur un système complexe d&#8217;un domaine fréquentiel. C&#8217;est
+utilisé pour calculer si le système atteindra une valeur stable. Si les
+valeurs sont choisies incorrectement, le procédé entrera en oscillation
+et sa sortie n&#8217;atteindra jamais la consigne.</p></div>
+<h3 id="_r_glage_d_8217_une_boucle">1.3. Réglage d&#8217;une boucle</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Régler une boucle de régulation consiste à agir sur les paramètres des
+différentes actions (gain du proportionnel, gain de l&#8217;intégral, gain de
+la dérivée) sur des valeurs optimales pour obtenir la réponse désirée
+sur la sortie du procédé. Le comportement des procédés varient selon
+les applications lors d&#8217;un changement de consigne. Certains procédés ne
+permettent aucun dépassement de la consigne. D&#8217;autres doivent minimiser
+l'énergie nécessaire pour atteindre un nouveau point de consigne.
+Généralement la stabilité de la réponse est requise, le procédé ne doit
+pas osciller quels que soient les conditions du procédé et le point de
+consigne.</p></div>
+<div class="paragraph"><p>Régler une boucle est rendu plus compliqué si le temps de réponse du
+procédé est long; il peut prendre plusieurs minutes, voir plusieurs
+heures pour qu&#8217;une modification de consigne produise un effet stable.
+Certains procédés ne sont pas linéaires et les paramètres qui
+fonctionnent bien à pleine charge ne marchent plus lors du démarrage
+hors charge du procédé. Cette section décrit quelques méthodes
+manuelles traditionnelles pour régler ces boucles.</p></div>
+<div class="paragraph"><p>Il existe plusieurs méthodes pour régler une boucle PID. Le choix de
+la méthode dépendra en grande partie de la possibilité ou non de mettre
+la boucle «hors production» pour la mise au point ainsi que de la
+vitesse de réponse du système. Si le système peut être mis hors
+production, la meilleure méthode de réglage consiste souvent à
+soumettre le système à un changement de consigne, à mesurer la réponse
+en fonction du temps et à l&#8217;aide de cette réponse à déterminer les
+paramètres de la régulation.</p></div>
+<h4 id="_m_thode_simple">1.3.1. Méthode simple</h4>
+<div class="paragraph"><p>Si le système doit rester en production, une méthode de réglage
+consiste à mettre les valeurs I et D à  zéro. Augmenter ensuite le gain
+P jusqu'à ce que la sortie de la boucle oscille. Puis, augmenter le
+gain I jusqu'à ce que cesse l&#8217;oscillation. Enfin, augmenter le gain D
+jusqu'à  ce que la boucle soit suffisamment rapide pour atteindre
+rapidement sa consigne. Le réglage d&#8217;une boucle PID rapide provoque
+habituellement un léger dépassement de consigne pour avoir une montée
+plus rapide, mais certains systèmes ne le permettent pas.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="90%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<thead>
+<tr>
+<th align="left" valign="top">Paramètre </th>
+<th align="left" valign="top"> Temps de montée </th>
+<th align="left" valign="top"> Dépassement </th>
+<th align="left" valign="top"> Temps de réglage </th>
+<th align="left" valign="top"> S.S. Error</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">P</p></td>
+<td align="left" valign="top"><p class="table">Augmente</p></td>
+<td align="left" valign="top"><p class="table">Augmente</p></td>
+<td align="left" valign="top"><p class="table">Chang. faible</p></td>
+<td align="left" valign="top"><p class="table">Diminue</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">I</p></td>
+<td align="left" valign="top"><p class="table">Diminue</p></td>
+<td align="left" valign="top"><p class="table">Augmente</p></td>
+<td align="left" valign="top"><p class="table">Augmente</p></td>
+<td align="left" valign="top"><p class="table">Eliminate</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">D</p></td>
+<td align="left" valign="top"><p class="table">Chang. faible</p></td>
+<td align="left" valign="top"><p class="table">Diminue</p></td>
+<td align="left" valign="top"><p class="table">Diminue</p></td>
+<td align="left" valign="top"><p class="table">Chang. faible</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Effets de l&#8217;augmentation des paramètres</p></div>
+<h4 id="_m_thode_de_ziegler_nichols">1.3.2. Méthode de Ziegler-Nichols</h4>
+<div class="paragraph"><p>Une autre méthode de réglage est la méthode dite de "Ziegler-Nichols",
+introduite par John G. Ziegler et Nathaniel B. Nichols. Elle commence
+comme la méthode précédente: réglage des gains I et D à zéro et
+accroissement du gain P jusqu'à ce que la sortie du procédé commence à
+osciller. Noter alors le gain critique (K<sub>c</sub>) et la période d&#8217;oscillation
+de la sortie (P<sub>c</sub>). Ajuster alors
+les termes P, I et D de la boucle comme sur la table ci-dessous:</p></div>
+<div class="tableblock">
+<table rules="all"
+width="90%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<thead>
+<tr>
+<th align="left" valign="top">Type de régulation </th>
+<th align="left" valign="top"> P           </th>
+<th align="left" valign="top"> I        </th>
+<th align="left" valign="top"> D</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">P</p></td>
+<td align="left" valign="top"><p class="table">.5K<sub>c</sub></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">PI</p></td>
+<td align="left" valign="top"><p class="table">.45K<sub>c</sub></p></td>
+<td align="left" valign="top"><p class="table">P<sub>c</sub>/1.2</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">PID</p></td>
+<td align="left" valign="top"><p class="table">.6K<sub>c</sub></p></td>
+<td align="left" valign="top"><p class="table">P<sub>c</sub>/2</p></td>
+<td align="left" valign="top"><p class="table">P<sub>c</sub>/8</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-02-04 09:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/motion/pid_theory_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+</html>

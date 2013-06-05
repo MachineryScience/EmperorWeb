@@ -1,0 +1,2477 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/gladevcp.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:13:56 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Glade Virtual Control Panel</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Glade Virtual Control Panel</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:glade-vcp"></a> </p></div>
+</div>
+</div>
+<h2 id="_what_is_gladevcp">1. What is GladeVCP?</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>GladeVCP is an LinuxCNC component which adds the ability to add a new user
+interface panel to LinuxCNC user interfaces like Axis or Touchy. Unlike
+PyVCP, GladeVCP is not limitied to displaying and setting HAL pins, as
+arbitrary actions can be executed in Python code - in fact, a
+complete LinuxCNC user interface could be built with GladeVCP and Python.</p></div>
+<div class="paragraph"><p>GladeVCP users the <a href="http://glade.gnome.org/">Glade</a> WYSIWYG user
+interface editor, which makes it easy to create visually pleasing
+panels. It relies on the <a href="http://www.pygtk.org/">PyGTK</a> bindings to the
+rich <a href="http://www.gtk.org/">GTK+</a> widget set, and in fact all of these
+may be used in a GladeVCP application - not just the specialized
+widgets for interacting with HAL and LinuxCNC, which are documented here.</p></div>
+<h3 id="_pyvcp_versus_gladevcp_at_a_glance">1.1. PyVCP versus GladeVCP at a glance</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Both support the creation of panels with <em>HAL widgets</em> - user
+interface elements like LED&#8217;s, buttons, sliders etc whose values are
+linked to a HAL pin, which in turn interfaces to the rest of LinuxCNC.</p></div>
+<div class="paragraph"><p><strong>PyVCP:</strong></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+widget set: uses TkInter widgets
+</p>
+</li>
+<li>
+<p>
+user interface creation: "edit XML file / run result / evaluate looks" cycle
+</p>
+</li>
+<li>
+<p>
+no support for embedding user-defined event handling
+</p>
+</li>
+<li>
+<p>
+no LinuxCNC interaction beyond HAL pin I/O supported
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><strong>GladeVCP:</strong></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+widget set: relies on the  <a href="http://www.gtk.org/">GTK+</a> widget set.
+</p>
+</li>
+<li>
+<p>
+user interface creation: uses the  <a href="http://glade.gnome.org/">Glade</a> WYSIWYG user interface editor
+</p>
+</li>
+<li>
+<p>
+any HAL pin change may be directed to call back into a user-defined Python event handler
+</p>
+</li>
+<li>
+<p>
+any GTK signal (key/button press, window, I/O, timer, network events) may be associated with user-defined handlers in Python
+</p>
+</li>
+<li>
+<p>
+direct LinuxCNC interaction: arbitrary command execution, like initiating MDI
+commands to call a G-code subroutine, plus support for status change operations through Action Widgets
+</p>
+</li>
+<li>
+<p>
+several independent GladeVCP panels may be run in different tabs
+</p>
+</li>
+<li>
+<p>
+separation of user interface appearance and functionality: change appearance without touching any code
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_a_quick_tour_with_the_example_panel">2. A Quick Tour with the Example Panel</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>GladeVCP panel windows may be run in three different setups:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+always visible integrated into Axis at the right side, exactly like PyVCP panels
+</p>
+</li>
+<li>
+<p>
+as a tab in Axis and Touchy; in Axis this would create a third tab besides the Preview and DRO tabs which must be raised explicitly
+</p>
+</li>
+<li>
+<p>
+as a standalone toplevel window, which can be iconifyed/deiconified independent of the main window.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><div class="title">Installed LinuxCNC</div><p>If your using an installed version of LinuxCNC the examples shown below are in
+the <a href="../common/starting-emc.html#cha:starting-linuxcnc">configuration picker</a> in the <em>Sample
+Configurations &gt; sim &gt; gladevcp</em> branch.</p></div>
+<div class="paragraph"><div class="title">Git Checkout</div><p>The following instructions only apply if your using a git checkout. Open a
+terminal and change to the directory created by git then issue the commmands
+as shown.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">For the following commands to work on your git checkout you must first run
+<em>make</em> then run <em>sudo make setuid</em> then run <em>. ./scripts/rip-environment</em>.
+More information about a git checkout is on the linuxcnc wiki page.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Run the sample GladeVCP panel integrated into Axis like PyVCP as follows:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ cd configs/sim/gladevcp
+$ linuxcnc gladevcp_panel.ini</tt></pre>
+</div></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/example-panel-small.png" alt="images/example-panel-small.png" />
+</div>
+</div>
+<div class="paragraph"><p>Run the same panel, but as a tab inside Axis:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ cd configs/sim/gladevcp
+$ linuxcnc gladevcp_tab.ini</tt></pre>
+</div></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/example-tabbed-small.png" alt="images/example-tabbed-small.png" />
+</div>
+</div>
+<div class="paragraph"><p>To run this panel as a standalone toplevel window besides Axis, just
+start Axis in the background and start gladevcp as follows:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ cd configs/sim/axis
+$ linuxcnc axis.ini &amp;
+$ gladevcp -c gladevcp -u ../gladevcp/hitcounter.py -H ../gladevcp/manual-example.hal ../gladevcp/manual-example.ui</tt></pre>
+</div></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/example-float-small.png" alt="images/example-float-small.png" />
+</div>
+</div>
+<div class="paragraph"><p>To run this panel inside <em>Touchy</em>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ cd configs/sim/gladevcp
+$ linuxcnc gladevcp_touchy.ini</tt></pre>
+</div></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/touchy-tab-33.png" alt="images/touchy-tab-33.png" />
+</div>
+</div>
+<div class="paragraph"><p>Functionally these setups are identical - they only differ in screen
+real estate requirements and visibility. Since it is possible to run
+several GladeVCP components in parallel (with different HAL component
+names), mixed setups are possible as well - for instance a panel on
+the right hand side, and one or more tabs for less-frequently used
+parts of the interface.</p></div>
+<h3 id="_exploring_the_example_panel">2.1. Exploring the example panel</h3><div style="clear:left"></div>
+<div class="paragraph"><p>While running Axis, explore <em>Show HAL Configuration</em> - you will find
+the <em>gladevcp</em> HAL component and may observe their pin values while
+interacting with the widgets in the panel. The HAL setup can be
+found in <em>configs/gladevcp/manual-example.hal</em>.</p></div>
+<div class="paragraph"><p>The example panel has two frames at the bottom. The panel is
+configured so that resetting ESTOP activates the Settings frame and
+turning the machine on  enables the Commands frame at the bottom. The HAL
+widgets in the Settings frame are linked to LEDs and labels in the
+<em>Status</em> frame, and to the current and prepared tool number - play
+with them to see the effect. Executing the <em>T&lt;toolnumber&gt;</em> and <em>M6</em>
+commands in the MDI window will change the current and prepared tool
+number fields.</p></div>
+<div class="paragraph"><p>The buttons in the <em>Commands</em> frame are <em>MDI Action widgets</em> -
+pressing them will execute an MDI command in the interpreter.  The
+third button <em>Execute Oword subroutine</em> is an advanced example - it
+takes several HAL pin values from the <em>Settings</em> frame, and passes
+them as parameters to the Oword subroutine. The actual parameters
+received by the routine are displayed by <em>(DEBUG, )</em> commands - see
+<em>configs/gladevcp/nc_files/oword.ngc</em> for the subroutine body.</p></div>
+<div class="paragraph"><p>To see how the panel is integrated into Axis, see the
+<em>[DISPLAY]GLADEVCP</em> statements in gladevcp_panel.ui, and the
+<em>[DISPLAY]EMBED*</em> and <em>[HAL]POSTGUI_HALFILE</em> statements in
+gladevcp_tab.ini respectively.</p></div>
+<h3 id="_exploring_the_user_interface_description">2.2. Exploring the User Interface description</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The user interface is created with the glade UI editor - to explore
+it, you need to have <a href="#gladevcp:Prerequisites">glade installed</a>. To
+edit the user interface, run the command</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>$ glade configs/gladevcp/manual-example.ui</tt></pre>
+</div></div>
+<div class="paragraph"><p>The center window shows the appearance of the UI. All user
+interface objects and support objects are found in the right top
+window, where you can select a specific widget (or by clicking on it
+in the center window). The properties of the selected widget are
+displayed, and can be changed, in the right bottom window.</p></div>
+<div class="paragraph"><p>To see how MDI commands are passed from the MDI Action widgets,
+explore the widgets listed under <em>Actions</em> in the top right window,
+and in the right bottom window, unter the <em>General</em> tab, the <em>MDI
+command</em> property.</p></div>
+<h3 id="_exploring_the_python_callback">2.3. Exploring the Python callback</h3><div style="clear:left"></div>
+<div class="paragraph"><p>See how a Python callback is integrated into the example:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+in glade, see the <tt>hits</tt> label widget (a plain GTK+ widget)
+</p>
+</li>
+<li>
+<p>
+in the <tt>button1</tt> widget, look at the <em>Signals</em> tab, and find the signal <em>pressed</em> associated with the handler <em>on_button_press</em>
+</p>
+</li>
+<li>
+<p>
+in ../gladevcp/hitcounter.py, see the method <em>on_button_press</em> and see how it sets the label property in the <em>hits</em> object
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The is just touching upon the concept - the callback mechanism will be
+handled in more detail in the <a href="gladevcp.html#gladevcp:GladeVCP_Programming">GladeVCP Programming</a> section.</p></div>
+</div>
+<h2 id="_creating_and_integrating_a_glade_user_interface">3. Creating and Integrating a Glade user interface</h2>
+<div class="sectionbody">
+<h3 id="gladevcp:Prerequisites">3.1. Prerequisite: Glade installation</h3><div style="clear:left"></div>
+<div class="paragraph"><p>To view or modify Glade UI files, you need glade installed - it is not
+needed just to run a GladeVCP panel. If the glade command is missing,
+install it with the command:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>$ sudo apt-get install glade</tt></pre>
+</div></div>
+<div class="paragraph"><p>Verify the version number to be greater than 3.6.7:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>$ glade --version
+glade3 3.6.7</tt></pre>
+</div></div>
+<h3 id="_running_glade_to_create_a_new_user_interface">3.2. Running Glade to create a new user interface</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This section just outlines the initial LinuxCNC-specific steps. For more
+information and a tutorial on glade, see <a href="http://glade.gnome.org/">http://glade.gnome.org</a>. Some
+glade tips &amp; tricks may also be found on
+<a href="http://www.youtube.com/">youtube</a>.</p></div>
+<div class="paragraph"><p>Either modify an existing UI component by running <tt>glade &lt;file&gt;.ui</tt>
+or start a new one by just running the <tt>glade</tt> command from the shell.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+If LinuxCNC was not installed from a package, the LinuxCNC shell environment needs to be set up with
+<tt>. &lt;linuxcncdir&gt;/scripts/rip-environment</tt>, otherwise glade won&#8217;t find the LinuxCNC-specific widgets.
+</p>
+</li>
+<li>
+<p>
+When asked for unsaved Preferences, just accept the defaults and hit <em>Close</em>.
+</p>
+</li>
+<li>
+<p>
+From <em>Toplevel</em> (left pane), pick <em>Window</em> (first icon) as top level window, which
+by default will be named <em>window1</em>. Do not change this name - GladeVCP relies on it.
+</p>
+</li>
+<li>
+<p>
+In the left tab, scroll down and expand  <em>HAL Python</em> and <em>EMC Actions</em>.
+</p>
+</li>
+<li>
+<p>
+add a container like a HAL_Box or a HAL_Table from <em>HAL Python</em> to the frame
+</p>
+</li>
+<li>
+<p>
+pick and place some elements like LED, button, etc. within a container
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>This will look like so:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/glade-manual-small.png" alt="images/glade-manual-small.png" />
+</div>
+</div>
+<div class="paragraph"><p>Glade tends to write a lot of messages to the shell window, which
+mostly can be ignored.  Select <em>File→Save as</em>, give it a name like
+<em>myui.ui</em> and make sure it&#8217;s saved as <em>GtkBuilder</em> file (radio button
+left bottom corner in Save dialog). GladeVCP will also process the
+older <em>libglade</em> format correctly but there is no point in using it. The
+convention for GtkBuilder file extension is <em>.ui</em>.</p></div>
+<h3 id="_testing_a_panel">3.3. Testing a panel</h3><div style="clear:left"></div>
+<div class="paragraph"><p>You&#8217;re now ready to give it a try (while LinuxCNC, e.g. Axis is running) it with:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>gladevcp myui.ui</tt></pre>
+</div></div>
+<div class="paragraph"><p>GladeVCP creates a HAL component named like the basename of the UI
+file - <em>myui</em> in this case - unless overriden by the <tt>-c &lt;component
+name&gt;</tt> option.  If running Axis, just try <em>Show HAL configuration</em> and
+inspect its pins.</p></div>
+<div class="paragraph"><p>You might wonder why widgets contained a <em>HAL_Hbox</em> or <em>HAL_Table</em> appear
+greyed out (inactive). HAL containers have an associated HAL pin which
+is off by default, which causes all contained widgets to render
+inactive. A common use case would be to associate these container HAL
+pins with <tt>halui.machine.is-on</tt> or one of the <tt>halui.mode.</tt> signals,
+to assure some widgets appear active only in a certain state.</p></div>
+<div class="paragraph"><p>To just activate a container, execute the HAL command <tt>setp gladevcp.&lt;container-name&gt; 1</tt>.</p></div>
+<h3 id="_preparing_the_hal_command_file">3.4. Preparing the HAL command file</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The suggested way of linking HAL pins in a GladeVCP panel is to
+collect them in a separate file with extension <tt>.hal</tt>. This file is
+passed via the <tt>POSTGUI_HALFILE=</tt> option in the <tt>HAL</tt> section of your
+ini file.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Caution</div>
+</td>
+<td class="content">Do not add the GladeVCP HAL command file to the Axis <tt>[HAL]HALFILE=</tt> ini
+section, this will not have the desired effect - see the following sections.</td>
+</tr></table>
+</div>
+<h3 id="_integrating_into_axis_like_pyvcp">3.5. Integrating into Axis like PyVCP</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Place the GladeVCP panel in the righthand side panel by specifying the
+following in the ini file:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #000000">[DISPLAY]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># add GladeVCP panel where PyVCP used to live:</span></span>
+<span style="color: #009900">GLADEVCP</span><span style="color: #990000">=</span> <span style="color: #990000">-</span>u <span style="color: #990000">../</span>gladevcp<span style="color: #990000">/</span>hitcounter<span style="color: #990000">.</span>py <span style="color: #990000">../</span>gladevcp<span style="color: #990000">/</span>manual<span style="color: #990000">-</span>example<span style="color: #990000">.</span>ui
+
+<span style="font-weight: bold"><span style="color: #000000">[HAL]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># HAL commands for GladeVCP components in a tab must be executed via POSTGUI_HALFILE</span></span>
+<span style="color: #009900">POSTGUI_HALFILE </span><span style="color: #990000">=</span>  <span style="color: #990000">../</span>gladevcp<span style="color: #990000">/</span>manual<span style="color: #990000">-</span>example<span style="color: #990000">.</span>hal
+
+<span style="font-weight: bold"><span style="color: #000000">[RS274NGC]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># gladevcp Demo specific Oword subs live here</span></span>
+<span style="color: #009900">SUBROUTINE_PATH </span><span style="color: #990000">=</span> <span style="color: #990000">../</span>gladevcp<span style="color: #990000">/</span>nc_files<span style="color: #990000">/</span></tt></pre></div></div>
+<div class="paragraph"><p>The HAL component name of a GladeVCP application started with the  the GLADEVCP option is fixed:  <tt>gladevcp</tt>.
+The command line actually run by Axis in the above configuration is as follows:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>halcmd loadusr -Wn gladevcp gladevcp -c gladevcp -x {XID} &lt;arguments to GLADEVCP&gt;</tt></pre>
+</div></div>
+<div class="paragraph"><p>This means you may add arbitrary gladevcp options here, as long as
+they dont collide with the above command line options.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">The <tt>[RS274NGC]SUBROUTINE_PATH=</tt> option is only set so the example
+panel will find the Oword subroutine for the MDI Command widget. It
+might not be needed in your setup.</td>
+</tr></table>
+</div>
+<h3 id="_integrating_into_axis_as_a_tab_next_to_dro_and_preview">3.6. Integrating into Axis as a tab next to DRO and Preview</h3><div style="clear:left"></div>
+<div class="paragraph"><p>To do so, edit your .ini file and add to the DISPLAY and HAL sections of ini
+file as follows:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #000000">[DISPLAY]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># add GladeVCP panel as a tab next to Preview/DRO:</span></span>
+<span style="color: #009900">EMBED_TAB_NAME</span><span style="color: #990000">=</span>GladeVCP demo
+<span style="color: #009900">EMBED_TAB_COMMAND</span><span style="color: #990000">=</span>halcmd loadusr <span style="color: #990000">-</span>Wn gladevcp gladevcp <span style="color: #990000">-</span>c gladevcp <span style="color: #990000">-</span>x {XID} <span style="color: #990000">-</span>u <span style="color: #990000">../</span>gladevcp<span style="color: #990000">/</span>hitcounter<span style="color: #990000">.</span>py <span style="color: #990000">../</span>gladevcp<span style="color: #990000">/</span>manual<span style="color: #990000">-</span>example<span style="color: #990000">.</span>ui
+
+<span style="font-weight: bold"><span style="color: #000000">[HAL]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># HAL commands for GladeVCP components in a tab must be executed via POSTGUI_HALFILE</span></span>
+<span style="color: #009900">POSTGUI_HALFILE </span><span style="color: #990000">=</span>  <span style="color: #990000">../</span>gladevcp<span style="color: #990000">/</span>manual<span style="color: #990000">-</span>example<span style="color: #990000">.</span>hal
+
+<span style="font-weight: bold"><span style="color: #000000">[RS274NGC]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># gladevcp Demo specific Oword subs live here</span></span>
+<span style="color: #009900">SUBROUTINE_PATH </span><span style="color: #990000">=</span> <span style="color: #990000">../</span>gladevcp<span style="color: #990000">/</span>nc_files<span style="color: #990000">/</span></tt></pre></div></div>
+<div class="paragraph"><p>Note the <em>halcmd loadusr</em> way of starting the tab command - this
+assures that <em>POSTGUI_HALFILE</em> will only be run after the HAL
+component is ready. In rare cases you might run a a command here which
+uses a tab but does not have an associated HAL component. Such a
+command can be started without <em>halcmd loadusr</em>, and this signifies to
+Axis that it does not have to wait for a HAL component since there is
+none.</p></div>
+<div class="paragraph"><p>When changing the component name in the above example, note that the
+names used in <tt>-Wn &lt;component&gt;</tt> and <tt>-c &lt;component&gt;</tt> must be
+identical.</p></div>
+<div class="paragraph"><p>Try it out by running Axis - there should be a new tab called
+<em>GladeVCP demo</em> near the DRO tab. Select that tab, you should see the
+example panel nicely fit within Axis.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">Make sure the UI file is the last option passed to GladeVCP in
+both the <tt>GLADEVCP=</tt> and <tt>EMBED_TAB_COMMAND=</tt> statements.</td>
+</tr></table>
+</div>
+<h3 id="_integrating_into_touchy">3.7. Integrating into Touchy</h3><div style="clear:left"></div>
+<div class="paragraph"><p>To do add a GladeVCP tab to <em>Touchy</em>, edit your .ini file as follows:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #000000">[DISPLAY]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># add GladeVCP panel as a tab</span></span>
+<span style="color: #009900">EMBED_TAB_NAME</span><span style="color: #990000">=</span>GladeVCP demo
+<span style="color: #009900">EMBED_TAB_COMMAND</span><span style="color: #990000">=</span>gladevcp <span style="color: #990000">-</span>c gladevcp <span style="color: #990000">-</span>x {XID} <span style="color: #990000">-</span>u <span style="color: #990000">../</span>gladevcp<span style="color: #990000">/</span>hitcounter<span style="color: #990000">.</span>py <span style="color: #990000">-</span>H <span style="color: #990000">../</span>gladevcp<span style="color: #990000">/</span>gladevcp<span style="color: #990000">-</span>touchy<span style="color: #990000">.</span>hal  <span style="color: #990000">../</span>gladevcp<span style="color: #990000">/</span>manual<span style="color: #990000">-</span>example<span style="color: #990000">.</span>ui
+
+<span style="font-weight: bold"><span style="color: #000000">[RS274NGC]</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># gladevcp Demo specific Oword subs live here</span></span>
+<span style="color: #009900">SUBROUTINE_PATH </span><span style="color: #990000">=</span> <span style="color: #990000">../</span>gladevcp<span style="color: #990000">/</span>nc_files<span style="color: #990000">/</span></tt></pre></div></div>
+<div class="paragraph"><p>Note the following differences to the Axis tab setup:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+The HAL command file is slightly modified since <em>Touchy</em> does not
+ use the <em>halui</em> components so its signals are not available and some
+ shortcuts have been taken.
+</p>
+</li>
+<li>
+<p>
+there is no <em>POSTGUI_HALFILE=</em> ini option, but passing the HAL command file on the <em>EMBED_TAB_COMMAND=</em> line is ok
+</p>
+</li>
+<li>
+<p>
+the <em>halcmd loaduser -Wn &#8230;</em> incantation is not needed.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_gladevcp_command_line_options">4. GladeVCP command line options</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>See also <em>man gladevcp</em> . These are the gladevcp command line options:</p></div>
+<div class="paragraph"><p>Usage: gladevcp [options] myfile.ui</p></div>
+<div class="paragraph"><p>Options:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+-h, --help
+</dt>
+<dd>
+<p>
+    show this help message and exit
+</p>
+</dd>
+<dt class="hdlist1">
+-c NAME
+</dt>
+<dd>
+<p>
+    Set component name to NAME. Default is base name of UI file
+</p>
+</dd>
+<dt class="hdlist1">
+-d
+</dt>
+<dd>
+<p>
+    Enable debug output
+</p>
+</dd>
+<dt class="hdlist1">
+-g GEOMETRY
+</dt>
+<dd>
+<p>
+     Set geometry WIDTHxHEIGHT+XOFFSET+YOFFSET. Values are in pixel units,
+    XOFFSET/YOFFSET is referenced from top left of screen.
+    Use -g WIDTHxHEIGHT for just setting size or -g +XOFFSET+YOFFSET for just
+    position
+</p>
+</dd>
+<dt class="hdlist1">
+-H FILE
+</dt>
+<dd>
+<p>
+    execute hal statements from FILE with halcmd after the
+    component is set up and ready
+</p>
+</dd>
+<dt class="hdlist1">
+-m MAXIMUM
+</dt>
+<dd>
+<p>
+    force panel window to maximize.  Together with the -g geometry option
+    one can move the panel to a second monitor and force it to use all of the screen
+</p>
+</dd>
+<dt class="hdlist1">
+-t THEME
+</dt>
+<dd>
+<p>
+    set gtk theme. Default is system theme. Different panels can have different themes.
+    An example theme can be found in the <a href="http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?GTK_Themes">EMC Wiki</a>.
+</p>
+</dd>
+<dt class="hdlist1">
+-x XID
+</dt>
+<dd>
+<p>
+     Re-parent GladeVCP into an existing window XID instead of creating a
+    new top level window
+</p>
+</dd>
+<dt class="hdlist1">
+-u FILE
+</dt>
+<dd>
+<p>
+    Use File&#8217;s as additional user defined modules with handlers
+</p>
+</dd>
+<dt class="hdlist1">
+-U USEROPT
+</dt>
+<dd>
+<p>
+    pass USEROPTs to Python modules
+</p>
+</dd>
+</dl></div>
+</div>
+<h2 id="_understanding_the_gladevcp_startup_process">5. Understanding the gladeVCP startup process</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The integration steps outlined above look a bit tricky, and they
+are. It does therefore help to understand the startup process of
+LinuxCNC and how this relates to gladeVCP.</p></div>
+<div class="paragraph"><p>The normal LinuxCNC startup process does the following:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+the realtime environment is started
+</p>
+</li>
+<li>
+<p>
+all HAL components are loaded
+</p>
+</li>
+<li>
+<p>
+the HAL components are linked together through the .hal cmd scripts
+</p>
+</li>
+<li>
+<p>
+task, iocontrol and eventually the user interface is started
+</p>
+</li>
+<li>
+<p>
+pre-gladeVCP the assumption was: by the time the UI starts, all of HAL is loaded, plumbed and ready to go
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The introduction of gladeVCP brought the following issue:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+gladeVCP panels need to be embedded in a master GUI window setup, e.g. Axis, or Touchy (embedded window or as an embedded tab)
+</p>
+</li>
+<li>
+<p>
+this requires the master GUI to run before the gladeVCP window can be hooked into the master GUI
+</p>
+</li>
+<li>
+<p>
+however gladeVCP is also a HAL component, and creates HAL pins of its own.
+</p>
+</li>
+<li>
+<p>
+as a consequence, all HAL plumbing involving gladeVCP HAL pins as source or destination must be run <strong>after</strong> the GUI has been set up
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>This is the purpose of the <tt>POSTGUI_HALFILE</tt>. This ini option is
+inspected by the GUIs. If a GUI detects this option, it runs the
+corresponding HAl file after any embedded gladVCP panel is set
+up. However, it does not check whether a gladeVCP panel is actually
+used, in which case the HAL cmd file is just run normally. So if you
+do NOT start gladeVCP through <tt>GLADEVCP</tt> or <tt>EMBED_TAB</tt> etc, but later
+in a separate shell window or some other mechanism, a HAL
+command file in <tt>POSTGUI_HALFILE</tt> will be executed too early. Assuming
+gladeVCP pins are referenced herein, this will fail with an error
+message indicating that the gladeVCP HAL component is not available.</p></div>
+<div class="paragraph"><p>So, in case you run gladeVCP from a separate shell window (i.e. not
+started by the GUI in an embedded fashion):</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+you cannot rely on the <tt>POSTGUI_HALFILE</tt> ini option causing the HAL
+commands being run <em>at the right point in time</em>, so comment that out
+in the ini file
+</p>
+</li>
+<li>
+<p>
+explicitly pass the HAL command file which refers to gladeVCP pins
+to gladeVCP with the <em>-H &lt;halcmd file&gt;</em> option (see previous section).
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_hal_widget_reference">6. HAL Widget reference</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>GladeVcp includes a collection of Gtk widgets with attached HAL pins
+called HAL Widgets, intended to control, display or otherwise interact
+with the LinuxCNC HAL layer. They are intended to be used with the Glade
+user interface editor. With proper installation, the HAL Widgets should
+show up in Glade&#8217;s <em>HAL Python</em> widget group. Many HAL specific fields
+in the Glade <em>General</em> section have an associated mouse-over tool tip.</p></div>
+<div class="paragraph"><p>HAL signals come in two variants, bits and numbers. Bits are off/on
+signals. Numbers can be "float", "s32" or "u32". For more information
+on HAL data types see the <a href="../hal/basic_hal.html#sec:Hal-Data">HAL manual</a>. The GladeVcp
+widgets can either display the value of the signal with an indicator
+widget, or modify the signal value with a control widget. Thus there
+are four classes of GladeVcp widgets that you can connect to a HAL
+signal. Another class of helper widgets allow you to organize and
+label your panel.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Widgets for indicating "bit" signals: <a href="#gladevcp:HAL_LED">HAL_LED</a>
+</p>
+</li>
+<li>
+<p>
+Widgets for controlling "bit" signals: <a href="#gladevcp:HAL_Buttons">HAL_Button HAL_RadioButton HAL_CheckButton</a>
+</p>
+</li>
+<li>
+<p>
+Widgets for indicating "number" signals: <a href="#gladevcp:HAL_Label">HAL_Label</a>,
+   <a href="#gladevcp:HAL_ProgressBar">HAL_ProgressBar</a>,
+   <a href="#gladevcp:HAL_Bars">HAL_HBar and HAL_VBar</a>, <a href="#gladevcp:HAL_Meter">HAL_Meter</a>
+</p>
+</li>
+<li>
+<p>
+Widgets for controlling "number" signals: <a href="#gladevcp:HAL_SpinButton">HAL_SpinButton</a>,
+   <a href="#gladevcp:HAL_Scales">HAL_HScale and HAL_VScale</a>
+</p>
+</li>
+<li>
+<p>
+Helper widgets: <a href="#gladevcp:HAL_HBox_Table">HAL_HBox and HAL_Table</a>
+</p>
+</li>
+<li>
+<p>
+Tool Path preview: <a href="#gladevcp:HAL_Gremlin">HAL_Gremlin</a>
+</p>
+</li>
+</ul></div>
+<h3 id="_widget_and_hal_pin_naming">6.1. Widget and HAL pin naming</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Most HAL widgets have a single associated HAL pin with the same HAL name
+as the widget (glade: General→Name).</p></div>
+<div class="paragraph"><p>Exceptions to this rule currently are.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>HAL_Spinbutton</em> and <em>HAL_ComboBox</em>, which have two pins: a <tt>&lt;widgetname&gt;-f</tt> (float) and a <tt>&lt;widgetname&gt;-s</tt> (s32) pin
+</p>
+</li>
+<li>
+<p>
+<em>HAL_ProgressBar</em>, which has a <tt>&lt;widgetname&gt;-value</tt> input pin, and a <tt>&lt;widgetname&gt;-scale</tt> input pin.
+</p>
+</li>
+</ul></div>
+<h3 id="_python_attributes_and_methods_of_hal_widgets">6.2. Python attributes and methods of HAL Widgets</h3><div style="clear:left"></div>
+<div class="paragraph"><p>HAL widgets are instances of GtKWidgets and hence inherit the methods,
+properties and signals of the applicable GtkWidget class. For
+instance, to figure out which GtkWidget-related methods, properties
+and signals a <em>HAL_Button</em> has, lookup the description of
+<a href="http://www.pygtk.org/docs/pygtk/class-gtkbutton.html">GtkButton</a> in the
+<a href="http://www.pygtk.org/docs/pygtk">PyGtk Reference Manual</a>.</p></div>
+<div class="paragraph"><p>An easy way to find out the inheritance relationship of a given HAL
+widget is as follows: run glade, place the widget in a window, and
+select it; then choose the <em>Signals</em> tab in the <em>Properties</em>
+window. For example, selecting a <em>HAL_LED</em> widget, this will show that
+a <em>HAL_LED</em> is derived from a  <em>GtkWidget</em>, which in turn is derived
+from a <em>GtkObject</em>, and eventually a <em>GObject</em>.</p></div>
+<div class="paragraph"><p>HAL Widgets also have a few HAL-specific Python attributes:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+hal_pin
+</dt>
+<dd>
+<p>
+         the underlying HAL pin Python object in case the widget has a
+         single pin type
+</p>
+</dd>
+<dt class="hdlist1">
+hal_pin_s, hal_pin_f
+</dt>
+<dd>
+<p>
+         the S32 and float pins of the <em>HAL_Spinbutton</em> and
+         <em>HAL_ComboBox</em> widgets - note these widgets do not have a
+         <em>hal_pin</em> attribute!
+</p>
+</dd>
+<dt class="hdlist1">
+hal_pin_scale
+</dt>
+<dd>
+<p>
+        the float input pin of <em>HAL_ProgressBar</em> widget representing
+        the maximum absolute value of input.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>The are several HAL-specific methods of HAL Widgets, but the only
+relevant method is:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+&lt;halpin&gt;.get()
+</dt>
+<dd>
+<p>
+        Retrieve the value of the current HAL pin, where <em>&lt;halpin&gt;</em> is
+        the applicable HAL pin name listed above.
+</p>
+</dd>
+</dl></div>
+<h3 id="_setting_pin_and_widget_values">6.3. Setting pin and widget values</h3><div style="clear:left"></div>
+<div class="paragraph"><p>As a general rule, if you need to set a HAL output widget&#8217;s value from
+Python code, do so by calling the underlying Gtk <em>setter</em> (e.g.
+<tt>set_active()</tt>, <tt>set_value()</tt>) - do not try to set the associated pin&#8217;s
+value by <tt>halcomp[pinname] = value</tt> directly because the widget will not
+take notice of the change!.</p></div>
+<div class="paragraph"><p>It might be tempting to <em>set HAL widget input pins</em> programmatically.
+Note this defeats the purpose of an input pin in the first place - it
+should be linked to, and react to signals generated by other HAL
+components. While there is currently no write protection on writing to
+input pins in HAL Python, this doesn&#8217;t make sense. You might use setp
+pinname value in the associated halfile for testing though.</p></div>
+<div class="paragraph"><p>It is perfectly OK to set an output HAL pin&#8217;s value with
+<tt>halcomp[pinname] = value</tt> provided this HAL pin is not associated with a
+widget, that is, has been created by the
+<tt>hal_glib.GPin(halcomp.newpin(&lt;name&gt;,&lt;type&gt;,&lt;direction&gt;)</tt> method (see
+GladeVCP Programming for an example).</p></div>
+<h3 id="gladevcp::hal-pin-changed_signal">6.4. The hal-pin-changed signal</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Event-driven programming means that the UI tells your code when "something
+happens" - through a callback, like when a button was pressed. The
+output HAL widgets (those which display a HAL pin&#8217;s value) like LED,
+Bar, VBar, Meter etc, support the <em>hal-pin-changed</em> signal which may
+cause a callback into your Python code when - well, a HAL pin changes
+its value. This means there&#8217;s no more need for permanent polling of HAL
+pin changes in your code, the widgets do that in the background and let
+you know.</p></div>
+<div class="paragraph"><p>Here is an example how to set a <tt>hal-pin-changed</tt> signal for a HAL_LED
+in the Glade UI editor:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/hal-pin-change-66.png" alt="images/hal-pin-change-66.png" />
+</div>
+</div>
+<div class="paragraph"><p>The example in <tt>configs/gladevcp/examples/complex</tt> shows how
+this is handled in Python.</p></div>
+<h3 id="gladevcp:HAL_Buttons">6.5. Buttons</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This group of widgets are derived from various Gtk buttons and consists
+of HAL_Button, HAL_ToggleButton, HAL_RadioButton and CheckButton
+widgets. All of them have a single output BIT pin named identical to
+the widget. Buttons have no additional properties compared to their
+base Gtk classes.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+HAL_Button: instantaneous action, does not retain state. Important
+   signal: <tt>pressed</tt>
+</p>
+</li>
+<li>
+<p>
+HAL_ToggleButton, HAL_CheckButton: retains on/off state. Important
+   signal: <tt>toggled</tt>
+</p>
+</li>
+<li>
+<p>
+HAL_RadioButton: a one-of-many group. Important signal: <tt>toggled</tt> (per
+   button).
+</p>
+</li>
+<li>
+<p>
+Important common methods: <tt>set_active()</tt>, <tt>get_active()</tt>
+</p>
+</li>
+<li>
+<p>
+Important properties: <tt>label</tt>, <tt>image</tt>
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Check button:
+<span class="image">
+<img src="images/checkbutton.png" alt="images/checkbutton.png" />
+</span>
+Radio buttons:
+<span class="image">
+<img src="images/radiobutton.png" alt="images/radiobutton.png" />
+</span>
+Toggle button:
+<span class="image">
+<img src="images/button.png" alt="images/button.png" />
+</span>
+.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">
+<div class="paragraph"><p>Defining radio button groups in Glade:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+decide on default active button
+</p>
+</li>
+<li>
+<p>
+in the other button&#8217;s <em>General→Group</em> select the default active
+button&#8217;s name in the <em>Choose a Radio Button in this project</em> dialog.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>See <tt>configs/gladevcp/by-widget/radiobutton</tt> for a GladeVCP application
+and UI file for working with radio buttons.</p></div>
+</td>
+</tr></table>
+</div>
+<h3 id="gladevcp:HAL_Scales">6.6. Scales</h3><div style="clear:left"></div>
+<div class="paragraph"><p>HAL_HScale and HAL_VScale are derived from the GtkHScale and GtkVScale
+respectively. They have one output FLOAT pin with name equal to widget
+name. Scales have no additional properties.</p></div>
+<div class="paragraph"><p>To make a scale useful in Glade, add an <em>Adjustment</em>
+(General→Adjustment→New or existing adjustment) and edit the
+adjustment object. It defines the default/min/max/increment
+values. Also, set adjustment <em>Page size</em> and <em>Page increment</em> to zero
+to avoid warnings.</p></div>
+<div class="paragraph"><p>Example HAL_HScale:
+<span class="image">
+<img src="images/hscale.png" alt="images/hscale.png" />
+</span>
+.</p></div>
+<h3 id="gladevcp:HAL_SpinButton">6.7. SpinButton</h3><div style="clear:left"></div>
+<div class="paragraph"><p>HAL SpinButton is derived from GtkSpinButton and holds two pins:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+&lt;widgetname&gt;-f
+</dt>
+<dd>
+<p>
+         out FLOAT pin
+</p>
+</dd>
+<dt class="hdlist1">
+&lt;widgetname&gt;-s
+</dt>
+<dd>
+<p>
+         out S32 pin
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>To be useful, Spinbuttons need an adjustment value like scales,
+see above.</p></div>
+<div class="paragraph"><p>Example SpinButton:
+<span class="image">
+<img src="images/spinbutton.png" alt="images/spinbutton.png" />
+</span>
+.</p></div>
+<h3 id="gladevcp:HAL_Label">6.8. Label</h3><div style="clear:left"></div>
+<div class="paragraph"><p>HAL_Label is a simple widget based on GtkLabel which represents a HAL
+pin value in a user-defined format.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+label_pin_type
+</dt>
+<dd>
+<p>
+        The pin&#8217;s HAL type  (0:S32, 1:float, 2:U32), see also the tooltip
+        on 'General→HAL pin type '(note this is different from PyVCP which has
+        three label widgets, one for each type).
+</p>
+</dd>
+<dt class="hdlist1">
+text_template
+</dt>
+<dd>
+<p>
+        Determines the text displayed - a Python
+        format string to convert the pin value to text. Defaults to <tt>%s</tt> (values
+        are converted by the str() function) but may contain any legit as an
+        argument to Pythons format() method.<br />
+        Example: <tt>Distance: %.03f</tt> will display the text and the pin value with
+        3 fractional digits padded with zeros for a FLOAT pin.
+</p>
+</dd>
+</dl></div>
+<h3 id="gladevcp:HAL_HBox_Table">6.9. Containers: HAL_HBox and HAL_Table</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Compared to their Gtk counterparts they have one input BIT pin which
+controls if their child widgets are sensitive or not. If the pin is low
+then child widgets are inactive which is the default.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Tip</div>
+</td>
+<td class="content">If you find some part of your GladeVCP application is <em>grayed
+out</em> (insensitive), see whether a container&#8217;s pin is unset.</td>
+</tr></table>
+</div>
+<h3 id="gladevcp:HAL_LED">6.10. LED</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The hal_led simulates a real indicator LED. It has a single input BIT
+pin which controls it&#8217;s state: ON or OFF. LEDs have several properties
+which control their look and feel:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+on_color
+</dt>
+<dd>
+<p>
+   a String defining ON color of LED. May be any valid
+   gtk.gdk.Color name. Not working on Ubuntu 8.04.
+</p>
+</dd>
+<dt class="hdlist1">
+off_color
+</dt>
+<dd>
+<p>
+   String defining OFF color of LED. May be any valid
+   gtk.gdk.Color name or special value <tt>dark</tt>. <tt>dark</tt> means that OFF color
+   will be set to 0.4 value of ON color. Not working on Ubuntu 8.04.
+</p>
+</dd>
+<dt class="hdlist1">
+pick_color_on, pick_color_off
+</dt>
+<dd>
+<p>
+   Colors for ON and OFF states may be
+   represented as <tt>#RRRRGGGGBBBB</tt> strings. These are optional properties
+   which have precedence over <tt>on_color</tt> and <tt>off_color</tt>.
+</p>
+</dd>
+<dt class="hdlist1">
+led_size
+</dt>
+<dd>
+<p>
+   LED radius (for square - half of LED&#8217;s side)
+</p>
+</dd>
+<dt class="hdlist1">
+led_shape
+</dt>
+<dd>
+<p>
+   LED Shape. Valid values are 0 for round, 1 for oval and 2
+   for square shapes.
+</p>
+</dd>
+<dt class="hdlist1">
+led_blink_rate
+</dt>
+<dd>
+<p>
+   if set and LED is ON then it&#8217;s blinking. Blink
+   period is equal to "led_blink_rate" specified in milliseconds.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>As an input widget, LED also supports the <tt>hal-pin-changed signal</tt>. If
+you want to get a notification in your code when the LED&#8217;s HAL pin was
+changed, then connect this signal to a handler, for example
+<tt>on_led_pin_changed</tt> and provide the handler as follows:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">def</span></span> <span style="font-weight: bold"><span style="color: #000000">on_led_pin_changed</span></span><span style="color: #990000">(</span>self<span style="color: #990000">,</span>hal_led<span style="color: #990000">,</span>data<span style="color: #990000">=</span>None<span style="color: #990000">):</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">print</span></span> <span style="color: #FF0000">"on_led_pin_changed() - HAL pin value:"</span><span style="color: #990000">,</span>hal_led<span style="color: #990000">.</span>hal_pin<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">get</span></span><span style="color: #990000">()</span></tt></pre></div></div>
+<div class="paragraph"><p>This will be called at any edge of the signal and also during program
+start up to report the current value.</p></div>
+<div class="paragraph"><p>Example LEDs:
+<span class="image">
+<img src="images/leds.png" alt="images/leds.png" />
+</span>
+.</p></div>
+<h3 id="gladevcp:HAL_ProgressBar">6.11. ProgressBar</h3><div style="clear:left"></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">This widget might go away. Use the HAL_HBar and HAL_VBar widgets
+instead.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>The HAL_ProgressBar is derived from gtk.ProgressBar and has two float
+HAL input pins:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+&lt;widgetname&gt;
+</dt>
+<dd>
+<p>
+        the current value to be displayed
+</p>
+</dd>
+<dt class="hdlist1">
+&lt;widgetname&gt;-scale
+</dt>
+<dd>
+<p>
+        the maximum absolute value of input
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>It has the following properties:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+scale
+</dt>
+<dd>
+<p>
+        value scale. set maximum absolute value of input. Same as
+        setting the &lt;widgetname&gt;.scale pin. A float, range from
+        -2<sup>24 to +2</sup>24.
+</p>
+</dd>
+<dt class="hdlist1">
+green_limit
+</dt>
+<dd>
+<p>
+      green zone limit lower limit
+</p>
+</dd>
+<dt class="hdlist1">
+yellow_limit
+</dt>
+<dd>
+<p>
+      yellow zone limit lower limit
+</p>
+</dd>
+<dt class="hdlist1">
+red_limit
+</dt>
+<dd>
+<p>
+      red zone limit lower limit
+</p>
+</dd>
+<dt class="hdlist1">
+text_template
+</dt>
+<dd>
+<p>
+      Text template to display the current value of the
+      <tt>&lt;widgetname&gt;</tt> pin. Python formatting may be used for dict
+      <tt>{"value":value}</tt>
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>Example HAL_ProgressBar:
+<span class="image">
+<img src="images/progressbar2.png" alt="images/progressbar2.png" />
+</span>
+.</p></div>
+<h3 id="gladevcp:HAL_ComboBox">6.12. ComboBox</h3><div style="clear:left"></div>
+<div class="paragraph"><p>HAL_ComboBox is derived from gtk.ComboBox. It enables choice of a
+value from a dropdown list.</p></div>
+<div class="paragraph"><p>It exports two HAL pins:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+&lt;widgetname&gt;-f
+</dt>
+<dd>
+<p>
+                  the current value, type FLOAT
+</p>
+</dd>
+<dt class="hdlist1">
+&lt;widgetname&gt;-s
+</dt>
+<dd>
+<p>
+                  the current value, type S32
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>It has the following property which can be set in Glade:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+column
+</dt>
+<dd>
+<p>
+         the column index, type S32, defaults to -1, range from -1..100 .
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>In default mode this widgets sets the pins to the index of the chosen
+list entry. So if your widget has three labels, it may only assume
+values 0,1 and 2.</p></div>
+<div class="paragraph"><p>In column mode (column &gt; -1), the value reported is chosen from the
+ListStore array as defined in Glade. So typically your widget
+definition would have two columns in the ListStore , one with text
+displayed in the dropdown, and an int or float value to use for that
+choice.</p></div>
+<div class="paragraph"><p>There&#8217;s an example in
+<tt>configs/gladevcp/by-widget/combobox/combobox.{py,ui}</tt> which uses column
+mode to pick a float value from the ListStore.</p></div>
+<div class="paragraph"><p>If you&#8217;re confused like me about how to edit ComboBox ListStores and
+CellRenderer, see <a href="http://www.youtube.com/watch?v=Z5_F-rW2cL8">http://www.youtube.com/watch?v=Z5_F-rW2cL8</a>.</p></div>
+<h3 id="gladevcp:HAL_Bars">6.13. Bars</h3><div style="clear:left"></div>
+<div class="paragraph"><p>HAL Bar and VBar widgets for horizontal and vertical bars representing
+float values. They have one input FLOAT hal pin. Both bars have the
+following properties:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+invert
+</dt>
+<dd>
+<p>
+   Swap min and max direction. An inverted HBar grows from right
+   to left, an inverted VBar from top to bottom.
+</p>
+</dd>
+<dt class="hdlist1">
+min, max
+</dt>
+<dd>
+<p>
+   Minimum and maximum value of desired range. It is not an
+   error condition if the current value is outside this range.
+</p>
+</dd>
+<dt class="hdlist1">
+zero
+</dt>
+<dd>
+<p>
+   Zero point of range. If it&#8217;s inside of min/max range then the
+   bar will grow from that value and not from the left (or right) side of
+   the widget. Useful to represent values that may be both positive or
+   negative.
+</p>
+</dd>
+<dt class="hdlist1">
+force_width, force_height
+</dt>
+<dd>
+<p>
+   Forced width or height of widget. If not
+   set then size will be deduced from packing or from fixed widget size
+   and bar will fill whole area.
+</p>
+</dd>
+<dt class="hdlist1">
+text_template
+</dt>
+<dd>
+<p>
+   Like in Label sets text format for min/max/current
+   values. Can be used to turn off value display.
+</p>
+</dd>
+<dt class="hdlist1">
+bg_color
+</dt>
+<dd>
+<p>
+   Background (inactive) color of bar.
+</p>
+</dd>
+<dt class="hdlist1">
+z0_color, z1_color, z2_color
+</dt>
+<dd>
+<p>
+   Colors of different value zones.
+   Defaults are <tt>green</tt>, <tt>yellow</tt> and <tt>red</tt>. For description of zones see
+   <tt>z*_border</tt> properties.
+</p>
+</dd>
+<dt class="hdlist1">
+z0_border, z1_border
+</dt>
+<dd>
+<p>
+   Define up bounds of color zones. By default
+   only one zone is enabled. If you want more then one zone set
+   <tt>z0_border</tt> and <tt>z1_border</tt> to desired values so zone 0 will fill from
+   0 to first border, zone 1 will fill from first to second border and
+   zone 2&#8201;&#8212;&#8201;from last border to 1. Borders are set as fractions, values
+   from 0 to 1.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>Horizontal bar:
+<span class="image">
+<img src="images/hal_hbar.png" alt="images/hal_hbar.png" />
+</span>
+Vertical bar:
+<span class="image">
+<img src="images/vscale.png" alt="images/vscale.png" />
+</span>
+.</p></div>
+<h3 id="gladevcp:HAL_Meter">6.14. Meter</h3><div style="clear:left"></div>
+<div class="paragraph"><p>HAL Meter is a widget similar to PyVCP meter - it represents a float value and has
+one input FLOAT hal pin. HAL Meter has the following properties:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+min, max
+</dt>
+<dd>
+<p>
+   Minimum and maximum value of desired range. It is not an
+   error condition if the current value is outside this range.
+</p>
+</dd>
+<dt class="hdlist1">
+force_size
+</dt>
+<dd>
+<p>
+   Forced diameter of widget. If not set then size will be
+   deduced from packing or from fixed widget size and meter will fill all
+   available space with respect to aspect ratio.
+</p>
+</dd>
+<dt class="hdlist1">
+text_template
+</dt>
+<dd>
+<p>
+   Like in Label sets text format for current value. Can
+   be used to turn off value display.
+</p>
+</dd>
+<dt class="hdlist1">
+label
+</dt>
+<dd>
+<p>
+   Large label above center of meter.
+</p>
+</dd>
+<dt class="hdlist1">
+sublabel
+</dt>
+<dd>
+<p>
+   Small label below center of meter.
+</p>
+</dd>
+<dt class="hdlist1">
+bg_color
+</dt>
+<dd>
+<p>
+   Background color of meter.
+</p>
+</dd>
+<dt class="hdlist1">
+z0_color, z1_color, z2_color
+</dt>
+<dd>
+<p>
+   Colors of different value
+   zones. Defaults are <tt>green</tt>, <tt>yellow</tt> and <tt>red</tt>. For description of
+   zones see <tt>z*_border</tt> properties.
+</p>
+</dd>
+<dt class="hdlist1">
+z0_border, z1_border
+</dt>
+<dd>
+<p>
+   Define up bounds of color zones. By default only
+   one zone is enabled. If you want more then one zone set <tt>z0_border</tt> and
+   <tt>z1_border</tt> to desired values so zone 0 will fill from min to first
+   border, zone 1 will fill from first to second border and zone 2&#8201;&#8212;&#8201;from
+   last border to max. Borders are set as values in range min-max.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>Example HAL Meters:
+<span class="image">
+<img src="images/hal_meter.png" alt="images/hal_meter.png" />
+</span>
+.</p></div>
+<h3 id="gladevcp:HAL_Gremlin">6.15. Gremlin tool path preview for .ngc files</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Gremlin is a plot preview widget similar to the Axis preview window.
+It assumes a running LinuxCNC environment like Axis or Touchy. To connect to
+it, inspects the INI_FILE_NAME environment variable. Gremlin displays
+the current .ngc file - it does monitor for changes and reloads the ngc
+file if the file name in Axis/Touchy changes. If you run it in a
+GladeVCP application when LinuxCNC is not running, you might get a traceback
+because the Gremlin widget can&#8217;t find LinuxCNC status, like the current file
+name.</p></div>
+<div class="paragraph"><p>Gremlin does not export any HAL pins. It has the following properties:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+view 
+</dt>
+<dd>
+<p>
+   may be any of <tt>x</tt>, <tt>y</tt>, <tt>z</tt>, <tt>p</tt> (perspective) . Defaults to
+   <tt>z</tt> view.
+</p>
+</dd>
+<dt class="hdlist1">
+enable_dro 
+</dt>
+<dd>
+<p>
+   boolean; whether to draw a DRO on the plot or not.
+   Defaults to <tt>True</tt>.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>Example:
+<span class="image">
+<img src="images/gremlin.png" alt="images/gremlin.png" />
+</span></p></div>
+<h3 id="_animated_function_diagrams_hal_widgets_in_a_bitmap">6.16. Animated function diagrams: HAL widgets in a bitmap</h3><div style="clear:left"></div>
+<div class="paragraph"><p>For some applications it might be desirable to have background image -
+like a functional diagram - and position widgets at appropriate places
+in that diagram. A good combination is setting a bitmap background
+image, like from a .png file, making the gladevcp window fixed-size,
+and use the glade Fixed widget to position widgets on this image.</p></div>
+<div class="paragraph"><p>The code for the below example can be found in <tt>configs/gladevcp/animated-backdrop</tt>:</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="images/small-screenshot.png" alt="images/small-screenshot.png" />
+</span></p></div>
+</div>
+<h2 id="_action_widgets_reference">7. Action Widgets reference</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>GladeVcp includes a collection of "canned actions" called EMC Action
+Widgets for the Glade user interface editor. Other than HAL widgets,
+which interact with HAL pins, EMC Actions interact with LinuxCNC and the
+G-code interpreter.</p></div>
+<div class="paragraph"><p>EMC Action Widgets are derived from the Gtk.Action widget. The Action
+widget in a nutshell:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+it is an object available in Glade
+</p>
+</li>
+<li>
+<p>
+it has no visual appearance by itself
+</p>
+</li>
+<li>
+<p>
+it&#8217;s purpose: associate a visible, sensitive UI component like menu,
+   toolbutton, button with a command. See these widget&#8217;s <em>General→Related
+   Action</em> property.
+</p>
+</li>
+<li>
+<p>
+the "canned action" will be executed when the associated UI component
+   is triggered (button press, menu click..)
+</p>
+</li>
+<li>
+<p>
+it provides an easy way to execute commands without resorting to
+   Python programming.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The appearance of EMC Actions in Glade is roughly as follows:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/emc-actions.png" alt="images/emc-actions.png" />
+</div>
+</div>
+<div class="paragraph"><p>Tooltip hovers provide a description.</p></div>
+<h3 id="_emc_action_widgets">7.1. EMC Action widgets</h3><div style="clear:left"></div>
+<div class="paragraph"><p>EMC Action widgets are one-shot type widgets. They implement a single action and
+are for use in simple buttons, menu entries or radio/check groups.</p></div>
+<h3 id="_emc_toggleaction_widgets">7.2. EMC ToggleAction widgets</h3><div style="clear:left"></div>
+<div class="paragraph"><p>These are bi-modal widgets. They implement two actions or use a second
+(usually pressed) state to indicate that currently an action is
+running. Toggle actions are aimed for use in ToggleButtons,
+ToggleToolButtons or toggling menu items. A simplex example is the
+ESTOP toggle button.</p></div>
+<div class="paragraph"><p>Currently the following widgets are available:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+The ESTOP toggle sends ESTOP or ESTOP_RESET commands to LinuxCNC depending
+   on it&#8217;s state.
+</p>
+</li>
+<li>
+<p>
+The ON/OFF toggle sends STATE_ON and STATE_OFF commands.
+</p>
+</li>
+<li>
+<p>
+Pause/Resume sends AUTO_PAUSE or AUTO_RESUME commands.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The following toggle actions have only one associated command and use
+the <em>pressed</em> state to indicate that the requested operation is
+running:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+The Run toggle sends an AUTO_RUN command and waits in the pressed
+   state until the interpreter is idle again.
+</p>
+</li>
+<li>
+<p>
+The Stop toggle is inactive until the interpreter enters the active
+   state (is running G-code) and then allows user to send AUTO_ABORT
+   command.
+</p>
+</li>
+<li>
+<p>
+The MDI toggle sends given MDI command and waits for its completion in
+   <em>pressed</em> inactive state.
+</p>
+</li>
+</ul></div>
+<h3 id="_the_action_mdi_toggle_and_action_mdi_widgets">7.3. The Action_MDI Toggle and Action_MDI widgets</h3><div style="clear:left"></div>
+<div class="paragraph"><p>These widgets provide a means to execute arbitrary MDI commands. The
+Action_MDI widget does not wait for command completion as the
+Action_MDI Toggle does, which remains disabled until command complete.</p></div>
+<h3 id="_a_simple_example_execute_mdi_command_on_button_press">7.4. A simple example: Execute MDI command on button press</h3><div style="clear:left"></div>
+<div class="paragraph"><p><tt>configs/gladevcp/mdi-command-example/whoareyou.ui</tt> is a Glade UI file which conveys the basics:</p></div>
+<div class="paragraph"><p>Open it in Glade and study how it&#8217;s done. Start Axis, and then start
+this from a terminal window with <tt>gladevcp whoareyou.ui</tt>. See the
+<tt>hal_action_mdi1</tt> Action and it&#8217;s <tt>MDI command</tt> property - this just
+executes <tt>(MSG, "Hi, I&#8217;m an EMC_Action_MDI")</tt> so there should be a
+message popup in Axis like so:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/whoareyou.png" alt="images/whoareyou.png" />
+</div>
+</div>
+<div class="paragraph"><p>You&#8217;ll notice that the button associated with the Action_MDI action is
+grayed out if the machine is off, in E-Stop or the interpreter is running.
+It will automatically become active when the machine is turned on and
+out of E-Stop, and the program is idle.</p></div>
+<h3 id="_parameter_passing_with_action_mdi_and_toggleaction_mdi_widgets">7.5. Parameter passing with Action_MDI and ToggleAction_MDI widgets</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Optionally, <em>MDI command</em> strings may have parameters substituted
+before they are passed to the interpreter. Parameters currently may be
+names of HAL pins in the GladeVCP component. This is how it works:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+assume you have a <em>HAL SpinBox</em> named <tt>speed</tt>, and you want to pass it&#8217;s
+   current value as a parameter in an MDI command.
+</p>
+</li>
+<li>
+<p>
+The HAL SpinBox will have a float-type HAL pin named speed-f (see
+   HalWidgets description).
+</p>
+</li>
+<li>
+<p>
+To substitute this value in the MDI command, insert the HAL pin name
+   enclosed like so: <tt>${pin-name}</tt>
+</p>
+</li>
+<li>
+<p>
+for the above HAL SpinBox, we could use <tt>(MSG, "The speed is:
+   ${speed-f}")</tt> just to show what&#8217;s happening.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The example UI file is <tt>configs/gladevcp/mdi-command-example/speed.ui</tt>. Here&#8217;s what you get when running it:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/speed.png" alt="images/speed.png" />
+</div>
+</div>
+<h3 id="_an_advanced_example_feeding_parameters_to_an_o_word_subroutine">7.6. An advanced example: Feeding parameters to an O-word subroutine</h3><div style="clear:left"></div>
+<div class="paragraph"><p>It&#8217;s perfectly OK to call an O-word subroutine in an MDI command, and
+pass HAL pin values as actual parameters. An example UI file
+is in <tt>configs/gladevcp/mdi-command-example/owordsub.ui</tt>.</p></div>
+<div class="paragraph"><p>Place <tt>configs/gladevcp/nc_files/oword.ngc</tt> so Axis can find it, and run <tt>gladevcp owordsub.ui</tt> from
+a terminal window. This looks like so:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/oword.png" alt="images/oword.png" />
+</div>
+</div>
+<h3 id="_preparing_for_an_mdi_action_and_cleaning_up_afterwards">7.7. Preparing for an MDI Action, and cleaning up afterwards</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The LinuxCNC G-Code interpreter has a single global set of variables, like
+feed, spindle speed, relative/absolute mode and others. If you use G
+code commands or O-word subs, some of these variables might get changed
+by the command or subroutine - for example, a probing subroutine will
+very likely set the feed value quite low. With no further precautions,
+your previous feed setting will be overwritten by the probing
+subroutine&#8217;s value.</p></div>
+<div class="paragraph"><p>To deal with this surprising and undesirable side effect of a given
+O-word subroutine or G-code statement executed with an LinuxCNC
+ToggleAction_MDI, you might associate pre-MDI and post-MDI handlers
+with a given LinuxCNC ToggleAction_MDI. These handlers are optional and
+provide a way to save any state before executing the MDI Action, and to
+restore it to previous values afterwards. The signal names are <tt>mdi-command-start</tt>
+and <tt>mdi-command-stop</tt>; the handler names can be set in Glade like any
+other handler.</p></div>
+<div class="paragraph"><p>Here&#8217;s an example how a feed value might be saved and restored by such
+handlers (note that LinuxCNC command and status channels are available as
+<tt>self.linuxcnc</tt> and <tt>self.stat</tt> through the EMC_ActionBase class:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>    <span style="font-weight: bold"><span style="color: #0000FF">def</span></span> <span style="font-weight: bold"><span style="color: #000000">on_mdi_command_start</span></span><span style="color: #990000">(</span>self<span style="color: #990000">,</span> action<span style="color: #990000">,</span> userdata<span style="color: #990000">=</span>None<span style="color: #990000">):</span>
+        action<span style="color: #990000">.</span>stat<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">poll</span></span><span style="color: #990000">()</span>
+        self<span style="color: #990000">.</span>start_feed <span style="color: #990000">=</span> action<span style="color: #990000">.</span>stat<span style="color: #990000">.</span>settings<span style="color: #990000">[</span><span style="color: #993399">1</span><span style="color: #990000">]</span>
+
+    <span style="font-weight: bold"><span style="color: #0000FF">def</span></span> <span style="font-weight: bold"><span style="color: #000000">on_mdi_command_stop</span></span><span style="color: #990000">(</span>self<span style="color: #990000">,</span> action<span style="color: #990000">,</span> userdata<span style="color: #990000">=</span>None<span style="color: #990000">):</span>
+        action<span style="color: #990000">.</span>linuxcnc<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">mdi</span></span><span style="color: #990000">(</span><span style="color: #FF0000">'F%.1f'</span> <span style="color: #990000">%</span> <span style="color: #990000">(</span>self<span style="color: #990000">.</span>start_feed<span style="color: #990000">))</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">while</span></span> action<span style="color: #990000">.</span>linuxcnc<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">wait_complete</span></span><span style="color: #990000">()</span> <span style="color: #990000">==</span> <span style="color: #990000">-</span><span style="color: #993399">1</span><span style="color: #990000">:</span>
+            <span style="font-weight: bold"><span style="color: #0000FF">pass</span></span></tt></pre></div></div>
+<div class="paragraph"><p>Only the Action_MDI Toggle widget supports these signals.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">In a later release of LinuxCNC, the new M-codes M70-M72 are available which
+make it saving state before a subroutine call, and restoring state on return much easier.</td>
+</tr></table>
+</div>
+<h3 id="_using_the_linuxcnc_stat_object_to_deal_with_status_changes">7.8. Using the LinuxCNC Stat object to deal with status changes</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Many actions depend on LinuxCNC status - is it in manual, MDI or auto mode?
+is a program running, paused or idle? You cannot start an MDI command
+while a G-code program is running, so this needs to be taken care of.
+Many LinuxCNC actions take care of this themselves, and related buttons and
+menu entries are deactivated when the operation is currently
+impossible.</p></div>
+<div class="paragraph"><p>When using Python event handlers - which are at a lower level than
+Actions - one needs to take care of dealing with status dependencies
+oneself. For this purpose, there&#8217;s the LinuxCNC Stat widget: to associate
+LinuxCNC status changes with event handlers.</p></div>
+<div class="paragraph"><p>LinuxCNC Stat has no visible component - you just add it to your UI with
+Glade. Once added, you can associate handlers with its following
+signals:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+state-related:     emitted when E-Stop condition occurs, is reset, machine is turned on, or is turned off
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<tt>state-estop</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>state-estop-reset</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>state-on</tt>,
+</p>
+</li>
+<li>
+<p>
+<tt>state-off</tt>
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+mode-related:    emitted when LinuxCNC enters that particular mode
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<tt>mode-manual</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>mode-mdi</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>mode-auto</tt>
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+interpreter-related:  emitted when the G-code interpreter changes into that mode
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<tt>interp-run</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>interp-idle</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>interp-paused</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>interp-reading</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>interp-waiting</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>file-loaded</tt>
+</p>
+</li>
+<li>
+<p>
+<tt>line-changed</tt>
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<h2 id="gladevcp:GladeVCP_Programming">8. GladeVCP Programming</h2>
+<div class="sectionbody">
+<h3 id="_user_defined_actions">8.1. User Defined Actions</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Most widget sets, and their associated user interface editors, support
+the concept of callbacks - functions in user-written code which are
+executed when <em>something happens</em> in the UI - events like mouse clicks,
+characters typed, mouse movement, timer events, window hiding and
+exposure and so forth.</p></div>
+<div class="paragraph"><p>HAL output widgets typically map input-type events like a button press
+to a value change of the associated HAL pin by means of such a -
+predefined - callback. Within PyVCP, this is really the only type of event
+handling supported - doing something more complex, like executing MDI
+commands to call a G-code subroutine, is not supported.</p></div>
+<div class="paragraph"><p>Within GladeVCP, HAL pin changes are just one type of the general
+class of events (called signals) in GTK+. Most widgets may originate such
+signals, and the Glade editor supports associating such a signal with a
+Python method or function name.</p></div>
+<div class="paragraph"><p>If you decide to use user-defined actions, your job is to write a
+Python module whose class methods - or in the simple case, just
+functions - can be referred to in Glade as event handlers. GladeVCP
+provides a way to import your module(s) at startup and will
+automatically link your event handlers with the widget signals as set
+in the Glade UI description.</p></div>
+<h3 id="_an_example_adding_custom_user_callbacks_in_python">8.2. An example: adding custom user callbacks in Python</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This is just a minimal example to convey the idea - details are laid
+out in the rest of this section.</p></div>
+<div class="paragraph"><p>GladeVCP can not only manipulate or display HAL pins, you can also
+write regular event handlers in Python. This could be used, among
+others, to execute MDI commands. Here&#8217;s how you do it:</p></div>
+<div class="paragraph"><p>Write a Python module like so and save as e.g. handlers.py:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>nhits <span style="color: #990000">=</span> <span style="color: #993399">0</span>
+<span style="font-weight: bold"><span style="color: #0000FF">def</span></span> <span style="font-weight: bold"><span style="color: #000000">on_button_press</span></span><span style="color: #990000">(</span>gtkobj<span style="color: #990000">,</span>data<span style="color: #990000">=</span>None<span style="color: #990000">):</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">global</span></span> nhits nhits <span style="color: #990000">+=</span> <span style="color: #993399">1</span> gtkobj<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">set_label</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"hits: %d"</span> <span style="color: #990000">%</span> nhits<span style="color: #990000">)</span></tt></pre></div></div>
+<div class="paragraph"><p>In Glade, define a button or HAL button, select the <em>Signals</em> tab, and
+in the GtkButton properties select the <em>pressed</em> line. Enter
+<em>on_button_press</em> there, and save the Glade file.</p></div>
+<div class="paragraph"><p>Then add the option <em>-u handlers.py</em> to the gladevcp command line. If
+your event handlers are spread over several files, just add multiple
+<em>-u &lt;pyfilename&gt;</em> options.</p></div>
+<div class="paragraph"><p>Now, pressing the button should change its label since it&#8217;s set in the
+callback function.</p></div>
+<div class="paragraph"><p>What the <tt>-u</tt> flag does: all Python functions in this file are
+collected and setup as potential callback handlers for your Gtk widgets
+- they can be referenced from Glade <em>Signals</em> tabs. The callback
+handlers are called with the particular object instance as parameter,
+like the GtkButton instance above, so you can apply any GtkButton
+method from there.</p></div>
+<div class="paragraph"><p>Or do some more useful stuff, like calling an MDI command!</p></div>
+<h3 id="_hal_value_change_events">8.3. HAL value change events</h3><div style="clear:left"></div>
+<div class="paragraph"><p>HAL input widgets, like a LED, automatically associate their HAL pin state
+(on/off) with the optical appearance of the widget (LED lit/dark).</p></div>
+<div class="paragraph"><p>Beyond this builtin functionality, one may associate a change
+callback with any HAL pin, including those of predefined HAL
+widgets. This fits nicely with the event-driven structure of a typical
+widget application: every activity, be it mouse click, key, timer
+expired, or the change of a HAL pin&#8217;s value, generates a callback and
+is handled by the same orthogonal mechanism.</p></div>
+<div class="paragraph"><p>For user-defined HAL pins not associated with a particular HAL widget,
+the signal name is <em>value-changed</em>. See the
+<a href="#gladevcp:Adding_HAL_pins">Adding HAL pins</a> section below for
+details.</p></div>
+<div class="paragraph"><p>HAL widgets come with a pre-defined signal called <em>hal-pin-changed</em>. See the
+<a href="#gladevcp::hal-pin-changed_signal">Hal Widgets section</a> for details.</p></div>
+<h3 id="_programming_model">8.4. Programming model</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The overall approach is as follows:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+design your UI with Glade, and set signal handlers where you want
+   actions associated with a widget
+</p>
+</li>
+<li>
+<p>
+write a Python module which contains callable objects (see <em>handler
+   models</em> below)
+</p>
+</li>
+<li>
+<p>
+pass your module&#8217;s path name to gladevcp with the <em>-u &lt;module&gt;</em> option
+</p>
+</li>
+<li>
+<p>
+gladevcp imports the module, inspects it for signal handlers and
+   connects them to the widget tree
+</p>
+</li>
+<li>
+<p>
+the main event loop is run.
+</p>
+</li>
+</ul></div>
+<h4 id="_the_simple_handler_model">8.4.1. The simple handler model</h4>
+<div class="paragraph"><p>For simple tasks it&#8217;s sufficient to define functions named after the
+Glade signal handlers. These will be called when the corresponding
+event happens in the widget tree. Here&#8217;s a trivial example - it assumes
+that the <em>pressed</em> signal of a Gtk Button or HAL Button is linked to a
+callback called <em>on_button_press</em>:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>nhits <span style="color: #990000">=</span> <span style="color: #993399">0</span>
+<span style="font-weight: bold"><span style="color: #0000FF">def</span></span> <span style="font-weight: bold"><span style="color: #000000">on_button_press</span></span><span style="color: #990000">(</span>gtkobj<span style="color: #990000">,</span>data<span style="color: #990000">=</span>None<span style="color: #990000">):</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">global</span></span> nhits
+    nhits <span style="color: #990000">+=</span> <span style="color: #993399">1</span>
+    gtkobj<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">set_label</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"hits: %d"</span> <span style="color: #990000">%</span> nhits<span style="color: #990000">)</span></tt></pre></div></div>
+<div class="paragraph"><p>Add this function to a Python file and run as follows:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>gladevcp -u &lt;myhandler&gt;.py mygui.ui</tt></pre>
+</div></div>
+<div class="paragraph"><p>Note communication between handlers has to go through global
+variables, which does not scale well and is positively un-pythonic.
+This is why we came up with the class-based handler model.</p></div>
+<h4 id="_the_class_based_handler_model">8.4.2. The class-based handler model</h4>
+<div class="paragraph"><p>The idea here is: handlers are linked to class methods. The underlying
+class(es) are instantiated and inspected during GladeVCP startup and
+linked to the widget tree as signal handlers. So the task now is to
+write:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+one or more several class definition(s) with one or several methods,
+   in one module or split over several modules,
+</p>
+</li>
+<li>
+<p>
+a function <em>get_handlers</em> in each module which will return a list of
+   class instances to GladeVCP - their method names will be linked to
+   signal handlers
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Here is a minimum user-defined handler example module:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">class</span></span> MyCallbacks <span style="color: #990000">:</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">def</span></span> <span style="font-weight: bold"><span style="color: #000000">on_this_signal</span></span><span style="color: #990000">(</span>self<span style="color: #990000">,</span>obj<span style="color: #990000">,</span>data<span style="color: #990000">=</span>None<span style="color: #990000">):</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">print</span></span> <span style="color: #FF0000">"this_signal happened, obj="</span><span style="color: #990000">,</span>obj
+
+<span style="font-weight: bold"><span style="color: #0000FF">def</span></span> <span style="font-weight: bold"><span style="color: #000000">get_handlers</span></span><span style="color: #990000">(</span>halcomp<span style="color: #990000">,</span>builder<span style="color: #990000">,</span>useropts<span style="color: #990000">):</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">[</span><span style="font-weight: bold"><span style="color: #000000">MyCallbacks</span></span> <span style="color: #990000">()]</span></tt></pre></div></div>
+<div class="paragraph"><p>Now, <em>on_this_signal</em> will be available as signal handler to your
+widget tree.</p></div>
+<h4 id="_the_get_handlers_protocol">8.4.3. The get_handlers protocol</h4>
+<div class="paragraph"><p>If during module inspection GladeVCP finds a function <tt>get_handlers</tt>,
+it calls it as follows:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>get_handlers(halcomp,builder,useropts)</tt></pre>
+</div></div>
+<div class="paragraph"><p>the arguments are:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+halcomp - refers to the HAL component under construction
+</p>
+</li>
+<li>
+<p>
+builder - widget tree - result of reading the UI definition (either
+   referring to a GtkBuilder or libglade-type object)
+</p>
+</li>
+<li>
+<p>
+useropts - a list of strings collected from the gladevcp
+   command line <tt>-U &lt;useropts&gt;</tt> option
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>GladeVCP then inspects the list of class instances and retrieves their
+method names. Qualifying method names are connected to the widget tree
+as signal handlers. Only method names which do not begin with an <em>_</em>
+(underscore) are considered.</p></div>
+<div class="paragraph"><p>Note that regardless whether you&#8217;re using the libglade or the new
+GtkBuilder format for your Glade UI, widgets can always be referred to
+as <tt>builder.get_object(&lt;widgetname&gt;)</tt>. Also, the complete list of
+widgets is available as <tt>builder.get_objects()</tt> regardless of UI
+format.</p></div>
+<h3 id="_initialization_sequence">8.5. Initialization sequence</h3><div style="clear:left"></div>
+<div class="paragraph"><p>It is important to know in which state of affairs your <tt>get_handlers()</tt>
+function is called so you know what is safe to do there and what not.
+First, modules are imported and initialized in command line order.
+After successful import, <tt>get_handlers()</tt> is called in the following
+state:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+the widget tree is created, but not yet realized (no toplevel
+   <tt>window.show()</tt> has been executed yet)
+</p>
+</li>
+<li>
+<p>
+the halcomp HAL component is set up and all HAL widget&#8217;s pins have
+   already been added to it
+</p>
+</li>
+<li>
+<p>
+it is safe to add more HAL pins because <tt>halcomp.ready()</tt> has not yet
+   been called at this point, so you may add your own pins, for instance
+   in the class <tt>__init__()</tt> method.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Once all modules have been imported and method names extracted, the
+following steps happen:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+all qualifying method names will be connected to the widget tree with
+   <tt>connect_signals()/signal_autoconnect()</tt> (depending on the type of UI
+   imported - GtkBuilder vs the old libglade format).
+</p>
+</li>
+<li>
+<p>
+the HAL component is finalized with halcomp.ready()
+</p>
+</li>
+<li>
+<p>
+if a window ID was passed as argument, the widget tree is re-parented
+   to run in this window, and Glade&#8217;s toplevel window1 is abandoned (see
+   FAQ)
+</p>
+</li>
+<li>
+<p>
+if a HAL command file was passed with <tt>-H halfile</tt>, it is executed
+   with halcmd
+</p>
+</li>
+<li>
+<p>
+the Gtk main loop is run.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>So when your handler class is initialized, all widgets are existent
+but not yet realized (displayed on screen). And the HAL component isn&#8217;t
+ready as well, so its unsafe to access pins values in your <tt>__init__()</tt>
+method.</p></div>
+<div class="paragraph"><p>If you want to have a callback to execute at program start after it is
+safe to access HAL pins, then a connect a handler to the realize signal
+of the top level window1 (which might be its only real purpose). At
+this point GladeVCP is done with all setup tasks, the halfile has been
+run, and GladeVCP is about to enter the Gtk main loop.</p></div>
+<h3 id="_multiple_callbacks_with_the_same_name">8.6. Multiple callbacks with the same name</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Within a class, method names must be unique. However, it is OK to have
+multiple class instances passed to GladeVCP by get_handlers() with
+identically named methods. When the corresponding signal occurs, these
+methods will be called in definition order - module by module, and
+within a module, in the order class instances are returned by
+<tt>get_handlers()</tt>.</p></div>
+<h3 id="_the_gladevcp_tt_u_lt_useropts_gt_tt_flag">8.7. The GladeVCP <tt>-U &lt;useropts&gt;</tt> flag</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Instead of extending GladeVCP for any conceivable option which could
+potentially be useful for a handler class, you may use the -U
+&lt;useroption&gt; flag (repeatedly if you wish). This flag collects a list
+of &lt;useroption&gt; strings. This list is passed to the get_handlers()
+function (useropts argument). Your code is free to interpret these
+strings as you see fit. An possible usage would be to pass them to the
+Python exec function in your <tt>get_handlers()</tt> as follows:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>debug <span style="color: #990000">=</span> <span style="color: #993399">0</span>
+<span style="color: #990000">...</span>
+<span style="font-weight: bold"><span style="color: #0000FF">def</span></span> <span style="font-weight: bold"><span style="color: #000000">get_handlers</span></span><span style="color: #990000">(</span>halcomp<span style="color: #990000">,</span>builder<span style="color: #990000">,</span>useropts<span style="color: #990000">):</span>
+    <span style="color: #990000">...</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">global</span></span> debug <span style="font-style: italic"><span style="color: #9A1900"># assuming there's a global var</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">for</span></span> cmd <span style="font-weight: bold"><span style="color: #0000FF">in</span></span> useropts<span style="color: #990000">:</span>
+        <span style="font-weight: bold"><span style="color: #0000FF">exec</span></span> cmd <span style="font-weight: bold"><span style="color: #0000FF">in</span></span> <span style="font-weight: bold"><span style="color: #000000">globals</span></span><span style="color: #990000">()</span></tt></pre></div></div>
+<div class="paragraph"><p>This way you can pass arbitrary Python statements to your module
+through the gladevcp -U option, for example:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>gladevcp -U debug=42 -U "print 'debug=%d' % debug" ...</tt></pre>
+</div></div>
+<div class="paragraph"><p>This should set debug to 2 and confirm that your module actually did it.</p></div>
+<h3 id="_persistent_variables_in_gladevcp">8.8. Persistent variables in GladeVCP</h3><div style="clear:left"></div>
+<div class="paragraph"><p>A annoying aspect of GladeVCP in its earlier form and pyvcp is the
+fact that you may change values and HAL pins through text entry,
+sliders, spin boxes, toggle buttons etc, but their settings are not
+saved and restored at the next run of LinuxCNC - they start at the default
+value as set in the panel or widget definition.</p></div>
+<div class="paragraph"><p>GladeVCP has an easy-to-use mechanism to save and restore the state of
+HAL widgets, and program variables (in fact any instance attribute of
+type int, float, bool or string).</p></div>
+<div class="paragraph"><p>This mechanism uses the popular <em>.ini</em> file format to save and reload
+persistent attributes.</p></div>
+<h4 id="_persistence_program_versions_and_the_signature_check">8.8.1. Persistence, program versions and the signature check</h4>
+<div class="paragraph"><p>Imagine renaming, adding or deleting widgets in Glade:
+an .ini file lying around from a previous program version, or an
+entirely different user interface, would be not be able to restore the
+state properly since variables and types might have changed.</p></div>
+<div class="paragraph"><p>GladeVCP detects this situation by a signature which depends on all
+object names and types which are saved and to be restored. In the case
+of signature mismatch, a new .ini file with default settings is
+generated.</p></div>
+<h3 id="_using_persistent_variables">8.9. Using persistent variables</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If you want any of Gtk widget state, HAL widgets output pin&#8217;s values
+and/or class attributes of your handler class to be retained across
+invocations, proceed as follows:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+import the <tt>gladevcp.persistence</tt> module
+</p>
+</li>
+<li>
+<p>
+decide which instance attributes, and their default values you want to
+   have retained, if any
+</p>
+</li>
+<li>
+<p>
+decide which widgets should have their state retained
+</p>
+</li>
+<li>
+<p>
+describe these decisions in your handler class' <tt><em>init</em>()</tt> method
+   through a nested dictionary as follows:
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">def</span></span> <span style="font-weight: bold"><span style="color: #000000">__init__</span></span><span style="color: #990000">(</span>self<span style="color: #990000">,</span> halcomp<span style="color: #990000">,</span>builder<span style="color: #990000">,</span>useropts<span style="color: #990000">):</span>
+    self<span style="color: #990000">.</span>halcomp <span style="color: #990000">=</span> halcomp
+    self<span style="color: #990000">.</span>builder <span style="color: #990000">=</span> builder
+    self<span style="color: #990000">.</span>useropts <span style="color: #990000">=</span> useropts
+    self<span style="color: #990000">.</span>defaults <span style="color: #990000">=</span> <span style="color: #990000">{</span>
+        <span style="font-style: italic"><span style="color: #9A1900"># the following names will be saved/restored as method attributes</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># the save/restore mechanism is strongly typed - the variables type will be derived from the type of the</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># initialization value. Currently supported types are: int, float, bool, string</span></span>
+        IniFile<span style="color: #990000">.</span>vars <span style="color: #990000">:</span> <span style="color: #990000">{</span> <span style="color: #FF0000">'nhits'</span> <span style="color: #990000">:</span> <span style="color: #993399">0</span><span style="color: #990000">,</span> <span style="color: #FF0000">'a'</span><span style="color: #990000">:</span> <span style="color: #993399">1.67</span><span style="color: #990000">,</span> <span style="color: #FF0000">'d'</span><span style="color: #990000">:</span> True <span style="color: #990000">,</span><span style="color: #FF0000">'c'</span> <span style="color: #990000">:</span> <span style="color: #FF0000">"a string"</span><span style="color: #990000">},</span>
+        <span style="font-style: italic"><span style="color: #9A1900"># to save/restore all widget's state which might remotely make sense, add this:</span></span>
+        IniFile<span style="color: #990000">.</span>widgets <span style="color: #990000">:</span> <span style="font-weight: bold"><span style="color: #000000">widget_defaults</span></span><span style="color: #990000">(</span>builder<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">get_objects</span></span><span style="color: #990000">())</span>
+        <span style="font-style: italic"><span style="color: #9A1900"># a sensible alternative might be to retain only all HAL output widgets' state:</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># IniFile.widgets: widget_defaults(select_widgets(self.builder.get_objects(), hal_only=True,output_only = True)),</span></span>
+    <span style="color: #990000">}</span></tt></pre></div></div>
+<div class="paragraph"><p>Then associate an .ini file with this descriptor:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>self<span style="color: #990000">.</span>ini_filename <span style="color: #990000">=</span> __name__ <span style="color: #990000">+</span> <span style="color: #FF0000">'.ini'</span>
+self<span style="color: #990000">.</span>ini <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">IniFile</span></span><span style="color: #990000">(</span>self<span style="color: #990000">.</span>ini_filename<span style="color: #990000">,</span>self<span style="color: #990000">.</span>defaults<span style="color: #990000">,</span>self<span style="color: #990000">.</span>builder<span style="color: #990000">)</span>
+self<span style="color: #990000">.</span>ini<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">restore_state</span></span><span style="color: #990000">(</span>self<span style="color: #990000">)</span></tt></pre></div></div>
+<div class="paragraph"><p>After <tt>restore_state()</tt>, self will have attributes set if as running the
+following:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>self<span style="color: #990000">.</span>nhits <span style="color: #990000">=</span> <span style="color: #993399">0</span>
+self<span style="color: #990000">.</span>a <span style="color: #990000">=</span> <span style="color: #993399">1.67</span>
+self<span style="color: #990000">.</span>d <span style="color: #990000">=</span> True
+self<span style="color: #990000">.</span>c <span style="color: #990000">=</span> <span style="color: #FF0000">"a string"</span></tt></pre></div></div>
+<div class="paragraph"><p>Note that types are saved and preserved on restore. This example
+assumes that the ini file didn&#8217;t exist or had the default values from
+self.defaults.</p></div>
+<div class="paragraph"><p>After this incantation, you can use the following IniFil methods:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+ini.save_state(obj)
+</dt>
+<dd>
+<p>
+         saves objs&#8217;s attributes as per IniFil.vars
+         dictionary and the widget state as described in IniFile.widgets in
+         self.defaults
+</p>
+</dd>
+<dt class="hdlist1">
+ini.create_default_ini()
+</dt>
+<dd>
+<p>
+         create a .ini file with default values
+</p>
+</dd>
+<dt class="hdlist1">
+ini.restore_state(obj)
+</dt>
+<dd>
+<p>
+        restore HAL out pins and obj&#8217;s attributes as
+        saved/initialized to default as above
+</p>
+</dd>
+</dl></div>
+<h3 id="_saving_the_state_on_gladvcp_shutdown">8.10. Saving the state on Gladvcp shutdown</h3><div style="clear:left"></div>
+<div class="paragraph"><p>To save the widget and/or variable state on exit, proceed as follows:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+select some interior widget (type is not important, for instance a
+table).
+</p>
+</li>
+<li>
+<p>
+in the <em>Signals</em> tab, select <em>GtkObject</em>. It should show a <em>destroy</em>
+signal in the first column.
+</p>
+</li>
+<li>
+<p>
+add the handler name, e.g. <em>on_destroy</em> to the second column.
+</p>
+</li>
+<li>
+<p>
+add a Python handler like below:
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #000080">import</span></span> gtk
+<span style="color: #990000">...</span>
+<span style="font-weight: bold"><span style="color: #0000FF">def</span></span> <span style="font-weight: bold"><span style="color: #000000">on_destroy</span></span><span style="color: #990000">(</span>self<span style="color: #990000">,</span>obj<span style="color: #990000">,</span>data<span style="color: #990000">=</span>None<span style="color: #990000">):</span>
+    self<span style="color: #990000">.</span>ini<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">save_state</span></span><span style="color: #990000">(</span>self<span style="color: #990000">)</span></tt></pre></div></div>
+<div class="paragraph"><p>This will save state and shutdown GladeVCP properly, regardless
+whether the panel is embedded in Axis, or a standalone window.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Caution</div>
+</td>
+<td class="content">Do not use <tt>window1</tt> (the toplevel window) to connect a
+<tt>destroy</tt> event. Due to the way a GladeVCP panel interacts with Axis
+if a panel is embedded within Axis, <strong>window1 will not receive destroy
+events properly</strong>. However, since on shutdown all widgets are
+destroyed, anyone will do. Recommended: use a second-level widget -
+for instance, if you have a table container in your panel, use
+that.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Next time you start the GladeVCP application, the widgets should come
+up in the state when the application was closed.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Caution</div>
+</td>
+<td class="content">The <em>GtkWidget</em> line has a similarly sounding <em>destroy-event</em> -
+<strong>dont use that to connect to the <em>on_destroy</em> handler, it wont work</strong> -
+make sure you use the <em>destroy</em> event from the <em>GtkObject</em> line.</td>
+</tr></table>
+</div>
+<h3 id="_saving_state_when_ctrl_c_is_pressed">8.11. Saving state when Ctrl-C is pressed</h3><div style="clear:left"></div>
+<div class="paragraph"><p>By default, the reaction of GladeVCP to a Ctrl-C event is to just exit
+- <tt>without</tt> saving state. To make sure that this case is covered, add
+a handler call <tt>on_unix_signal</tt> which will be automatically be called
+on Ctrl-C (actuall on the SIGINT and SIGTERM signals). Example</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">def</span></span> <span style="font-weight: bold"><span style="color: #000000">on_unix_signal</span></span><span style="color: #990000">(</span>self<span style="color: #990000">,</span>signum<span style="color: #990000">,</span>stack_frame<span style="color: #990000">):</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">print</span></span> <span style="color: #FF0000">"on_unix_signal(): signal %d received, saving state"</span> <span style="color: #990000">%</span> <span style="color: #990000">(</span>signum<span style="color: #990000">)</span>
+    self<span style="color: #990000">.</span>ini<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">save_state</span></span><span style="color: #990000">(</span>self<span style="color: #990000">)</span></tt></pre></div></div>
+<h3 id="_hand_editing_ini_files">8.12. Hand-editing .ini files</h3><div style="clear:left"></div>
+<div class="paragraph"><p>You can do that, but note that the values in self.defaults override
+your edits if there is a syntax or type error in your edit. The error
+is detected, a console message will hint about that happened, and the
+bad inifile will be renamed to have the .BAD suffix. Subsequent bad ini
+files overwrite earlier .BAD files.</p></div>
+<h3 id="gladevcp:Adding_HAL_pins">8.13. Adding HAL pins</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If you need HAL pins which are not associated with a specific HAL
+widget, add them as follows:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #000080">import</span></span> hal_glib
+<span style="color: #990000">...</span>
+<span style="font-style: italic"><span style="color: #9A1900"># in your handler class __init__():</span></span>
+self<span style="color: #990000">.</span>example_trigger <span style="color: #990000">=</span> hal_glib<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">GPin</span></span><span style="color: #990000">(</span>halcomp<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">newpin</span></span><span style="color: #990000">(</span><span style="color: #FF0000">'example-trigger'</span><span style="color: #990000">,</span> hal<span style="color: #990000">.</span>HAL_BIT<span style="color: #990000">,</span> hal<span style="color: #990000">.</span>HAL_IN<span style="color: #990000">))</span></tt></pre></div></div>
+<div class="paragraph"><p>To get a callback when this pin&#8217;s value changes, associate a
+<tt>value-change</tt> callback with this pin, add:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>self<span style="color: #990000">.</span>example_trigger<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">connect</span></span><span style="color: #990000">(</span><span style="color: #FF0000">'value-changed'</span><span style="color: #990000">,</span> self<span style="color: #990000">.</span>_on_example_trigger_change<span style="color: #990000">)</span></tt></pre></div></div>
+<div class="paragraph"><p>and define a callback method (or function, in this case leave out the
+<tt>self</tt> parameter):</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900"># note '_' - this method will not be visible to the widget tree</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">def</span></span> <span style="font-weight: bold"><span style="color: #000000">_on_example_trigger_change</span></span><span style="color: #990000">(</span>self<span style="color: #990000">,</span>pin<span style="color: #990000">,</span>userdata<span style="color: #990000">=</span>None<span style="color: #990000">):</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">print</span></span> <span style="color: #FF0000">"pin value changed to:"</span> <span style="color: #990000">%</span> <span style="color: #990000">(</span>pin<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">get</span></span><span style="color: #990000">())</span></tt></pre></div></div>
+<h3 id="_adding_timers">8.14. Adding timers</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Since GladeVCP uses Gtk widgets which rely on the
+<a href="http://www.pygtk.org/pygtk2reference/gobject-functions.html">GObject</a>
+base class, the full glib functionally is available. Here is an
+example for a timer callback:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">def</span></span> <span style="font-weight: bold"><span style="color: #000000">_on_timer_tick</span></span><span style="color: #990000">(</span>self<span style="color: #990000">,</span>userdata<span style="color: #990000">=</span>None<span style="color: #990000">):</span>
+    <span style="color: #990000">...</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> True <span style="font-style: italic"><span style="color: #9A1900"># to restart the timer; return False for on-shot</span></span>
+<span style="color: #990000">...</span>
+<span style="font-style: italic"><span style="color: #9A1900"># demonstrate a slow background timer - granularity is one second</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># for a faster timer (granularity 1 ms), use this:</span></span>
+<span style="font-style: italic"><span style="color: #9A1900"># glib.timeout_add(100, self._on_timer_tick,userdata) # 10Hz</span></span>
+glib<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">timeout_add_seconds</span></span><span style="color: #990000">(</span><span style="color: #993399">1</span><span style="color: #990000">,</span> self<span style="color: #990000">.</span>_on_timer_tick<span style="color: #990000">)</span></tt></pre></div></div>
+<h3 id="_setting_hal_widget_properties_programmatically">8.15. Setting HAL widget properties programmatically</h3><div style="clear:left"></div>
+<div class="paragraph"><p>With glade, widget properties are typically set fixed while editing.
+You can, however, set widget properties at runtime, for instance from
+ini file values, which  would typically be done in the handler
+initialisation code. Setting properties from HAL pin values is
+possible, too.</p></div>
+<div class="paragraph"><p>In the following example (assuming a HAL Meter widget called <tt>meter</tt>), the
+meter&#8217;s min value is set from an INI file parameter at startup, and the max value
+is set via a HAL pin, which causese the widget&#8217;s scale to readjust dynamically:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #000080">import</span></span> linuxcnc
+<span style="font-weight: bold"><span style="color: #000080">import</span></span> os
+<span style="font-weight: bold"><span style="color: #000080">import</span></span> hal
+<span style="font-weight: bold"><span style="color: #000080">import</span></span> hal_glib
+
+<span style="font-weight: bold"><span style="color: #0000FF">class</span></span> HandlerClass<span style="color: #990000">:</span>
+
+    <span style="font-weight: bold"><span style="color: #0000FF">def</span></span> <span style="font-weight: bold"><span style="color: #000000">_on_max_value_change</span></span><span style="color: #990000">(</span>self<span style="color: #990000">,</span>hal_pin<span style="color: #990000">,</span>data<span style="color: #990000">=</span>None<span style="color: #990000">):</span>
+        self<span style="color: #990000">.</span>meter<span style="color: #990000">.</span>max <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">float</span></span><span style="color: #990000">(</span>hal_pin<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">get</span></span><span style="color: #990000">())</span>
+        self<span style="color: #990000">.</span>meter<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">queue_draw</span></span><span style="color: #990000">()</span> <span style="font-style: italic"><span style="color: #9A1900"># force a widget redraw</span></span>
+
+    <span style="font-weight: bold"><span style="color: #0000FF">def</span></span> <span style="font-weight: bold"><span style="color: #000000">__init__</span></span><span style="color: #990000">(</span>self<span style="color: #990000">,</span> halcomp<span style="color: #990000">,</span>builder<span style="color: #990000">,</span>useropts<span style="color: #990000">):</span>
+        self<span style="color: #990000">.</span>builder <span style="color: #990000">=</span> builder
+
+        <span style="font-style: italic"><span style="color: #9A1900"># hal pin with change callback.</span></span>
+        <span style="font-style: italic"><span style="color: #9A1900"># When the pin's value changes the callback is executed.</span></span>
+        self<span style="color: #990000">.</span>max_value <span style="color: #990000">=</span> hal_glib<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">GPin</span></span><span style="color: #990000">(</span>halcomp<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">newpin</span></span><span style="color: #990000">(</span><span style="color: #FF0000">'max-value'</span><span style="color: #990000">,</span>  hal<span style="color: #990000">.</span>HAL_FLOAT<span style="color: #990000">,</span> hal<span style="color: #990000">.</span>HAL_IN<span style="color: #990000">))</span>
+        self<span style="color: #990000">.</span>max_value<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">connect</span></span><span style="color: #990000">(</span><span style="color: #FF0000">'value-changed'</span><span style="color: #990000">,</span> self<span style="color: #990000">.</span>_on_max_value_change<span style="color: #990000">)</span>
+
+        inifile <span style="color: #990000">=</span> linuxcnc<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">ini</span></span><span style="color: #990000">(</span>os<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">getenv</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"INI_FILE_NAME"</span><span style="color: #990000">))</span>
+        mmin <span style="color: #990000">=</span> <span style="font-weight: bold"><span style="color: #000000">float</span></span><span style="color: #990000">(</span>inifile<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">find</span></span><span style="color: #990000">(</span><span style="color: #FF0000">"METER"</span><span style="color: #990000">,</span> <span style="color: #FF0000">"MIN"</span><span style="color: #990000">)</span> <span style="font-weight: bold"><span style="color: #0000FF">or</span></span> <span style="color: #993399">0.0</span><span style="color: #990000">)</span>
+        self<span style="color: #990000">.</span>meter <span style="color: #990000">=</span> self<span style="color: #990000">.</span>builder<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">get_object</span></span><span style="color: #990000">(</span><span style="color: #FF0000">'meter'</span><span style="color: #990000">)</span>
+        self<span style="color: #990000">.</span>meter<span style="color: #990000">.</span>min <span style="color: #990000">=</span> mmin
+
+
+<span style="font-weight: bold"><span style="color: #0000FF">def</span></span> <span style="font-weight: bold"><span style="color: #000000">get_handlers</span></span><span style="color: #990000">(</span>halcomp<span style="color: #990000">,</span>builder<span style="color: #990000">,</span>useropts<span style="color: #990000">):</span>
+    <span style="font-weight: bold"><span style="color: #0000FF">return</span></span> <span style="color: #990000">[</span><span style="font-weight: bold"><span style="color: #000000">HandlerClass</span></span><span style="color: #990000">(</span>halcomp<span style="color: #990000">,</span>builder<span style="color: #990000">,</span>useropts<span style="color: #990000">)]</span></tt></pre></div></div>
+<h3 id="_examples_and_rolling_your_own_gladevcp_application">8.16. Examples, and rolling your own GladeVCP application</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Visit <tt>linuxcnc/configs/gladevcp</tt> for running examples and starters for your own projects.</p></div>
+</div>
+<h2 id="_faq">9. FAQ</h2>
+<div class="sectionbody">
+<div class="qlist qanda"><ol>
+<li>
+<p><em>
+I get an unexpected unmap event in my handler function right after startup. What&#8217;s this?
+</em></p>
+<p>
+   This is a consequence of your Glade UI file
+   having the window1 Visible property set to True, together with
+   re-parenting the GladeVCP window into Axis or touchy. The GladeVCP
+   widget tree is created, including a top level window, and then
+   <em>reparented into Axis</em>, leaving that toplevel window laying around
+   orphaned. To avoid having this useless empty window hanging around, it
+   is unmapped (made invisible), which is the cause of the unmap signal
+   you get. Suggested fix: set window1.visible to False, and ignore an
+   initial unmap event.
+</p>
+</li>
+<li>
+<p><em>
+My GladeVCP program starts, but no window appears where I expect it to be?
+</em></p>
+<p>
+   The window Axis allocates for GladeVCP will obtain the <em>natural
+   size</em> of all its child widgets combined. It&#8217;s the child widget&#8217;s job to
+   request a size (width and/or height). However, not all widgets do
+   request a width greater than 0, for instance the Graph widget in its
+   current form. If there&#8217;s such a widget in your Glade file and it&#8217;s the
+   one which defines the layout you might want to set its width
+   explicitly. Note that setting the window1 width and height properties
+   in Glade does not make sense because this window will be orphaned
+   during re-parenting and hence its geometry will have no impact on
+   layout (see above). The general rule is: if you manually run a UI file
+   with <em>gladevcp &lt;uifile&gt;</em> and its window has reasonable geometry, it
+   should come up in Axis properly as well.
+</p>
+</li>
+<li>
+<p><em>
+I want a blinking LED, but it wont blink
+</em></p>
+<p>
+  I ticked the checkbutton to let it blink with 100msec interval. It
+  wont blink, and I get a startup warning: Warning: value "0" of type
+  &#8216;gint&#8217; is invalid or out of range for property &#8216;led-blink-rate&#8217; of
+  type &#8216;gint&#8217;?  This seems to be a glade bug. Just type over the blink
+  rate field, and save again - this works for me.
+</p>
+</li>
+<li>
+<p><em>
+My gladevcp panel in Axis doesnt save state when I close Axis, although I defined an on_destroy handler linked to the window destroy signal
+</em></p>
+<p>
+   Very likely this handler is linked to window1,
+   which due to reparenting isnt usable for this purpose. Please link
+   the on_destroy handler to the destroy signal of an interior
+   window. For instance, I have a notebook inside window1, and linked
+   on_destroy to the notebooks destroy signal, and that works fine. It
+   doesnt work for window1.
+</p>
+</li>
+<li>
+<p><em>
+I want to set the background color or text of a HAL_Label widget depending on its HAL pin value
+</em></p>
+<p>
+    See the example in configs/gladevcp/colored-label.  Setting the
+    background color of a GtkLabel widget (and HAL_Label is derived
+    from GtkLabel) is a bit tricky. The GtkLabel widget has no window
+    object of its own for performance reasons, and only window objects
+    can have a background color. The solution is to enclose the Label
+    in an EventBox container, which has a window but is otherwise
+    invisible - see the coloredlabel.ui file.
+</p>
+</li>
+<li>
+<p><em>
+I defined a <tt>hal_spinbutton</tt> widget in glade, and set a default <tt>value</tt> property in the corresponding adjustment. It comes up with zero?
+</em></p>
+<p>
+  this is due to a bug in the old   Gtk version distributed with Ubuntu
+  8.04 and 10.04, and is likely to be the case for all widgets using
+  adjustment. The workaround mentione for instance in
+  <a href="http://osdir.com/ml/gtk-app-devel-list/2010-04/msg00129.html">http://osdir.com/ml/gtk-app-devel-list/2010-04/msg00129.html</a> does
+  not reliably set the HAL pin value, it is better to set it
+  explicitly in an <tt>on_realize</tt> signal handler during widget creation.
+  See the example in <tt>configs/gladevcp/by-widget/spinbutton</tt>.
+</p>
+</li>
+</ol></div>
+</div>
+<h2 id="_troubleshooting">10. Troubleshooting</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+make sure your have the development version of LinuxCNC installed. You
+   don&#8217;t need the axisrc file any more, this was mentioned in the old
+   GladeVcp wiki page.
+</p>
+</li>
+<li>
+<p>
+run GladeVCP or Axis from a terminal window. If you get Python errors,
+   check whether there&#8217;s still a <tt>/usr/lib/python2.6/dist-packages/hal.so</tt>
+   file lying around besides the newer
+   <tt>/usr/lib/python2.6/dist-packages/_hal.so</tt> (note underscore); if yes,
+   remove the <tt>hal.so</tt> file. It has been superseded by hal.py in the same
+   directory and  confuses the import mechanism.
+</p>
+</li>
+<li>
+<p>
+if you&#8217;re using run-in-place, do a <em>make clean</em> to remove any
+   accidentally left over hal.so file, then <em>make</em>.
+</p>
+</li>
+<li>
+<p>
+if you&#8217;re using <em>HAL_table</em> or <em>HAL_HBox</em> widgets, be aware they have
+   an HAL pin associated with it which is off by default. This pin
+   controls whether these container&#8217;s children are active or not.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_implementation_note_key_handling_in_axis">11. Implementation note: Key handling in Axis</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>We believe key handling works OK, but since it is new code, we&#8217;re
+telling about it you so you can watch out for problems; please let us
+know of errors or odd behavior. This is the story:</p></div>
+<div class="paragraph"><p>Axis uses the TkInter widget set. GladeVCP applications use Gtk
+widgets and run in a separate process context. They are hooked into
+Axis with the Xembed protocol. This allows a child application like
+GladeVCP to properly fit in a parent&#8217;s window, and - in theory - have
+integrated event handling.</p></div>
+<div class="paragraph"><p>However, this assumes that both parent and child application properly
+support the Xembed protocol, which Gtk does, but TkInter doesn&#8217;t. A
+consequence of this is that certain keys would not be forwarded from a
+GladeVCP panel to Axis properly under all circumstances. One of these
+situations was the case when an Entry, or SpinButton widget had focus:
+in this case, for instance an Escape key would not have been forwarded
+to Axis and cause an abort as it should, with potentially disastrous
+consequences.</p></div>
+<div class="paragraph"><p>Therefore, key events in GladeVCP are explicitly handled, and
+selectively forwarded to Axis, to assure that such situations cannot
+arise. For details, see the <tt>keyboard_forward()</tt> function in
+<tt>lib/python/gladevcp/xembed.py</tt>.</p></div>
+</div>
+<h2 id="_adding_custom_widgets">12. Adding Custom Widgets</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The LinuxCNC Wiki has information on adding custom widgets to GladeVCP.
+<a href="http://wiki.linuxcnc.org/cgi-bin/wiki.pl?GladeVCP_Custom_Widgets">GladeVCP Custom Widgets</a></p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-01-24 16:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/gladevcp.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:14:27 GMT -->
+</html>

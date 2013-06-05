@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/ladder/ladder_examples_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title></title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<h2 id="_ladder_examples">1. Ladder Examples</h2>
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:classicladder-examples"></a> </p></div>
+<h3 id="_wrapping_counter">1.1. Wrapping Counter</h3><div style="clear:left"></div>
+<div class="paragraph"><p>To have a counter that "wraps around" you have to use the preset pin
+and the reset pin. When you create the counter set the preset at the
+number you wish to reach before wrapping around to 0. The logic is if
+the counter value is over the preset then reset the counter and if the
+underflow is on then set the counter value to the preset value. As you
+can see in the example when the counter value is greater than the
+counter preset the counter reset is triggered and the value is now 0.
+The underflow output %Q2 will set the counter value at the preset when
+counting backwards.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/wrapping-counter.png" alt="images/wrapping-counter.png" />
+</div>
+<div class="title">Figure 1. Wrapping Counter<a id="fig:Wrapping-Counter"></a></div>
+</div>
+<h3 id="_reject_extra_pulses">1.2. Reject Extra Pulses</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This example shows you how to reject extra pulses from an input.
+Suppose the input pulse %I0 has an annoying habit of giving an extra
+pulse that spoils our logic. The TOF (Timer Off Delay) prevents the
+extra pulse from reaching our cleaned up output %Q0. How this works is
+when the timer gets an input the output of the timer is on for the
+duration of the time setting. Using a normally closed contact %TM0.Q
+the output of the timer blocks any further inputs from reaching our
+output until it times out.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/extra-pulse-reject.png" alt="images/extra-pulse-reject.png" />
+</div>
+<div class="title">Figure 2. Reject Extra Pulse<a id="fig:Reject-Extra-Pulse"></a></div>
+</div>
+<h3 id="_external_e_stop">1.3. External E-Stop</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The External E-Stop example is in the /config/classicladder/cl-estop
+folder. It uses a pyVCP panel to simulate the external components.</p></div>
+<div class="paragraph"><p>To interface an external E-Stop to LinuxCNC and have the external E-Stop
+work together with the internal E-Stop requires a couple of connections
+through Classic Ladder.</p></div>
+<div class="paragraph"><p>First we have to open the E-Stop loop in the main HAL file by
+commenting out by adding the pound sign as shown or removing the
+following lines.</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt># net estop-out &lt;= iocontrol.0.user-enable-out
+# net estop-out =&gt; iocontrol.0.emc-enable-in</tt></pre>
+</div></div>
+<div class="paragraph"><p>Next we add Classic Ladder to our custom.hal file by adding these two
+lines:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>loadrt classicladder_rt
+addf classicladder.0.refresh servo-thread</tt></pre>
+</div></div>
+<div class="paragraph"><p>Next we run our config and build the ladder as shown here.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/EStop_Section_Display.png" alt="images/EStop_Section_Display.png" />
+</div>
+<div class="title">Figure 3. E-Stop Section Display<a id="cap:E-Stop-Section-Display"></a></div>
+</div>
+<div class="paragraph"><p>After building the ladder select Save As and save the ladder as
+estop.clp</p></div>
+<div class="paragraph"><p>Now add the following line to your custom.hal file.</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt># Load the ladder
+loadusr classicladder --nogui estop.clp</tt></pre>
+</div></div>
+<div class="paragraph"><p>I/O assignments</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+%I0 = Input from the pyVCP panel simulated E-Stop (the checkbox)
+</p>
+</li>
+<li>
+<p>
+%I1 = Input from LinuxCNC&#8217;s E-Stop
+</p>
+</li>
+<li>
+<p>
+%I2 = Input from LinuxCNC&#8217;s E-Stop Reset Pulse
+</p>
+</li>
+<li>
+<p>
+%I3 = Input from the pyVCP panel reset button
+</p>
+</li>
+<li>
+<p>
+%Q0 = Ouput to LinuxCNC to enable
+</p>
+</li>
+<li>
+<p>
+%Q1 = Output to external driver board enable pin (use a N/C output if
+   your board had a disable pin)
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Next we add the following lines to the custom_postgui.hal file</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt># E-Stop example using pyVCP buttons to simulate external components</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt># The pyVCP checkbutton simulates a normally closed external E-Stop
+net ext-estop classicladder.0.in-00 &lt;= pyvcp.py-estop</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt># Request E-Stop Enable from LinuxCNC
+net estop-all-ok iocontrol.0.emc-enable-in &lt;= classicladder.0.out-00</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt># Request E-Stop Enable from pyVCP or external source
+net ext-estop-reset classicladder.0.in-03 &lt;= pyvcp.py-reset</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt># This line resets the E-Stop from LinuxCNC
+ net emc-reset-estop iocontrol.0.user-request-enable =&gt;
+classicladder.0.in-02</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt># This line enables LinuxCNC to unlatch the E-Stop in Classic Ladder
+net emc-estop iocontrol.0.user-enable-out =&gt; classicladder.0.in-01</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt># This line turns on the green indicator when out of E-Stop
+net estop-all-ok =&gt; pyvcp.py-es-status</tt></pre>
+</div></div>
+<div class="paragraph"><p>Next we add the following lines to the panel.xml file. Note you have
+to open it with the text editor not the default html viewer.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt>    <span style="font-weight: bold"><span style="color: #0000FF">&lt;pyvcp&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;vbox&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;label&gt;&lt;text&gt;</span></span>"E-Stop Demo"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;&lt;/label&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;led&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"py-es-status"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;size&gt;</span></span>50<span style="font-weight: bold"><span style="color: #0000FF">&lt;/size&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;on_color&gt;</span></span>"green"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/on_color&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;off_color&gt;</span></span>"red"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/off_color&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/led&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;checkbutton&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"py-estop"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"E-Stop"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/checkbutton&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/vbox&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;button&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"py-reset"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Reset"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/button&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/pyvcp&gt;</span></span></tt></pre></div></div>
+<div class="paragraph"><p>Now start up your config and it should look like this.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/axis_cl-estop.png" alt="images/axis_cl-estop.png" />
+</div>
+<div class="title">Figure 4. AXIS E-Stop<a id="cap:AXIS-E-Stop"></a></div>
+</div>
+<div class="paragraph"><p>Note that in this example like in real life you must clear the remote
+E-Stop (simulated by the checkbox) before the AXIS E-Stop or the
+external Reset will put you in OFF mode. If the E-Stop in the AXIS
+screen was pressed, you must press it again to clear it. You cannot
+reset from the external after you do an E-Stop in AXIS.</p></div>
+<h3 id="_timer_operate_example">1.4. Timer/Operate Example</h3><div style="clear:left"></div>
+<div class="paragraph"><p>In this example we are using the Operate block to assign a value to
+the timer preset based on if an input is on or off.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/Tmr_Section_Display.png" alt="images/Tmr_Section_Display.png" />
+</div>
+<div class="title">Figure 5. Timer/Operate Example<a id="cap:Timer/Operate-Example"></a></div>
+</div>
+<div class="paragraph"><p>In this case %I0 is true so the timer preset value is 10. If %I0 was
+false the timer preset would be 5.</p></div>
+<h3 id="_tool_turret">1.5. Tool Turret</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+This Example is not complete yet.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>This is a program for one type of tool turret. The turret has a home
+switch at tool position 1 and another switch to tell you when the
+turret is in a lockable position. To keep track of the actual tool
+number one must count how many positions past home you are. We will use
+Classic Ladder&#8217;s counter block <em>$CO</em>.The counter is preset to 1 when
+RESET is true. The counter is increased by one on the rising edge of
+INDEX. We then <em>COMPARE</em> the counter value (%C0.V) to the tool number
+we want (in the example only checks for tool 1 and 2 are shown). We
+also <em>OPERATE</em> the counter value to a word variable (%W0) that (you can
+assume) is mapped on to a s32 out HAL pin so you can let some other HAL
+component know what the current tool number is. In the real world
+another s32 (in) pin would be used to get the requested tool number
+from LinuxCNC.You would have to load Classic Ladder&#8217;s real time module
+specifying that you want s32 in and out pins. See <em>loading options</em>
+above. [display turret sample]</p></div>
+<h3 id="_sequential_example">1.6. Sequential Example</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+This Example is not complete yet.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>This is a sequential program.<br />
+When the program is first started step one is active.<br />
+Then when %B0 is true, steps 2 and 3 are then active and step one is inactive.<br />
+Then when %B1 and/or %B2 are true, step 4 and/or 5 are active and step 2 and/or 3 are inactive.<br />
+Then when either %B3 OR %B4 are true, step 6 is true and steps 4 and 5 are inactive.<br />
+Then when %B5 is true step 1 is active and step 6 is inactive and it all starts again.</p></div>
+<div class="paragraph"><p>As shown, the sequence has been:<br />
+%B0 was true making step 2 and 3 active, then %B1 became true<br />
+(and still is-see the pink line through %B1)<br />
+making step 4 active and step 2 inactive.<br />
+Step 3 is active and waiting for %B2 to be true.<br />
+Step 4 is active and is waiting for %B3 to be true.<br />
+WOW, that was quite a mouthful!!<br /></p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-02-03 18:36:08 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/ladder/ladder_examples_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+</html>

@@ -1,0 +1,192 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:20 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/hal_pin_bit_newf.3hal.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>hal_pin_new</title>
+
+</head>
+<body>
+
+<h1 align="center">hal_pin_new</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNTAX">SYNTAX</a><br>
+<a href="#ARGUMENTS">ARGUMENTS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#RETURN VALUE">RETURN VALUE</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">hal_pin_new
+&minus; Create a HAL pin</p>
+
+<h2>SYNTAX
+<a name="SYNTAX"></a>
+</h2>
+
+
+<p style="margin-left:22%; margin-top: 1em">int
+hal_pin_bit_new(const char *<i>name</i>, hal_pin_dir_t
+<i>dir</i>, hal_bit_t ** <i>data_ptr_addr</i>, int
+<i>comp_id</i>)</p> </table>
+
+<p style="margin-left:22%; margin-top: 1em">int
+hal_pin_float_new(const char *<i>name</i>, hal_pin_dir_t
+<i>dir</i>, hal_float_t ** <i>data_ptr_addr</i>, int
+<i>comp_id</i>)</p> </table>
+
+<p style="margin-left:22%; margin-top: 1em">int
+hal_pin_u32_new(const char *<i>name</i>, hal_pin_dir_t
+<i>dir</i>, hal_u32_t ** <i>data_ptr_addr</i>, int
+<i>comp_id</i>)</p> </table>
+
+<p style="margin-left:22%; margin-top: 1em">int
+hal_pin_s32_new(const char *<i>name</i>, hal_pin_dir_t
+<i>dir</i>, hal_s32_t ** <i>data_ptr_addr</i>, int
+<i>comp_id</i>)</p> </table>
+
+<p style="margin-left:22%; margin-top: 1em">int
+hal_pin_bit_newf(hal_pin_dir_t <i>dir</i>, hal_bit_t **
+<i>data_ptr_addr</i>, int <i>comp_id</i>, const char
+*<i>fmt</i>, <i>...</i>)</p></table>
+
+<p style="margin-left:22%; margin-top: 1em">int
+hal_pin_float_newf(hal_pin_dir_t <i>dir</i>, hal_float_t **
+<i>data_ptr_addr</i>, int <i>comp_id</i>, const char
+*<i>fmt</i>, <i>...</i>)</p></table>
+
+<p style="margin-left:22%; margin-top: 1em">int
+hal_pin_u32_newf(hal_pin_dir_t <i>dir</i>, hal_u32_t **
+<i>data_ptr_addr</i>, int <i>comp_id</i>, const char
+*<i>fmt</i>, <i>...</i>)</p></table>
+
+<p style="margin-left:22%; margin-top: 1em">int
+hal_pin_s32_newf(hal_pin_dir_t <i>dir</i>, hal_s32_t **
+<i>data_ptr_addr</i>, int <i>comp_id</i>, const char
+*<i>fmt</i>, <i>...</i>)</p></table>
+
+<p style="margin-left:22%; margin-top: 1em">int
+hal_pin_new(const char *<i>name</i>, hal_type_t <i>type</i>,
+hal_in_dir_t <i>dir</i>, void **<i>data_ptr_addr</i>, int
+<i>comp_id</i>)</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+
+
+<h2>ARGUMENTS
+<a name="ARGUMENTS"></a>
+</h2>
+<td width="11%"></td>
+<td width="6%"></td>
+<td width="5%"></td>
+<td width="78%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><i>name</i></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>The name of the pin</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><i>dir</i></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>The direction of the pin, from the viewpoint of the
+component. It may be one of <b>HAL_IN</b>, <b>HAL_OUT</b>,
+or <b>HAL_IO</b>. Any number of <b>HAL_IN</b> or
+<b>HAL_IO</b> pins may be connected to the same signal, but
+at most one <b>HAL_OUT</b> pin is permitted. A component may
+assign a value to a pin that is <b>HAL_OUT</b> or
+<b>HAL_IO</b>, but may not assign a value to a pin that is
+<b>HAL_IN</b>.</p> </td></tr>
+</table>
+
+<p style="margin-left:11%;"><i>data_ptr_addr</i></p>
+
+<p style="margin-left:22%;">The address of the
+pointer-to-data, which must lie within memory allocated by
+<b>hal_malloc</b>.</p>
+
+<p style="margin-left:11%;"><i>comp_id</i></p>
+
+<p style="margin-left:22%;">A HAL component identifier
+returned by an earlier call to <b>hal_init</b>.</p>
+
+<p style="margin-left:11%;"><i>fmt,</i> <br>
+A printf-style format string and arguments <i><br>
+type</i> <br>
+The type of the param, as specified in
+<b>hal_type_t(3hal)</b>.</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The
+<b>hal_pin_new</b> family of functions create a new
+<i>pin</i> object. Once a pin has been created, it can be
+linked to a signal object using <b>hal_link</b>. A pin
+contains a pointer, and the component that owns the pin can
+dereference the pointer to access whatever signal is linked
+to the pin. (If no signal is linked, it points to a dummy
+signal.)</p>
+
+<p style="margin-left:11%; margin-top: 1em">There are
+functions for each of the data types that the HAL supports.
+Pins may only be linked to signals of the same type.</p>
+
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Returns a HAL
+status code.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>hal_type_t(3hal)</b>,
+<b>hal_link(3hal)</b></p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/hal_pin_bit_newf.3hal.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+</html>

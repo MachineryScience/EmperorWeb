@@ -1,0 +1,134 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:41 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/clarke3.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CLARKE3</title>
+
+</head>
+<body>
+
+<h1 align="center">CLARKE3</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">clarke3 &minus;
+Clarke (3 phase to cartesian) transform</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="72%">
+
+
+<p style="margin-top: 1em"><b>loadrt clarke3
+[count=</b><i>N</i><b>|names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p> </td>
+<td width="17%">
+</td></tr>
+</table>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The Clarke
+transform can be used to translate a vector quantity from a
+three phase system (three components 120 degrees apart) to a
+two phase Cartesian system (plus a homopolar component if
+the three phases don&rsquo;t sum to zero).</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>clarke3</b>
+implements the general case of the transform, using all
+three phases. If the three phases are known to sum to zero,
+see <b>clarke2</b> for a simpler version.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>clarke3.</b><i>N</i>
+(requires a floating-point thread)</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>clarke3.</b><i>N</i><b>.a</b>
+float in <b><br>
+clarke3.</b><i>N</i><b>.b</b> float in <b><br>
+clarke3.</b><i>N</i><b>.c</b> float in</p>
+
+<p style="margin-left:22%;">three phase input vector</p>
+
+
+<p style="margin-left:11%;"><b>clarke3.</b><i>N</i><b>.x</b>
+float out <b><br>
+clarke3.</b><i>N</i><b>.y</b> float out</p>
+
+<p style="margin-left:22%;">cartesian components of
+output</p>
+
+
+<p style="margin-left:11%;"><b>clarke3.</b><i>N</i><b>.h</b>
+float out</p>
+
+<p style="margin-left:22%;">homopolar component of
+output</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>clarke2</b>
+for the &rsquo;a+b+c=0&rsquo; case, <b>clarkeinv</b> for the
+inverse transform.</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/clarke3.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

@@ -1,0 +1,178 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:22 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/rtapi_shmem.3rtapi.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>rtapi_shmem</title>
+
+</head>
+<body>
+
+<h1 align="center">rtapi_shmem</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNTAX">SYNTAX</a><br>
+<a href="#ARGUMENTS">ARGUMENTS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#REALTIME CONSIDERATIONS">REALTIME CONSIDERATIONS</a><br>
+<a href="#RETURN VALUE">RETURN VALUE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">rtapi_shmem
+&minus; Functions for managing shared memory blocks</p>
+
+<h2>SYNTAX
+<a name="SYNTAX"></a>
+</h2>
+
+
+<p style="margin-left:22%; margin-top: 1em">int
+rtapi_shmem_new(int <i>key</i>, int <i>module_id</i>,
+unsigned long int <i>size</i>)</p></table>
+
+<p style="margin-left:22%; margin-top: 1em">int
+rtapi_shmem_delete(int <i>shmem_id</i>, int
+<i>module_id</i>)</p> </table>
+
+<p style="margin-left:22%; margin-top: 1em">int
+rtapi_shmem_getptr(int <i>shmem_id</i>, void **
+<i>ptr</i>)</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+
+
+<h2>ARGUMENTS
+<a name="ARGUMENTS"></a>
+</h2>
+<td width="11%"></td>
+<td width="4%"></td>
+<td width="7%"></td>
+<td width="78%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><i>key</i></p></td>
+<td width="7%"></td>
+<td width="78%">
+
+
+<p>Identifies the memory block. Key must be nonzero. All
+modules wishing to use the same memory must use the same
+key.</p> </td></tr>
+</table>
+
+<p style="margin-left:11%;"><i>module_id</i></p>
+
+<p style="margin-left:22%;">Module identifier returned by a
+prior call to <b>rtapi_init</b>.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><i>size</i></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>The desired size of the shared memory block, in
+bytes</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><i>ptr</i></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>The pointer to the shared memory block. Note that the
+block may be mapped at a different address for different
+modules.</p> </td></tr>
+</table>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_shmem_new</b>
+allocates a block of shared memory. <i>key</i> identifies
+the memory block, and must be non-zero. All modules wishing
+to access the same memory must use the same key.
+<i>module_id</i> is the ID of the module that is making the
+call (see rtapi_init). The block will be at least
+<i>size</i> bytes, and may be rounded up. Allocating many
+small blocks may be very wasteful. When a particular block
+is allocated for the first time, the first 4 bytes are
+zeroed. Subsequent allocations of the same block by other
+modules or processes will not touch the contents of the
+block. Applications can use those bytes to see if they need
+to initialize the block, or if another module already did
+so. On success, it returns a positive integer ID, which is
+used for all subsequent calls dealing with the block. On
+failure it returns a negative error code.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_shmem_delete</b>
+frees the shared memory block associated with
+<i>shmem_id</i>. <i>module_id</i> is the ID of the calling
+module. Returns a status code.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_shmem_getptr</b>
+sets <i>*ptr</i> to point to shared memory block associated
+with <i>shmem_id</i>.</p>
+
+<h2>REALTIME CONSIDERATIONS
+<a name="REALTIME CONSIDERATIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_shmem_getptr</b>
+may be called from user code, init/cleanup code, or realtime
+tasks.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_shmem_new</b>
+and <b>rtapi_shmem_dete</b> may not be called from realtime
+tasks.</p>
+
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/rtapi_shmem.3rtapi.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+</html>

@@ -1,0 +1,496 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/Getting_EMC.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:10:15 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>About LinuxCNC</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>About LinuxCNC</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<h2 id="_the_software">1. The Software</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+LinuxCNC (the Enhanced Machine Control) is a software system for computer
+  control of machine tools such as milling machines and lathes, robots
+  such as puma and scara and other computer controlled machines up to 9 axes.
+</p>
+</li>
+<li>
+<p>
+LinuxCNC is free software with open source code. Current versions of LinuxCNC
+  are entirely licensed under the GNU General Public License and Lesser
+  GNU General Public License (GPL and LGPL)
+</p>
+</li>
+<li>
+<p>
+LinuxCNC provides:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+a graphical user interface (actually several interfaces to choose from)
+</p>
+</li>
+<li>
+<p>
+an interpreter for <em>G-code</em> (the RS-274 machine tool programming language)
+</p>
+</li>
+<li>
+<p>
+a realtime motion planning system with look-ahead
+</p>
+</li>
+<li>
+<p>
+operation of low-level machine electronics such as sensors and motor drives
+</p>
+</li>
+<li>
+<p>
+an easy to use <em>breadboard</em> layer for quickly creating a unique
+   configuration for your machine
+</p>
+</li>
+<li>
+<p>
+a software PLC programmable with ladder diagrams
+</p>
+</li>
+<li>
+<p>
+easy installation with a Live-CD
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+It does not provide drawing (CAD - Computer Aided Design) or G-code
+  generation from the drawing (CAM - Computer Automated Manufacturing)
+  functions.
+</p>
+</li>
+<li>
+<p>
+It can simultaneously move up to 9 axes and supports a variety of
+  interfaces.
+</p>
+</li>
+<li>
+<p>
+The control can operate true servos (analog or PWM) with the feedback
+  loop closed by the LinuxCNC software at the computer, or open loop with
+  step-servos or stepper motors.
+</p>
+</li>
+<li>
+<p>
+Motion control features include: cutter radius and length
+  compensation, path deviation limited to a specified tolerance, lathe
+  threading, synchronized axis motion, adaptive feedrate, operator feed
+  override, and constant velocity control.
+</p>
+</li>
+<li>
+<p>
+Support for non-Cartesian motion systems is provided via custom
+  kinematics modules. Available architectures include hexapods (Stewart
+  platforms and similar concepts) and systems with rotary joints to
+  provide motion such as PUMA or SCARA robots.
+</p>
+</li>
+<li>
+<p>
+LinuxCNC runs on Linux using real time extensions.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_the_operating_system">2. The Operating System</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Ubuntu has been chosen because it fits perfectly into the Open Source
+views of LinuxCNC:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Ubuntu will always be free of charge, and there is no extra fee for
+   the <em>enterprise edition</em>, we make our very best work available to
+   everyone on the same Free terms.
+</p>
+</li>
+<li>
+<p>
+LinuxCNC is paired with the LTS versions of Ubuntu which provide support
+   and security fixes from the Ubuntu team for 3 - 5 years.
+</p>
+</li>
+<li>
+<p>
+Ubuntu uses the very best in translations and accessibility
+   infrastructure that the Free Software community has to offer, to make
+   Ubuntu usable for as many people as possible.
+</p>
+</li>
+<li>
+<p>
+The Ubuntu community is entirely committed to the principles of free
+   software development; we encourage people to use open source software,
+   improve it and pass it on.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_getting_help">3. Getting Help</h2>
+<div class="sectionbody">
+<h3 id="_irc">3.1. IRC</h3><div style="clear:left"></div>
+<div class="paragraph"><p>IRC stands for Internet Relay Chat.
+It is a live connection to other LinuxCNC users.
+The LinuxCNC IRC channel is #linuxcnc on freenode.</p></div>
+<div class="paragraph"><p>The simplest way to get on the IRC is to use
+the embedded java client on this
+<a href="http://www.linuxcnc.org/index.php/english/community">page</a>.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Some IRC etiquette
+</dt>
+<dd>
+<div class="ulist"><ul>
+<li>
+<p>
+Ask specific questions&#8230; Avoid questions like "Can someone help me?".
+</p>
+</li>
+<li>
+<p>
+If you&#8217;re really new to all this, think a bit about your question
+   before typing it. Make sure you give enough information so
+   someone can solve your question.
+</p>
+</li>
+<li>
+<p>
+Have some patience when waiting for an answer, sometimes it takes a
+   while to formulate an answer or everyone might be busy working or
+   something.
+</p>
+</li>
+<li>
+<p>
+Set up your IRC account with your unique name so people will know who
+   you are. If you use the java client, use the same name every time you
+   log in. This helps people remember who you are and if you have been on
+   before many will remember the past discussions which
+   saves time on both ends.
+</p>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+Sharing Files
+</dt>
+<dd>
+<p>
+The most common way to share files on the IRC is to upload the file
+to one of the following or a similar service and paste the link:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>For text</em> - <a href="http://pastebin.com/">http://pastebin.com/</a> , <a href="http://pastie.org/">http://pastie.org/</a>, <a href="https://gist.github.com/">https://gist.github.com/</a>
+</p>
+</li>
+<li>
+<p>
+<em>For pictures</em> - <a href="http://imagebin.org/">http://imagebin.org/</a> , <a href="http://imgur.com/">http://imgur.com/</a> , <a href="http://bayimg.com/">http://bayimg.com/</a>
+</p>
+</li>
+<li>
+<p>
+<em>For files</em> - <a href="http://filedropper.com/">http://filedropper.com/</a> , <a href="http://filefactory.com/">http://filefactory.com/</a> , <a href="http://1fichier.com/">http://1fichier.com/</a>
+</p>
+</li>
+</ul></div>
+</dd>
+</dl></div>
+<h3 id="_mailing_list">3.2. Mailing List</h3><div style="clear:left"></div>
+<div class="paragraph"><p>An Internet Mailing List is a way to put questions out for everyone on
+that list to see and answer at their convenience. You get better
+exposure to your questions on a mailing list than on the IRC but
+answers take longer. In a nutshell you e-mail a message to the list and
+either get daily digests or individual replies back depending on how
+you set up your account.</p></div>
+<div class="paragraph"><p>The <a href="https://lists.sourceforge.net/lists/listinfo/emc-users">emc-users mailing list</a></p></div>
+<h3 id="_linuxcnc_wiki">3.3. LinuxCNC Wiki</h3><div style="clear:left"></div>
+<div class="paragraph"><p>A Wiki site is a user maintained web site
+that anyone can add to or edit.</p></div>
+<div class="paragraph"><p>The user maintained LinuxCNC Wiki site contains a
+wealth of information and tips at:</p></div>
+<div class="paragraph"><p><a href="http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl">wiki.linuxcnc.org</a></p></div>
+</div>
+<h2 id="_getting_linuxcnc">4. Getting LinuxCNC</h2>
+<div class="sectionbody">
+<h3 id="_normal_download">4.1. Normal Download</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Download the Live CD from:</p></div>
+<div class="paragraph"><p><a href="http://www.linuxcnc.org/">the LinuxCNC homepage at www.linuxcnc.org</a></p></div>
+<div class="paragraph"><p>and follow the Download link.</p></div>
+<h3 id="_multi_session_download">4.2. Multi-session Download </h3><div style="clear:left"></div>
+<div class="paragraph"><p>If the file is too large to download in one session
+because of a bad or slow Internet connection,
+use <em>wget</em> to allow resuming after an interrupted download.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Wget Linux
+</dt>
+<dd>
+<p>
+
+Open a terminal window. In Ubuntu it is Applications/Accessories/Terminal.
+Use <em>cd</em> to change to the directory where you would like to store the ISO.
+Use <em>mkdir</em> to create a new directory if needed.
+</p>
+<div class="paragraph"><p>Note that actual file names may change so you might have to go to
+<a href="http://www.linuxcnc.org/">http://www.linuxcnc.org/</a>
+and follow the Download link to get the actual file name.
+In most browsers you can right click on the link and select
+Copy Link Location or similar, then paste the link into the
+terminal window with a right mouse click and select Paste.</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="sidebar-title">Ubuntu 10.04 Lucid Lynx and LinuxCNC (current release)</div>
+<div class="paragraph"><p>To get the Ubuntu 10.04 Lucid Lynx version,
+copy one of these in the terminal window and press enter:</p></div>
+<div class="paragraph"><p>For the USA mirror:
+wget <a href="http://linuxcnc.org/iso/ubuntu-10.04-linuxcnc3-i386.iso">http://linuxcnc.org/iso/ubuntu-10.04-linuxcnc3-i386.iso</a></p></div>
+<div class="paragraph"><p>For the European mirror:
+wget <a href="http://dsplabs.upt.ro/~juve/emc/get.php?file=ubuntu-10.04-linuxcnc3-i386.iso">http://dsplabs.upt.ro/~juve/emc/get.php?file=ubuntu-10.04-linuxcnc3-i386.iso</a></p></div>
+<div class="paragraph"><p>The md5sum of the above file is: <em>76dc2416b917679b71255e464ede84ec</em></p></div>
+</div></div>
+<div class="paragraph"><p>To continue a partial download that was interrupted
+add the -c option to wget:</p></div>
+<div class="paragraph"><p>wget -c <a href="http://linuxcnc.org/iso/ubuntu-10.04-linuxcnc3-i386.iso">http://linuxcnc.org/iso/ubuntu-10.04-linuxcnc3-i386.iso</a></p></div>
+<div class="paragraph"><p>To stop a download use Ctrl-C or close the terminal window.</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="sidebar-title">Ubuntu 8.04 Hardy Heron and LinuxCNC (older)</div>
+<div class="paragraph"><p>If your hardware requires an older version of Ubuntu, you can download Ubuntu
+8.04 and upgrade to the latest LinuxCNC version by following the instructions
+on the LinuxCNC.org download page.</p></div>
+<div class="paragraph"><p><a href="http://linuxcnc.org/index.php/english/download">http://linuxcnc.org/index.php/english/download</a></p></div>
+</div></div>
+<div class="paragraph"><p>After the download is complete you will find the ISO file in the
+directory that you selected. Next we will burn the CD.</p></div>
+</dd>
+<dt class="hdlist1">
+Wget Windows
+</dt>
+<dd>
+<p>
+
+The wget program is also available for Windows from:
+</p>
+<div class="paragraph"><p><a href="http://gnuwin32.sourceforge.net/packages/wget.htm">http://gnuwin32.sourceforge.net/packages/wget.htm</a></p></div>
+<div class="paragraph"><p>Follow the instructions on the web page for downloading and installing
+the windows version of the wget program.</p></div>
+<div class="paragraph"><p>To run wget open a command prompt window.</p></div>
+<div class="paragraph"><p>In most Windows it is Programs/Accessories/Command Prompt</p></div>
+<div class="paragraph"><p>First you have to change to the directory where wget is installed in.</p></div>
+<div class="paragraph"><p>Typically it is in C:\Program Files\GnuWin32\bin so
+in the Command Prompt window type:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>cd C:\Program Files\GnuWin32\bin</tt></pre>
+</div></div>
+<div class="paragraph"><p>and the prompt should change to: <em>C:\Program Files\GnuWin32\bin&gt;</em></p></div>
+<div class="paragraph"><p>Type the wget command into the window and press enter as above.</p></div>
+</dd>
+</dl></div>
+<h3 id="_burning_the_cd">4.3. Burning the CD</h3><div style="clear:left"></div>
+<div class="paragraph"><p>LinuxCNC is distributed as CD image files, called ISOs.
+To install LinuxCNC, you first need to burn the ISO file onto a CD.
+You need a working CD/DVD burner and an 80 minute (700 Mb) CD for this.
+If the CD writing fails, try writing at a slower burn speed.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Verify md5sum in Linux
+</dt>
+<dd>
+<p>
+Before burning a CD, it is highly recommended that you verify the
+md5sum (hash) of the .iso file.
+</p>
+<div class="paragraph"><p>Open a terminal window.
+In Ubuntu it is Applications/Accessories/Terminal.</p></div>
+<div class="paragraph"><p>Change to the directory where the ISO was downloaded to.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>cd download_directory</tt></pre>
+</div></div>
+<div class="paragraph"><p>Then run the md5sum command with the file name you saved.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>md5sum -b ubuntu-10.04-linuxcnc1-i386.iso</tt></pre>
+</div></div>
+<div class="paragraph"><p>The md5sum should print out a single line after
+calculating the hash.
+On slower computers this might take a minute or two.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>76dc2416b917679b71255e464ede84ec *ubuntu-10.04-linuxcnc3-i386.iso</tt></pre>
+</div></div>
+<div class="paragraph"><p>Now compare it to the md5sum value that it should be.</p></div>
+<div class="paragraph"><p>If you downloaded the md5sum as well as the iso,
+you can ask the md5sum program to do the checking for you.
+In the same directory:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>md5sum -c ubuntu-10.04-linuxcnc1-i386.iso.md5</tt></pre>
+</div></div>
+<div class="paragraph"><p>If all is well, after a short delay the terminal will print:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>ubuntu-10.04-linuxcnc1-i386.iso: OK</tt></pre>
+</div></div>
+</dd>
+<dt class="hdlist1">
+Burning the ISO in Linux
+</dt>
+<dd>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Insert a blank CD into your burner. A <em>CD/DVD Creator</em> or
+   <em>Choose Disc Type</em> window will pop up.
+   Close this, as we will not be using it.
+</p>
+</li>
+<li>
+<p>
+Browse to the downloaded ISO image in the file browser.
+</p>
+</li>
+<li>
+<p>
+Right click on the ISO image file and choose Write to Disc.
+</p>
+</li>
+<li>
+<p>
+Select the write speed. If you are burning a Ubuntu Live CD, it is
+   recommended that you write at the lowest possible speed.
+</p>
+</li>
+<li>
+<p>
+Start the burning process.
+</p>
+</li>
+<li>
+<p>
+If a <em>choose a file name for the disc image</em> window pops up, just pick OK.
+</p>
+</li>
+</ol></div>
+</dd>
+<dt class="hdlist1">
+Verify md5sum with Windows
+</dt>
+<dd>
+<p>
+Before burning a CD, it is highly recommended that you verify the md5
+sum (hash) of the .iso file, to ensure that you got a good download.
+</p>
+<div class="paragraph"><p>Windows does not come with a md5sum program. You will have to download
+and install one to check the md5sum. More information can be found at:</p></div>
+<div class="paragraph"><p><a href="https://help.ubuntu.com/community/HowToMD5SUM">https://help.ubuntu.com/community/HowToMD5SUM</a></p></div>
+</dd>
+<dt class="hdlist1">
+Burning the ISO in Windows
+</dt>
+<dd>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Download and install Infra Recorder, a free and open source image
+   burning program: <a href="http://infrarecorder.org/">http://infrarecorder.org/</a>
+</p>
+</li>
+<li>
+<p>
+Insert a blank CD in the drive and select Do nothing or Cancel if an
+   auto-run dialog pops up.
+</p>
+</li>
+<li>
+<p>
+Open Infra Recorder, and select the
+   <em>Actions</em> menu, then <em>Burn image</em>.
+</p>
+</li>
+</ol></div>
+</dd>
+</dl></div>
+<h3 id="_testing_linuxcnc">4.4. Testing LinuxCNC</h3><div style="clear:left"></div>
+<div class="paragraph"><p>With the Live CD in the CD/DVD drive shut down the computer then turn
+the computer back on. This will boot the computer from the Live CD.
+Once the computer has booted up you can try out LinuxCNC without installing
+it. You can not create custom configurations or modify most system
+settings like screen resolution unless you install LinuxCNC.</p></div>
+<div class="paragraph"><p>To try out LinuxCNC from the Applications/CNC menu pick LinuxCNC. Then select
+a sim configuration to try out.</p></div>
+<div class="paragraph"><p>To see if your computer is suitable for software step pulse generation
+run the Latency Test as shown <a href="../config/stepconf.html#latency-test">here</a>.</p></div>
+<h3 id="_installing_linuxcnc">4.5. Installing LinuxCNC</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If you like what you see, just click the Install icon on the desktop,
+answer a few questions (your name, timezone, password) and the install
+completes in a few minutes. Make sure you write down the name you used
+and the password. Once the install process is complete and you go on
+line the update manager will pop up and allow you to upgrade to the
+latest stable version of LinuxCNC.</p></div>
+<h3 id="_updates_to_linuxcnc">4.6. Updates to LinuxCNC </h3><div style="clear:left"></div>
+<div class="paragraph"><p>With the normal install the Update Manager will notify you of updates
+to LinuxCNC when you go on line and allow you to easily upgrade with no
+Linux knowledge needed.
+If you want to upgrade to 10.04 from 8.04 a
+clean install from the Live-CD is recommended.
+It is OK to upgrade everything except the operating system when asked to.</p></div>
+<div class="paragraph"><p>Warning: Do not upgrade Ubuntu to a new but non-LTS version
+(like 8.04 to 8.10) as it will prevent LinuxCNC from running.</p></div>
+<h3 id="_install_problems">4.7. Install Problems</h3><div style="clear:left"></div>
+<div class="paragraph"><p>In rare cases you might have to reset the BIOS to default settings if
+during the Live CD install it cannot recognize the hard drive
+during the boot up.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-10-15 19:36:04 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/Getting_EMC.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:10:15 GMT -->
+</html>

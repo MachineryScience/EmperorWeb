@@ -1,0 +1,127 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:41 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/blend.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>BLEND</title>
+
+</head>
+<body>
+
+<h1 align="center">BLEND</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">blend &minus;
+Perform linear interpolation between two values</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="69%">
+
+
+<p style="margin-top: 1em"><b>loadrt blend
+[count=</b><i>N</i><b>|names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p> </td>
+<td width="20%">
+</td></tr>
+</table>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>blend.</b><i>N</i>
+(requires a floating-point thread)</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>blend.</b><i>N</i><b>.in1</b>
+float in</p>
+
+<p style="margin-left:22%;">First input. If select is equal
+to 0.0, the output is equal to in1</p>
+
+
+<p style="margin-left:11%;"><b>blend.</b><i>N</i><b>.in2</b>
+float in</p>
+
+<p style="margin-left:22%;">Second input. If select is
+equal to 1.0, the output is equal to in2</p>
+
+
+<p style="margin-left:11%;"><b>blend.</b><i>N</i><b>.select</b>
+float in</p>
+
+<p style="margin-left:22%;">Select input. For values
+between 0.0 and 1.0, the output changes linearly from in1 to
+in2</p>
+
+
+<p style="margin-left:11%;"><b>blend.</b><i>N</i><b>.out</b>
+float out</p>
+
+<p style="margin-left:22%;">Output value.</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>blend.</b><i>N</i><b>.open</b>
+bit rw</p>
+
+<p style="margin-left:22%;">If true, select values outside
+the range 0.0 to 1.0 give values outside the range in1 to
+in2. If false, outputs are clamped to the the range in1 to
+in2</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/blend.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

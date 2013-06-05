@@ -1,0 +1,182 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:27 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/sim_encoder.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>SIM_ENCODER</title>
+
+</head>
+<body>
+
+<h1 align="center">SIM_ENCODER</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#NAMING">NAMING</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">sim_encoder
+&minus; simulated quadrature encoder</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+sim_encoder [num_chan=</b><i>num</i> <b>|
+names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>sim_encoder</b>
+can generate quadrature signals as if from an encoder. It
+also generates an index pulse once per revolution. It is
+mostly used for testing and simulation, to replace hardware
+that may not be available. It has a limited maximum
+frequency, as do all software based pulse generators.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>sim_encoder</b>
+supports a maximum of eight channels. The number of channels
+actually loaded is set by the <b>num_chan=</b> argument when
+the module is loaded. Alternatively, specify <b>names=</b>
+and unique names separated by commas.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The
+<b>num_chan=</b> and <b>names=</b> specifiers are mutually
+exclusive. If neither <b>num_chan=</b> nor <b>names=</b> are
+specified, the default value is one.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>sim-encoder.make-pulses</b>
+(no floating-point)</p>
+
+<p style="margin-left:22%;">Generates the actual quadrature
+and index pulses. Must be called as frequently as possible,
+to maximize the count rate and minimize jitter. Operates on
+all channels at once.</p>
+
+
+<p style="margin-left:11%;"><b>sim-encoder.update-speed</b>
+(uses floating-point)</p>
+
+<p style="margin-left:22%;">Reads the <b>speed</b> command
+and other parameters and converts the data into a form that
+can be used by <b>make-pulses</b>. Changes take effect only
+when <b>update-speed</b> runs. Can (and should) be called
+less frequently than <b>make-pulses</b>. Operates on all
+channels at once.</p>
+
+<h2>NAMING
+<a name="NAMING"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The names for
+pins and parameters are prefixed as: <b><br>
+sim-encoder.N.</b> for N=0,1,...,num-1 when using
+<b>num_chan=num <br>
+nameN.</b> for nameN=name1,name2,... when using
+<b>names=name1,name2,...</b></p>
+
+<p style="margin-left:11%; margin-top: 1em">The
+<b>sim-encoder.N.</b> format is shown in the following
+descriptions.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>sim-encoder.</b><i>N</i><b>.phase-A</b>
+bit out</p>
+
+<p style="margin-left:22%;">One of the quadrature
+outputs.</p>
+
+
+<p style="margin-left:11%;"><b>sim-encoder.</b><i>N</i><b>.phase-B</b>
+bit out</p>
+
+<p style="margin-left:22%;">The other quadrature
+output.</p>
+
+
+<p style="margin-left:11%;"><b>sim-encoder.</b><i>N</i><b>.phase-Z</b>
+bit out</p>
+
+<p style="margin-left:22%;">The index pulse.</p>
+
+
+<p style="margin-left:11%;"><b>sim-encoder.</b><i>N</i><b>.speed</b>
+float in</p>
+
+<p style="margin-left:22%;">The desired speed of the
+encoder, in user units per per second. This is divided by
+<b>scale</b>, and the result is used as the encoder speed in
+revolutions per second.</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>sim-encoder.</b><i>N</i><b>.ppr</b>
+u32 rw</p>
+
+<p style="margin-left:22%;">The pulses per revolution of
+the simulated encoder. Note that this is pulses, not counts,
+per revolution. Each pulse or cycle from the encoder results
+in four counts, because every edge is counted. Default value
+is 100 ppr, or 400 counts per revolution.</p>
+
+
+<p style="margin-left:11%;"><b>sim-encoder.</b><i>N</i><b>.scale</b>
+float rw</p>
+
+<p style="margin-left:22%;">Scale factor for the
+<b>speed</b> input. The <b>speed</b> value is divided by
+<b>scale</b> to get the actual encoder speed in revolutions
+per second. For example, if <b>scale</b> is set to 60, then
+<b>speed</b> is in revolutions per minute (RPM) instead of
+revolutions per second. The default value is 1.00.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/sim_encoder.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

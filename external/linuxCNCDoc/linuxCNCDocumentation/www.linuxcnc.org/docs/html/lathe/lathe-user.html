@@ -1,0 +1,437 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/lathe/lathe-user.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:11:57 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Lathe User Information</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Lathe User Information</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:lathe-user-information"></a> </p></div>
+<div class="paragraph"><p>This chapter attempts to bring together all the lathe specific
+information and is currently under construction.</p></div>
+</div>
+</div>
+<h2 id="_lathe_mode">1. Lathe Mode</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>If your CNC machine is a lathe, there are some specific changes you
+will probably want to make to your ini file in order to get the
+best results from LinuxCNC.</p></div>
+<div class="paragraph"><p>If you are using the AXIS display,
+have Axis display your lathe tools properly.
+See the INI Configuration section of the Integrator Manual for
+more details but you will probably want to make an entry like this
+to set up AXIS for Lathe Mode.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[DISPLAY]
+
+# Tell the Axis Display our machine is a lathe.
+LATHE = TRUE</tt></pre>
+</div></div>
+<div class="paragraph"><p>Lathe Mode in Axis does not set your default plane to G18 (XZ). You
+must program that in the preamble of each gcode file or
+(better) add it to your ini file, like this:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[RS274NGC]
+
+# g-code modal codes (modes) that the interpreter is initialized with on startup
+RS274NGC_STARTUP_CODE = G18 G20 G90</tt></pre>
+</div></div>
+</div>
+<h2 id="_lathe_tool_table_a_id_sec_lathe_tool_table_a">2. Lathe Tool Table <a id="sec:lathe-tool-table"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The "Tool Table" is a text file that contains information about each tool.
+The file is located in the same directory as your configuration and is called "tool.tbl" by default.
+The tools might be in a tool changer or just changed manually.
+The file can be edited with a text editor or be updated using G10 L1,L10,L11.
+There is also a built-in tool table editor in the Axis display.
+The maximum number of entries in the tool table is 56.
+The maximum tool and pocket number is 99999.</p></div>
+<div class="paragraph"><p>Earlier versions of LinuxCNC had two different tool table formats for mills and lathes,
+but since the 2.4.x release, one tool table format is used for all machines.
+Just ignore the parts of the tool table that don&#8217;t pertain to your machine,
+or which you don&#8217;t need to use.
+For more information on the specifics of the tool table format,
+see the <a href="../gcode/tool_compensation.html#sec:tool-table">Tool Table</a> Section.</p></div>
+</div>
+<h2 id="_lathe_tool_orientation_a_id_lathe_tool_orientation_a">3. Lathe Tool Orientation<a id="lathe-tool-orientation"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The following figure shows the lathe tool orientations
+with the center line angle of each orientation and
+info on FRONTANGLE and BACKANGLE.
+The FRONTANGLE and BACKANGLE are clockwise starting at a line parallel to Z+.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tool_positions.png" alt="images/tool_positions.png" />
+</div>
+<div class="title">Figure 1. Lathe Tool Orientations<a id="cap:Lathe-Tool-Orientations"></a></div>
+</div>
+<div class="paragraph"><p>In AXIS the following figures show what the Tool Positions look like, as entered in the tool table.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tool_pos_1.png" alt="images/tool_pos_1.png" />
+</div>
+<div class="title">Figure 2. Tool Positions 1, 2, 3 &amp; 4<a id="fig:Tool-Positions-1-2-3-4"></a></div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tool_pos_2.png" alt="images/tool_pos_2.png" />
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tool_pos_3.png" alt="images/tool_pos_3.png" />
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tool_pos_4.png" alt="images/tool_pos_4.png" />
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tool_pos_5.png" alt="images/tool_pos_5.png" />
+</div>
+<div class="title">Figure 3. Tool Positions 5, 6, 7 &amp; 8<a id="fig:Tool-Positions-5-6-7-8"></a></div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tool_pos_6.png" alt="images/tool_pos_6.png" />
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tool_pos_7.png" alt="images/tool_pos_7.png" />
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tool_pos_8.png" alt="images/tool_pos_8.png" />
+</div>
+</div>
+</div>
+<h2 id="_tool_touch_off">4. Tool Touch Off</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>When running in lathe mode in AXIS you can set the X and Z in the tool
+table using the Touch Off window.</p></div>
+<h3 id="_the_x_tool_offset">4.1. The X Tool Offset</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The X axis offset for each tool is normally an offset
+from the center line of the spindle.</p></div>
+<div class="paragraph"><p>One method is to take your normal turning tool and
+turn down some stock to a known diameter.
+Using the Tool Touch Off window enter the measured diameter
+(or radius if in radius mode) for that tool.
+Then using some layout fluid or a marker to coat the part
+bring each tool up
+till it just touches the dye and set it&#8217;s X offset to
+the diameter of the part used using the tool touch off.
+Make sure any tools in the corner quadrants have the nose radius
+set properly in the tool table so the control point is correct.
+Tool touch off automatically adds a G43
+so the current tool is the current offset.</p></div>
+<div class="paragraph"><p>A typical session might be:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Home each axis if not homed.
+</p>
+</li>
+<li>
+<p>
+Set the current tool with "Tn M6" where "n" is the tool number.
+</p>
+</li>
+<li>
+<p>
+Select the X axis in the Manual Control window.
+</p>
+</li>
+<li>
+<p>
+Move the X to a known position or take a test cut and measure the diameter.
+</p>
+</li>
+<li>
+<p>
+Select Touch Off and pick Tool Table then enter the position or the diameter.
+</p>
+</li>
+<li>
+<p>
+Follow the same sequence to correct the Z axis.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Note: if you are in Radius Mode you must enter the radius, not the diameter.</p></div>
+<h3 id="_the_z_tool_offset">4.2. The Z Tool Offset</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The Z axis offsets can be a bit confusing at first
+because there are two elements to the Z offset.
+There is the tool table offset, and the machine coordinate offset.
+First we will look at the tool table offsets.
+One method is to use a fixed point on your lathe and
+set the Z offset for all tools from this point.
+Some use the spindle nose or chuck face.
+This gives you the ability to change to a new tool and
+set its Z offset without having to reset all the tools.</p></div>
+<div class="paragraph"><p>A typical session might be:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Home each axis if not homed.
+</p>
+</li>
+<li>
+<p>
+Make sure no offsets are in effect for the current coordinate system.
+</p>
+</li>
+<li>
+<p>
+Set the current tool with "TnM6" where "n" is the tool number.
+</p>
+</li>
+<li>
+<p>
+Select the Z axis in the Manual Control window.
+</p>
+</li>
+<li>
+<p>
+Bring the tool close to the control surface. Using a cylinder move the
+   Z away from the control surface until the cylinder just passes between
+   the tool and the control surface.
+</p>
+</li>
+<li>
+<p>
+Select Touch Off and pick Tool Table and set the position to 0.0.
+</p>
+</li>
+<li>
+<p>
+Repeat for each tool using the same cylinder.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Now all the tools are offset the same distance from a standard position.
+If you change a tool like a drill bit you repeat the above and
+it is now in sync with the rest of the tools for Z offset.
+Some tools might require a bit of cyphering to determine
+the control point from the touch off point.
+For example, if you have a 0.125" wide parting tool and
+you touch the left side off but want the right to be Z0,
+then enter 0.125" in the touch off window.</p></div>
+<h3 id="_the_z_machine_offset">4.3. The Z Machine Offset</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Once all the tools have the Z offset entered into the tool table,
+you can use any tool to set the machine offset
+using the machine coordinate system.</p></div>
+<div class="paragraph"><p>A typical session might be:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Home each axis if not homed.
+</p>
+</li>
+<li>
+<p>
+Set the current tool with "Tn M6" where "n" is the tool number.
+</p>
+</li>
+<li>
+<p>
+Issue a G43 so the current tool offset is in effect.
+</p>
+</li>
+<li>
+<p>
+Bring the tool to the work piece and set the machine Z offset.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>If you forget to set the G43 for the current tool when you set the
+machine coordinate system offset, you will not get what you expect,
+as the tool offset will be added to the current offset when
+the tool is used in your program.</p></div>
+</div>
+<h2 id="_spindle_synchronized_motion">5. Spindle Synchronized Motion</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Spindle synchronized motion requires a quadrature encoder connected
+to the spindle with one index pulse per revolution. See the motion
+man page and Spindle Control Example in integrators manual for more
+information.</p></div>
+<div class="paragraph"><div class="title">Threading</div><p>The G76 threading cycle is used for both internal and external threads.
+For more information see the <a href="../gcode/gcode.html#sec:G76-Threading-Canned">G76</a> Section.</p></div>
+<div class="paragraph"><div class="title">Constant Surface Speed</div><p>CSS or Constant Surface Speed uses the machine X origin modified
+by the tool X offset to compute the spindle speed in RPM. CSS will
+track changes in tool offsets. The X machine origin should be when the
+reference tool (the one with zero offset) is at the center of rotation.
+For more information see the <a href="../gcode/gcode.html#sec:G96-G97-Spindle">G96</a> Section.</p></div>
+<div class="paragraph"><div class="title">Feed per Revolution</div><p>Feed per revolution will move the Z axis by the F amount per revolution.
+This is not for threading, use G76 for threading.
+For more information see the <a href="../gcode/gcode.html#sec:G93-G94-G95-Mode">G95</a> Section.</p></div>
+</div>
+<h2 id="_arcs">6. Arcs</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Calculating arcs can be mind challenging enough without considering
+radius and diameter mode on lathes as well as machine coordinate system
+orientation. The following applies to center format arcs. On a lathe
+you should include G18 in your preamble as the default is G17 even if
+you&#8217;re in lathe mode, in the user interface Axis. Arcs in G18 XZ plane
+use I (X axis) and K (Z axis) offsets.</p></div>
+<h3 id="_arcs_and_lathe_design">6.1. Arcs and Lathe Design</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The typical lathe has the spindle on the left of the operator and the
+tools on the operator side of the spindle center line. This is
+typically set up with the imaginary Y axis (+) pointing at the floor.</p></div>
+<div class="paragraph"><p>The following will be true on this type of setup:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+The Z axis (+) points to the right, away from the spindle.
+</p>
+</li>
+<li>
+<p>
+The X axis (+) points toward the operator, and when on the operator
+   side of the spindle the X values are positive.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Some lathes with tools on the back side have the imaginary Y axis (+)
+pointing up.</p></div>
+<div class="paragraph"><p>G2/G3 Arc directions are based on the axis they rotate around. In the
+case of lathes, it is the imaginary Y axis. If the Y axis (+) points
+toward the floor, you have to look up for the arc to appear to go in the
+correct direction. So looking from above you reverse the G2/G3 for the
+arc to appear to go in the correct direction.</p></div>
+<h3 id="_radius_amp_diameter_mode">6.2. Radius &amp; Diameter Mode</h3><div style="clear:left"></div>
+<div class="paragraph"><p>When calculating arcs in radius mode you only have to remember the
+direction of rotation as it applies to your lathe.</p></div>
+<div class="paragraph"><p>When calculating arcs in diameter mode X is diameter and the X offset
+(I) is radius even if you&#8217;re in G7 diameter mode.</p></div>
+</div>
+<h2 id="_tool_path">7. Tool Path</h2>
+<div class="sectionbody">
+<h3 id="_control_point">7.1. Control Point</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The control point for the tool follows the programmed path. The
+control point is the intersection of a line parallel to the X and Z
+axis and tangent to the tool tip diameter, as defined when you touch
+off the X and Z axes for that tool. When turning or facing straight
+sided parts the cutting path and the tool edge follow the same path.
+When turning radius and angles the edge of the tool tip will not follow
+the programmed path unless cutter comp is in effect. In the following
+figures you can see how the control point does not follow the tool edge
+as you might assume.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/control_point.png" alt="images/control_point.png" />
+</div>
+<div class="title">Figure 4. Control Point<a id="fig:Control-Point"></a></div>
+</div>
+<h3 id="_cutting_angles_without_cutter_comp">7.2. Cutting Angles without Cutter Comp</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Now imagine we program a ramp without cutter comp. The programmed path
+is shown in the following figure. As you can see in the figure the
+programmed path and the desired cut path are one and the same as long
+as we are moving in an X or Z direction only.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/ramp_entry.png" alt="images/ramp_entry.png" />
+</div>
+<div class="title">Figure 5. Ramp Entry</div>
+</div>
+<div class="paragraph"><p>Now as the control point progresses along the programmed path the
+actual cutter edge does not follow the programmed path as shown in the
+following figure. There are two ways to solve this, cutter comp and
+adjusting your programmed path to compensate for tip radius.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/ramp_cut.png" alt="images/ramp_cut.png" />
+</div>
+<div class="title">Figure 6. Ramp Path</div>
+</div>
+<div class="paragraph"><p>In the above example it is a simple exercise to adjust the programmed
+path to give the desired actual path by moving the programmed path for
+the ramp to the left the radius of the tool tip.</p></div>
+<h3 id="_cutting_a_radius">7.3. Cutting a Radius</h3><div style="clear:left"></div>
+<div class="paragraph"><p>In this example we will examine what happens during a radius cut
+without cutter comp. In the next figure you see the tool turning the OD
+of the part. The control point of the tool is following the programmed
+path and the tool is touching the OD of the part.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/radius_1.png" alt="images/radius_1.png" />
+</div>
+<div class="title">Figure 7. Turning Cut</div>
+</div>
+<div class="paragraph"><p>In this next figure you can see as the tool approaches the end of the
+part the control point still follows the path but the tool tip has left
+the part and is cutting air. You can also see that even though a radius
+has been programmed the part will actually end up with a square corner.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/radius_2.png" alt="images/radius_2.png" />
+</div>
+<div class="title">Figure 8. Radius Cut</div>
+</div>
+<div class="paragraph"><p>Now you can see as the control point follows the radius programmed the
+tool tip has left the part and is now cutting air.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/radius_3.png" alt="images/radius_3.png" />
+</div>
+<div class="title">Figure 9. Radius Cut</div>
+</div>
+<div class="paragraph"><p>In the final figure we can see the tool tip will finish cutting the
+face but leave a square corner instead of a nice radius. Notice also
+that if you program the cut to end at the center of the part a small
+amount of material will be left from the radius of the tool. To finish
+a face cut to the center of a part you have to program the tool to go
+past center at least the nose radius of the tool.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/radius_4.png" alt="images/radius_4.png" />
+</div>
+<div class="title">Figure 10. Face Cut</div>
+</div>
+<h3 id="_using_cutter_comp">7.4. Using Cutter Comp</h3><div style="clear:left"></div>
+<div class="paragraph"><p>When using cutter comp on a lathe think of the tool tip radius as the
+radius of a round cutter. When using cutter comp the path must be large
+enough for a round tool that will not gouge into the next line. When
+cutting straight lines on the lathe you might not want to use cutter
+comp. For example boring a hole with a tight fitting boring bar you may
+not have enough room to do the exit move. The entry move into a cutter
+comp arc is important to get the correct results.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-05-09 07:36:10 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/lathe/lathe-user.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:12:03 GMT -->
+</html>

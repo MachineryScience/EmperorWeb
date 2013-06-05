@@ -1,0 +1,157 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:22 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/rtapi_region.3rtapi.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>rtapi_region</title>
+
+</head>
+<body>
+
+<h1 align="center">rtapi_region</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNTAX">SYNTAX</a><br>
+<a href="#ARGUMENTS">ARGUMENTS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#REALTIME CONSIDERATIONS">REALTIME CONSIDERATIONS</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#RETURN VALUE">RETURN VALUE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">rtapi_region
+&minus; functions to manage I/O memory regions</p>
+
+<h2>SYNTAX
+<a name="SYNTAX"></a>
+</h2>
+
+
+<p style="margin-left:22%; margin-top: 1em">void
+*rtapi_request_region(unsigned long <i>base</i>, unsigned
+long int <i>size</i>, const char *<i>name</i>)</p></table>
+
+<p style="margin-left:22%; margin-top: 1em">void
+rtapi_release_region(unsigned long <i>base</i>, unsigned
+long int <i>size</i>)</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+
+
+<h2>ARGUMENTS
+<a name="ARGUMENTS"></a>
+</h2>
+<td width="11%"></td>
+<td width="6%"></td>
+<td width="5%"></td>
+<td width="56%">
+</td>
+<td width="22%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><i>base</i></p></td>
+<td width="5%"></td>
+<td width="56%">
+
+
+<p>The base address of the I/O region</p></td>
+<td width="22%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><i>size</i></p></td>
+<td width="5%"></td>
+<td width="56%">
+
+
+<p>The size of the I/O region</p></td>
+<td width="22%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><i>name</i></p></td>
+<td width="5%"></td>
+<td width="56%">
+
+
+<p>The name to be shown in /proc/ioports</p></td>
+<td width="22%">
+</td></tr>
+</table>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_request_region</b>
+reserves I/O memory starting at <i>base</i> and going for
+<i>size</i> bytes.</p>
+
+<h2>REALTIME CONSIDERATIONS
+<a name="REALTIME CONSIDERATIONS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">May be called
+from realtime init/cleanup code only.</p>
+
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">On kernels
+before 2.4.0, <b>rtapi_request_region</b> always
+suceeds.</p>
+
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_request_region</b>
+returns NULL if the allocation fails, and a non-NULL value
+otherwise.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_release_region</b>
+has no return value.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/rtapi_region.3rtapi.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+</html>

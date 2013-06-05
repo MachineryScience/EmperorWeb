@@ -1,0 +1,1079 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/mini_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:50 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>L&#8217;interface graphique MINI</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>L&#8217;interface graphique MINI</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:Mini"></a> </p></div>
+</div>
+</div>
+<h2 id="_introduction">1. Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph"><p><span class="footnote"><br />[Une grande partie de ce chapitre provient du manuel Sherline CNC
+operators.]<br /></span></p></div>
+<div class="imageblock" id="fig:startminif">
+<div class="content">
+<img src="images/mini01_fr.png" alt="images/mini01_fr.png" />
+</div>
+<div class="title">Figure 1. L&#8217;interface graphique Mini</div>
+</div>
+<div class="paragraph"><p>Mini a été prévu pour être une interface graphique plein
+écran. Il a été écrit initialement pour Sherline
+CNC mais est disponible pour ceux qui veulent l&#8217;utiliser, le
+copier le distribuer selon les termes de la GPL.</p></div>
+<div class="paragraph"><p>Au lieu d&#8217;ouvrir une nouvelle fenêtre pour chaque chose que
+l&#8217;opérateur veux faire, Mini permet de les afficher toutes dans la même
+fenêtre. Certaines parties de ce chapitre sont des copies des
+instructions écrites par Joe Martin et Ray Henry.</p></div>
+</div>
+<h2 id="_l_cran">2. L'écran</h2>
+<div class="sectionbody">
+<div class="paragraph" id="fig:runminif"><div class="title">Affichage de Mini lors du fonctionnement de LinuxCNC</div><p><span class="image">
+<img src="images/mini_fr.png" alt="images/mini_fr.png" />
+</span></p></div>
+<div class="paragraph"><p>L'écran de Mini est visible dans plusieurs sections, voir la figure
+ci-dessus. Il inclu une barre de menu, un jeu de boutons de
+contrôle juste en dessous et deux larges colonnes d&#8217;information
+montrant l'état de la machine et permettant à l&#8217;opérateur d&#8217;entrer des
+commandes ou des programmes.</p></div>
+<div class="paragraph"><p>Quand on compare <a href="#fig:startminif">entre l'écran d&#8217;accueil</a> et <a href="#fig:runminif">l'écran en cours de fonctionnement</a>, des différences apparaissent. Sur la
+seconde image:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Chaque axe a été référencé sur son origine&#8201;&#8212;&#8201;L&#8217;affichage de la visu est vert
+   sombre
+</p>
+</li>
+<li>
+<p>
+LinuxCNC est en mode auto&#8201;&#8212;&#8201;le bouton est vert clair
+</p>
+</li>
+<li>
+<p>
+Le parcours d&#8217;outil a été activé&#8201;&#8212;&#8201;le parcours 
+   est visible dans la fenêtre
+</p>
+</li>
+<li>
+<p>
+Le bloc de G-code en cours est en surbrillance blanche sur fond rouge
+  parmi les lignes défilantes du programme.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Dès le début de l&#8217;utilisation de Mini on découvre combien il est
+facile de visualiser le fonctionnement de LinuxCNC et d&#8217;agir sur lui.</p></div>
+</div>
+<h2 id="_barre_de_menu">3. Barre de menu</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>La première ligne est occupée par la barre de menu. Elle permet de
+configurer les informations optionnelles que l'écran doit afficher.
+Certains des items du menu sont très différents de ce qu&#8217;il est coutume
+de rencontrer avec d&#8217;autres programmes. Il faut prendre quelques
+minutes pour regarder chaque item du menu et se familiariser avec les
+possibilités qu&#8217;il offre.</p></div>
+<div class="paragraph"><p>Le menu inclus chacune des sections et sous-sections suivantes:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Programme
+</dt>
+<dd>
+<p>
+     ce menu inclus les deux fonctions <em>reset</em> et <em>quitter</em>. Reset renvoie
+    LinuxCNC dans l'état dans lequel il était quand il à démarré. Certains items
+    de conditions de démarrage comme les unités du programme peuvent être
+    spécifiés dans le fichier ini.
+</p>
+</dd>
+<dt class="hdlist1">
+Vues
+</dt>
+<dd>
+<p>
+     ce menu inclus plusieurs éléments d&#8217;affichage pouvant être ajoutés
+    pendant qu&#8217;un programme s&#8217;exécute, pour donner des information
+    supplémentaires. Ce qui inclus:
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Type_de_position
+</dt>
+<dd>
+<p>
+         cet item ajoute une ligne, au dessus de l&#8217;afficheur principal de
+        position, qui indique si la position affichée est en coordonnées
+        machine (absolues) ou en coordonnées pièce (relatives), si la
+        position affichée est actuelle ou commandée et si l&#8217;unité et
+        le pouce le millimètre. Ce qui peut être modifié en agissant
+        sur le menu <em>Réglages</em> décrit plus loin.
+</p>
+</dd>
+<dt class="hdlist1">
+Informations_outil
+</dt>
+<dd>
+<p>
+         cet item ajoute une ligne immédiatement sous l&#8217;afficheur principal,
+        elle affiche quel outil est selectionné et la valeur de l&#8217;offset
+        appliqué.
+</p>
+</dd>
+<dt class="hdlist1">
+Informations_offset
+</dt>
+<dd>
+<p>
+         ajoute une ligne immédiatement sous celle des informations outil,
+        elle affiche les offsets de travail actuellement appliqués. C&#8217;est la
+        distance totale pour chaque axe depuis son point d&#8217;origine machine.
+</p>
+</dd>
+<dt class="hdlist1">
+Afficher_Reprise
+</dt>
+<dd>
+<p>
+         ajoute, en mode Auto, un bloc de boutons en bas à droite de
+        l&#8217;affichage du programme. Ces boutons permettent à l&#8217;opérateur de
+        relancer un programme après un A/U ou un Abandon. Le programme est
+        figé lorsqu&#8217;un A/U ou un Abandon est engagé, mais l&#8217;opérateur peut ici
+        choisir le bloc sur lequel redémarrer dans le mode Auto, en activant
+        cet item de menu.
+</p>
+</dd>
+<dt class="hdlist1">
+Masquer_Reprise
+</dt>
+<dd>
+<p>
+          enlève le bloc de boutons contrôlant la reprise d&#8217;un programme
+        stoppé par Abandon ou Arrêt d&#8217;Urgence.
+</p>
+</dd>
+<dt class="hdlist1">
+Diviser_la_vue_droite
+</dt>
+<dd>
+<p>
+         modifie la nature de l&#8217;affichage de la colonne de droite pour qu&#8217;il
+        montre plus d&#8217;informations.
+</p>
+</dd>
+<dt class="hdlist1">
+Afficher_en_mode_complet
+</dt>
+<dd>
+<p>
+         modifie l&#8217;affichage de la colonne de droite, soit en mode boutons
+        et la colonne divisée, soit affichage sur la colonne entière. En mode
+        manuel et en utilisant ce mode entier, les boutons de la broche et
+        du lubrifiant sont visibles en plus des boutons de mouvement.
+</p>
+</dd>
+<dt class="hdlist1">
+Afficher_dans_toute_la_fenêtre
+</dt>
+<dd>
+<p>
+         modifie l&#8217;affichage dans la colonne de droite pour qu&#8217;elle soit
+        remplie entièrement.
+</p>
+</dd>
+</dl></div>
+</dd>
+<dt class="hdlist1">
+Réglages
+</dt>
+<dd>
+<p>
+     Les items de ce menu permettent à l&#8217;opérateur de contrôler certains
+    paramètres en cours d&#8217;usinage.
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Position_Actuelle
+</dt>
+<dd>
+<p>
+         régle l&#8217;afficheur principal sur des valeurs de position actuelle
+        (basées sur la machine).
+</p>
+</dd>
+<dt class="hdlist1">
+Position_Commandée
+</dt>
+<dd>
+<p>
+         régle l&#8217;afficheur principal sur des valeurs de position commandée
+        (positions cibles).
+</p>
+</dd>
+<dt class="hdlist1">
+Position_Machine
+</dt>
+<dd>
+<p>
+         régle l&#8217;afficheur principal sur des valeurs de position absolue,
+        distance depuis le point d&#8217;origine machine.
+</p>
+</dd>
+<dt class="hdlist1">
+Position_Relative
+</dt>
+<dd>
+<p>
+         régle l&#8217;affichage principal pour qu&#8217;il affiche les valeurs de la
+        position courante en incluant tous les offsets comme les origines
+        pièces qui seraient actives. Pour plus de détails voir le chapitre
+        sur les <em>Systèmes de coordonnées</em>.
+</p>
+</dd>
+</dl></div>
+</dd>
+<dt class="hdlist1">
+Informations
+</dt>
+<dd>
+<p>
+     Indique diverses activités en affichant des valeurs dans la zône MESSAGES.
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Fichier_programme
+</dt>
+<dd>
+<p>
+        Indique le nom du fichier programme actif.
+</p>
+</dd>
+<dt class="hdlist1">
+Editeur_de_Fichiers
+</dt>
+<dd>
+<p>
+          Indique le nom de l'éditeur de texte lancé quand un fichier est
+    choisi pour être édité.
+</p>
+</dd>
+<dt class="hdlist1">
+Fichier_de_paramètres
+</dt>
+<dd>
+<p>
+         Indique le nom du fichier devant être utilisé pour enregistrer les
+        paramètres du programme. Il est possible d&#8217;avoir plus d&#8217;informations
+        dans le chapitre sur les offsets et l&#8217;utilisation des paramètres
+        dans les programmes.
+</p>
+</dd>
+<dt class="hdlist1">
+Fichiers_d&#8217;outils
+</dt>
+<dd>
+<p>
+        Indique le nom du fichier d&#8217;outils utilisé pour l&#8217;usinage en cours.
+</p>
+</dd>
+<dt class="hdlist1">
+G-Codes_actifs
+</dt>
+<dd>
+<p>
+         Indique la liste des G-codes modaux actifs au moment ou cet item
+        a été sélectionné. Pour plus d&#8217;informations sur les codes modaux, se
+        reporter aux chapitres sur la programmation.
+</p>
+</dd>
+</dl></div>
+</dd>
+<dt class="hdlist1">
+Aide
+</dt>
+<dd>
+<p>
+    Ouvre une fenêtre de texte contenant un fichier d&#8217;aide.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>Noter que entre le menu informations et le menu d&#8217;aide il y a un jeu
+de quatre cases à cocher. Elles sont appelées cases sélectionnables car
+elles passent au rouge si elles sont sélectionnées. Ces quatre cases,
+Editeur, Parcours d&#8217;outil, Outils et Offsets activent les différents
+écrans. Si plus d&#8217;une de ces cases est validée (case en rouge) il est
+possible de passer de l&#8217;un à l&#8217;autre des écrans surgissant par un clic
+droit de la souris.</p></div>
+</div>
+<h2 id="_barre_de_boutons_de_contr_le">4. Barre de boutons de contrôle</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Sous la ligne de menu se trouve une ligne de boutons de contrôle. Ce
+sont les boutons principaux de l&#8217;interface. En utilisant ces boutons il
+est possible de changer de mode cycliquement entre <em>MANUEL</em> puis <em>AUTO</em>
+puis <em>MDI</em> (Manual Data Input). Ces boutons ont un fond vert clair
+quand le mode correspondant est actif.</p></div>
+<div class="paragraph"><p>Il est également possible d&#8217;utiliser les boutons <em>VITESSE-0</em>,
+<em>ABANDON</em> et <em>A/U</em> pour contrôler les mouvements du programme.</p></div>
+<h3 id="_manuel">4.1. MANUEL </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Ce bouton, ou la touche <strong>F3</strong> placent LinuxCNC en mode Manuel et affiche un
+jeu condensé de boutons que l&#8217;opérateur peut utiliser pour effectuer
+des commandes de mouvements manuels. Les labels des boutons de jog
+varient pour refléter l&#8217;axe actif. Quand en plus de ce mode manuel, la
+vue en mode complet est activée, les boutons de la broche et du
+lubrifiant sont visibles en plus de ceux de mouvement. La touche <strong>i</strong> ou
+<strong>I</strong> basculera entre jog en continu et jog par incréments. Presser cette
+touche plusieurs fois provoquera le changement cyclique de la taille de
+l&#8217;incrément de jog.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/miniman_fr.png" alt="images/miniman_fr.png" />
+</div>
+<div class="title">Figure 2. Boutons du mode Manuel</div>
+</div>
+<div class="paragraph"><p>Un bouton à été ajouté pour désigner la position actuelle comme étant
+la position d&#8217;origine. Une machine simple telle que la Sherline 5400
+serait facile à utiliser sans avoir de position d&#8217;origine. Ce bouton
+met les offsets de tous les axes à zéro et place l&#8217;origine de tous les
+axes au point courant.</p></div>
+<div class="paragraph"><p>Ce concentrer sur les axes est important ici. Noter que sur la capture
+<a href="#fig:startminif">du début de chapitre</a> qui est en mode manuel,
+on voit un cadre autour de l&#8217;axe X pour mettre son affichage en évidence. Ce
+cadre (le focus) indique que l&#8217;axe X est l&#8217;axe actif. Il est l&#8217;axe cible
+pour les mouvements de jog faits par appui sur les boutons <em>plus</em> ou <em>moins</em>.
+Il est possible de changer l&#8217;axe actif en cliquant sur l&#8217;affichage
+d&#8217;un autre axe. C&#8217;est également possible en mode manuel en pressant la
+touche de son nom sur le clavier. La casse n&#8217;a pas d&#8217;importance <strong>Y</strong> ou
+<strong>y</strong> donneront le focus à l&#8217;axe Y. <strong>A</strong> ou <strong>a</strong> le donneront à l&#8217;axe A.
+Pour aider à se rappeller quel est l&#8217;axe actif avant de faire un jog,
+son nom est indiqué sur les boutons de jog.</p></div>
+<div class="paragraph"><p>LinuxCNC peut faire un jog (mouvement d&#8217;un axe particulier) aussi longtemps
+que le bouton est maintenu pressé, si le jog est réglé sur <em>continu</em> ,
+ou il peut se déplacer d&#8217;une valeur prédéfinie, quand il est réglé
+sur <em>incrément</em> s. Il est aussi possible de faire un jog de l&#8217;axe
+actif en pressant les touches <strong>+</strong> ou moins <strong>-</strong> du clavier. De nouveau,
+la casse n&#8217;a pas d&#8217;importance pour les jogs au clavier. Les deux petits
+boutons situés entre les deux gros du jog, permettent de choisir quel type
+de jog est souhaîté. Quand on est en mode incréments, les boutons de taille
+d&#8217;incréments sont accessibles. La sélection d&#8217;une taille d&#8217;incrément se
+fait par clic sur la case à cocher avec la souris ou cycliquement en
+pressant la touche <strong>i</strong> ou <strong>I</strong> sur le clavier. Le jog par incréments
+présente quelques effets intéressants autant qu&#8217;inattendus. Si vous
+pressez le bouton de jog alors qu&#8217;un mouvement de jog est déjà en
+cours, la distance à laquelle il était lorsqu&#8217;est arrivée la commande
+du second jog, sera ajoutée à la position. Deux pressions successives
+rapides de 10mm d&#8217;incrément ne donneront pas 20mm de mouvement. Vous
+devez attendre que le premier soit terminé avant d&#8217;envoyer le second.</p></div>
+<div class="paragraph"><p>La vitesse de jog est affichée au dessus du curseur. Il est possible
+de régler le curseur en cliquant dans la glissière du curseur, du côté
+où vous voulez son déplacement, ou en cliquant sur les boutons
+<em>Défaut</em> ou <em>Rapide</em>. Ces réglages n&#8217;affectent que les mouvements de
+jog en mode manuel. Tant qu&#8217;un mouvement de jog est en cours, un
+changement de la vitesse de jog est sans effet sur le jog. Par exemple,
+disons que vous avez réglé le jog par incréments de 10mm. Même si vous
+pressez le bouton <em>Jog</em>, le déplacement de dix millimètres se finira à
+la vitesse à laquelle il a commencé.</p></div>
+<h3 id="_auto">4.2. AUTO </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Quand le bouton Auto est pressé, ou <strong>F4</strong> sur le clavier, LinuxCNC passe
+dans ce mode, un jeu de boutons traditionnels des opérations en auto
+est affiché et une petite fenêtre textuelle s&#8217;ouvre, montrant une
+partie du programme. Durant un usinage, la ligne active est affichée en
+surbrillance blanche sur fond rouge.</p></div>
+<div class="paragraph"><p>Dans le mode auto, beaucoup de touches sont liées aux contrôles. Par
+exemple, les touches numérotées au dessus du clavier sont liées aux
+réglages du correcteur de vitesse d&#8217;avance travail. Le <strong>0</strong> l&#8217;ajuste à
+100%, le <strong>9</strong> l&#8217;ajuste à 90% etc. D&#8217;autres touches fonctionnent de la
+même manière qu&#8217;avec l&#8217;interface TkLinuxCNC.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/miniauto_fr.png" alt="images/miniauto_fr.png" />
+</div>
+<div class="title">Figure 3. Mode Auto</div>
+</div>
+<div class="paragraph"><p>Le mode Auto n&#8217;affiche normalement pas les G-codes actifs ou modaux.
+Si l&#8217;opérateur veut les voir, il doit utiliser le menu <em>Informations →
+G-codes actifs</em> et afficher ainsi la liste des codes modaux dans la
+zône de texte MESSAGES.</p></div>
+<div class="paragraph"><p>Si un Arrêt d&#8217;Urgence ou un Abandon est pressé pendant un usinage, un
+jeu de boutons s&#8217;affiche en bas et à droite, ils permettent à
+l&#8217;opérateur de décaler la ligne de reprise vers l&#8217;avant ou vers
+l&#8217;arrière. Si la ligne de reprise n&#8217;est pas la dernière ligne active,
+elle sera mise en surbrillance blanche sur fond bleu. ATTENTION, une
+vitesse très faible et un doigt collé sur le bouton de pause est
+prudent pendant toute reprise de programme!</p></div>
+<div class="paragraph"><p>Ce qui est le mieux avec une machine CNC, c&#8217;est le mode auto. Le mode
+auto affiche les fonctions typiques que tout le monde espère utiliser
+avec LinuxCNC. Au dessus de la fenêtre un jeu de boutons qui contrôlent ce
+qui se passe en mode auto. En dessous, la fenêtre montrant la partie du
+programme en cours d&#8217;exécution. Quand le programme est lancé, la ligne
+active s&#8217;affiche en surbrillance blanche sur fond rouge. Les trois
+premiers boutons, <em>Ouvrir</em>, <em>Lancer</em> et <em>Pause</em> font ce que leurs noms
+indiquent. <em>Pause</em> stoppe le programme en cours d&#8217;exécution là où il
+est. Le bouton suivant, <em>Reprise</em>, reprend le mouvement. Le résultat
+est le même si le bouton <em>Vitesse-0</em> était pressé au lieu du bouton
+<em>Pause</em>, le mouvement est stoppé, <em>Pas à pas</em> reprend aussi le
+mouvement, mais il ne continue que jusqu'à la fin du bloc courant.
+Presser une nouvelle fois <em>Pas à pas</em> exécutera le mouvement du bloc
+suivant. Presser <em>Reprise</em> à ce moment là et l&#8217;interpréteur reviendra
+en arrière lire et relancer le programme. La combinaison entre <em>Pause</em>
+et <em>Pas à pas</em> marche un peu comme un seul bloc dans plusieurs
+interpréteurs. Avec la différence que <em>Pause</em> ne laisse pas le
+mouvement se poursuivre jusqu'à la fin du bloc courant. Le correcteur
+de vitesse d&#8217;avance travail peut se révéler très pratique pour
+s&#8217;approchez de la matière pour un premièr usinage. Le placer sur 100%
+pour les déplacements rapides, le régler sur 10% et basculez entre
+<em>Vitesse-0</em> et 10% en utilisant le bouton <em>Pause</em>. Quand vous êtes
+satisfait et que les choses se présentent bien, pressez le zéro à la
+droite du neuf en haut du clavier, et c&#8217;est parti.</p></div>
+<div class="paragraph"><p>Le bouton <em>Vérifier</em> passe le code dans l&#8217;interpréteur sans production
+de mouvements. Si Vérifier trouve un problème il stoppe la lecture
+juste derrière le bloc posant problème et affiche un message. La
+plupart du temps vous serez en mesure de régler le problème avec votre
+programme par la lecture du message et en vérifiant la ligne de code en
+surbrillance dans la fenêtre du programme. Certains messages,
+toutefois, ne sont pas d&#8217;un grand secours. Parfois vous devrez lire une
+ou deux lignes en avant de celle en surbrillance pour voir le problème.
+Occasionnellement le message fait référence à quelque chose très en
+avant de la ligne en surbrillance. Le plus souvent ça se produit si
+vous oubliez de terminer votre programme par un code correct comme %,
+M2, M30, ou M60.</p></div>
+<h3 id="_mdi_a_id_sub_mdi_a">4.3. MDI<a id="sub:MDI"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le bouton MDI ou la touche <strong>F5</strong> activent le mode d&#8217;entrée de données
+en manuel (Manual Data Input). Ce mode affiche un simple champ de
+saisie d&#8217;une ligne de texte et montre les codes modaux actuellement
+actifs dans l&#8217;interpréteur.</p></div>
+<div class="paragraph"><p>Le mode MDI vous permet d&#8217;entrer de simples blocs et de les faire
+exécuter par l&#8217;interpréteur comme si ils étaient une partie d&#8217;un
+programme (Une sorte de programme d&#8217;une seule ligne). Vous pouvez
+exécuter des cercles, des arcs, des lignes et autres. Vous pouvez aussi
+mettre au point une ligne de programme en entrant cette ligne comme un
+seul bloc, attendre que le mouvement se termine et entrer le bloc
+suivant. Sous la fenêtre d&#8217;entrée, se trouve une liste des codes modaux
+courants. Cette liste peut être très pratique. J&#8217;oublie parfois
+d&#8217;entrer un G0 avant une commande de mouvement. Si rien ne se passe je
+regarde dans la liste si G80 est actif. G80 stoppe tous les mouvements.
+Si il y est je me rappelle de mettre un bloc comme G00 X0 Y0 Z0. Dans
+le MDI, vous entrez du texte depuis le clavier, ainsi toutes les
+touches principales ne fonctionnent pas comme raccourcis clavier pour
+les commandes machine. <strong>F1</strong> engage l&#8217;Arrêt d&#8217;Urgence.</p></div>
+<div class="paragraph"><p>Puisque les touches du clavier sont nécessaires à la saisie du texte,
+beaucoup des raccourcis clavier disponibles en mode auto ne le sont pas
+ici.</p></div>
+<h3 id="_vitesse_0_et_continuer">4.4. VITESSE-0 et CONTINUER</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Vitesse-0 est une bascule. Quand LinuxCNC est prêt pour exécuter, ou qu&#8217;il
+exécute une commande de mouvement, ce bouton affiche son label
+<em>VITESSE-0</em> sur fond rouge. Si Vitesse-0 a été pressé il affiche le
+label <em>CONTINUER</em>. Utiliser ce bouton pour faire une pause dans un
+mouvement présente l&#8217;avantage d'être capable de relancer le programme
+d&#8217;où il a été stoppé. Vitesse-0 bascule simplement entre vitesse zéro
+et la vitesse d&#8217;avance travail avec l'éventuel correcteur qui était
+actif au moment de l&#8217;arrêt. Ce bouton et la fonction qu&#8217;il active sont
+également liés à la touche pause de la plupart des claviers.</p></div>
+<h3 id="_abandon">4.5. ABANDON</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le bouton Abandon stoppe tous les mouvements quand il est pressé. Il
+désactive aussi la commande de marche de LinuxCNC. Plus aucun mouvement ne
+survient après l&#8217;appui sur ce bouton. Si vous êtes en mode auto, ce
+bouton enlève le reste du programme du planificateur de mouvements. Il
+enregistre aussi le numéro de la ligne qui s&#8217;exécutait quand il a été
+pressé. Vous pouvez vous servir de ce numéro de ligne pour redémarrer
+le programme après avoir supprimé la raison de l&#8217;appui&#8230;</p></div>
+<h3 id="_arr_t_d_8217_urgence">4.6. Arrêt d&#8217;Urgence</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le bouton d&#8217;Arrêt d&#8217;Urgence est une bascule mais il a trois
+fonctionnements possibles.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Au démarrage de Mini c&#8217;est un bouton avec le texte <em>A/U</em> écrit en noir
+   sur fond rouge. C&#8217;est état de la machine est correct pour charger un
+   programme ou faire un jog sur un axe. L&#8217;Arrêt d&#8217;Urgence est libéré
+   quand il s&#8217;affiche dans cet état.
+</p>
+</li>
+<li>
+<p>
+Si vous pressez sur le bouton d&#8217;Arrêt d&#8217;Urgence pendant qu&#8217;un
+   mouvement est exécuté, le texte sur le bouton devient <em>A/U Engagé</em> sur
+   fond gris et le bouton s&#8217;enfonce. Plus aucun mouvement n&#8217;est possible
+   et plus rien ne réagi sur l&#8217;interface Mini tant que l&#8217;Arrêt d&#8217;Urgence
+   est dans cet état. Le presser à nouveau à la souris le fera repasser en
+   conditions normales de fonctionnement.
+</p>
+</li>
+<li>
+<p>
+Un troisième état est encore possible. Un bouton enfoncé portant le
+   texte <em>A/U Libéré</em> sur fond vert signifie que l&#8217;A/U a bien été libéré
+   mais que la machine n&#8217;a pas été mise en marche. Normalement cet état
+   apparaît quand l&#8217;A/U était libéré mais que la touche Marche Machine
+   <strong>F2</strong> a été pressée.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Joe Martin disait, <em>Quand tout le reste a échoué, pressez
+un Arrêt d&#8217;Urgence software</em>. Si vous avez un circuit externe qui
+gère l&#8217;A/U en surveillant une broche du port parallèle ou celle
+d&#8217;une carte d&#8217;entrées/sorties, un arrêt d&#8217;urgence software pourra
+couper la puissance sur les moteurs.</p></div>
+<div class="paragraph"><p>La plupart du temps, quand un Abandon ou un Arrêt d&#8217;Urgence est engagé
+c&#8217;est parce que quelque chose se passe mal. Peut être un outil cassé et
+qui doit être changé. On passe alors en mode manual et on arrête la
+broche, on change l&#8217;outil et en supposant que sa longueur reste la
+même, on est prêt pour relancer le programme. Si on renvoie l&#8217;outil à
+la même place ou il était avant, LinuxCNC va fonctionner parfaitement. Il
+est aussi possible de se déplacer sur la ligne suivante ou précédente
+de celle ou c&#8217;est produit l&#8217;abandon. Si vous pressez le bouton
+<em>Arrière</em> ou <em>Avant</em> vous voyez une ligne en surbrillance bleue
+montrant l'écart entre la ligne sur laquelle l&#8217;abandon s&#8217;est produit
+(restée en surbrillance rouge) et la ligne à laquelle LinuxCNC va
+redémarrer. En réfléchissant à ce qui va se produire au moment de la
+reprise vous serez en mesure de placer l&#8217;arête de l&#8217;outil là où la
+reprise pourra se faire de manière acceptable. Vous aurez peut être à
+solutionner certaines difficultés comme celles créées par les
+compensations de rayon d&#8217;outil le long d&#8217;une ligne diagonale et vous
+devrez être sûr de vous avant de presser sur le bouton <em>Reprise</em>.</p></div>
+</div>
+<h2 id="_colonne_de_gauche">5. Colonne de gauche</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Il y a deux colonnes sous la barre de contrôle. La colonne de gauche
+affiche les informations intéressant l&#8217;opérateur. Il y a seulement deux
+boutons dans cette zône.</p></div>
+<h3 id="_afficheurs_de_position_des_axes">5.1. Afficheurs de position des axes</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Ces afficheurs se comportent exactement comme ceux de TkeLinuxCNC. La
+couleur des afficheurs est importante.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Rouge, elle indique que la machine est en appui sur un contact de fin
+   de course ou que la polarité d&#8217;une limite est mal positionnée dans le
+   fichier ini.
+</p>
+</li>
+<li>
+<p>
+Jaune, elle indique que la machine est prête pour faire ses prises
+   d&#8217;origine.
+</p>
+</li>
+<li>
+<p>
+Verte, elle indique que la machine a bien été référencée sur ses
+   points d&#8217;origine.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Le type de position affichée peut varier, selon les options choisies
+dans le menus <em>Réglages</em>. Les réglages par défaut, ou de démarrage,
+peuvent être changés dans le fichier ini pour correspondre à vos
+besoins.</p></div>
+<h3 id="_correcteur_de_vitesse_travail">5.2. Correcteur de vitesse travail</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Immédiatement sous les afficheurs de position on trouve un curseur,
+c&#8217;est le correcteur de vitesse travail. Vous pouvez agir sur le
+correcteur de vitesse et sur le bouton Vitesse-0 dans tous les modes de
+marche. Le correcteur agit sur la vitesse de jog et sur la vitesse
+d&#8217;avance travail dans les modes manuel ou MDI. Il est possible de
+modifier la position du curseur en le déplaçant à la souris le long de
+sa glissière. Il est également possible de modifier le correcteur de 1%
+à chaque fois qu&#8217;un clic de souris est fait dans la glissière du
+curseur. En mode Manuel il est possible d&#8217;ajuster le correcteur par
+incréments de 10% avec les touches chiffrées du haut du clavier. Le
+curseur est une référence visuelle très pratique pour estimer la
+correction appliquée sur la vitesse d&#8217;avance programmée.</p></div>
+<h3 id="_messages">5.3. Messages</h3><div style="clear:left"></div>
+<div class="paragraph"><p>L&#8217;affichage des messages situé sous le curseur du correcteur de
+vitesse est une sorte de bloc-notes pour LinuxCNC. Si un problème survient,
+il est reporté sur ce bloc-notes. Si vous essayez de déplacer un axe
+alors que l&#8217;Arrêt d&#8217;Urgence est engagé, vous recevez un message qui dit
+quelques choses à propos des conditions de marche empêchant LinuxCNC de
+répondre à la commande de mouvement. Si un axe est en défaut, par
+exemple un dépassement de limite, le message affiché sur le bloc-notes
+indiquera ce qui se passe. Pour demander à l&#8217;opérateur de changer
+d&#8217;outil par exemple, vous pouvez aussi ajouter une ligne de code dans
+le programme qui s&#8217;affichera sur l'écran, dans la boîte de messages. Un
+exemple pourrait être: (msg, Montez l&#8217;outil N°3 puis pressez Reprise).
+Cette ligne de code, incluse dans un programme, va
+afficher <em>Montez l&#8217;outil 3 puis pressez Reprise</em> dans la boîte
+de messages. Le mot msg, (avec la virgule) est la commande qui fait
+apparaître le commentaire, sans <em>msg</em>, le message ne serait pas affiché.</p></div>
+<div class="paragraph"><p>Pour effacer les messages cliquer simplement sur le bandeau
+--MESSAGES-- au dessus du bloc-notes ou au clavier, presser <strong>m</strong> tout en
+maintenant la touche <em>Alt</em> appuyée.</p></div>
+</div>
+<h2 id="_colonne_de_droite">6. Colonne de droite</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>La colonne de droite est l&#8217;emplacement sur lequel seront affichés les
+différents éléments résultants des choix de l&#8217;utilisateur. C&#8217;est ici
+que seront visibles les différentes entrées de texte, les différents
+affichages et les boutons du mode manuel. C&#8217;est ici que le parcours
+d&#8217;outil sera affiché pendant l&#8217;exécution d&#8217;un programme. C&#8217;est
+également ici que l'éditeur de texte s&#8217;ouvrira pour permettre l'édition
+des programmes, l'édition des tables d&#8217;outils ou d&#8217;offsets. L'écran du
+mode manuel a déjà été décrit précédemment. Chaque écran surgissant va
+être décrit en détail ci-dessous.</p></div>
+<h3 id="_editeur_de_texte">6.1. Editeur de texte</h3><div style="clear:left"></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/miniedit_fr.png" alt="images/miniedit_fr.png" />
+</div>
+<div class="title">Figure 4. Editeur de texte de Mini</div>
+</div>
+<div class="paragraph"><p>L'éditeur de texte de Mini peut sembler un peu limité par rapport aux
+éditeurs de texte modernes. Il a été inclus parce qu&#8217;il comporte
+l&#8217;excellente possibilité de numéroter et renuméroter un programme de la
+même manière que l&#8217;interpréteur le fait avec un fichier. Il permet
+également le couper/coller d&#8217;une partie vers une autre du fichier. En
+plus, il permet d&#8217;enregistrer les changements faits dans le programme
+et de soumettre celui-ci à l&#8217;interpréteur de LinuxCNC depuis le même menu. Il
+est possible de travailler sur un fichier ouvert dans cet éditeur puis
+de l&#8217;enregistrer et de le recharger si LinuxCNC est en mode Auto. Si vous
+avez lancé un fichier et que vous avez besoin de l'éditer, ce fichier
+sera placé dans l'éditeur quand vous cliquez sur le bouton <em>Editeur</em> du
+menu.</p></div>
+<h3 id="_parcours_d_8217_outil">6.2. Parcours d&#8217;outil</h3><div style="clear:left"></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/minibkplot_fr.png" alt="images/minibkplot_fr.png" />
+</div>
+<div class="title">Figure 5. Parcours d&#8217;outil de Mini</div>
+</div>
+<div class="paragraph"><p>Le bouton <em>Parcours d&#8217;outil</em> du menu, affiche un tracé produit par le
+cheminement de l&#8217;outil pendant l&#8217;usinage. Cette trace est affichable
+selon plusieurs plans et en <strong>3-D</strong> qui est le mode par défaut. Les choix
+sont affichés au dessus et à droite de cette fenêtre. Si l&#8217;usinage est
+déjà en cours depuis un certain temps quand cette fenêtre est activée,
+il lui faudra un peu de temps pour recalculer la vue du parcours.</p></div>
+<div class="paragraph"><p>Sur le côté droit de la fenêtre une petite pyramide graphique montre
+l&#8217;angle depuis lequel l&#8217;opérateur voit le tracé du parcours d&#8217;outil. En
+dessous, une série de curseurs permettent de modifier les angles et la
+taille de la vue. Il est possible de contrôler les modifications en
+regardant l&#8217;attitude de la petite pyramide. Les modifications ne
+prendront effet qu&#8217;après appui sur le bouton <em>Rafraîchir</em>. Le bouton
+<em>Reset</em> efface toutes les traces du parcours affiché et prépare la
+fenêtre pour un nouveau lancement du programme, il conserve toutefois
+les orientations et le niveau de zoom actuellement définis.</p></div>
+<div class="paragraph"><p>Si un parcours d&#8217;outil est lancé avant qu&#8217;un programme ne soit
+démarré, il va afficher quelques lignes de couleur pour indiquer le
+type de tracé qui sera utilisé. Une ligne verte représente un mouvement
+en vitesse d&#8217;avance rapide. Une ligne noire, un mouvement en vitesse
+d&#8217;avance travail. Une ligne bleue et une ligne rouge indiquent
+respectivement un arc en sens anti-horaire et un arc en sens horaire.</p></div>
+<div class="paragraph"><p>Le tracé du parcours d&#8217;outil de Mini permet de zoomer et d&#8217;orienter
+les vues du programme en cours d&#8217;exécution mais il n&#8217;est pas conçu pour
+enregistrer un chemin d&#8217;outil sur une longue période de temps.</p></div>
+<h3 id="_page_des_outils">6.3. Page des outils</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La page des outils permet d&#8217;ajuster la longueur et le diamètre des
+outils, ces valeurs deviennent effectives dès l&#8217;appui sur la touche
+<em>Entrée</em>. Il est nécessaire de définir les paramètres des outils avant
+de lancer le programme. Les offsets d&#8217;outils ne peuvent pas être
+modifiés une fois le programme démarré ni quand il est en pause.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/minitool_fr.png" alt="images/minitool_fr.png" />
+</div>
+<div class="title">Figure 6. Affichage de la table d&#8217;outils de Mini</div>
+</div>
+<div class="paragraph"><p>Les boutons <em>Ajouter un outil</em> et <em>Enlever le dernier outil</em> portent
+sur la fin de la liste des outils de sorte que l&#8217;ajout d&#8217;outils
+s&#8217;effectuent vers le bas. Quand un nouvel outil est ajouté, il est
+utilisable dans le programme avec la commande G-code habituelle. Le
+nombre maximum d&#8217;outils est de 32 dans le fichier de configuration
+de LinuxCNC mais vous serez arrivé au bout des possibilités d&#8217;affichage de
+Mini bien avant celà. A la place vous pouvez utiliser le <em>menu →
+Vues → Afficher dans toute la fenêtre</em> pour voir plus d&#8217;outils si
+nécessaire.</p></div>
+<h3 id="_page_des_offsets">6.4. Page des offsets</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La page des offsets peut être utilisée pour afficher et ajuster les
+décalages d&#8217;origine des différents systèmes de coordonnées. Le système
+de coordonnées est choisi dans la colonne de gauche, par sélection
+d&#8217;une case à cocher. Quand un système de coordonnées est choisi il est
+possible d&#8217;entrer directement les valeurs ou de déplacer l&#8217;axe à une
+position d&#8217;apprentissage.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/minioffsets_fr.png" alt="images/minioffsets_fr.png" />
+</div>
+<div class="title">Figure 7. Mini Offset Display</div>
+</div>
+<div class="paragraph"><p>Il est également possible d&#8217;utiliser une pinnule puis d&#8217;ajouter le
+rayon et la longueur par le bouton <em>Apprentissage</em>. Pour celà, il peur
+être nécessaire d&#8217;ajouter ou de soustraire le rayon de la pinnule selon
+la surface qui est touchée. C&#8217;est la case à cocher <em>Soustraire</em> ou
+<em>Ajouter</em> qui permet ce choix.</p></div>
+<div class="paragraph"><p>Le bouton <em>Tous les Gxx à zéro</em> enléve tous les décalages du système
+courant visibles sur l'écran mais ne modifie pas les variables dans le
+fichier tant que le bouton <em>_écrire et recharger</em> n&#8217;est pas pressé. Le
+bouton <em>écrire et recharger</em> est à presser pour valider et recharger
+tous les changements effectués sur les valeurs des systèmes de
+coordonnées.</p></div>
+</div>
+<h2 id="_raccourcis_clavier">7. Raccourcis clavier</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Un certain nombre de raccourcis clavier utilisés avec TkLinuxCNC ont été
+conservés avec Mini. Quelques uns ont changé pour étendre leurs
+fonctions ou pour faciliter les opérations sur une machine utilisant
+cette interface. Certaines touches opérent de la même manière quelque
+soit le mode. D&#8217;autres change en fonction du mode de travail de LinuxCNC.</p></div>
+<h3 id="_touches_courantes">7.1. Touches courantes</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Pause
+</dt>
+<dd>
+<p>
+    Bascule du correcteur de vitesse travail
+</p>
+</dd>
+<dt class="hdlist1">
+Echap
+</dt>
+<dd>
+<p>
+    Abandonne le mouvement
+</p>
+</dd>
+<dt class="hdlist1">
+F1
+</dt>
+<dd>
+<p>
+    Bascule l'état de l&#8217;Arrêt d&#8217;Urgence
+</p>
+</dd>
+<dt class="hdlist1">
+F2
+</dt>
+<dd>
+<p>
+    Marche/Arrêt machine
+</p>
+</dd>
+<dt class="hdlist1">
+F3
+</dt>
+<dd>
+<p>
+    Mode manuel
+</p>
+</dd>
+<dt class="hdlist1">
+F4
+</dt>
+<dd>
+<p>
+    Mode Auto
+</p>
+</dd>
+<dt class="hdlist1">
+F5
+</dt>
+<dd>
+<p>
+    Mode MDI
+</p>
+</dd>
+<dt class="hdlist1">
+F6
+</dt>
+<dd>
+<p>
+    Réinitialise l&#8217;interpréteur
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>Ces touches fonctionnent seulement pour une machine utilisant des
+entrées sorties auxiliaires</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+F7
+</dt>
+<dd>
+<p>
+    Marche/Arrêt du brouillard
+</p>
+</dd>
+<dt class="hdlist1">
+F8
+</dt>
+<dd>
+<p>
+    Marche/Arrêt arrosage
+</p>
+</dd>
+<dt class="hdlist1">
+F9
+</dt>
+<dd>
+<p>
+    Marche/Arrêt broche sens horaire
+</p>
+</dd>
+<dt class="hdlist1">
+F10
+</dt>
+<dd>
+<p>
+    Marche/Arrêt broche sens anti-horaire
+</p>
+</dd>
+<dt class="hdlist1">
+F11
+</dt>
+<dd>
+<p>
+    Diminue la vitesse de broche
+</p>
+</dd>
+<dt class="hdlist1">
+F12
+</dt>
+<dd>
+<p>
+    Augmente la vitesse de broche
+</p>
+</dd>
+</dl></div>
+<h3 id="_mode_manuel">7.2. Mode Manuel </h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+1-9 0
+</dt>
+<dd>
+<p>
+     Positionne le correcteur de vitesse d&#8217;avance travail de 10% en 10%, de
+    0 à 100%
+</p>
+</dd>
+<dt class="hdlist1">
+~
+</dt>
+<dd>
+<p>
+    Positionne le correcteur de vitesse à 0
+</p>
+</dd>
+<dt class="hdlist1">
+x
+</dt>
+<dd>
+<p>
+    Sélectionne l&#8217;axe X
+</p>
+</dd>
+<dt class="hdlist1">
+y
+</dt>
+<dd>
+<p>
+    Sélectionne l&#8217;axe Y
+</p>
+</dd>
+<dt class="hdlist1">
+z
+</dt>
+<dd>
+<p>
+    Sélectionne l&#8217;axe Z
+</p>
+</dd>
+<dt class="hdlist1">
+a
+</dt>
+<dd>
+<p>
+    Sélectionne l&#8217;axe A
+</p>
+</dd>
+<dt class="hdlist1">
+b
+</dt>
+<dd>
+<p>
+    Sélectionne l&#8217;axe B
+</p>
+</dd>
+<dt class="hdlist1">
+c
+</dt>
+<dd>
+<p>
+    Sélectionne l&#8217;axe C
+</p>
+</dd>
+<dt class="hdlist1">
+Gauche Droite
+</dt>
+<dd>
+<p>
+    jog de l&#8217;axe X
+</p>
+</dd>
+<dt class="hdlist1">
+Haut Bas
+</dt>
+<dd>
+<p>
+    jog de l&#8217;axe Y
+</p>
+</dd>
+<dt class="hdlist1">
+Pg.préc Pg.suiv
+</dt>
+<dd>
+<p>
+    jog de l&#8217;axe Z
+</p>
+</dd>
+<dt class="hdlist1">
+- _
+</dt>
+<dd>
+<p>
+    jog de l&#8217;axe actif dans la direction moins
+</p>
+</dd>
+<dt class="hdlist1">
++ =
+</dt>
+<dd>
+<p>
+    jog l&#8217;axe actif dans la direction plus
+</p>
+</dd>
+<dt class="hdlist1">
+Origine
+</dt>
+<dd>
+<p>
+    POM de l&#8217;axe actif
+</p>
+</dd>
+<dt class="hdlist1">
+i I
+</dt>
+<dd>
+<p>
+    Bascule cyclique des incréments de jog
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>Les touches suivantes ne fonctionnent que sur les machines utilisant
+des entrées sorties auxiliaires</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+b
+</dt>
+<dd>
+<p>
+    Relâcher le frein de broche
+</p>
+</dd>
+<dt class="hdlist1">
+Alt-b
+</dt>
+<dd>
+<p>
+    Engager le frein de broche
+</p>
+</dd>
+</dl></div>
+<h3 id="_mode_auto">7.3. Mode Auto </h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+1-9,0
+</dt>
+<dd>
+<p>
+     Positionne le correcteur de vitesse d&#8217;avance travail de 10% en 10%, de
+    0 à 100%
+</p>
+</dd>
+<dt class="hdlist1">
+~
+</dt>
+<dd>
+<p>
+    Positionne le correcteur de vitesse à 0
+</p>
+</dd>
+<dt class="hdlist1">
+o/O
+</dt>
+<dd>
+<p>
+    Ouvre un programme
+</p>
+</dd>
+<dt class="hdlist1">
+r/R
+</dt>
+<dd>
+<p>
+    Lance le programme ouvert
+</p>
+</dd>
+<dt class="hdlist1">
+p/P
+</dt>
+<dd>
+<p>
+    Met le programme en pause
+</p>
+</dd>
+<dt class="hdlist1">
+s/S
+</dt>
+<dd>
+<p>
+    Reprise d&#8217;un programme en pause
+</p>
+</dd>
+<dt class="hdlist1">
+a/A
+</dt>
+<dd>
+<p>
+    Avance d&#8217;une ligne dans un programme en pause
+</p>
+</dd>
+</dl></div>
+</div>
+<h2 id="_divers">8. Divers</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Une des possibilités de Mini est d&#8217;afficher n&#8217;importe quel axe, au
+delà de 2, comme étant un axe rotatif, il affiche alors des degrés pour
+celui-ci. Il converti également les unités en degrés quand un axe
+rotatif a le focus.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-03-30 16:36:04 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/mini_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:53 GMT -->
+</html>

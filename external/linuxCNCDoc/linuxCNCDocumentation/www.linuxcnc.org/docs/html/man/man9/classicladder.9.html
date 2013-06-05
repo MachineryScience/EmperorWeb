@@ -1,0 +1,175 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Sat Mar 17 00:36:11 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/classicladder.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>CLASSICLADDER</title>
+
+</head>
+<body>
+
+<h1 align="center">CLASSICLADDER</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">classicladder
+&minus; realtime software plc based on ladder logic</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+classicladder_rt [numRungs=</b><i>N</i><b>]
+[numBits=</b><i>N</i><b>] [numWords=</b><i>N</i><b>]
+[numTimers=</b><i>N</i><b>] [numMonostables=</b><i>N</i><b>]
+[numCounters=</b><i>N</i><b>]
+[numPhysInputs=</b><i>N</i><b>]
+[numPhysOutputs=</b><i>N</i><b>]
+[numArithmExpr=</b><i>N</i><b>]
+[numSections=</b><i>N</i><b>] [numSymbols=</b><i>N</i><b>]
+[numS32in=</b><i>N</i><b>]
+[numS32out=</b><i>N</i><b>]</b></p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">These pins and
+parameters are created by the realtime
+<b>classicladder_rt</b> module. Each period (minimum 1000000
+ns), classicladder reads the inputs, evaluates the ladder
+logic defined in the GUI, and then writes the outputs.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>classicladder.0.in-</b><i>N</i>
+IN bit</p>
+
+<p style="margin-left:22%;">These bit signal pins map to
+<b>%I</b><i>NNN</i> variables in classicladder</p>
+
+
+<p style="margin-left:11%;"><b>classicladder.0.out-</b><i>N</i>
+OUT bit</p>
+
+<p style="margin-left:22%;">These bit signal pins map to
+<b>%Q</b><i>nNN</i> variables in classicladder Output from
+classicladder</p>
+
+
+<p style="margin-left:11%;"><b>classicladder.0.in-</b><i>N</i>
+IN s32</p>
+
+<p style="margin-left:22%;">Integer input from
+classicladder These s32 signal pins map to
+<b>%IW</b><i>NNN</i> variables in classicladder</p>
+
+
+<p style="margin-left:11%;"><b>classicladder.0.out-</b><i>N</i>
+OUT s32</p>
+
+<p style="margin-left:22%;">Integer output from
+classicladder These s32 signal pins map to
+<b>%QW</b><i>NNN</i> variables in classicladder</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>classicladder.0.refresh.time</b>
+RO s32</p>
+
+<p style="margin-left:22%;">Tells you how long the last
+refresh took</p>
+
+
+<p style="margin-left:11%;"><b>classicladder.0.refresh.tmax</b>
+RW s32</p>
+
+<p style="margin-left:22%;">Tells you how long the longest
+refresh took</p>
+
+
+<p style="margin-left:11%;"><b>classicladder.0.ladder-state</b>
+RO s32</p>
+
+<p style="margin-left:22%;">Tells you if the program is
+running or not</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>classicladder.0.refresh</b>
+FP</p>
+
+<p style="margin-left:22%;">The rung update rate. Add this
+to the servo thread. You can added it to a faster thread but
+it Will update no faster than once every 1 millisecond
+(1000000 ns).</p>
+
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">See
+http://wiki.linuxcnc.org/cgi-bin/wiki.pl?ClassicLadder_Ver_7.124
+for the latest.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><i>Classicladder</i>
+chapters in the LinuxCNC documentation for a full
+description of the <b>Classicladder</b> syntax and
+examples</p>
+
+
+<p style="margin-left:11%; margin-top: 1em">http://wiki.linuxcnc.org/cgi-bin/wiki.pl?ClassicLadder_Ver_7.124</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/classicladder.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/tooledit_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:59 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Éditeur graphique de table d&#8217;outils</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Éditeur graphique de table d&#8217;outils</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph" id="cha:editeur-tooledit"><p></p></div>
+</div>
+</div>
+<h2 id="_versions_requises_pour_l_diteur_d_8217_outils">1. Versions requises pour l'éditeur d&#8217;outils</h2>
+<div class="sectionbody">
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">Les éléments de tooledit modifiables décrits ici sont disponibles
+dans les versions 2.5.1 et suivantes. Dans la version 2.5.0, l&#8217;interface
+graphique ne permet pas ces ajustements.</td>
+</tr></table>
+</div>
+<div class="imageblock" style="text-align:left;">
+<div class="content">
+<img src="images/tooledit_fr.png" alt="images/tooledit_fr.png" width="640" />
+</div>
+</div>
+<div class="paragraph"><p>Le programme tooledit rafraichi le fichier de la table d&#8217;outils avec les
+changements édités puis enregistrés avec le bouton <em>EnregistrerFichier</em>.
+Le bouton <em>EnregistrerFichier</em> met à jour le fichier système mais une action
+manuelle dans le menu <em>Fichier -&gt; Recharger la table d&#8217;outils</em> est requise pour
+mettre à jour la table d&#8217;outils en cours d&#8217;utilisation par l&#8217;instance courante
+de LinuxCNC. Avec l&#8217;interface graphique Axis, il est toutefois possible, grâce
+au bouton <em>RechargerTable</em>, de rafraichir le fichier tout en mettant à jour la
+table d&#8217;outils courante. Ce dernier bouton est disponible uniquement quand la
+machine est <em>En marche</em> et inactive.</p></div>
+</div>
+<h2 id="_choix_des_colonnes">2. Choix des colonnes</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Par défaut, le programme tooledit affiche toutes les colonnes utilisables dans
+une table d&#8217;outils. Très peu de machines utilisent tous les paramètres,
+les colonnes affichées peuvent être limitées aux paramètres utilisés. Pour cela,
+passer une ligne de paramètre dans le fichier ini, comme ci-dessous:</p></div>
+<div class="listingblock">
+<div class="title">Syntaxe</div>
+<div class="content">
+<pre><tt>[DISPLAY]
+TOOL_EDITOR = tooledit nom_colonne nom_colonne ...</tt></pre>
+</div></div>
+<div class="listingblock">
+<div class="title">Exemple pour les colonnes Z et DIAM</div>
+<div class="content">
+<pre><tt>[DISPLAY]
+TOOL_EDITOR = tooledit Z DIAM</tt></pre>
+</div></div>
+<div class="imageblock" style="text-align:left;">
+<div class="content">
+<img src="images/tooledit-columns_fr.png" alt="images/tooledit-columns_fr.png" />
+</div>
+<div class="title">Figure 1. Résultat obtenu</div>
+</div>
+</div>
+<h2 id="_tri_par_colonne">3. Tri par colonne</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Les outils de la table affichée peuvent être triés selon n&#8217;importe quelle
+colonne, par ordre croissant ou décroissant, en cliquant sur l&#8217;entête de la
+colonne. Un second clic inverse l&#8217;ordre de tri. Le tri par colonne nécessite
+une version de TCL/TK &gt;= 8.5</p></div>
+<div class="imageblock" style="text-align:left;">
+<div class="content">
+<img src="images/tooledit-sort_fr.png" alt="images/tooledit-sort_fr.png" />
+</div>
+</div>
+<div class="paragraph"><p>Sous Ubuntu Lucid 10.04 tcl/tk8.4 est installé par défaut. Il est possible
+d&#8217;ajouter tcl/tk8.5 avec la commande suivante:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>sudo apt-get install tcl8.5 tk8.5</tt></pre>
+</div></div>
+<div class="paragraph"><p>Si le tri ne fonctionne pas il peut être nécessaire d&#8217;activer tcl/tk8.5 avec
+les commandes:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>sudo update-alternatives --config tclsh  ;# choisir l'option pour tclsh8.5
+sudo update-alternatives --config wish   ;# choisir l'option pour wish8.5</tt></pre>
+</div></div>
+</div>
+<h2 id="_utilisation_autonome">4. Utilisation autonome</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Le programme <em>tooledit</em> peut aussi être invoqué comme un programme autonome.
+Par exemple si le programme est dans le PATH de l&#8217;utilisateur, taper <em>tooledit</em>
+en suivant une des syntaxes suivantes selon le besoin:</p></div>
+<div class="listingblock">
+<div class="title">Tooledit autonome</div>
+<div class="content">
+<pre><tt>tooledit
+Usage:
+tooledit nomfichier
+tooledit [colonne_1 ... colonne_n] nomfichier</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour synchroniser un tooledit autonome avec l&#8217;application LinuxCNC courante,
+le nom de fichier doit être le même que celui spécifié par le paramètre
+<strong>[EMCIO]TOOL_TABLE</strong> dans le fichier ini.</p></div>
+<div class="paragraph"><p>Lors de l&#8217;utilisation de tooledit pendant la marche de LinuxCNC,
+l&#8217;exécution d&#8217;un g-code ou d&#8217;un autre programme peut altérer les données de la
+table d&#8217;outils. Toute modification est alors détectée par tooledit qui affiche
+le message: Attention: Fichier modifié par un autre process</p></div>
+<div class="imageblock" style="text-align:left;">
+<div class="content">
+<img src="images/tooledit-warning_fr.png" alt="images/tooledit-warning_fr.png" />
+</div>
+</div>
+<div class="paragraph"><p>L&#8217;affichage de la table d&#8217;outils dans tooledit peut être rafraichi par le
+bouton <em>Relire</em>, pour relire le fichier modifié.</p></div>
+<div class="paragraph"><p>Le nom de la table d&#8217;outils est spécifié dans le fichier ini par l&#8217;entrée:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[EMCIO]TOOL_TABLE = nom_fichier_table_</tt></pre>
+</div></div>
+<div class="paragraph"><p>Le fichier de table d&#8217;outils est éditable avec n&#8217;importe quel simple éditeur de
+texte. (et non avec un traitement de texte)</p></div>
+<div class="paragraph"><p>L&#8217;interface graphique Axis peut optionnellement utiliser un paramètre du fichier
+ini pour spécifier quel éditeur doit être utilisé:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[DISPLAY]TOOL_EDITOR = path_pour_editeur</tt></pre>
+</div></div>
+<div class="paragraph"><p>Par défaut, le programme tooledit est utilisé. Cet éditeur supporte tous les
+paramètres de table d&#8217;outils, permet l&#8217;ajout ou l&#8217;effacement d&#8217;outils et fourni
+un certain nombre de contrôles de validité des paramètres introduits.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-01-27 16:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/tooledit_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:00 GMT -->
+</html>

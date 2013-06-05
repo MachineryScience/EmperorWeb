@@ -1,0 +1,160 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:44 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/gearchange.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>GEARCHANGE</title>
+
+</head>
+<body>
+
+<h1 align="center">GEARCHANGE</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">gearchange
+&minus; Select from one two speed ranges</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The output will
+be a value scaled for the selected gear, and clamped to the
+min/max values for that gear. The scale of gear 1 is assumed
+to be 1, so the output device scale should be chosen
+accordingly. The scale of gear 2 is relative to gear 1, so
+if gear 2 runs the spindle 2.5 times as fast as gear 1,
+scale2 should be set to 2.5.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>gearchange.</b><i>N</i>
+(requires a floating-point thread)</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>gearchange.</b><i>N</i><b>.sel</b>
+bit in</p>
+
+<p style="margin-left:22%;">Gear selection input</p>
+
+
+<p style="margin-left:11%;"><b>gearchange.</b><i>N</i><b>.speed-in</b>
+float in</p>
+
+<p style="margin-left:22%;">Speed command input</p>
+
+
+<p style="margin-left:11%;"><b>gearchange.</b><i>N</i><b>.speed-out</b>
+float out</p>
+
+<p style="margin-left:22%;">Speed command to DAC/PWM</p>
+
+
+<p style="margin-left:11%;"><b>gearchange.</b><i>N</i><b>.dir-in</b>
+bit in</p>
+
+<p style="margin-left:22%;">Direction command input</p>
+
+
+<p style="margin-left:11%;"><b>gearchange.</b><i>N</i><b>.dir-out</b>
+bit out</p>
+
+<p style="margin-left:22%;">Direction output - possibly
+inverted for second gear</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>gearchange.</b><i>N</i><b>.min1</b>
+float rw (default: <i>0</i>)</p>
+
+<p style="margin-left:22%;">Minimum allowed speed in gear
+range 1</p>
+
+
+<p style="margin-left:11%;"><b>gearchange.</b><i>N</i><b>.max1</b>
+float rw (default: <i>100000</i>)</p>
+
+<p style="margin-left:22%;">Maximum allowed speed in gear
+range 1</p>
+
+
+<p style="margin-left:11%;"><b>gearchange.</b><i>N</i><b>.min2</b>
+float rw (default: <i>0</i>)</p>
+
+<p style="margin-left:22%;">Minimum allowed speed in gear
+range 2</p>
+
+
+<p style="margin-left:11%;"><b>gearchange.</b><i>N</i><b>.max2</b>
+float rw (default: <i>100000</i>)</p>
+
+<p style="margin-left:22%;">Maximum allowed speed in gear
+range 2</p>
+
+
+<p style="margin-left:11%;"><b>gearchange.</b><i>N</i><b>.scale2</b>
+float rw (default: <i>1.0</i>)</p>
+
+<p style="margin-left:22%;">Relative scale of gear 2 vs.
+gear 1 Since it is assumed that gear 2 is &quot;high
+gear&quot;, <b>scale2</b> must be greater than 1, and will
+be reset to 1 if set lower.</p>
+
+
+<p style="margin-left:11%;"><b>gearchange.</b><i>N</i><b>.reverse</b>
+bit rw (default: <i>0</i>)</p>
+
+<p style="margin-left:22%;">Set to 1 to reverse the spindle
+in second gear</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/gearchange.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

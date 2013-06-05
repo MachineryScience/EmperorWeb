@@ -1,0 +1,995 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/linuxcnc2hal_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:26 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>LinuxCNC et HAL</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>LinuxCNC et HAL</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph" id="cha:LinuxCNC-et-HAL"><p></p></div>
+<div class="paragraph"><p>Voir également la man page <em>motion(9)</em>.</p></div>
+</div>
+</div>
+<h2 id="sec:Motion">1. motion (temps réel)</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Ces pins et paramètres sont créés par le module temps réel <em>motmod</em>.
+Ce module fourni une interface vers HAL pour le planificateur de mouvements de
+ LinuxCNC. En gros, motmod prends dans une liste de points de cheminement
+et génère un flux de positions respectant les limites de contrainte des
+articulations. Ce flux sera reçu simultanément par tous les pilotes de moteurs.</p></div>
+<div class="paragraph"><p>Optionnellement le nombre d&#8217;E/S numériques est fixé avec <em>num_dio</em>.
+Le nombre d&#8217;E/S analogiques est fixé avec <em>num_aio</em>. Le nombre par défaut est 4
+de chaque.</p></div>
+<div class="paragraph"><p>Les noms de pin commençant par <em>axis</em> sont actuellement des valeurs
+d&#8217;articulations, mais les pins et les paramètres sont également appelés <em>axis.N</em>.
+Ils sont lus et mis à jour par la fonction <em>motion-controller</em>.</p></div>
+<div class="paragraph"><p><em>motion</em> est chargé par la commande <em>motmod</em>.
+La cinématique doit être chargée avant motion.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt motmod [base_period_nsec=period] [servo_period_nsec=period] \
+[traj_period_nsec=period] [num_joints=[0-9] ([num_dio=1-64] num_aio=1-16])]</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>base_period_nsec = 50000</em> - période de <em>Base</em> des tâches, en nanosecondes.
+  C&#8217;est le <em>thread</em> le plus rapide de la machine.
+</p>
+</li>
+</ul></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">Sur les systèmes à base de servomoteurs, il n&#8217;y a généralement aucune raison
+d&#8217;avoir une valeur <em>base_period_nsec</em> inférieure à celle de <em>servo_period_nsec</em>.
+Sur les machines avec une génération de pas logicielle, la valeur de
+<em>base_period_nsec</em> détermine le nombre maximum de pas par seconde. En l&#8217;absence
+de la nécessité d&#8217;une grande durée de pas ou d&#8217;un grand écart entre pas, le
+taux maximum de pas est de un pas par <em>base_period_nsec</em>. Ainsi, la
+<em>base_period_nsec</em> ci-dessus donnera un taux maximum absolu de 20000 pas
+par seconde. 50000ns (50 µs) est une valeur assez prudente. La plus petite
+valeur utilisable est relative au résultat du test de latence, à la
+longueur de pas nécessaire et à la vitesse du processeur.
+Choisir une <em>base_period_nsec</em> trop basse peut entrainer l&#8217;arrivée du message
+"Unexpected real time delay" ou "délai temps réel inattendu", le blocage de la
+machine ou son redémarrage spontané.</td>
+</tr></table>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>servo_period_nsec = 1000000</em> - C&#8217;est la période de la tâche <em>Servo</em> en
+  nanosecondes. Cette valeur doit être arrondie à un entier multiple de
+  <em>base_period_nsec</em>. Cette période est utilisée même sur les systèmes à
+  moteurs pas à pas.
+</p>
+<div class="paragraph"><p>C&#8217;est la vitesse à laquelle sont calculées les nouvelles positions des moteurs,
+que l&#8217;erreur de suivi est calculée, que les valeurs de sortie des PID sont
+rafraichies et ainsi de suite. Les valeurs par défaut conviennent pour la
+plupart des systèmes. C&#8217;est le taux de rafraichissement du planificateur de
+mouvement de bas niveau.</p></div>
+</li>
+<li>
+<p>
+<em>traj_period_nsec = 100000</em> - C&#8217;est la période, en nanosecondes, du
+  planificateur de mouvement. Cette valeur doit être arrondie à un entier
+  multiple de <em>servo_period_nsec</em>. Excepté pour les machines ayant une
+  cinématique particulière (ex: hexapodes) cette valeur n&#8217;a pas de raison
+  d'être supérieure à celle de <em>servo_period_nsec</em>.
+</p>
+</li>
+</ul></div>
+<h3 id="_options">1.1. Options</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si le nombre d&#8217;entrées/sorties numériques demandées est supérieur à la valeur
+par défaut de 4, il est possible d&#8217;en ajouter jusqu'à 64 en utilisant
+l&#8217;option num_dio au chargement de motmod.</p></div>
+<div class="paragraph"><p>Si le nombre d&#8217;entrées/sorties analogiques demandées est supérieur à la
+valeur par défaut de 4, il est possible d&#8217;en ajouter jusqu'à 16 en utilisant
+l&#8217;option num_aio au chargement de motmod.</p></div>
+<h3 id="_pins">1.2. Pins </h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+motion.adaptive-feed
+</dt>
+<dd>
+<p>
+     (float, in) Quand la vitesse est placée en mode adaptatif avec
+    <em>M52 P1</em> la vitesse commandée est multipliée par cette valeur. Cet
+    effet est
+     multiplicatif avec <em>motion.feed-hold</em> et la valeur du correcteur de
+    vitesse du niveau NML.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.analog-in-00
+</dt>
+<dd>
+<p>
+     (float, in) Ces pins (00, 01, 02, 03 ou plus si configurées) sont
+    contrôlées par <em>M66</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.analog-out-00
+</dt>
+<dd>
+<p>
+     (float, out) Ces pins (00, 01, 02, 03 ou plus si configurées) sont contrôlées par <em>M67</em> ou <em>M68</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.coord-error
+</dt>
+<dd>
+<p>
+     (bit, out) TRUE quand le mouvement est en erreur, ex: dépasser une
+    limite logicielle.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.coord-mode
+</dt>
+<dd>
+<p>
+     (bit, out) TRUE quand le mouvement est en <em>mode coordonnées</em> par
+    opposistion au <em>mode téléopération</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.current-vel
+</dt>
+<dd>
+<p>
+    (float, out) La vitesse courante de l&#8217;outil.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.digital-in-00
+</dt>
+<dd>
+<p>
+     (bit, in) Ces pins (00, 01, 02, 03 ou plus si configurées) sont contrôlées par <em>M62</em> à <em>M65</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.digital-out-00
+</dt>
+<dd>
+<p>
+    (bit, out) Ces pins (00, 01, 02, 03 ou plus si configurées) sont controlées par <em>M62</em> à <em>M65</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.distance-to-go
+</dt>
+<dd>
+<p>
+    (float, out) Distance restante pour terminer le mouvement courant.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.enable
+</dt>
+<dd>
+<p>
+     (bit, in) Si ce bit devient FALSE, les mouvements s&#8217;arrêtent, la
+    machine est placée dans l'état “machine arrêtée” et un message est
+    affiché pour l&#8217;opérateur. En fonctionnement normal, ce bit devra être
+    mis TRUE.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.feed-hold
+</dt>
+<dd>
+<p>
+     (bit, in) Quand la vitesse est placée en mode arrêt contrôlé avec
+    <em>M53 P1</em> et que ce bit est TRUE, la vitesse est fixée à 0.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.motion-inposition
+</dt>
+<dd>
+<p>
+    (bit, out) TRUE si la machine est en position.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.motion-enabled
+</dt>
+<dd>
+<p>
+    (bit, out) TRUE quand l'état de la machine est <em>machine on</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.on-soft-limit
+</dt>
+<dd>
+<p>
+    (bit, out) TRUE quand la machine est sur une limite logicielle.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.probe-input
+</dt>
+<dd>
+<p>
+     (bit, in) <em>G38.x</em> utilise la valeur de cette pin pour déterminer
+    quand la sonde de mesure a touché. TRUE le contact de la sonde est fermé
+    (touche), FALSE le contact de la sonde est ouvert.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.program-line
+</dt>
+<dd>
+<p>
+     (s32, out) La ligne en cours d&#8217;exécution pendant le déroulement du programme.
+    Zéro si pas en marche ou entre deux lignes, pendant le changement de pas de programme.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.requested-vel
+</dt>
+<dd>
+<p>
+     (float, out) La vitesse courante requise en unités utilisateur par seconde selon le réglage F=n du fichier G-code. Les correcteurs de vitesse et autres ajustements ne s&#8217;appliquent pas à cette pin.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.spindle-at-speed
+</dt>
+<dd>
+<p>
+     (bit, in) Les mouvements passent en pause tant que cette pin est TRUE,
+    sous les conditions suivantes: avant le premier mouvement d&#8217;avance
+    suivant chaque démarrage de broche ou changement de vitesse; après le
+    démarrage de tout enchainement de mouvements avec broche synchronisée;
+    et si en mode CSS, à chaque transition avance rapide -&gt; avance travail.
+    Cette entrée peut être utilisée pour s&#8217;assurer que la broche a atteint
+    sa vitesse, avant de lancer un mouvement d&#8217;usinage. Elle peut également
+    être utilisée sur un tour travaillant en mode CSS, au passage d&#8217;un
+    grand diamètre à un petit, pour s&#8217;assurer que la vitesse a été
+    suffisamment réduite avant la prise de passe sur le petit diamètre et
+    inversement, lors du passage d&#8217;un petit diamètre vers un grand, pour
+    s&#8217;assurer que la vitesse a été suffisamment augmentée. Beaucoup de
+    variateurs de fréquence disposent d&#8217;une sortie <em>vitesse atteinte</em>.
+    Sinon, il est facile de générer ce signal avec le composant <em>near</em>, par
+    comparaison entre la vitesse de broche demandée et la vitesse actuelle.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.spindle-brake
+</dt>
+<dd>
+<p>
+    (bit, out) TRUE quand le frein de broche doit être activé.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.spindle-forward
+</dt>
+<dd>
+<p>
+    (bit, in) TRUE quand la broche doit tourner en sens horaire.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.spindle-index-enable
+</dt>
+<dd>
+<p>
+     (bit, I/O) Pour les mouvements avec broche synchronisée, ce signal
+    doit être raccordé à la pin <em>index-enable</em> du codeur de broche.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.spindle-on
+</dt>
+<dd>
+<p>
+    (bit, out) TRUE quand la broche doit tourner.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.spindle-reverse
+</dt>
+<dd>
+<p>
+    (bit, out) TRUE quand la broche doit tourner en sens anti-horaire.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.spindle-revs
+</dt>
+<dd>
+<p>
+     (float, in) Pour le bon fonctionnement des mouvements avec broche
+    synchronisée, ce signal doit être raccordé à la broche <em>position</em> du
+    codeur de broche. La position donnée par le codeur de broche doit être
+    étalonnée pour que <em>spindle-revs</em> augmente de 1.0 pour chaque tour de
+    broche dans le sens horaire (<em>M3</em>).
+</p>
+</dd>
+<dt class="hdlist1">
+motion.spindle-speed-in
+</dt>
+<dd>
+<p>
+     (float, in) Donne la vitesse actuelle de rotation de la broche
+    exprimée en tours par seconde. Elle est utilisée pour les mouvements en
+    unités par tour (<em>G95</em>). Si le pilote du codeur de broche ne dispose pas
+    d&#8217;une sortie <em>vitesse</em>, il est possible d&#8217;en générer une en passant la
+    position de la broche au travers d&#8217;un composant ddt. Si la machine n&#8217;a pas de
+    codeur de broche, il est possible d&#8217;utiliser <em>motion.spindle-speed-out-rps</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.spindle-speed-out
+</dt>
+<dd>
+<p>
+     (float, out) Consigne de vitesse de rotation de la broche, exprimée en
+    tours par minute. Positive pour le sens horaire (<em>M3</em>), négative pour le
+    sens anti-horaire (<em>M4</em>).
+</p>
+</dd>
+<dt class="hdlist1">
+motion.spindle-speed-out-rps
+</dt>
+<dd>
+<p>
+     (float, out) Vitesse de rotation broche commandée tours par seconde. Valeur positive
+    pour le sens horaire (<em>M3</em>), valeur négative pour le sens anti-horaire (<em>M4</em>).
+</p>
+</dd>
+<dt class="hdlist1">
+motion.teleop-mode
+</dt>
+<dd>
+<p>
+     (bit, out) TRUE quand motion est en <em>mode téléopération</em>, par opposition au
+    <em>mode coordonné</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.tooloffset.x:: à motion.tooloffset.w
+</dt>
+<dd>
+<p>
+     (float, out; un par axe) montre l&#8217;offset d&#8217;outil courant. Il peut provenir de la
+    table d&#8217;outils (<em>G43 actif</em>), ou du G-code (<em>G43.1 actif</em>)
+</p>
+</dd>
+</dl></div>
+<h3 id="_param_tres">1.3. Paramètres</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Beaucoup de ces paramètres servent d&#8217;aide au déboguage et sont sujets
+aux changements ou au retrait à tout moment.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+motion-command-handler.time
+</dt>
+<dd>
+<p>
+    (s32, RO)
+</p>
+</dd>
+<dt class="hdlist1">
+motion-command-handler.tmax
+</dt>
+<dd>
+<p>
+    (s32, RW)
+</p>
+</dd>
+<dt class="hdlist1">
+motion-controller.time
+</dt>
+<dd>
+<p>
+    (s32, RO)
+</p>
+</dd>
+<dt class="hdlist1">
+motion-controller.tmax
+</dt>
+<dd>
+<p>
+    (s32, RW)
+</p>
+</dd>
+<dt class="hdlist1">
+motion.debug-bit-0
+</dt>
+<dd>
+<p>
+    (bit, RO) Utilisé pour le déboguage.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.debug-bit-1
+</dt>
+<dd>
+<p>
+    (bit, RO) Utilisé pour le déboguage.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.debug-float-0
+</dt>
+<dd>
+<p>
+    (float, RO) Utilisé pour le déboguage.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.debug-float-1
+</dt>
+<dd>
+<p>
+    (float, RO) Utilisé pour le déboguage.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.debug-float-2
+</dt>
+<dd>
+<p>
+    (float, RO) Utilisé pour le déboguage.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.debug-float-3
+</dt>
+<dd>
+<p>
+    (float, RO) Utilisé pour le déboguage.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.debug-s32-0
+</dt>
+<dd>
+<p>
+    (s32, RO) Utilisé pour le déboguage.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.debug-s32-1
+</dt>
+<dd>
+<p>
+    (s32, RO) Utilisé pour le déboguage.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.servo.last-period
+</dt>
+<dd>
+<p>
+     Le nombre de cycle du processeur entre les invoquations du thread
+    servo. Typiquement, ce nombre divisé par la vitesse du processeur donne
+    un temps en secondes. Il peut être utilisé pour determiner si le
+    contrôleur de mouvement en temps réel respecte ses contraintes de
+    timing.
+</p>
+</dd>
+<dt class="hdlist1">
+motion.servo.last-period-ns
+</dt>
+<dd>
+<p>
+    (float, RO)
+</p>
+</dd>
+<dt class="hdlist1">
+motion.servo.overruns
+</dt>
+<dd>
+<p>
+    (u32, RW)
+     En voyant de grandes différences entre les valeurs successives de
+    <em>motion.servo.last-period</em> , le contrôleur de mouvement peut
+    déterminer qu&#8217;il a échoué dans le respect de ses contraintes de timing.
+    Chaque fois qu&#8217;une erreur est détectée, cette valeur est incrémentée.
+</p>
+</dd>
+</dl></div>
+<h3 id="_fonctions">1.4. Fonctions</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Généralement, ces fonctions sont toutes les deux ajoutées à
+servo-thread dans l&#8217;ordre suivant:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+motion-command-handler
+</dt>
+<dd>
+<p>
+     Processus des commandes de mouvement provenant de l&#8217;interface
+    utilisateur.
+</p>
+</dd>
+<dt class="hdlist1">
+motion-controller
+</dt>
+<dd>
+<p>
+    Lance le contrôleur de mouvement de LinuxCNC.
+</p>
+</dd>
+</dl></div>
+</div>
+<h2 id="_axis_n_temps_r_el">2. axis.N (temps réel)</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Ces pins et paramètres sont créés par le module temps réel <em>motmod</em>.
+Ce sont en fait des valeurs d&#8217;articulations, mais les pins et les
+paramètres sont toujours appelés <em>axis.N</em>.<span class="footnote"><br />[Dans une machine à
+<em>cinématique triviale</em>, il y a correspondance une
+pour une, entre les articulations et les axes.
+Note Du Traducteur: nous utilisons dans cette traduction le terme <em>axe</em>,
+dans le cas d&#8217;une cinématique non triviale il devra être remplacé par
+le terme <em>articulation</em> (joint).]<br /></span>
+Ils sont lus et mis à jour par la fonction <em>motion-controller</em>.</p></div>
+<h3 id="_pins_2">2.1. Pins </h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+axis.N.active
+</dt>
+<dd>
+<p>
+    TRUE quand cet axe est actif.
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.amp-enable-out
+</dt>
+<dd>
+<p>
+    (bit, out) TRUE si l&#8217;ampli de cet axe doit être activé.
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.amp-fault-in
+</dt>
+<dd>
+<p>
+     (bit, in) Doit être mis TRUE si une erreur externe est détectée sur
+    l&#8217;ampli de cet axe.
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.backlash-corr
+</dt>
+<dd>
+<p>
+    (float, out)
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.backlash-filt
+</dt>
+<dd>
+<p>
+    (float, out)
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.backlash-vel
+</dt>
+<dd>
+<p>
+    (float, out)
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.coarse-pos-cmd
+</dt>
+<dd>
+<p>
+    (float, out)
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.error
+</dt>
+<dd>
+<p>
+    (bit, out)
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.f-error
+</dt>
+<dd>
+<p>
+    (float, out)
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.f-error-lim
+</dt>
+<dd>
+<p>
+    (float, out)
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.f-errored
+</dt>
+<dd>
+<p>
+    (bit, out)
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.faulted
+</dt>
+<dd>
+<p>
+    (bit, out)
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.free-pos-cmd
+</dt>
+<dd>
+<p>
+    (float, out)
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.free-tp-enable
+</dt>
+<dd>
+<p>
+    (bit, out)
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.free-vel-lim
+</dt>
+<dd>
+<p>
+    (float, out)
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.home-sw-in
+</dt>
+<dd>
+<p>
+     (bit, in) Doit être mis TRUE si le contact d&#8217;origine de cet axe est
+    activé.
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.homed
+</dt>
+<dd>
+<p>
+    (bit, out)
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.homing
+</dt>
+<dd>
+<p>
+    (bit, out) TRUE si la prise d&#8217;origine de cette axe est en cours.
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.in-position
+</dt>
+<dd>
+<p>
+    TRUE si cet axe, utilisant le <em>free planner</em>, a atteint un arrêt.
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.index-enable
+</dt>
+<dd>
+<p>
+     (bit, I/O) Doit être reliée à la broche <em>index-enable</em> du codeur de
+    cet axe pour activer la prise d&#8217;origine sur l&#8217;impulsion d&#8217;index.
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.jog-counts
+</dt>
+<dd>
+<p>
+     (s32, in) Connection à la broche <em>counts</em> d&#8217;un codeur externe utilisé
+    comme manivelle.
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.jog-enable
+</dt>
+<dd>
+<p>
+     (bit, in) Quand elle est TRUE (et en mode manuel), tout changement
+    dans <em>jog-counts</em> se traduira par un mouvement. Quand elle est FALSE,
+    <em>jog-counts</em> sera ignoré.
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.jog-scale
+</dt>
+<dd>
+<p>
+     (float, in) Fixe la distance, en unités machine, du déplacement pour
+    chaque évolution de <em>jog-counts</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.jog-vel-mode
+</dt>
+<dd>
+<p>
+     (bit, in) Quand elle est FALSE (par défaut), la manivelle fonctionne
+    en mode position. L&#8217;axe se déplace exactement selon l&#8217;incrément de jog
+    sélectionné pour chaque impulsion, sans s&#8217;occuper du temps que prendra
+    le mouvement. Quand elle est TRUE, la manivelle fonctionne en mode
+    vitesse. Le mouvement s&#8217;arrête quand la manivelle s&#8217;arrête, même si le
+    mouvement commandé n&#8217;est pas achevé.
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.joint-pos-cmd
+</dt>
+<dd>
+<p>
+     (float, out) La position commandée de l&#8217;articulation (par opposition à celle du moteur).
+    Ca peut être un écart entre les positions articulation et moteur. Par exemple;
+    la procédure de prise d&#8217;origine fixe cet écart.
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.joint-pos-fb
+</dt>
+<dd>
+<p>
+    (float, out) Le retour de position de l&#8217;articulation (par opposition à celui du moteur).
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.joint-vel-cmd
+</dt>
+<dd>
+<p>
+    (float, out)
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.kb-jog-active
+</dt>
+<dd>
+<p>
+    (bit, out)
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.motor-pos-cmd
+</dt>
+<dd>
+<p>
+    (float, out) Position commandée pour cette articulation.
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.motor-pos-fb
+</dt>
+<dd>
+<p>
+    (float, in) Position actuelle de cette articulation.
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.neg-hard-limit
+</dt>
+<dd>
+<p>
+    (bit, out)
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.pos-lim-sw-in
+</dt>
+<dd>
+<p>
+     (bit, in) Doit être mis TRUE si le fin de course de limite positive de
+    cette articulation est activé.
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.pos-hard-limit
+</dt>
+<dd>
+<p>
+    (bit, out)
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.neg-lim-sw-in
+</dt>
+<dd>
+<p>
+     (bit, in) Doit être mis TRUE si le fin de course de limite négative de
+    cette articulation est activé.
+</p>
+</dd>
+<dt class="hdlist1">
+axis.N.wheel-jog-active
+</dt>
+<dd>
+<p>
+    (bit, out)
+</p>
+</dd>
+</dl></div>
+<h3 id="_param_tres_2">2.2. Paramètres</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+axis.N.home-state
+</dt>
+<dd>
+<p>
+    Reflète l'étape de la prise d&#8217;origine en cours actuellement.
+</p>
+</dd>
+</dl></div>
+</div>
+<h2 id="_iocontrol_espace_utilisateur">3. iocontrol (espace utilisateur)</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Ces pins sont créées par le contrôleur d&#8217;entrées/sorties de l&#8217;espace
+utilisateur, habituellement appelé <em>io</em>.</p></div>
+<h3 id="_pins_3">3.1. Pins </h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+iocontrol.0.coolant-flood
+</dt>
+<dd>
+<p>
+    (bit, out) TRUE quand l&#8217;arrosage est demandé.
+</p>
+</dd>
+<dt class="hdlist1">
+iocontrol.0.coolant-mist
+</dt>
+<dd>
+<p>
+    (bit, out) TRUE quand le brouillard est demandé.
+</p>
+</dd>
+<dt class="hdlist1">
+iocontrol.0.emc-enable-in
+</dt>
+<dd>
+<p>
+     (bit, in) Doit être mise FALSE quand un arrêt d&#8217;urgence externe est
+    activé.
+</p>
+</dd>
+<dt class="hdlist1">
+iocontrol.0.lube
+</dt>
+<dd>
+<p>
+    (bit, out) TRUE quand le graissage centralisé est commandé.
+</p>
+</dd>
+<dt class="hdlist1">
+iocontrol.0.lube_level
+</dt>
+<dd>
+<p>
+    (bit, in) Doit être mise TRUE quand le niveau d&#8217;huile est correct.
+</p>
+</dd>
+<dt class="hdlist1">
+iocontrol.0.tool-change
+</dt>
+<dd>
+<p>
+    (bit, out) TRUE quand un changement d&#8217;outil est demandé.
+</p>
+</dd>
+<dt class="hdlist1">
+iocontrol.0.tool-changed
+</dt>
+<dd>
+<p>
+    (bit, in) Doit être mise TRUE quand le changement d&#8217;outil est terminé.
+</p>
+</dd>
+<dt class="hdlist1">
+iocontrol.0.tool-number
+</dt>
+<dd>
+<p>
+    (s32, out) Numéro de l&#8217;outil courant.
+</p>
+</dd>
+<dt class="hdlist1">
+iocontrol.0.tool-prep-number
+</dt>
+<dd>
+<p>
+    (s32, out) Numéro du prochain outil, donné par le mot <strong>T</strong> selon RS274NGC.
+</p>
+</dd>
+<dt class="hdlist1">
+iocontrol.0.tool-prepare
+</dt>
+<dd>
+<p>
+    (bit, out) TRUE quand une préparation d&#8217;outil est demandée.
+</p>
+</dd>
+<dt class="hdlist1">
+iocontrol.0.tool-prepared
+</dt>
+<dd>
+<p>
+     (bit, in) Doit être mise TRUE quand une préparation d&#8217;outil est
+    terminée.
+</p>
+</dd>
+<dt class="hdlist1">
+iocontrol.0.user-enable-out
+</dt>
+<dd>
+<p>
+    (bit, out) FALSE quand un arrêt d&#8217;urgence interne est activé.
+</p>
+</dd>
+<dt class="hdlist1">
+iocontrol.0.user-request-enable
+</dt>
+<dd>
+<p>
+    (bit, out) TRUE quand l&#8217;arrêt d&#8217;urgence est relâché.
+</p>
+</dd>
+</dl></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-02-10 11:36:07 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/linuxcnc2hal_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:26 GMT -->
+</html>

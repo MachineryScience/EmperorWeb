@@ -1,0 +1,407 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/quickstart/stepper_quickstart.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:10:15 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Stepper Quickstart</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Stepper Quickstart</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:stepper-quickstart"></a> </p></div>
+<div class="paragraph"><p>This section assumes you have done a standard install from the Live
+CD. After installation it is recommended that you connect the computer
+to the Internet and wait for the update manager to pop up and get the
+latest updates for LinuxCNC and Ubuntu before continuing. For more complex
+installations see the Integrator Manual.</p></div>
+</div>
+</div>
+<h2 id="_latency_test">1. Latency Test</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The Latency Test determines how late your computer processor is in
+responding to a request. Some hardware can interrupt the processing
+which could cause missed steps when running a CNC machine. This is the
+first thing you need to do. Follow the instructions
+<a href="../config/stepconf.html#latency-test">here</a> to run the latency test.</p></div>
+</div>
+<h2 id="sec:Sherline">2. Sherline</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>If you have a Sherline several predefined configurations are provided.
+This is on the main menu CNC/EMC then pick the Sherline configuration
+that matches yours and save a copy.</p></div>
+</div>
+<h2 id="sec:Xylotex">3. Xylotex</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>If you have a Xylotex you can skip the following sections and go
+straight to the <a href="../config/stepconf.html#cha:stepconf-wizard">Stepper Config Wizard</a>.
+LinuxCNC has provided quick setup for the Xylotex machines.</p></div>
+</div>
+<h2 id="_machine_information">4. Machine Information</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Gather the information about each axis of your machine.</p></div>
+<div class="paragraph"><p>Drive timing is in nano seconds. If you&#8217;re unsure about the timing
+many popular drives are included in the stepper configuration wizard.
+Note some newer Gecko drives have different timing than the original
+one. A <a href="http://wiki.linuxcnc.org/">list</a> is also on the user maintained LinuxCNC
+wiki site of more drives.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<thead>
+<tr>
+<th align="left" valign="top">Axis </th>
+<th align="left" valign="top"> Drive Type </th>
+<th align="left" valign="top"> Step Time ns </th>
+<th align="left" valign="top"> Step Space ns </th>
+<th align="left" valign="top"> Dir. Hold ns </th>
+<th align="left" valign="top"> Dir. Setup ns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">X</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Y</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Z</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<h2 id="_pinout_information">5. Pinout Information</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Gather the information about the connections from your machine to the
+PC parallel port.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<thead>
+<tr>
+<th align="left" valign="top">Output Pin </th>
+<th align="left" valign="top"> Typ. Function    </th>
+<th align="left" valign="top"> If Different </th>
+<th align="left" valign="top"> Input Pin </th>
+<th align="left" valign="top"> Typ. Function </th>
+<th align="left" valign="top"> If Different</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">1</p></td>
+<td align="left" valign="top"><p class="table">E-Stop Out</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">10</p></td>
+<td align="left" valign="top"><p class="table">X Limit/Home</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">2</p></td>
+<td align="left" valign="top"><p class="table">X Step</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">11</p></td>
+<td align="left" valign="top"><p class="table">Y Limit/Home</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">3</p></td>
+<td align="left" valign="top"><p class="table">X Direction</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">12</p></td>
+<td align="left" valign="top"><p class="table">Z Limit/Home</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">4</p></td>
+<td align="left" valign="top"><p class="table">Y Step</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">13</p></td>
+<td align="left" valign="top"><p class="table">A Limit/Home</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">5</p></td>
+<td align="left" valign="top"><p class="table">Y Direction</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">15</p></td>
+<td align="left" valign="top"><p class="table">Probe In</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">6</p></td>
+<td align="left" valign="top"><p class="table">Z Step</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">7</p></td>
+<td align="left" valign="top"><p class="table">Z Direction</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">8</p></td>
+<td align="left" valign="top"><p class="table">A Step</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">9</p></td>
+<td align="left" valign="top"><p class="table">A Direction</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">14</p></td>
+<td align="left" valign="top"><p class="table">Spindle CW</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">16</p></td>
+<td align="left" valign="top"><p class="table">Spindle PWM</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">17</p></td>
+<td align="left" valign="top"><p class="table">Amplifier Enable</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Note any pins not used should be set to Unused in the drop down box.
+These can always be changed later by running Stepconf again.</p></div>
+</div>
+<h2 id="_mechanical_information">6. Mechanical Information</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Gather information on steps and gearing. The result of this is steps
+per user unit which is used for SCALE in the .ini file.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<thead>
+<tr>
+<th align="left" valign="top">Axis </th>
+<th align="left" valign="top"> Steps/Rev. </th>
+<th align="left" valign="top"> Micro Steps </th>
+<th align="left" valign="top"> Motor Teeth </th>
+<th align="left" valign="top"> Leadscrew Teeth </th>
+<th align="left" valign="top"> Leadscrew Pitch</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">X</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Y</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Z</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Steps per revolution</em> - is how many stepper-motor-steps it takes to turn
+the stepper motor one revolution.
+Typical is 200.
+</p>
+</li>
+<li>
+<p>
+<em>Micro Steps</em> - is how many steps the drive needs
+to move the stepper motor one full step.
+If microstepping is not used, this number will be 1.
+If microstepping is used the value will depend on the
+stepper drive hardware.
+</p>
+</li>
+<li>
+<p>
+<em>Motor Teeth and Leadscrew Teeth</em> - is if you have some reduction
+(gears, chain, timing belt, etc.) between the motor and the leadscrew.
+If not, then set these both to 1.
+</p>
+</li>
+<li>
+<p>
+<em>Leadscrew Pitch</em> - is how much movement occurs
+(in user units) in one leadscrew turn.
+If you&#8217;re setting up in inches then it is inches per turn.
+If you&#8217;re setting up in millimeters then it is millimeters per turn.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The net result you&#8217;re looking for is how many CNC-output-steps it takes
+to move one user unit (inches or mm).</p></div>
+<div class="exampleblock">
+<div class="title">Example 1: Units inches</div>
+<div class="exampleblock-content">
+<div class="literalblock">
+<div class="content">
+<pre><tt>Stepper         = 200 steps per revolution
+Drive           =  10 micro steps per step
+Motor Teeth     =  20
+Leadscrew Teeth =  40
+Leadscrew Pitch =   0.2000 inches per turn</tt></pre>
+</div></div>
+</div></div>
+<div class="paragraph"><p>From the above information, the leadscrew moves 0.200 inches per turn.
+ - The motor turns 2.000 times per 1 leadscrew turn.
+ - The drive takes 10 microstep inputs to make the stepper step once.
+ - The drive needs 2000 steps to turn the stepper one revolution.
+So the scale needed is:</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/step-calc-inch-math.png" alt="images/step-calc-inch-math.png" />
+</div>
+</div>
+<div class="exampleblock">
+<div class="title">Example 2: Units mm</div>
+<div class="exampleblock-content">
+<div class="literalblock">
+<div class="content">
+<pre><tt>    Stepper         = 200 steps per revolution
+    Drive           =   8 micro steps per step
+    Motor Teeth     =  30
+    Leadscrew Teeth =  90
+    Leadscrew Pitch =   5.00 mm per turn</tt></pre>
+</div></div>
+</div></div>
+<div class="paragraph"><p>From the above information:
+ - The leadscrew moves 5.00 mm per turn.
+ - The motor turns 3.000 times per 1 leadscrew turn.
+ - The drive takes 8 microstep inputs to make the stepper step once.
+ - The drive needs 1600 steps to turn the stepper one revolution.
+So the scale needed is:</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/step-calc-mm-math.png" alt="images/step-calc-mm-math.png" />
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-01-24 16:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/quickstart/stepper_quickstart.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:10:15 GMT -->
+</html>

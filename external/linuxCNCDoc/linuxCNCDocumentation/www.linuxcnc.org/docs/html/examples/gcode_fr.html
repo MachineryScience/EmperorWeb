@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/examples/gcode_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:42 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Exemples de fichiers G-Code</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Exemples de fichiers G-Code</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>Après l&#8217;installation de LinuxCNC, plusieurs exemples de fichiers G-code se trouveront
+dans le répertoire /nc_files du dossier d&#8217;installation. Seuls les fichiers
+adaptés au type de la machine sont utilisable.</p></div>
+</div>
+</div>
+<h2 id="_exemples_pour_une_fraiseuse">1. Exemples pour une fraiseuse</h2>
+<div class="sectionbody">
+<h3 id="_fraisage_h_lico_dal_d_8217_un_orifice">1.1. Fraisage hélicoïdal d&#8217;un orifice</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Nom du fichier: useful-subroutines.ngc
+</p>
+</li>
+<li>
+<p>
+Description: Programme pour usiner une poche ou un alésage avec utilisation
+des paramètres.
+</p>
+</li>
+</ul></div>
+<h3 id="_rainurage">1.2. Rainurage</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Nom du fichier: useful-subroutines.ngc
+</p>
+</li>
+<li>
+<p>
+Decription: Programme pour fraiser une rainure avec utilisation des
+paramètres.
+</p>
+</li>
+</ul></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/useful-subroutines-ngc.png" alt="images/useful-subroutines-ngc.png" />
+</div>
+<div class="title">Figure 1. Les différents usinages de l&#8217;exemple</div>
+</div>
+<h3 id="_palpage_d_8217_une_grille_rectangulaire_de_points">1.3. Palpage d&#8217;une grille rectangulaire de points</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Nom du fichier: gridprobe.ngc
+</p>
+</li>
+<li>
+<p>
+Description: Relevé d&#8217;une grille rectangulaire de points au palpeur.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Ce programme palpe de manière répétitive, en suivant une grille
+régulière en XY et écrit les points mesurés dans le fichier
+<em>probe-results.txt</em> situé dans le même répertoire que le fichier .ini.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/gridprobe-ngc.png" alt="images/gridprobe-ngc.png" />
+</div>
+<div class="title">Figure 2. La grille de palpage</div>
+</div>
+<h3 id="_am_lioration_du_palpage_d_8217_une_grille_rectangulaire_de_points">1.4. Amélioration du palpage d&#8217;une grille rectangulaire de points</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Nom du fichier: smartprobe.ngc
+</p>
+</li>
+<li>
+<p>
+Description: Relevé d&#8217;une grille rectangulaire de points au palpeur.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Ce programme est une amélioration du précédent. Il palpe de manière
+répétitive, en suivant une grille régulière en XY et écrit les points
+mesurés dans le fichier <em>probe-results.txt</em> situé dans le même
+répertoire que le fichier .ini.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/smartprobe-ngc.png" alt="images/smartprobe-ngc.png" />
+</div>
+<div class="title">Figure 3. La grille de palpage plus fine</div>
+</div>
+<h3 id="_mesure_de_longueur_d_8217_outil">1.5. Mesure de longueur d&#8217;outil</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Nom du fichier: tool-lenght-probe.ngc
+</p>
+</li>
+<li>
+<p>
+Description: Mesure automatique de la longueur de l&#8217;outil.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Ce programme donne un exemple de la mesure automatique de longueur
+d&#8217;outil en utilisant un contact raccordé à l&#8217;entrée sonde. C&#8217;est très
+pratique pour une machine sur laquelle la longueur des outils est
+différente à chaque montage.</p></div>
+<h3 id="_mesure_d_8217_un_al_sage_au_palpeur">1.6. Mesure d&#8217;un alésage au palpeur</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Nom du fichier: probe-hole.ngc
+</p>
+</li>
+<li>
+<p>
+Description: Mesure le centre et le diamètre d&#8217;un alésage.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Ce programme montre comment trouver le centre d&#8217;un alésage, comment
+calculer son diamètre et enregistrer les mesures dans un fichier.</p></div>
+<h3 id="_compensation_de_rayon_d_8217_outil">1.7. Compensation de rayon d&#8217;outil</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Nom du fichier: comp-g1.ngc
+</p>
+</li>
+<li>
+<p>
+Description: Mouvements d&#8217;entrée et de sortie avec la compensation de
+rayon d&#8217;outil.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Ce programme démontre la particularité du chemin d&#8217;outil sans et avec
+la compensation de rayon d&#8217;outil. Le rayon d&#8217;outil est pris dans la
+table d&#8217;outils.</p></div>
+</div>
+<h2 id="_exemples_pour_un_tour">2. Exemples pour un tour</h2>
+<div class="sectionbody">
+<h3 id="_filetage">2.1. Filetage</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Nom du fichier: lathe-g76.ngc
+</p>
+</li>
+<li>
+<p>
+Description: Dressage, filetage et tronçonnage.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Ce programme donne un exemple de filetage automatique sur un tour avec
+utilisation des paramètres. Il demande quelques adaptations pour fonctionner, ces
+adaptations seront un excellent exercice.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-28 06:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/examples/gcode_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:43 GMT -->
+</html>

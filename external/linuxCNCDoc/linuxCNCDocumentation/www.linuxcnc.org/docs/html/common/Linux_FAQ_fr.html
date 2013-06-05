@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/Linux_FAQ_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:39 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Petite FAQ Linux</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Petite FAQ Linux</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:FAQ-Linux"></a> </p></div>
+<div class="paragraph"><p>Voici quelques commandes et techniques de base pour l&#8217;utilisateur
+débutant sous Linux. Beaucoup d&#8217;autres informations peuvent être
+trouvées sur <a href="http://www.linuxcnc.org/">le site web de LinuxCNC</a> ou dans les man
+pages.</p></div>
+</div>
+</div>
+<h2 id="_login_automatique">1. Login automatique</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Quand vous installez LinuxCNC avec le CD-Live Ubuntu, par défaut vous
+devez passer par la fenêtre de connexion à chaque démarrage du PC. Pour
+activer le login automatique ouvrez le menu
+<em>Système → Administration → Fenêtre de connexion</em>.
+Si l&#8217;installation est
+récente la fenêtre de connexion peut prendre quelques secondes pour
+s&#8217;ouvrir. Vous devez entrer le mot de passe utilisé pour l&#8217;installation
+pour accéder à la fenêtre des préférences. Ouvrez alors l&#8217;onglet
+<em>Sécurité</em>, cochez la case <em>Activer les connexions automatiques</em> et
+saisissez votre nom d&#8217;utilisateur ou choisissez en un dans la liste
+déroulante. Vous êtes maintenant dispensé de la fenêtre de connexion.</p></div>
+</div>
+<h2 id="_les_man_pages_a_id_sec_man_pages_a">2. Les Man Pages<a id="sec:Man-Pages"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Les Man pages sont des pages de manuel générées automatiquement le
+plus souvent. Les Man pages existent pour quasiment tous les programmes
+et les commandes de Linux.</p></div>
+<div class="paragraph"><p>Pour visualiser une man page ouvrez un terminal depuis <em>Applications →
+ Accessoires → Terminal</em>. Par exemple si vous voulez trouver quelques
+choses concernant la commande <em>find</em>, tapez alors dans le terminal:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>man find</tt></pre>
+</div></div>
+<div class="paragraph"><p>Utilisez les touches <em>Vers le haut</em> et <em>Vers le bas</em> pour faire
+défiler le texte et la touche <strong>Q</strong> pour quitter.</p></div>
+</div>
+<h2 id="_lister_les_modules_du_noyau">3. Lister les modules du noyau</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>En cas de problème il est parfois utile de connaître la liste des
+modules du noyau qui sont chargés. Ouvrez une console et tapez:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>lsmod</tt></pre>
+</div></div>
+<div class="paragraph"><p>Si vous voulez, pour le consulter tranquillement, envoyer le résultat
+de la commande dans un fichier, tapez la sous cette forme:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>lsmod &gt; mes_modules.txt</tt></pre>
+</div></div>
+<div class="paragraph"><p>Le fichier mes_modules.txt résultant, se trouvera alors dans votre
+répertoire home si c&#8217;est de là que vous avez ouvert la console.</p></div>
+</div>
+<h2 id="_diter_un_fichier_en_root_a_id_sec_editer_un_fichier_en_root_a">4. Éditer un fichier en root<a id="sec:Editer-un-fichier-en-root"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Éditer certains fichiers du système en root peut donner des résultats
+inattendus! Soyez très vigilant quand vous éditez en root, une erreur peut
+compromettre tout le système et l&#8217;empêcher de redémarrer. Vous pouvez
+ouvrir et lire de nombreux fichiers systèmes appartenant au root qui
+sont en mode lecture seule.</p></div>
+<h3 id="_a_la_ligne_de_commande">4.1. A la ligne de commande</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Ouvrir un terminal depuis <em>Applications → Accessoires → Terminal</em>.</p></div>
+<div class="paragraph"><p>Dans ce terminal, tapez:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>sudo gedit</tt></pre>
+</div></div>
+<div class="paragraph"><p>Ouvrez un fichier depuis <em>Fichiers → Ouvrir</em> puis éditez le.</p></div>
+<h3 id="_en_mode_graphique">4.2. En mode graphique</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Faites un clic droit sur le bureau et choisissez <em>Créer un lanceur..</em>.
+</p>
+</li>
+<li>
+<p>
+Tapez un nom tel que <em>éditeur</em>, dans la zone <em>Nom</em>.
+</p>
+</li>
+<li>
+<p>
+Entrez <em>gksudo "gnome-open %u"</em> dans la zone <em>Commande</em> et validez.
+</p>
+</li>
+<li>
+<p>
+Glissez un fichier et déposez le sur votre lanceur, il s&#8217;ouvrira alors
+   directement dans l'éditeur.
+</p>
+</li>
+</ol></div>
+</div>
+<h2 id="_commandes_du_terminal_a_id_sec_commandes_terminal_a">5. Commandes du terminal<a id="sec:Commandes-Terminal"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<h3 id="_r_pertoire_de_travail">5.1. Répertoire de travail</h3><div style="clear:left"></div>
+<div class="paragraph"><p> </p></div>
+<div class="paragraph"><p>Pour afficher le chemin du répertoire courant dans le terminal tapez:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>pwd</tt></pre>
+</div></div>
+<h3 id="_changer_de_r_pertoire">5.2. Changer de répertoire</h3><div style="clear:left"></div>
+<div class="paragraph"><p> </p></div>
+<div class="paragraph"><p>Pour remonter dans le répertoire précédent, tapez dans le terminal:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>cd ..</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour remonter de deux niveaux de répertoire, tapez dans le terminal:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>cd ../..</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour aller directement dans le sous-répertoire linuxcnc/configs tapez:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>cd linuxcnc/configs</tt></pre>
+</div></div>
+<h3 id="_lister_les_fichiers_du_r_pertoire_courant">5.3. Lister les fichiers du répertoire courant</h3><div style="clear:left"></div>
+<div class="paragraph"><p> </p></div>
+<div class="paragraph"><p>Pour voir le contenu du répertoire courant tapez:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>ls</tt></pre>
+</div></div>
+<h3 id="_trouver_un_fichier">5.4. Trouver un fichier</h3><div style="clear:left"></div>
+<div class="paragraph"><p> </p></div>
+<div class="paragraph"><p>La commande <em>find</em> peut être un peu déroutante pour le nouvel
+utilisateur de Linux. La syntaxe de base est:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>find répertoire_de_départ &lt;paramètres&gt; &lt;actions&gt;</tt></pre>
+</div></div>
+<div class="paragraph"><p>Par exemple, pour trouver tous les fichiers .ini dans votre répertoire
+linuxcnc utilisez d&#8217;abord la commande <em>pwd</em> pour trouver le répertoire
+courant. Ouvrez un nouveau terminal et tapez:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>pwd</tt></pre>
+</div></div>
+<div class="paragraph"><p>il vous est retourné par exemple le résultat suivant:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>/home/robert</tt></pre>
+</div></div>
+<div class="paragraph"><p>Avec cette information vous pouvez taper, par exemple, la commande:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>find /home/robert/linuxcnc -name *.ini -print</tt></pre>
+</div></div>
+<div class="paragraph"><p>Le <em>-name</em> est le nom du fichier que vous recherchez et le <em>-print</em>
+indique à find d&#8217;afficher le résultat dans le terminal. Le <em>*.ini</em>
+indique à find de retourner tous les fichiers portant l&#8217;extension
+<em>.ini</em></p></div>
+<h3 id="_rechercher_un_texte">5.5. Rechercher un texte</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Tapez dans un terminal:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>grep -lir "texte à rechercher" *</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour trouver tous les fichiers contenant le texte <em>"texte à rechercher"</em>  dans le
+répertoire courant, tous ses sous-répertoires et en ignorant la casse.
+Le paramètre <strong>-l</strong> demande de ne pas afficher les résultats normalement mais à la
+place, d&#8217;indiquer le nom des fichiers pour lesquels des résultats auraient été
+affichés. Le paramètre <strong>-i</strong> demande d&#8217;ignorer la casse. Le paramètre <strong>-r</strong> demande
+une recherche récursive (qui inclus tous les sous-répertoires dans la recherche).
+Le caractère <strong>*</strong> est un jocker indiquant <em>tous les fichiers</em>.</p></div>
+<h3 id="_messages_du_boot">5.6. Messages du boot</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Pour visualiser les messages du boot utilisez la commande <em>dmesg</em>
+depuis un terminal. Pour enregistrer ces messages dans un fichier,
+redirigez les avec:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>dmesg &gt; dmesg.txt</tt></pre>
+</div></div>
+<div class="paragraph"><p>Le contenu de ce fichier pourra alors être copié et collé à
+destination des personnes en ligne qui vous aideront à diagnostiquer
+votre problème.</p></div>
+<div class="paragraph"><p>Pour nettoyer le tampon des messages tapez cette commande:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>sudo dmesg -c</tt></pre>
+</div></div>
+<div class="paragraph"><p>C&#8217;est utile avant de lancer LinuxCNC, pour que ne soit enregistrés que les
+messages relatifs au fonctionnement courant de LinuxCNC.</p></div>
+<div class="paragraph"><p>Pour trouver les adresses des ports parallèles de la machine, tapez cette
+commande grep pour filtrer les informations contenues dans dmesg.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>dmesg|grep parport</tt></pre>
+</div></div>
+</div>
+<h2 id="_probl_mes_mat_riels">6. Problèmes matériels</h2>
+<div class="sectionbody">
+<h3 id="_informations_sur_le_mat_riel">6.1. Informations sur le matériel</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Pour voir la liste du matériel installé sur les ports PCI de votre carte mère,
+tapez la commande suivante dans un terminal:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>lspci -v</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour voir la liste du matériel installé sur les ports USB de votre carte mère,
+tapez la commande suivante dans un terminal:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>lsusb -v</tt></pre>
+</div></div>
+<h3 id="_r_solution_du_moniteur">6.2. Résolution du moniteur</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Lors de l&#8217;installation d&#8217;Ubuntu les réglages du moniteur sont automatiquement
+détectés. Il peut arriver que la détection fonctionne mal et que la résolution
+ne soit que celle d&#8217;un moniteur générique en 800x600.</p></div>
+<div class="paragraph"><p>Pour résoudre ce cas, suivez les instructions données ici:</p></div>
+<div class="paragraph"><p><a href="https://help.ubuntu.com/community/FixVideoResolutionHowto">https://help.ubuntu.com/community/FixVideoResolutionHowto</a></p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-03-30 16:36:04 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/Linux_FAQ_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:39 GMT -->
+</html>

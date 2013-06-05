@@ -1,0 +1,230 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:46 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/multiclick.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>MULTICLICK</title>
+
+</head>
+<body>
+
+<h1 align="center">MULTICLICK</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">multiclick
+&minus; Single-, double-, triple-, and quadruple-click
+detector</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="77%">
+
+
+<p style="margin-top: 1em"><b>loadrt multiclick
+[count=</b><i>N</i><b>|names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p> </td>
+<td width="12%">
+</td></tr>
+</table>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">A click is
+defined as a rising edge on the &rsquo;in&rsquo; pin,
+followed by the &rsquo;in&rsquo; pin being True for at most
+&rsquo;max-hold-ns&rsquo; nanoseconds, followed by a falling
+edge.</p>
+
+<p style="margin-left:11%; margin-top: 1em">A double-click
+is defined as two clicks, separated by at most
+&rsquo;max-space-ns&rsquo; nanoseconds with the
+&rsquo;in&rsquo; pin in the False state.</p>
+
+<p style="margin-left:11%; margin-top: 1em">I bet you can
+guess the definition of triple- and quadruple-click.</p>
+
+<p style="margin-left:11%; margin-top: 1em">You probably
+want to run the input signal through a debounce component
+before feeding it to the multiclick detector, if the input
+is at all noisy.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The
+&rsquo;*-click&rsquo; pins go high as soon as the input
+detects the correct number of clicks.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The
+&rsquo;*-click-only&rsquo; pins go high a short while after
+the click, after the click separator space timeout has
+expired to show that no further click is coming. This is
+useful for triggering halui MDI commands.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>multiclick.</b><i>N</i></p>
+
+<p style="margin-left:22%;">Detect single-, double-,
+triple-, and quadruple-clicks</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>multiclick.</b><i>N</i><b>.in</b>
+bit in</p>
+
+<p style="margin-left:22%;">The input line, this is where
+we look for clicks.</p>
+
+
+<p style="margin-left:11%;"><b>multiclick.</b><i>N</i><b>.single-click</b>
+bit out</p>
+
+<p style="margin-left:22%;">Goes high briefly when a
+single-click is detected on the &rsquo;in&rsquo; pin.</p>
+
+
+<p style="margin-left:11%;"><b>multiclick.</b><i>N</i><b>.single-click-only</b>
+bit out</p>
+
+<p style="margin-left:22%;">Goes high briefly when a
+single-click is detected on the &rsquo;in&rsquo; pin and no
+second click followed it.</p>
+
+
+<p style="margin-left:11%;"><b>multiclick.</b><i>N</i><b>.double-click</b>
+bit out</p>
+
+<p style="margin-left:22%;">Goes high briefly when a
+double-click is detected on the &rsquo;in&rsquo; pin.</p>
+
+
+<p style="margin-left:11%;"><b>multiclick.</b><i>N</i><b>.double-click-only</b>
+bit out</p>
+
+<p style="margin-left:22%;">Goes high briefly when a
+double-click is detected on the &rsquo;in&rsquo; pin and no
+third click followed it.</p>
+
+
+<p style="margin-left:11%;"><b>multiclick.</b><i>N</i><b>.triple-click</b>
+bit out</p>
+
+<p style="margin-left:22%;">Goes high briefly when a
+triple-click is detected on the &rsquo;in&rsquo; pin.</p>
+
+
+<p style="margin-left:11%;"><b>multiclick.</b><i>N</i><b>.triple-click-only</b>
+bit out</p>
+
+<p style="margin-left:22%;">Goes high briefly when a
+triple-click is detected on the &rsquo;in&rsquo; pin and no
+fourth click followed it.</p>
+
+
+<p style="margin-left:11%;"><b>multiclick.</b><i>N</i><b>.quadruple-click</b>
+bit out</p>
+
+<p style="margin-left:22%;">Goes high briefly when a
+quadruple-click is detected on the &rsquo;in&rsquo; pin.</p>
+
+
+<p style="margin-left:11%;"><b>multiclick.</b><i>N</i><b>.quadruple-click-only</b>
+bit out</p>
+
+<p style="margin-left:22%;">Goes high briefly when a
+quadruple-click is detected on the &rsquo;in&rsquo; pin and
+no fifth click followed it.</p>
+
+
+<p style="margin-left:11%;"><b>multiclick.</b><i>N</i><b>.state</b>
+s32 out</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>multiclick.</b><i>N</i><b>.invert-input</b>
+bit rw (default: <i>FALSE</i>)</p>
+
+<p style="margin-left:22%;">If FALSE (the default), clicks
+start with rising edges. If TRUE, clicks start with falling
+edges.</p>
+
+
+<p style="margin-left:11%;"><b>multiclick.</b><i>N</i><b>.max-hold-ns</b>
+u32 rw (default: <i>250000000</i>)</p>
+
+<p style="margin-left:22%;">If the input is held down
+longer than this, it&rsquo;s not part of a multi-click.
+(Default 250,000,000 ns, 250 ms.)</p>
+
+
+<p style="margin-left:11%;"><b>multiclick.</b><i>N</i><b>.max-space-ns</b>
+u32 rw (default: <i>250000000</i>)</p>
+
+<p style="margin-left:22%;">If the input is released longer
+than this, it&rsquo;s not part of a multi-click. (Default
+250,000,000 ns, 250 ms.)</p>
+
+
+<p style="margin-left:11%;"><b>multiclick.</b><i>N</i><b>.output-hold-ns</b>
+u32 rw (default: <i>100000000</i>)</p>
+
+<p style="margin-left:22%;">Positive pulses on the output
+pins last this long. (Default 100,000,000 ns, 100 ms.)</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/multiclick.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

@@ -1,0 +1,232 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Sat Mar 17 00:36:10 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/halsampler.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>HALSAMPLER</title>
+
+</head>
+<body>
+
+<h1 align="center">HALSAMPLER</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#USAGE">USAGE</a><br>
+<a href="#EXIT STATUS">EXIT STATUS</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#HISTORY">HISTORY</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br>
+<a href="#COPYRIGHT">COPYRIGHT</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">halsampler
+&minus; sample data from HAL in realtime</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>halsampler</b>
+[<i>options</i>]</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>sampler</b>(9)
+and <b>halsampler</b> are used together to sample HAL data
+in real time and store it in a file. <b>sampler</b> is a
+realtime HAL component that exports HAL pins and creates a
+FIFO in shared memory. It then begins sampling data from the
+HAL and storing it to the FIFO. <b>halsampler</b> is a user
+space program that copies data from the FIFO to stdout,
+where it can be redirected to a file or piped to some other
+program.</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>-c</b>
+<i>CHAN</i></p>
+
+<p style="margin-left:22%;">instructs <b>halsampler</b> to
+read from FIFO <i>CHAN</i>. FIFOs are numbered from zero,
+and the default value is zero, so this option is not needed
+unless multiple FIFOs have been created.</p>
+
+<p style="margin-left:11%;"><b>-n</b> <i>COUNT</i></p>
+
+<p style="margin-left:22%;">instructs <b>halsampler</b> to
+read <i>COUNT</i> samples from the FIFO, then exit. If
+<b>-n</b> is not specified, <b>halsampler</b> will read
+continuously until it is killed.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p><b>-t</b></p></td>
+<td width="8%"></td>
+<td width="78%">
+
+
+<p>instructs <b>halsampler</b> to tag each line by printing
+the sample number in the first column.</p></td></tr>
+</table>
+
+<p style="margin-left:11%;"><b>FILENAME</b></p>
+
+<p style="margin-left:22%;">instructs <b>halsampler</b> to
+write to <b>FILENAME</b> instead of to stdout.</p>
+
+<h2>USAGE
+<a name="USAGE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">A FIFO must
+first be created by loading <b>sampler</b>(9) with <b>halcmd
+loadrt</b> or a <b>loadrt</b> command in a .hal file. Then
+<b>halsampler</b> can be invoked to begin printing data from
+the FIFO to stdout.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Data is printed
+one line per sample. If <b>-t</b> was specified, the sample
+number is printed first. The data follows, in the order that
+the pins were defined in the config string. For example, if
+the <b>sampler</b> config string was &quot;ffbs&quot; then a
+typical line of output (without <b>-t</b>) would look
+like:</p>
+
+<p style="margin-left:11%; margin-top: 1em">123.55 33.4 0
+-12</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>halsampler</b>
+prints data as fast as possible until the FIFO is empty,
+then it retries at regular intervals, until it is either
+killed or has printed <i>COUNT</i> samples as requested by
+<b>-n</b>. Usually, but not always, data printed by
+<b>halsampler</b> will be redirected to a file or piped to
+some other program.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The FIFO size
+should be chosen to absorb samples captured during any
+momentary disruptions in the flow of data, such as disk
+seeks, terminal scrolling, or the processing limitations of
+subsequent program in a pipeline. If the FIFO gets full and
+<b>sampler</b> is forced to overwrite old data,
+<b>halsampler</b> will print &rsquo;overrun&rsquo; on a line
+by itself to mark each gap in the sampled data. If <b>-t</b>
+was specified, gaps in the sequential sample numbers in the
+first column can be used to determine exactly how many
+samples were lost.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The data format
+for <b>halsampler</b> output is the same as for
+<b>halstreamer</b>(1) input, so &rsquo;waveforms&rsquo;
+captured with <b>halsampler</b> can be replayed using
+<b>halstreamer</b>. The <b>-t</b> option should not be used
+in this case.</p>
+
+<h2>EXIT STATUS
+<a name="EXIT STATUS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">If a problem is
+encountered during initialization, <b>halsampler</b> prints
+a message to stderr and returns failure.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Upon printing
+<i>COUNT</i> samples (if <b>-n</b> was specified) it will
+shut down and return success. If it is terminated before
+printing the specified number of samples, it returns
+failure. This means that when <b>-n</b> is not specified, it
+will always return failure when terminated.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>sampler</b>(9)
+<b>streamer</b>(9) <b>halstreamer</b>(1)</p>
+
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+
+
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Original
+version by John Kasunich, as part of the LinuxCNC project.
+Improvements by several other members of the LinuxCNC
+development team.</p>
+
+<h2>REPORTING BUGS
+<a name="REPORTING BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Report bugs to
+jmkasunich AT users DOT sourceforge DOT net</p>
+
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Copyright
+&copy; 2006 John Kasunich. <br>
+This is free software; see the source for copying
+conditions. There is NO warranty; not even for
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/halsampler.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

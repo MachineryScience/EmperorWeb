@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/touchy_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:45 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>L&#8217;interface graphique Touchy</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>L&#8217;interface graphique Touchy</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:touchy-gui"></a> </p></div>
+<div class="paragraph"><p>Touchy est une interface utilisateur pour LinuxCNC, destinée à être utilisée avec les
+panneaux de commande de machines. Il ne nécessite ni clavier, ni souris.</p></div>
+<div class="paragraph"><p>Il a été conçu pour fonctionner également sur les écrans tactiles, en combinaison
+avec une manivelle électronique (MPG) et des boutons et interrupteurs.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/touchy_fr.png" alt="images/touchy_fr.png" />
+</div>
+<div class="title">Figure 1. L&#8217;interface tactile Touchy</div>
+</div>
+</div>
+</div>
+<h2 id="_panneau_de_configuration">1. Panneau de Configuration</h2>
+<div class="sectionbody">
+<h3 id="_connections_avec_hal">1.1. Connections avec HAL</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Touchy requiert qu&#8217;un fichier nommé <em>touchy.hal</em> soit créé, dans le même
+répertoire de configuration que le fichier ini, pour y connecter ses contrôles.
+Touchy exécute les commandes de HAL dans ce fichier après qu&#8217;il a créé ses propres
+pins, lesquelles sont disponibles pour connexion.</p></div>
+<div class="paragraph"><p>Touchy dispose de plusieurs pins de sortie destinées à être connectées au
+contrôleur de mouvement pour gérer les manivelles de jog:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+touchy.jog.wheel.increment,
+    qui doit être connecté à la pin <em>axis.N.jog-scale</em> de chacun des N axes.
+</p>
+</li>
+<li>
+<p>
+touchy.jog.wheel.N, qui doit être connecté à <em>axis.N.jog-enable</em> pour
+    chacun des N axes.
+</p>
+</li>
+<li>
+<p>
+En plus d'être connecté à <em>touchy.wheel-counts</em>, le compteur d&#8217;impulsions
+    de la manivelle doit aussi être connecté à <em>axis.N.jog-counts</em> pour chacun
+    des N axes. Si le composant de HAL <em>ilowpass</em> est utilisé pour adoucir les
+    mouvements de jog à la manivelle, il faut l&#8217;appliquer uniquement sur
+    <em>axis.N.jog-counts</em> et non sur <em>touchy.wheel-counts</em>.
+</p>
+</li>
+</ul></div>
+<h4 id="_contr_les_requis">1.1.1. Contrôles requis</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+Un bouton <em>Abandon</em> (contact momentané) connecté sur la HAL pin <em>touchy.abort</em>
+</p>
+</li>
+<li>
+<p>
+Un bouton de <em>Départ cycle</em> (contact momentané) connecté à <em>touchy.cycle-start</em>
+</p>
+</li>
+<li>
+<p>
+Volant/Manivelle/MPG, connecté à <em>touchy.wheel-counts</em> et à la pin de mouvement
+   comme décrit précédemment.
+</p>
+</li>
+<li>
+<p>
+Un bouton à bascule simple (contact à deux positions) connecté à
+<em>touchy.single-block</em>
+</p>
+</li>
+</ul></div>
+<h4 id="_contr_les_optionnels">1.1.2. Contrôles optionnels</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+Pour le jog continu, un interrupteur à trois positions avec retour au centre
+   (ou deux boutons momentanés) pour chacun des axes concernés, attaché à
+    <em>touchy.jog.continuous.x.negative</em> et à <em>touchy.jog.continuous.x.positive</em>,
+    etc. pour les autres axes.
+</p>
+</li>
+<li>
+<p>
+Si un bouton de genouillère est nécessaire, (pour jogger Z en haut de sa
+    course en grande vitesse), un bouton à contact momentané sera connecté à
+<em>touchy.quill-up</em>.
+</p>
+</li>
+</ul></div>
+<h4 id="_voyants_de_panneau_optionnels">1.1.3. Voyants de panneau optionnels</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>touchy.jog.active</em> indique quand les contrôles de jog du panneau sont actifs.
+</p>
+</li>
+<li>
+<p>
+<em>touchy.status-indicator</em> est allumé en continu quand la machine exécute un
+    G-code et clignote quand la machine est en marche mais en pause, ou en
+    vitesse à zéro.
+</p>
+</li>
+</ul></div>
+<h3 id="_recommand_pour_toutes_les_configurations">1.2. Recommandé pour toutes les configurations</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Un bouton d&#8217;Arrêt d&#8217;Urgence (A/U) câblé physiquement, dans la chaîne d&#8217;arrêt
+   d&#8217;urgence.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_r_glages">2. Réglages</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Pour utiliser Touchy, dans la section [DISPLAY] du fichier ini de la machine,
+modifier la ligne de cette manière: DISPLAY = touchy</p></div>
+<div class="paragraph"><p>Quand Touchy démarre pour la première fois, vérifier l&#8217;onglet <em>Préférences</em>.
+Dans le cas d&#8217;un écran tactile, choisir de cacher le pointeur dans les options,
+pour obtenir les meilleurs résultats.</p></div>
+<div class="paragraph"><p>La fenêtre d'état est fixée en haut, ajustée par la taille d&#8217;une police fixe.
+La résolution de Gnome peut affecter cela. Si le bas de l'écran est coupé, aller
+dans le gestionnaire de résolution de Gnome pour revenir au réglage d&#8217;origine,
+à 96 DPI.</p></div>
+<h3 id="_macros">2.1. Macros</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Touchy peut invoquer les macros avec mots O au travers de l&#8217;interface MDI. Pour
+configurer cette possibilité, dans la section [TOUCHY] du fichier ini, ajouter
+une ou plusieurs lignes avec MACRO. Chacune de ces lignes doit respecter le
+format suivant:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>MACRO=increment xinc yinc</tt></pre>
+</div></div>
+<div class="paragraph"><p>Dans lequel, <em>increment</em> est le nom de la macro, laquelle accepte deux paramètres,
+nommés ici <em>xinc</em> et <em>yinc</em>.</p></div>
+<div class="paragraph"><p>Maintenant, placer la macro proprement dite dans un fichier nommé
+<em>increment.ngc</em>. La variable PROGRAM_PREFIX du fichier ini pourra être
+utilisée pour identifier le répertoire contenant ce fichier. Il est également
+possible de le déclarer dans la variable SUBROUTINE_PATH.</p></div>
+<div class="paragraph"><p>Elle pourrait ressembler à cela:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>O&lt;increment&gt; sub
+G91 G0 X#1 Y#2
+G90
+O&lt;increment&gt; endsub</tt></pre>
+</div></div>
+<div class="paragraph"><p>Noter que le nom du sous-programme, le nom de la macro ainsi que le nom du
+fichier .ngc doivent correspondre exactement, y compris les minuscules/
+majuscules des noms.</p></div>
+<div class="paragraph"><p>Quand la macro est invoquée en pressant le bouton <em>Macro</em> dans l&#8217;onglet MDI
+de Touchy, il est possible de saisir des valeurs pour xinc et yinc, lesquelles
+seront passées à la macro comme étant respectivement <strong>#1</strong> et <strong>#2</strong>. Les
+paramètres laissées vides sont passés comme des valeur <strong>0</strong>.</p></div>
+<div class="paragraph"><p>Si il y a plusieurs macros différentes, presser le bouton <em>Macro</em>
+répétitivement pour les faire défiler.</p></div>
+<div class="paragraph"><p>Dans notre petit exemple, si -1 est entré pour xinc puis que le <em>Départ cycle</em>
+est pressé, un <strong>G0</strong>, sera invoqué, provoquant un déplacement en vitesse rapide,
+vers la gauche, de une unité machine.</p></div>
+<div class="paragraph"><p>Cette capacité d&#8217;utilisation des macros est très utile pour le palpage de
+contours ou d&#8217;orifices ainsi que pour d&#8217;autres opérations simples
+pré-configurées, de fraisage ou de perçage, qui pourront être réalisées depuis
+le panneau de Touchy sans avoir, pour cela, à écrire de programme G-code.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-02-04 09:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/touchy_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:45 GMT -->
+</html>

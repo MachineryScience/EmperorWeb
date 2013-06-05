@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/lathe_config.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:13:39 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Lathe Configuration</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Lathe Configuration</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:lathe-configuration"></a> </p></div>
+</div>
+</div>
+<h2 id="_default_plane">1. Default Plane</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>When LinuxCNC&#8217;s interpreter was first written, it was designed for mills.
+That is why the default plane is XY (G17). A normal lathe only uses the
+XZ plane (G18). To change the default plane place the following line in
+the .ini file in the RS274NGC section.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>RS274NGC_STARTUP_CODE = G18</tt></pre>
+</div></div>
+<div class="paragraph"><p>The above can be overwritten in a g code program so always set important things
+in the preamble of the g code file.</p></div>
+</div>
+<h2 id="_ini_settings">2. INI Settings</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The following .ini settings are needed for lathe mode in Axis in addition to
+or replacing normal settings in the .ini file.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[DISPLAY]
+DISPLAY = axis
+LATHE = 1
+[TRAJ]
+AXES = 3
+COORDINATES = X Z
+[AXIS_0]
+...
+[AXIS_2]
+...</tt></pre>
+</div></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-18 14:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/lathe_config.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:13:39 GMT -->
+</html>

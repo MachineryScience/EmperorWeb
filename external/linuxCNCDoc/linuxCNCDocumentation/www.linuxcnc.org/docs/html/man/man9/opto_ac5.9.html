@@ -1,0 +1,170 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Sat Mar 17 00:36:11 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/opto_ac5.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>OPTO_AC5</title>
+
+</head>
+<body>
+
+<h1 align="center">OPTO_AC5</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">opto_ac5
+&minus; Realtime driver for opto22 PCI-AC5 cards</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+opto_ac5 [portconfig0=0x</b><i>N</i><b>]
+[portconfig1=0x</b><i>N</i><b>]</b></p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">These pins and
+parameters are created by the realtime <b>opto_ac5</b>
+module. The portconfig0 and portconfig1 variables are used
+to configure the two ports of each card. The first 24 bits
+of a 32 bit number represent the 24 i/o points of each port.
+The lowest (rightmost) bit would be HAL pin 0 which is
+header connector pin 47. Then next bit to the left would be
+HAL pin 1, header connector pin 45 and so on, untill bit 24
+would be HAL pin 23 , header connector pin 1. &quot;1&quot;
+bits represent output points. So channel 0..11 as inputs and
+12..23 as outputs would be represented by (in binary)
+111111111111000000000000 which is 0xfff000 in hexadecimal.
+That is the number you would use Eg. loadrt opto_ac5
+portconfig0=0xfff000</p>
+
+<p style="margin-left:11%; margin-top: 1em">If no
+portconfig variable is specified the default configuration
+is 12 inputs then 12 outputs.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Up to 4 boards
+are supported. Boards are numbered starting at 0.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Portnumber can
+be 0 or 1. Port 0 is closes to the card bracket.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>opto_ac5.[</b><i>BOARDNUMBER</i>].<b>port[</b><i>PORTNUMBER</i>].<b>in-[</b><i>PINNUMBER</i>]
+OUT bit <b><br>
+
+opto_ac5.[</b><i>BOARDNUMBER</i>].<b>port[</b><i>PORTNUMBER</i>].<b>in-[</b><i>PINNUMBER</i>]-not
+OUT bit</p>
+
+<p style="margin-left:22%;">Connect a hal bit signal to
+this pin to read an i/o point from the card. The PINNUMBER
+represents the position in the relay rack. Eg. PINNUMBER 0
+is position 0 in a opto22 relay rack and would be pin 47 on
+the 50 pin header connector. The <b>-not</b> pin is inverted
+so that LOW gives TRUE and HIGH gives FALSE.</p>
+
+
+<p style="margin-left:11%;"><b>opto_ac5.[</b><i>BOARDNUMBER</i>].<b>port[</b><i>PORTNUMBER</i>].<b>out-[</b><i>PINNUMBER</i>]
+IN bit</p>
+
+<p style="margin-left:22%;">Connect a hal bit signal to
+this pin to write to an i/o point of the card. The PINNUMBER
+represents the position in the relay rack.Eg. PINNUMBER 23
+is position 23 in a opto22 relay rack and would be pin 1 on
+the 50 pin header connector.</p>
+
+
+<p style="margin-left:11%;"><b>opto_ac5.[</b><i>BOARDNUMBER</i>].<b>led[</b><i>NUMBER</i>]
+OUT bit</p>
+
+<p style="margin-left:22%;">Turns one of the on board LEDS
+on/off. LEDS are numbered 0 to 3.</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>opto_ac5.[</b><i>BOARDNUMBER</i>].<b>port[</b><i>PORTNUMBER</i>].<b>out-[</b><i>PINNUMBER</i>]-invert
+W bit</p>
+
+<p style="margin-left:22%;">When TRUE, invert the meaning
+of the corresponding <b>-out</b> pin so that TRUE gives LOW
+and FALSE gives HIGH.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>opto_ac5.0.digital-read</b></p>
+
+<p style="margin-left:22%;">Add this to a thread to read
+all the input points.</p>
+
+
+<p style="margin-left:11%;"><b>opto_ac5.0.digital-write</b></p>
+
+<p style="margin-left:22%;">Add this to a thread to write
+all the output points and LEDS.</p>
+
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">All boards are
+loaded with the same port configurations as the first
+board.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em">http://wiki.linuxcnc.org/cgi-bin/wiki.pl?OptoPciAc5</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/opto_ac5.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

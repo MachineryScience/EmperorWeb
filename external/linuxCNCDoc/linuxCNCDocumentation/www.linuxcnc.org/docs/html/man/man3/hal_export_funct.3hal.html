@@ -1,0 +1,180 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:20 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/hal_export_funct.3hal.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>hal_export_funct</title>
+
+</head>
+<body>
+
+<h1 align="center">hal_export_funct</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNTAX">SYNTAX</a><br>
+<a href="#ARGUMENTS">ARGUMENTS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#RETURN VALUE">RETURN VALUE</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em">hal_export_funct
+&minus; create a realtime function callable from a
+thread</p>
+
+<h2>SYNTAX
+<a name="SYNTAX"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="89%">
+
+
+<p style="margin-top: 1em">typedef void(*hal_funct_t)(void
+* <i>arg</i>, long <i>period</i>)</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="89%">
+
+
+<p style="margin-top: 1em">int hal_export_funct(const char
+*<i>name</i>, hal_funct_t <i>funct</i>, void *<i>arg</i>,
+int <i>uses_fp</i>, int <i>reentrant</i>, int
+<i>comp_id</i>)</p> </td></tr>
+</table>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+
+
+<h2>ARGUMENTS
+<a name="ARGUMENTS"></a>
+</h2>
+<td width="11%"></td>
+<td width="7%"></td>
+<td width="4%"></td>
+<td width="78%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p><i>name</i></p></td>
+<td width="4%"></td>
+<td width="78%">
+
+
+<p>The name of the function.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p><i>funct</i></p></td>
+<td width="4%"></td>
+<td width="78%">
+
+
+<p>The pointer to the function</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p><i>arg</i></p></td>
+<td width="4%"></td>
+<td width="78%">
+
+
+<p>The argument to be passed as the first parameter of
+<i>funct</i></p> </td></tr>
+</table>
+
+<p style="margin-left:11%;"><i>uses_fp</i></p>
+
+<p style="margin-left:22%;">Nonzero if the function uses
+floating-point operations, including assignment of floating
+point values with &quot;=&quot;.</p>
+
+<p style="margin-left:11%;"><i>reentrant</i></p>
+
+<p style="margin-left:22%;">If reentrant is non-zero, the
+function may be preempted and called again before the first
+call completes. Otherwise, it may only be added to one
+thread.</p>
+
+<p style="margin-left:11%;"><i>comp_id</i></p>
+
+<p style="margin-left:22%;">A HAL component identifier
+returned by an earlier call to <b>hal_init</b>.</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>hal_export_funct</b>
+makes a realtime function provided by a component available
+to the system. A subsequent call to
+<b>hal_add_funct_to_thread</b> can be used to schedule the
+execution of the function as needed by the system.</p>
+
+<p style="margin-left:11%; margin-top: 1em">When this
+function is placed on a HAL thread, and HAL threads are
+started, <i>funct</i> is called repeatedly with two
+arguments: <i>void *arg</i> is the same value that was given
+to <b>hal_export_funct</b>, and <i>long period</i> is the
+interval between calls in nanoseconds.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Each call to
+the function should do a small amount of work and
+return.</p>
+
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Returns a HAL
+status code.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>hal_create_thread(3hal)</b>,
+<b>hal_add_funct_to_thread(3hal)</b></p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/hal_export_funct.3hal.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

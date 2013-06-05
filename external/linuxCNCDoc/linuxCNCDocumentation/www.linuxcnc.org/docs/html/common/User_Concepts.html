@@ -1,0 +1,354 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/User_Concepts.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:11:49 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Important User Concepts</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Important User Concepts</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:important-user-concepts"></a> </p></div>
+<div class="paragraph"><p>This chapter covers important user concepts that should be understood
+before attempting to run a CNC machine with g code.</p></div>
+</div>
+</div>
+<h2 id="_trajectory_control_a_id_sec_trajectory_control_a">1. Trajectory Control<a id="sec:trajectory-control"></a></h2>
+<div class="sectionbody">
+<h3 id="_trajectory_planning">1.1. Trajectory Planning</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Trajectory planning, in general, is the means by which LinuxCNC follows the
+path specified by your G Code program, while still operating within the
+limits of your machinery.</p></div>
+<div class="paragraph"><p>A G Code program can never be fully obeyed. For example, imagine you
+specify as a single-line program the following move:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G1 X1 F10 (G1 is linear move, X1 is the destination, F10 is the speed)</tt></pre>
+</div></div>
+<div class="paragraph"><p>In reality, the whole move can&#8217;t be made at F10, since the machine
+must accelerate from a stop, move toward X=1, and then decelerate to
+stop again. Sometimes part of the move is done at F10, but for many
+moves, especially short ones, the specified feed rate is never reached
+at all. Having short moves in your G Code can cause your machine to
+slow down and speed up for the longer moves if the <em>naive cam detector</em>
+is not employed with G64 Pn.</p></div>
+<div class="paragraph"><p>The basic acceleration and deceleration described above is not complex
+and there is no compromise to be made. In the INI file the specified
+machine constraints such as maximum axis velocity and axis acceleration
+must be obeyed by the trajectory planner.</p></div>
+<h3 id="_path_following">1.2. Path Following</h3><div style="clear:left"></div>
+<div class="paragraph"><p>A less straightforward problem is that of path following. When you
+program a corner in G Code, the trajectory planner can do several
+things, all of which are right in some cases: it can decelerate to a
+stop exactly at the coordinates of the corner, and then accelerate in
+the new direction. It can also do what is called blending, which is to
+keep the feed rate up while going through the corner, making it
+necessary to round the corner off in order to obey machine constraints.
+You can see that there is a trade off here: you can slow down to get
+better path following, or keep the speed up and have worse path
+following. Depending on the particular cut, the material, the tooling,
+etc., the programmer may want to compromise differently.</p></div>
+<div class="paragraph"><p>Rapid moves also obey the current trajectory control. With moves long
+enough to reach maximum velocity on a machine with low acceleration and
+no path tolerance specified, you can get a fairly round corner.</p></div>
+<h3 id="_programming_the_planner">1.3. Programming the Planner</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The trajectory control commands are as follows:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>G61</em> - (Exact Path Mode) visits the programmed point exactly, even though
+    that means it might temporarily come to a complete stop in order to
+    change direction to the next programmed point.
+</p>
+</li>
+<li>
+<p>
+<em>G61.1</em> - (Exact Stop Mode) tells the planner to come to an exact stop at every
+    segment&#8217;s end.
+</p>
+</li>
+<li>
+<p>
+<em>G64</em> - (Blend Without Tolerance Mode) G64 is the default setting when you
+    start LinuxCNC. G64 is just blending and the naive cam detector is not
+    enabled. G64 and G64 P0 tell the planner to sacrifice path following
+    accuracy in order to keep the feed rate up. This is necessary for some
+    types of material or tooling where exact stops are harmful, and can
+    work great as long as the programmer is careful to keep in mind that
+    the tool&#8217;s path will be somewhat more curvy than the program specifies.
+    When using G0 (rapid) moves with G64 use caution on clearance moves and
+    allow enough distance to clear obstacles based on the acceleration
+    capabilities of your machine.
+</p>
+</li>
+<li>
+<p>
+<em>G64 P- Q-</em> - (Blend With Tolerance Mode) This enables the <em>naive cam detector</em> and
+    enables blending with a tolerance. If you program G64 P0.05, you tell
+    the planner that you want continuous feed, but at programmed corners
+    you want it to slow down enough so that the tool path can stay within
+    0.05 user units of the programmed path. The exact amount of slowdown
+    depends on the geometry of the programmed corner and the machine
+    constraints, but the only thing the programmer needs to worry about is
+    the tolerance. This gives the programmer complete control over the path
+    following compromise. The blend tolerance can be changed throughout the
+    program as necessary. Beware that a specification of G64 P0 has the
+    same effect as G64 alone (above), which is necessary for backward
+    compatibility for old G Code programs. See the G Code Chapter for more
+    information on G64 P- Q-.
+</p>
+</li>
+<li>
+<p>
+<em>Blending without tolerance</em> - The controlled point will touch each specified movement at at least
+    one point. The machine will never move at such a speed that it cannot
+    come to an exact stop at the end of the current movement (or next
+    movement, if you pause when blending has already started). The distance
+    from the end point of the move is as large as it needs to be to keep up
+    the best contouring feed.
+</p>
+</li>
+<li>
+<p>
+<em>Naive Cam Detector</em> - Successive G1 moves that involve only the XYZ axes that deviate less
+    than Q- from a straight line are merged into a single straight line.
+    This merged movement replaces the individual G1 movements for the
+    purposes of blending with tolerance. Between successive movements, the
+    controlled point will pass no more than P- from the actual endpoints of
+    the movements. The controlled point will touch at least one point on
+    each movement. The machine will never move at such a speed that it
+    cannot come to an exact stop at the end of the current movement (or
+    next movement, if you pause when blending has already started) On G2/3
+    moves in the G17 (XY) plane when the maximum deviation of an arc from a
+    straight line is less than the G64 Q- tolerance the arc is broken into
+    two lines (from start of arc to midpoint, and from midpoint to end).
+    those lines are then subject to the naive cam algorithm for lines.
+    Thus, line-arc, arc-arc, and arc-line cases as well as line-line
+    benefit from the <em>naive cam detector</em>. This improves contouring
+    performance by simplifying the path.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>In the following figure the blue line represents the actual machine
+velocity. The red lines are the acceleration capability of the machine.
+The horizontal lines below each plot is the planned move. The upper
+plot shows how the trajectory planner will slow the machine down when
+short moves are encountered to stay within the limits of the machines
+acceleration setting to be able to come to an exact stop at the end of
+the next move. The bottom plot shows the effect of the Naive Cam
+Detector to combine the moves and do a better job of keeping the
+velocity as planned.</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/naive-cam.png" alt="images/naive-cam.png" />
+</div>
+<div class="title">Figure 1. Naive Cam Detector</div>
+</div>
+<h3 id="_planning_moves">1.4. Planning Moves</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Make sure moves are <em>long enough</em> to suit your machine/material.
+Principally because of the rule that the machine will never move at
+such a speed that it cannot come to a complete stop at the end of the
+current movement, there is a minimum movement length that will allow
+the machine to keep up a requested feed rate with a given acceleration
+setting.</p></div>
+<div class="paragraph"><p>The acceleration and deceleration phase each use half the ini file
+MAX_ACCELERATION. In a blend that is an exact reversal, this causes the
+total axis acceleration to equal the ini file MAX_ACCELERATION. In
+other cases, the actual machine acceleration is somewhat less than the
+ini file acceleration</p></div>
+<div class="paragraph"><p>To keep up the feed rate, the move must be longer than the distance it
+takes to accelerate from 0 to the desired feed rate and then stop
+again. Using A as <strong>1/2</strong> the ini file MAX_ACCELERATION
+and F as the feed rate <strong>in units per second</strong>, the acceleration time is
+<strong>t<sub>a</sub> = F/A</strong> and the acceleration distance is
+<strong>d<sub>a</sub> = F*t<sub>a</sub>/2</strong>. The deceleration time
+and distance are the same, making the critical distance
+<strong>d = d<sub>a</sub> + d<sub>d</sub> = 2 * d<sub>a</sub> = F<sup>2</sup>/A</strong>.</p></div>
+<div class="paragraph"><p>For example, for a feed rate of 1 inch per second and an acceleration of
+<strong>10 inches/sec<sup>2</sup></strong>, the critical distance is
+<strong>1<sup>2</sup>/10 = 1/10 = 0.1 inches</strong>.</p></div>
+<div class="paragraph"><p>For a feed rate of 0.5 inch per second, the critical distance is
+<strong>5<sup>2</sup>/100 = 25/10 = 0.025</strong> inches.</p></div>
+</div>
+<h2 id="_g_code">2. G Code</h2>
+<div class="sectionbody">
+<h3 id="_defaults">2.1. Defaults</h3><div style="clear:left"></div>
+<div class="paragraph"><p>When LinuxCNC first starts up many G and M codes are loaded by default. The
+current active G and M codes can be viewed on the MDI tab in the
+<em>Active G-Codes:</em> window in the AXIS interface. These G and M codes
+define the behavior of LinuxCNC and it is important that you understand what
+each one does before running LinuxCNC. The defaults can be changed when
+running a G-Code file and left in a different state than when you
+started your LinuxCNC session. The best practice is to set the defaults
+needed for the job in the preamble of your G-Code file and not assume
+that the defaults have not changed. Printing out the G-Code
+<a href="../gcode/gcode.html#quick-reference-table">Quick Reference</a> page can help you remember
+what each one is.</p></div>
+<h3 id="_feed_rate">2.2. Feed Rate</h3><div style="clear:left"></div>
+<div class="paragraph"><p>How the feed rate is applied depends on if an axis involved with the
+move is a rotary axis. Read and understand the <a href="../gcode/machining_center.html#sub:feed-rate">Feed Rate</a>
+section if you have a rotary axis or a lathe.</p></div>
+<h3 id="_tool_radius_offset">2.3. Tool Radius Offset</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Tool Radius Offset (G41/42) requires that the tool be able to touch
+somewhere along each programmed move without gouging the two adjacent
+moves. If that is not possible with the current tool diameter you will
+get an error. A smaller diameter tool may run without an error on the
+same path. This means you can program a cutter to pass down a path that
+is narrower than the cutter without any errors. See the
+<a href="../gcode/tool_compensation.html#sec:cutter-compensation">Cutter Compensation</a> Section
+for more information.</p></div>
+</div>
+<h2 id="_homing">3. Homing</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>After starting LinuxCNC each axis must be homed prior to running a program
+or running a MDI command.</p></div>
+<div class="paragraph"><p>If your machine does not have home switches a match mark on each axis
+can aid in homing the machine coordinates to the same place each time.</p></div>
+<div class="paragraph"><p>Once homed your soft limits that are set in the ini file will be used.</p></div>
+<div class="paragraph"><p>If you want to deviate from the default behavior, or want to use the
+Mini interface you will need to set the option NO_FORCE_HOMING = 1 in
+the [TRAJ] section of your ini file. More information on homing can be
+found in the Integrator Manual.</p></div>
+</div>
+<h2 id="_tool_changes">4. Tool Changes</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>There are several options when doing manual tool changes. See the
+[EMCIO] section of the Integrator Manual for information on
+configuration of these options. Also see the G28 and G30 section of the
+User Manual.</p></div>
+</div>
+<h2 id="_coordinate_systems">5. Coordinate Systems</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The Coordinate Systems can be confusing at first. Before running a CNC
+machine you must understand the basics of the coordinate systems used
+by LinuxCNC. In depth information on the LinuxCNC Coordinate Systems
+is in the <a href="../gcode/coordinates.html#cha:coordinate-system">Coordinate System</a> Section of this
+manual.</p></div>
+<h3 id="_g53_machine_coordinate">5.1. G53 Machine Coordinate</h3><div style="clear:left"></div>
+<div class="paragraph"><p>When you home LinuxCNC you set the G53 Machine Coordinate System to 0 for
+each axis homed.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+No other coordinate systems or tool offsets are changed by homing.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The only time you move in the G53 machine coordinate system is when
+you program a G53 on the same line as a move. Normally you are in the
+G54 coordinate system.</p></div>
+<h3 id="_g54_59_3_user_coordinates">5.2. G54-59.3 User Coordinates</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Normally you use the G54 Coordinate System. When an offset is applied
+to a current user coordinate system a small blue ball with lines will
+be at the machine origin when your DRO is displaying <em>Position:
+Relative Actual</em> in Axis. If your offsets are temporary use the Zero
+Coordinate System from the Machine menu or program <em>G10 L2 P1 X0 Y0 Z0</em>
+at the end of your G Code file. Change the <em>P</em> number to suit the
+coordinate system you wish to clear the offset in.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Offsets stored in a user coordinate system are retained when LinuxCNC is
+   shut down.
+</p>
+</li>
+<li>
+<p>
+Using the <em>Touch Off</em> button in Axis sets an offset for the chosen
+   User Coordinate System.
+</p>
+</li>
+</ul></div>
+<h3 id="_when_you_8217_re_lost">5.3. When You&#8217;re Lost</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If you&#8217;re having trouble getting 0,0,0 on the DRO when you think you
+should, you may have some offsets programmed in and need to remove
+them.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Move to the Machine origin with G53 G0 X0 Y0 Z0
+</p>
+</li>
+<li>
+<p>
+Clear any G92 offset with G92.1
+</p>
+</li>
+<li>
+<p>
+Use the G54 coordinate system with G54
+</p>
+</li>
+<li>
+<p>
+Set the G54 coordinate system to be the same as the
+   machine coordinate system with G10 L2 P1 X0 Y0 Z0 R0
+</p>
+</li>
+<li>
+<p>
+Turn off tool offsets with G49
+</p>
+</li>
+<li>
+<p>
+Turn on the Relative Coordinate Display from the menu
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Now you should be at the machine origin X0 Y0 Z0 and the relative
+coordinate system should be the same as the machine coordinate system.</p></div>
+</div>
+<h2 id="_machine_configurations">6. Machine Configurations</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The following diagram shows a typical mill showing direction of travel
+of the tool and the mill table and limit switches. Notice how the mill table
+moves in the opposite direction of the Cartesian coordinate system arrows
+shown by the <em>Tool Direction</em> image. This makes the <em>tool</em> move in the
+correct direction in relation to the material.</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/mill-diagram.png" alt="images/mill-diagram.png" />
+</div>
+<div class="title">Figure 2. Mill Configuration</div>
+</div>
+<div class="paragraph"><p>The following diagram shows a typical lathe showing direction of travel
+of the tool and limit switches.</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/lathe-diagram.png" alt="images/lathe-diagram.png" />
+</div>
+<div class="title">Figure 3. Lathe Configuration</div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-01-24 16:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/User_Concepts.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:11:57 GMT -->
+</html>

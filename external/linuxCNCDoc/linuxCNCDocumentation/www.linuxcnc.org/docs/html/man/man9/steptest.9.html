@@ -1,0 +1,162 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:47 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/steptest.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>STEPTEST</title>
+
+</head>
+<body>
+
+<h1 align="center">STEPTEST</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">steptest
+&minus; Used by Stepconf to allow testing of acceleration
+and velocity values for an axis.</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="74%">
+
+
+<p style="margin-top: 1em"><b>loadrt steptest
+[count=</b><i>N</i><b>|names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p> </td>
+<td width="15%">
+</td></tr>
+</table>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>steptest.</b><i>N</i>
+(requires a floating-point thread)</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>steptest.</b><i>N</i><b>.jog-minus</b>
+bit in</p>
+
+<p style="margin-left:22%;">Drive TRUE to jog the axis in
+its minus direction</p>
+
+
+<p style="margin-left:11%;"><b>steptest.</b><i>N</i><b>.jog-plus</b>
+bit in</p>
+
+<p style="margin-left:22%;">Drive TRUE to jog the axis in
+its positive direction</p>
+
+
+<p style="margin-left:11%;"><b>steptest.</b><i>N</i><b>.run</b>
+bit in</p>
+
+<p style="margin-left:22%;">Drive TRUE to run the axis near
+its current position_fb with a trapezoidal velocity
+profile</p>
+
+
+<p style="margin-left:11%;"><b>steptest.</b><i>N</i><b>.maxvel</b>
+float in</p>
+
+<p style="margin-left:22%;">Maximum velocity</p>
+
+
+<p style="margin-left:11%;"><b>steptest.</b><i>N</i><b>.maxaccel</b>
+float in</p>
+
+<p style="margin-left:22%;">Permitted Acceleration</p>
+
+
+<p style="margin-left:11%;"><b>steptest.</b><i>N</i><b>.amplitude</b>
+float in</p>
+
+<p style="margin-left:22%;">Approximate amplitude of
+positions to command during &rsquo;run&rsquo;</p>
+
+
+<p style="margin-left:11%;"><b>steptest.</b><i>N</i><b>.dir</b>
+s32 in</p>
+
+<p style="margin-left:22%;">Direction from central point to
+test: 0 = both, 1 = positive, 2 = negative</p>
+
+
+<p style="margin-left:11%;"><b>steptest.</b><i>N</i><b>.position-cmd</b>
+float out <b><br>
+steptest.</b><i>N</i><b>.position-fb</b> float in <b><br>
+steptest.</b><i>N</i><b>.running</b> bit out <b><br>
+steptest.</b><i>N</i><b>.run-target</b> float out <b><br>
+steptest.</b><i>N</i><b>.run-start</b> float out <b><br>
+steptest.</b><i>N</i><b>.run-low</b> float out <b><br>
+steptest.</b><i>N</i><b>.run-high</b> float out <b><br>
+steptest.</b><i>N</i><b>.pause</b> s32 in (default:
+<i>0</i>)</p>
+
+<p style="margin-left:22%;">pause time for each end of run
+in seconds</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>steptest.</b><i>N</i><b>.epsilon</b>
+float rw (default: <i>.001</i>) <b><br>
+steptest.</b><i>N</i><b>.elapsed</b> float r</p>
+
+<p style="margin-left:22%;">Current value of the internal
+timer</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/steptest.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

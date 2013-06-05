@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/image-to-gcode_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:01 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Image-to-gcode: Usiner un depth maps</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Image-to-gcode: Usiner un depth maps</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="images/image-to-gcode.png" alt="images/image-to-gcode.png" />
+</div>
+</div>
+</div>
+</div>
+<h2 id="_qu_8217_est_ce_qu_8217_un_em_depth_map_em">1. Qu&#8217;est-ce qu&#8217;un <em>depth map</em>?</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Il s&#8217;agit d&#8217;une image en échelle de gris dont la luminosité de chaque
+pixel corresponds à la profondeur (ou hauteur) de chaque point de
+l&#8217;objet.</p></div>
+</div>
+<h2 id="_int_grer_image_to_gcode_dans_l_8217_interface_utilisateur_d_8217_axis">2. Intégrer image-to-gcode dans l&#8217;interface utilisateur d&#8217;AXIS</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Ajoutez les lignes suivantes dans la section: <em>[FILTER]</em> de votre
+fichier .ini pour qu&#8217;AXIS invoque automatiquement
+image-to-gcode à l&#8217;ouverture d&#8217;une image .png, .gif, ou .jpg:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>PROGRAM_EXTENSION = .png,.gif,.jpg Grayscale Depth Image</tt></pre>
+</div></div>
+<div class="paragraph"><p>Le fichier de configuration: <em>sim/axis.ini</em> est déjà configuré de
+cette façon.</p></div>
+</div>
+<h2 id="_utilisation_d_8217_image_to_gcode">3. Utilisation d&#8217;image-to-gcode</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>image-to-gcode peut être démarré soit en ouvrant une image dans AXIS,
+soit en invoquant image-to-gcode dans une console, de la manière
+suivante:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>image-to-gcode torus.png &gt; torus.ngc</tt></pre>
+</div></div>
+<div class="paragraph"><p>Ajustez les réglages dans la colonne de droite, puis pressez <em>OK</em> pour
+créer le G-code. Selon la taille de l&#8217;image et les options choisies, le
+traitement peut durer de quelques secondes à quelques minutes. Quand
+une image est appelée, le G-code sera automatiquement chargé et
+visualisé dans AXIS une fois le traitement terminé. Dans AXIS, faites
+<em>Recharger</em> pour afficher de nouveau l'écran d&#8217;options d'
+image-to-gcode, vous pourrez ainsi travailler en boucle.</p></div>
+</div>
+<h2 id="_les_diff_rentes_options">4. Les différentes options</h2>
+<div class="sectionbody">
+<h3 id="_unit_s">4.1. Unités</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Spécifie quelle unité sera utilisée dans le G-code généré G20 (pouces)
+ou G21 (mm), ce sera également l&#8217;unité utilisée par toutes les options
+marquées: <em>(units)</em>.</p></div>
+<h3 id="_invert_image">4.2. Invert Image</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si <em>no</em>, le pixel noir sera le point le plus bas et le pixel blanc le
+point le plus haut. Si <em>yes</em>, le pixel noir sera le point le plus haut
+et le pixel blanc le point le plus bas.</p></div>
+<h3 id="_normalize_image">4.3. Normalize Image</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si <em>yes</em>, le pixel le plus sombre est ramené au noir, le pixel le plus
+lumineux est ramené au blanc.</p></div>
+<h3 id="_expand_image_border">4.4. Expand Image Border</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si <em>None</em>, l&#8217;image entrée sera utilisée telle-quelle, les détails les
+plus aux bords de l&#8217;image pourraient être coupés. Si <em>White</em> ou
+<em>Black</em>, alors une bordure de pixels égale au diamètre de l&#8217;outil sera
+ajoutée sur tout le pourtour pour éviter ce risque.</p></div>
+<h3 id="_tolerance_unit_s">4.5. Tolerance (unités)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Quand une série de points est proche d&#8217;une ligne droite au point
+d'être dans la <em>tolerance</em> , elle sera traitée comme une ligne droite
+en sortie. Augmenter la
+tolérance peut donner de meilleures performances de contourage avec
+LinuxCNC, mais peut aussi estomper ou gommer les détails les plus fins de
+l&#8217;image.</p></div>
+<h3 id="_pixel_size_unit_s">4.6. Pixel Size (unités)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Il y a beaucoup d&#8217;unités pour un pixel dans l&#8217;image entrée.
+Habituellement ce nombre est beaucoup plus petit que 1.0. Par exemple,
+pour usiner un objet de 50x50mm depuis une image de 400x400 pixels,
+utiliser un <em>pixel size</em> de 0.125, parce que 50 / 400 = 0.125.</p></div>
+<h3 id="_plunge_feed_rate_unit_s_par_minute">4.7. Plunge Feed Rate (unités par minute)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Vitesse du mouvement de plongée initial.</p></div>
+<h3 id="_feed_rate_unit_s_par_minute">4.8. Feed Rate (unités par minute)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Vitesse d&#8217;avance pour le reste de l&#8217;usinage.</p></div>
+<h3 id="_spindle_speed_rpm">4.9. Spindle Speed (RPM)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Vitesse de rotation de la broche, en tours/mn</p></div>
+<h3 id="_scan_pattern">4.10. Scan Pattern</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Modèles de balayage possibles:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Rangées
+</p>
+</li>
+<li>
+<p>
+Colonnes
+</p>
+</li>
+<li>
+<p>
+Rangées puis colonnes
+</p>
+</li>
+<li>
+<p>
+Colonnes puis rangées
+</p>
+</li>
+</ul></div>
+<h3 id="_scan_direction">4.11. Scan Direction</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Directions de balayage possibles:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Positive: le fraisage commence à de petites valeurs de X ou Y et se
+   poursuit avec des valeurs croissantes.
+</p>
+</li>
+<li>
+<p>
+Négative: le fraisage commence à des valeurs élevées de X ou Y et se
+   poursuit avec des valeurs décroissantes.
+</p>
+</li>
+<li>
+<p>
+Alternative: le fraisage commence aux valeurs de X ou Y où s&#8217;est
+   terminé le dernier mouvement. Cela réduit les déplacements <em>en l&#8217;air</em>.
+</p>
+</li>
+<li>
+<p>
+Up Milling: le fraisage commence en points bas et se poursuit vers les
+   points hauts.
+</p>
+</li>
+<li>
+<p>
+Down Milling: le fraisage commence en points hauts et se poursuit vers
+   les points bas.
+</p>
+</li>
+</ul></div>
+<h3 id="_depth_unit_s">4.12. Depth (unités)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le dessus du bloc est toujours à <em>Z=0</em>. La profondeur d&#8217;usinage dans
+le matériau est de <em>Z=-depth.</em></p></div>
+<h3 id="_step_over_pixels">4.13. Step Over (pixels)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Distance entre rangées ou colonnes adjacentes. Pour trouver le nombre
+en pixels pour une distance donnée en unités, calculez: <em>distance/pixel
+size</em> et arrondissez au nombre le plus proche'.' Par exemple: si <em>pixel
+size=.006</em> et le pas souhaité sur la <em>distance=.015</em>, alors utilisez un
+Step Over de 2 ou 3 pixels, parce que <em>.015/.006=2.5</em>'.'</p></div>
+<h3 id="_tool_diameter">4.14. Tool Diameter</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le diamètre du taillant de l&#8217;outil.</p></div>
+<h3 id="_safety_height">4.15. Safety Height</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La hauteur à laquelle les mouvements de traversée. image-to-gcode
+considère toujours le dessus du matériau comme étant: <em>Z=0</em>.</p></div>
+<h3 id="_tool_type">4.16. Tool Type</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La forme du taillant de l&#8217;outil. Les formes possibles sont:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Hémisphèrique
+</p>
+</li>
+<li>
+<p>
+Plate
+</p>
+</li>
+<li>
+<p>
+Vé à 45 degrés
+</p>
+</li>
+<li>
+<p>
+Vé à 60 degrés
+</p>
+</li>
+</ul></div>
+<h3 id="_lace_bounding">4.17. Lace bounding</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Contrôle si les zones relativement plates le long d&#8217;une colonne ou
+d&#8217;une rangée peuvent être ignorées. Ces options n&#8217;ont de sens que pour
+un fraisage dans les deux directions. Trois choix sont possibles:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+None: toutes les rangées et les colonnes seront entièrement fraisées.
+</p>
+</li>
+<li>
+<p>
+Secondary: lors du fraisage dans la deuxième direction, les zones qui
+   ne présentent pas une forte pente dans cette direction seront ignorées.
+</p>
+</li>
+<li>
+<p>
+Full: lors du fraisage dans la première direction, les zones qui
+   présentent une forte pente dans la deuxième direction seront ignorées.
+   Lors du fraisage dans la deuxième direction, les zones qui ne
+   présentent pas une forte pente dans cette direction seront ignorées.
+</p>
+</li>
+</ul></div>
+<h3 id="_contact_angle">4.18. Contact angle</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Quand <em>Lace bounding</em> n&#8217;est pas None, les pentes qui présentent une
+pente supérieure à <em>Contact angle</em> seront considérées comme de
+<em>fortes</em> pentes et celles en dessous de
+cet angle considérées comme de faible pentes.</p></div>
+<h3 id="_offset_d_bauche_et_profondeur_par_passe_d_bauche">4.19. Offset d'ébauche et profondeur par passe d'ébauche</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Image-to-gcode peut optionnellement produire des passes d'ébauche. La
+profondeur des passes d'ébauche successives est fixée par <em>Roughing
+depth per pass</em>. Par exemple, entrer 0.2 pour une première passe
+d'ébauche d&#8217;une profondeur de 0.2, la seconde passe d'ébauche aura une
+profondeur de 0.4 et ainsi de suite, jusqu'à-ce que la profondeur
+totale Depth de l&#8217;image soit atteinte. Aucune des passes d'ébauche
+n&#8217;usinera plus près de la partie finale que Roughing Offset. La figure
+ci-dessous montre une grande profondeur verticale à
+usiner. Sur cette image, la profondeur des passes d'ébauche est de 0.2
+pouces et Roughing Offset de 0.1 pouces.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/i2g-roughing.png" alt="images/i2g-roughing.png" />
+</div>
+<div class="title">Figure 1. Passes d'ébauche<a id="cap:Passes-Ebauche"></a></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-01-25 16:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/image-to-gcode_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:01 GMT -->
+</html>

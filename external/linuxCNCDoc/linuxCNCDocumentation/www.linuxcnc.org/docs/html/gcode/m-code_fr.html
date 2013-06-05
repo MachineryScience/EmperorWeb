@@ -1,0 +1,874 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gcode/m-code_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:59 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Les M-codes</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Les M-codes</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:M-codes"></a> </p></div>
+</div>
+</div>
+<h2 id="_table_des_m_codes">1. Table des M-codes</h2>
+<div class="sectionbody">
+<div class="tableblock">
+<table rules="all"
+width="60%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="28%" />
+<col width="71%" />
+<thead>
+<tr>
+<th align="center" valign="top"> Code                                                 </th>
+<th align="left" valign="top"> Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="m-code_fr.html#sec:M0-M1">M0 M1</a></p></td>
+<td align="left" valign="top"><p class="table">Pause dans le programme</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="m-code_fr.html#sec:M2-M30">M2 M30</a></p></td>
+<td align="left" valign="top"><p class="table">Fin de programme</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="m-code_fr.html#sec:M60">M60</a></p></td>
+<td align="left" valign="top"><p class="table">Pause pour déchargement pièce</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="m-code_fr.html#sec:M3-M4-M5">M3 M4 M5</a></p></td>
+<td align="left" valign="top"><p class="table">Contrôle de la broche</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="m-code_fr.html#sec:M6-Appel-Outil">M6 Tn</a></p></td>
+<td align="left" valign="top"><p class="table">Appel d&#8217;outil n=numéro d&#8217;outil</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="m-code_fr.html#sec:M7-M8-M9">M7 M8 M9</a></p></td>
+<td align="left" valign="top"><p class="table">Contrôle des arrosages</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="m-code_fr.html#sec:M48-M49">M48 M49</a></p></td>
+<td align="left" valign="top"><p class="table">Contrôle des correcteurs de vitesse</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="m-code_fr.html#sec:M50-Controle-Correcteur-Vitesse-Travail">M50</a></p></td>
+<td align="left" valign="top"><p class="table">Contrôle du correcteur de vitesse travail</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="m-code_fr.html#sec:M51-Controle-Correcteur-Vitesse-Broche">M51</a></p></td>
+<td align="left" valign="top"><p class="table">Contrôle du correcteur de vitesse de broche</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="m-code_fr.html#sec:M52-Controle-Vitesse-Adaptative">M52</a></p></td>
+<td align="left" valign="top"><p class="table">Correcteur dynamique de vitesse d&#8217;avance</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="m-code_fr.html#sec:M53-Controle-Coupure-Vitesse">M53</a></p></td>
+<td align="left" valign="top"><p class="table">Contrôle de la coupure de vitesse</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="m-code_fr.html#sec:M61-Correction-Numero-Outil-Courant">M61</a></p></td>
+<td align="left" valign="top"><p class="table">Correction du numéro de l&#8217;outil courant</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="m-code_fr.html#sec:M62-a-M65-Ctrl-Sortie-Numerique">M62 à M65</a></p></td>
+<td align="left" valign="top"><p class="table">Contrôle de sortie numérique</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="m-code_fr.html#sec:M66-Ctrl-Entree-Numerique-Et-Analogique">M66</a></p></td>
+<td align="left" valign="top"><p class="table">Contrôle d&#8217;entrée numérique et analogique</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="m-code_fr.html#sec:M67-Ctrl-Sortie-Analogique-Synchro">M67</a></p></td>
+<td align="left" valign="top"><p class="table">Contrôle sortie analogique synchronisée</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="m-code_fr.html#sec:M68-Ctrl-Sortie-Analogique-Directe">M68</a></p></td>
+<td align="left" valign="top"><p class="table">Contrôle sortie analogique directe</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="m-code_fr.html#sec:M100-a-M199">M100 à M199</a></p></td>
+<td align="left" valign="top"><p class="table">M-codes définis par l&#8217;utilisateur</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<h2 id="sec:M0-M1">2. M0, M1, pause dans le programme</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>M0</em> - Effectue une pause temporaire dans le programme en cours
+(quelle que soit la position du bouton d&#8217;arrêt facultatif).
+LinuxCNC reste en mode automatique afin que le MDI ou
+d&#8217;autres actions manuelles ne puissent pas être activés. Presser le départ
+cycle après cette commande relance le programme à la ligne suivante.
+</p>
+</li>
+<li>
+<p>
+<em>M1</em> - Stoppe temporairement le programme en cours
+(mais seulement si le bouton d&#8217;arrêt optionnel est activé).
+LinuxCNC reste en mode automatique afin que le MDI ou
+d&#8217;autres actions manuelles ne puissent pas être activés. Presser le départ
+cycle après cette commande relance le programme à la ligne suivante.
+</p>
+</li>
+</ul></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">Il est permis de programmer <em>M0</em> et <em>M1</em> en mode données manuelles (MDI),
+mais l&#8217;effet ne sera probablement pas perceptible,
+puisque le comportement normal en mode MDI est
+de s&#8217;arrêter, de toute façon, à la fin de chaque ligne.</td>
+</tr></table>
+</div>
+</div>
+<h2 id="sec:M2-M30">3. M2, M30, fin de programme</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>M2</em> - Indique la fin du programme. Presser le départ cycle après cette
+commande relance le programme au début du fichier.
+</p>
+</li>
+<li>
+<p>
+<em>M30</em> - Décharge le porte-pièce du chargeur et termine le programme. Presser
+le départ cycle après cette commande relance le programme au début du fichier.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Les deux commandes précédentes produisent les effets suivants:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Changement du mode automatique au mode MDI.
+</p>
+</li>
+<li>
+<p>
+Les décalages d&#8217;axes sont mis aux valeurs par défaut (comme avec <em>G54</em>).
+</p>
+</li>
+<li>
+<p>
+Le plan de travail actif devient XY (comme avec <em>G17</em>).
+</p>
+</li>
+<li>
+<p>
+Le mode de déplacement devient absolu (comme avec <em>G90</em>).
+</p>
+</li>
+<li>
+<p>
+La vitesse travail passe en unités par minute (comme avec <em>G94</em>).
+</p>
+</li>
+<li>
+<p>
+Les correcteurs de vitesse sont activés (comme avec <em>M48</em>).
+</p>
+</li>
+<li>
+<p>
+Les compensations d&#8217;outil sont désactivées (comme avec <em>G40</em>).
+</p>
+</li>
+<li>
+<p>
+La broche est arrêtée (comme avec <em>M5</em>).
+</p>
+</li>
+<li>
+<p>
+Le mode mouvement courant devient <em>G1</em> (comme avec <em>G1</em>).
+</p>
+</li>
+<li>
+<p>
+L&#8217;arrosage est arrêté (comme avec <em>M9</em>).
+</p>
+</li>
+</ol></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">Les lignes de code placées après un <em>M2</em> ou un <em>M30</em> ne sont pas exécutées.</td>
+</tr></table>
+</div>
+</div>
+<h2 id="sec:M60">4. M60, pause pour déchargement pièce</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>M60</em> - Procède au changement de porte-pièce avec le chargeur de pièces et
+effectue une pause dans le programme en cours (quel que soit le réglage
+du bouton d&#8217;arrêt facultatif). Presser ensuite le bouton de départ cycle pour
+relancer le programme à la ligne suivante.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:M3-M4-M5">5. M3, M4, M5 Contrôle de la broche</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>M3 Snnnnn</em> - Démarre la broche en sens horaire à la vitesse <strong>nnnnn</strong>.
+</p>
+</li>
+<li>
+<p>
+<em>M4 Snnnnn</em> - Démarre la broche en sens anti-horaire à la vitesse <strong>nnnnn</strong>.
+</p>
+</li>
+<li>
+<p>
+<em>M5</em> - Arrête la rotation de la broche.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Il est permis d&#8217;utiliser <em>M3</em> ou <em>M4</em> si la vitesse de broche est à zéro.
+Si cela est fait
+(ou si le bouton du correcteur de vitesse est activé mais mis à zéro),
+la broche ne tournera pas.
+Si, plus tard la vitesse de broche est augmentée
+(ou que le correcteur de vitesse est augmenté),
+la broche va se mettre en rotation.
+Il est permis d&#8217;utiliser <em>M3</em> ou <em>M4</em> quand la broche est déjà
+en rotation ou d&#8217;utiliser <em>M5</em> quand la broche est déjà arrêtée.</p></div>
+</div>
+<h2 id="sec:M6-Appel-Outil">6. M6 Appel d&#8217;outil</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<h3 id="_changement_d_8217_outil_manuel">6.1. Changement d&#8217;outil manuel</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si le composant de HAL, hal_manualtoolchange est chargé,
+<em>M6</em> va arrêter la broche et inviter l&#8217;utilisateur à changer l&#8217;outil.
+Pour plus d&#8217;informations sur hal_manualtoolchange voir
+la section <a href="../gui/axis_fr.html#sec:Changement-D-Outil-Manuel">sur le changement manuel d&#8217;outil</a>.</p></div>
+<h3 id="_changement_d_8217_outil">6.2. Changement d&#8217;outil</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Pour changer l&#8217;outil, actuellement dans la broche, par un autre,
+nouvellement sélectionné en utilisant le mot T, voir la section
+<a href="other-code_fr.html#sec:T-Choix-Outil">sur le choix de l&#8217;outil</a>, programmer <em>M6</em>.
+Un changement d&#8217;outil complet donnera:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+La rotation de la broche est arrêtée.
+</p>
+</li>
+<li>
+<p>
+L&#8217;outil qui a été sélectionné (par le mot T sur la même ligne ou sur
+   n&#8217;importe quelle ligne après le changement d&#8217;outil précédent),
+   sera placé dans la broche.
+   Le mot <strong>T</strong> est un nombre entier indiquant le
+   numéro de poche d&#8217;outil dans le carrousel (non son index).
+</p>
+</li>
+<li>
+<p>
+Si l&#8217;outil sélectionné n&#8217;est pas déjà dans la broche avant le
+   changement d&#8217;outil, l&#8217;outil qui était dans la broche
+   (s&#8217;il y en avait un)
+   va être replacé dans son emplacement dans le chargeur.
+</p>
+</li>
+<li>
+<p>
+Les coordonnées des axes seront arrêtées dans les mêmes positions
+   absolues qu&#8217;elles avaient avant le changement d&#8217;outil (mais la broche
+   devra peut-être être réorientée).
+</p>
+</li>
+<li>
+<p>
+Aucune autre modification ne sera apportée. Par exemple, l&#8217;arrosage
+   continue à couler durant le changement d&#8217;outil à moins qu&#8217;il ne soit
+   arrêté par <em>M9</em>.
+</p>
+</li>
+</ul></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Attention</div>
+</td>
+<td class="content">La longueur d&#8217;outil n&#8217;est pas modifié par <em>M6</em>,
+utilisez un <em>G43</em> après le <em>M6</em> pour changer la longueur d&#8217;outil.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Le changement d&#8217;outil peut inclure des mouvements d&#8217;axes pendant son exécution.
+Il est permis (mais pas utile) de programmer un changement d&#8217;outil avec
+le même outil que celui qui est déjà dans la broche.
+Il est permis également, si il n&#8217;y a pas d&#8217;outil dans le slot sélectionné,
+dans ce cas, la broche sera vide après le changement d&#8217;outil.
+Si le slot zéro a été le dernier sélectionné,
+il n&#8217;y aura pas d&#8217;outil dans la broche après le changement.</p></div>
+</div>
+<h2 id="sec:M7-M8-M9">7. M7, M8, M9 Contrôle de l&#8217;arrosage</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>M7</em> - Active l&#8217;arrosage par gouttelettes.
+</p>
+</li>
+<li>
+<p>
+<em>M8</em> - Active l&#8217;arrosage fluide.
+</p>
+</li>
+<li>
+<p>
+<em>M9</em> - Arrête tous les arrosages.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Il est toujours permis d&#8217;utiliser une de ces commandes,
+que les arrosages soient arrêtés ou non.</p></div>
+</div>
+<h2 id="sec:M48-M49">8. M48, M49 Contrôle des correcteurs de vitesse</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>M48</em> - Autorise les curseurs de corrections de
+vitesses de broche et celui de vitesse d&#8217;avance travail.
+</p>
+</li>
+<li>
+<p>
+<em>M49</em> - Inhibe les deux curseurs.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Il est permis d&#8217;autoriser ou d&#8217;inhiber ces curseurs quand
+ils sont déjà autorisés ou inhibés. Ils peuvent aussi être activés
+individuellement en utilisant les commandes <em>M50</em> et <em>M51</em>, voir ci-dessous.</p></div>
+</div>
+<h2 id="sec:M50-Controle-Correcteur-Vitesse-Travail">9. M50 Contrôle du correcteur de vitesse travail</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>M50 &lt;P1&gt;</em> - Autorise le curseur de correction de vitesse d&#8217;avance travail. Le
+paramètre <em>P1</em> est optionnel.
+</p>
+</li>
+<li>
+<p>
+<em>M50 P0</em> - Inhibe le curseur de correction d&#8217;avance travail.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Quand il est inhibé, le curseur de correction de
+vitesse n&#8217;a plus aucune influence et les mouvements seront exécutés à la
+vitesse d&#8217;avance travail programmée. (à moins que ne soit actif un
+correcteur de vitesse adaptative).</p></div>
+</div>
+<h2 id="sec:M51-Controle-Correcteur-Vitesse-Broche">10. M51 Contrôle du correcteur de vitesse broche</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>M51 &lt;P1&gt;</em> - Autorise le curseur de correction de vitesse de la broche. Le
+paramètre <em>P1</em> est optionnel.
+</p>
+</li>
+<li>
+<p>
+<em>M51 P0</em> - Inhibe le curseur de correction de vitesse de broche.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Quand il est inhibé, le curseur de correction de vitesse de broche
+n&#8217;a plus aucune influence, et la broche tournera à la vitesse programmée,
+en utilisant le mot <em>S</em> comme décrit dans la section <a href="other-code_fr.html#sec:S-Broche">sur le réglage de la vitesse de broche</a>.</p></div>
+</div>
+<h2 id="sec:M52-Controle-Vitesse-Adaptative">11. M52 Contrôle de vitesse adaptative</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>M52 P1</em> - Utilise une vitesse adaptative. Le paramètre <em>P1</em> est optionnel.
+</p>
+</li>
+<li>
+<p>
+<em>M52 P0</em> - Cesse l&#8217;utilisation d&#8217;une vitesse adaptative.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Quand la vitesse adaptative est utilisée, certaines valeurs externes sont
+utilisées avec les correcteurs de vitesse de l&#8217;interface utilisateur et
+les vitesses programmées pour obtenir la vitesse travail.
+Dans LinuxCNC, la HAL pin <em>motion.adaptive-feed</em> est utilisée dans ce but.
+Les valeurs de <em>motion.adaptive-feed</em> doivent être dans comprises
+entre 0 (vitesse nulle) et 1 (pleine vitesse).</p></div>
+</div>
+<h2 id="sec:M53-Controle-Coupure-Vitesse">12. M53 Contrôle de la coupure de vitesse</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>M53 P1</em> - Autorise le bouton de coupure de vitesse. Le paramètre <em>P1</em> est
+optionnel. Autoriser la coupure de vitesse permet d&#8217;interrompre les mouvements
+par le biais d&#8217;une coupure de vitesse. Dans LinuxCNC, la HAL pin
+<em>motion.feed-hold</em> est utilisée pour cette fonctionnalité. Une valeur
+de 1 provoque un arrêt des mouvements quand <em>M53</em> est actif.
+</p>
+</li>
+<li>
+<p>
+<em>M53 P0</em> - Inhibe le bouton de coupure de vitesse. L'état de
+<em>motion.feed-hold</em> est sans effet sur la vitesse quand <em>M53</em> est inhibé.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:M61-Correction-Numero-Outil-Courant">13. M61 Correction du numéro de l&#8217;outil courant</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>M61 Q-</em> - Corrige le numéro de l&#8217;outil courant, en mode MDI ou après un
+changement manuel d&#8217;outil dans la fenêtre de données manuelles. Au démarrage
+de LinuxCNC avec un outil dans la broche, il est possible ainsi d&#8217;ajuster le
+numéro de l&#8217;outil courant sans faire de changement d&#8217;outil.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Q- n&#8217;est pas égal où supérieur à 0
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:M62-a-M65-Ctrl-Sortie-Numerique">14. M62 à M65 Contrôle de bits de sortie numérique</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>M62 P-</em> - Active un bit de sortie numérique en synchronisme avec
+un mouvement.
+</p>
+</li>
+<li>
+<p>
+<em>M63 P-</em> - Désactive un bit de sortie numérique en synchronisme avec
+un mouvement.
+</p>
+</li>
+<li>
+<p>
+<em>M64 P-</em> - Active immédiatement un bit de sortie numérique.
+</p>
+</li>
+<li>
+<p>
+<em>M65 P-</em> - Désactive immédiatement un bit de sortie numérique.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Le mot <em>P-</em> spécifie le numéro du bit de sortie numérique. Le mot P doit
+être compris entre 0 et une valeur par défaut de 3. Si nécessaire, le
+nombre des entrées/sorties peut être augmenté en utilisant
+le paramètre <em>num_dio</em> lors du chargement du contrôleur de mouvement.
+Voir le manuel de l&#8217;intégrateur et section "LinuxCNC et HAL",
+pour plus d&#8217;informations.</p></div>
+<div class="paragraph"><p>Les commandes <em>M62</em> et <em>M63</em> seront mises en file d&#8217;attente.
+Toute nouvelle commande, destinée à un bit de sortie écrasera l&#8217;ancien
+réglage de ce bit. Plusieurs bits peuvent changer d'état
+simultanément par l&#8217;envoi de plusieurs commandes M62/M63.</p></div>
+<div class="paragraph"><p>Les nouveaux changements d'état des bits de sortie spécifiés, seront
+effectifs au début du prochain mouvement commandé. S&#8217;il n&#8217;y a pas de
+commande de mouvement ultérieur, les changements en attente
+n&#8217;auront pas lieu. Il est préférable de toujours programmer un
+G-code de mouvement (G0, G1, etc) juste après les M62/63.</p></div>
+<div class="paragraph"><p><em>M64</em> et <em>M65</em> produisent leur effet immédiatement après être reçus par le
+contrôleur de mouvement. Ils ne sont pas synchronisés avec un mouvement.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">M62 à M66 ne seront opérationnels que si les pins _motion.digital-out-nn
+appropriées sont connectées aux sorties dans le fichier HAL.</td>
+</tr></table>
+</div>
+</div>
+<h2 id="sec:M66-Ctrl-Entree-Numerique-Et-Analogique">15. M66 Contrôle d&#8217;entrée numérique et analogique</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>M66 P- | E- &lt;L-&gt; &lt;Q-&gt;</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>P-</em> - Spécifie le numéro d&#8217;un bit d&#8217;entrée numérique entre 0 et 3.
+</p>
+</li>
+<li>
+<p>
+<em>E-</em> - Spécifie le numéro d&#8217;un bit d&#8217;entrée analogique entre 0 et 3.
+</p>
+</li>
+<li>
+<p>
+<em>L-</em> - Spécifie le mode d&#8217;attente.
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+Mode 0: <em>IMMEDIATE</em> - pas d&#8217;attente, retour immédiat, la valeur courante de
+l&#8217;entrée est stockée dans le paramètre #5399
+</p>
+</li>
+<li>
+<p>
+Mode 1: <em>RISE</em>  attente d&#8217;un front montant sur l&#8217;entrée.
+</p>
+</li>
+<li>
+<p>
+Mode 2: <em>FALL</em>  attente d&#8217;un front descendant sur l&#8217;entrée.
+</p>
+</li>
+<li>
+<p>
+Mode 3: <em>HIGH</em>  attente d&#8217;un état logique HAUT sur l&#8217;entrée.
+</p>
+</li>
+<li>
+<p>
+Mode 4: <em>LOW</em>   attente d&#8217;un état logique BAS sur l&#8217;entrée.
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+<em>Q-</em> - Spécifie le timeout pour l&#8217;attente, en secondes. Si le timeout est
+dépassé, l&#8217;attente est interrompue et la variable #5399 positionnée à -1.
+</p>
+</li>
+<li>
+<p>
+Le mode <em>0</em> est le seul autorisé pour une entrée analogique.
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">Exemple de ligne avec M66</div>
+<div class="content">
+<pre><tt>M66 P0 L3 Q5 (attend jusqu'à 5 secondes la montée de l'entrée numérique 0)</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>M66</em> attend un nouvel événement sur une entrée ou la fin de l&#8217;exécution
+du programme, jusqu'à ce que l'événement sélectionné (ou le timeout
+programmé) ne survienne.
+C&#8217;est également une erreur de programmer <em>M66</em> avec les deux
+mots, un mot P- et un mot E- (ce qui reviendrait à sélectionner à la fois une
+entrée analogique et une numérique).
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Si nécessaire, le nombre des entrées/sorties peut être augmenté en
+utilisant les paramètres <em>num_dio</em> ou <em>num_aio</em> lors du chargement du
+contrôleur de mouvement. Voir le Manuel de l&#8217;intégrateur pour
+plus d&#8217;informations, section des configurations, paragraphes "LinuxCNC et HAL".</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">M66 ne sera opérationnel que si les pins motion.digital-in-nn ou
+motion.analog-in-nn appropriées sont connectées aux entrées dans le fichier HAL.</td>
+</tr></table>
+</div>
+</div>
+<h2 id="sec:M67-Ctrl-Sortie-Analogique-Synchro">16. M67 Contrôle de sortie analogique</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>M67 E- Q-</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>M67</em> - Contrôle une sortie analogique synchronisée avec un mouvement.
+</p>
+</li>
+<li>
+<p>
+<em>E-</em> - Spécifie le numéro de la sortie, doit être compris entre 0 et 3.
+</p>
+</li>
+<li>
+<p>
+<em>Q-</em> - Spécifie la valeur à appliquer sur la sortie.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Les changements de valeur spécifiés, seront effectifs au début du
+prochain mouvement commandé. S&#8217;il n&#8217;y a pas de commande de mouvement ultérieur,
+les changements en attente n&#8217;auront pas lieu. Il est préférable de toujours
+programmer un G-code de mouvement (G0, G1, etc) juste après les M67.
+M67 fonctionne comme M62 à M63.</p></div>
+<div class="paragraph"><p>Le nombre d&#8217;entrées/sorties peut être augmenté en utilisant le paramètre
+<em>num_aio</em> au chargement du contrôleur de mouvement. Voir les chapitres
+"LinuxCNC et HAL" dans la section configuration du Manuel de l&#8217;intégrateur
+pour plus d&#8217;informations sur le contrôleur de mouvement.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">M67 ne sera opérationnel que si les pins motion.analog-out-nn appropriées sont
+connectées aux sorties dans le fichier HAL.</td>
+</tr></table>
+</div>
+</div>
+<h2 id="sec:M68-Ctrl-Sortie-Analogique-Directe">17. M68 Contrôle de sortie analogique directe</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>M68 E- Q-</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>M68</em> - Contrôle directement une sortie analogique.
+</p>
+</li>
+<li>
+<p>
+<em>E-</em> - Spécifie le numéro de la sortie, doit être compris entre 0 et 3.
+</p>
+</li>
+<li>
+<p>
+<em>Q-</em> - Spécifie la valeur à appliquer sur la sortie.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>M68 produit son effet immédiatement après être reçu par le
+contrôleur de mouvement. Il n&#8217;est pas synchronisé avec un mouvement.
+M68 fonctionne comme M64 à M65.</p></div>
+<div class="paragraph"><p>Le nombre d&#8217;entrées/sorties peut être augmenté en utilisant
+le paramètre <em>num_aio</em> au chargement du contrôleur de mouvement. Voir le
+chapitre "LinuxCNC et HAL" dans le Manuel de l&#8217;intégrateur pour plus
+d&#8217;informations sur le contrôleur de mouvement.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">M68 ne sera opérationnel que si les pins motion.analog-out-nn appropriées sont
+connectées aux sorties dans le fichier HAL.</td>
+</tr></table>
+</div>
+</div>
+<h2 id="sec:M100-a-M199">18. M100 à M199 Commandes définies par l&#8217;utilisateur</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>M1-- &lt;P- Q-&gt;</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>M1--</em> - Un entier compris entre 100 et 199.
+</p>
+</li>
+<li>
+<p>
+<em>P-</em> - Un nombre passé comme premier argument au programme externe.
+</p>
+</li>
+<li>
+<p>
+<em>Q-</em> - Un nombre passé comme second argument au programme externe.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Le programme externe, nommé <em>M100</em> à <em>M199</em>, (avec un <em>M</em> majuscule et aucune
+extension) qui doit se trouver dans le répertoire pointé par la variable
+<em>[DISPLAY] PROGRAM_PREFIX</em> du fichier ini, sera exécuté avec les valeurs
+<em>P-</em> et <em>Q-</em> comme étant ses deux arguments. L&#8217;exécution du fichier G-code
+courant passera en pause jusqu'à ce que le programme invoqué soit terminé.
+Tout fichier exécutable valide peut être utilisé. Le fichier doit se trouver
+dans le chemin spécifié dans le fichier ini de configuration. Voir la section
+sur le fichier de configuration dans le manuel de l&#8217;intégrateur.</p></div>
+<div class="paragraph"><p>Après la création d&#8217;un nouveau programme M1nn, l&#8217;interface graphique doit être
+redémarrée pour que le nouveau programme soit pris en compte, autrement une
+erreur <em>m code inconnu</em> surviendra.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Attention</div>
+</td>
+<td class="content">Ne pas utiliser un traitement de texte pour créer ou éditer ces fichiers.
+Un traitement de texte ajoute des caractères invisibles qui causent des problèmes
+et empêchent les scripts bash ou Python de fonctionner. Pour ces raisons,
+utiliser un éditeur de texte tel que <em>Gedit</em> dans Ubuntu ou le Notepad++ dans un
+autre OS.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Le message d&#8217;erreur <em>M-code inconnu</em> signifie que:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+La commande utilisateur spécifiée n&#8217;existe pas.
+</p>
+</li>
+<li>
+<p>
+Le fichier n&#8217;a pas été rendu exécutable.
+</p>
+</li>
+<li>
+<p>
+Le nom du fichier comporte une extension.
+</p>
+</li>
+<li>
+<p>
+Le nom du fichier ne suis pas le format suivant: M1nn où nn = 00 à 99.
+</p>
+</li>
+<li>
+<p>
+Le nom de fichier utilise un <em>m</em> minuscule.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Exemple d&#8217;utilisation, dans un programme G-code, on doit ouvrir et fermer un
+mandrin automatique via une broche du port parallèle, on appellera
+respectivement M101 pour ouvrir le mandrin et M102 pour le fermer. Les
+deux scripts bash correspondants, appelés M101 et M102 seront créés avant
+le lancement de LinuxCNC puis rendus exécutables, par exemple par un clic
+droit puis <em>propriétés → permissions → Exécution</em>. S&#8217;assurer que cette
+broche du port parallèle n&#8217;est pas déjà utilisée dans un fichier de HAL.</p></div>
+<div class="listingblock">
+<div class="title">Exemple de fichier pour M101</div>
+<div class="content">
+<pre><tt>#!/bin/bash
+# ce fichier met la broche 14 du port à 1 pour ouvrir le mandrin automatique
+halcmd setp parport.0.pin-14-out True
+exit 0</tt></pre>
+</div></div>
+<div class="listingblock">
+<div class="title">Exemple de fichier pour M102</div>
+<div class="content">
+<pre><tt>#!/bin/bash
+# ce fichier met la broche 14 du port à 0 pour fermer le mandrin automatique
+halcmd setp parport.0.pin-14-out False
+exit 0</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour passer des variables à un fichier M1nn, utiliser les mots facultatifs
+P et Q de cette façon:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>M100 P123.456 Q321.654</tt></pre>
+</div></div>
+<div class="listingblock">
+<div class="title">Exemple pour M100</div>
+<div class="content">
+<pre><tt>#!/bin/bash
+tension=$1
+vitesse=$2
+halcmd setp thc.voltage $tension
+halcmd setp thc.feedrate $vitesse
+exit 0</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour ouvrir un message graphique et passer en pause jusqu'à ce que la fenêtre
+du message soit fermée, utiliser un programme comme <em>Eye of Gnome</em> pour
+afficher le fichier graphique. Quand la fenêtre sera fermée, le programme
+reprendra.</p></div>
+<div class="listingblock">
+<div class="title">Exemple pour M110, affichage d&#8217;un graphique avec passage en pause</div>
+<div class="content">
+<pre><tt>#!/bin/bash
+eog /home/robert/linuxcnc/nc_files/message.png
+exit 0</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour afficher un message graphique en continuant le traitement du fichier
+G-code, ajouter un caractère esperluette à la commande.</p></div>
+<div class="listingblock">
+<div class="title">Exemple pour M110, affichage d&#8217;un graphique sans passer en pause</div>
+<div class="content">
+<pre><tt>#!/bin/bash
+eog /home/robert/linuxcnc/nc_files/message.png &amp;
+exit 0</tt></pre>
+</div></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-03-22 04:36:09 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gcode/m-code_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:59 GMT -->
+</html>

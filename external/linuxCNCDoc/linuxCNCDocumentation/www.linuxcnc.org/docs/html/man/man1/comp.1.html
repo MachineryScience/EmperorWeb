@@ -1,0 +1,211 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 26 09:51:47 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/comp.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>comp</title>
+
+</head>
+<body>
+
+<h1 align="center">comp</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">comp &minus;
+Build, compile and install LinuxCNC HAL components</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:18%; margin-top: 1em"><b>comp</b>
+[<b>--compile</b>|<b>--preprocess</b>|<b>--document</b>|<b>--view-doc</b>]
+compfile...</p>
+
+<p style="margin-left:11%;"><i>sudo</i> <b>comp</b>
+[<b>--install</b>|<b>--install-doc</b>] compfile...</p>
+
+<p style="margin-left:18%;"><b>comp --compile
+--userspace</b> cfile...</p>
+
+<p style="margin-left:11%;"><i>sudo</i> <b>comp --install
+--userspace</b> cfile... <i><br>
+sudo</i> <b>comp --install --userspace</b> pyfile...</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>comp</b>
+performs many different functions:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="83%">
+
+
+<p>Compile <b>.comp</b> and <b>.c</b> files into <b>.so</b>
+or <b>.ko</b> HAL realtime components (the <b>--compile</b>
+flag)</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="83%">
+
+
+<p>Compile <b>.comp</b> and <b>.c</b> files into HAL
+userspace components (the <b>--compile --userspace</b>
+flag)</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="83%">
+
+
+<p>Preprocess <b>.comp</b> files into <b>.c</b> files (the
+<b>--preprocess</b> flag)</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="83%">
+
+
+<p>Extract documentation from <b>.comp</b> files into
+<b>.9</b> manpage files (the <b>--document</b> flag)</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="83%">
+
+
+<p>Display documentation from <b>.comp</b> files onscreen
+(the <b>--view-doc</b> flag)</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="83%">
+
+
+<p>Compile and install <b>.comp</b> and <b>.c</b> files
+into the proper directory for HAL realtime components (the
+<b>--install</b> flag), which may require <i>sudo</i> to
+write to system directories.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="83%">
+
+
+<p>Install <b>.c</b> and <b>.py</b> files into the proper
+directory for HAL userspace components (the <b>--install
+--userspace</b> flag), which may require <i>sudo</i> to
+write to system directories.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="83%">
+
+
+<p>Extract documentation from <b>.comp</b> files into
+<b>.9</b> manpage files in the proper system directory (the
+<b>--install</b> flag), which may require <i>sudo</i> to
+write to system directories.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="83%">
+
+
+<p>Preprocess <b>.comp</b> files into <b>.c</b> files (the
+<b>--preprocess</b> flag)</p></td></tr>
+</table>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><i>Comp HAL
+Component Generator</i> in the LinuxCNC documentation for a
+full description of the <b>.comp</b> syntax, along with
+examples</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>pydoc
+hal</b> and <i>Creating Userspace Python Components</i> in
+the LinuxCNC documentation for documentation on the Python
+interface to HAL components</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>comp(9)</b>
+for documentation on the &quot;two input comparator with
+hysteresis&quot;, a HAL realtime component with the same
+name as this program</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/comp.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

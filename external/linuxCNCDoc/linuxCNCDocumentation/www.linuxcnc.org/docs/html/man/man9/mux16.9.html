@@ -1,0 +1,180 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:46 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/mux16.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>MUX16</title>
+
+</head>
+<body>
+
+<h1 align="center">MUX16</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">mux16 &minus;
+Select from one of sixteen input values</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="69%">
+
+
+<p style="margin-top: 1em"><b>loadrt mux16
+[count=</b><i>N</i><b>|names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p> </td>
+<td width="20%">
+</td></tr>
+</table>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>mux16.</b><i>N</i>
+(requires a floating-point thread)</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>mux16.</b><i>N</i><b>.use-graycode</b>
+bit in</p>
+
+<p style="margin-left:22%;">This signifies the input will
+use Gray code instead of binary. Gray code is a good choice
+when using physical switches because for each increment only
+one select input changes at a time.</p>
+
+
+<p style="margin-left:11%;"><b>mux16.</b><i>N</i><b>.suppress-no-input</b>
+bit in</p>
+
+<p style="margin-left:22%;">This suppresses changing the
+output if all select lines are false. This stops unwanted
+jumps in output between transitions of input. but make in00
+unavaliable.</p>
+
+
+<p style="margin-left:11%;"><b>mux16.</b><i>N</i><b>.debounce-time</b>
+float in</p>
+
+<p style="margin-left:22%;">sets debouce time in seconds.
+eg. .10 = a tenth of a second input must be stable this long
+before outputs changes. This helps to ignore
+&rsquo;noisy&rsquo; switches.</p>
+
+
+<p style="margin-left:11%;"><b>mux16.</b><i>N</i><b>.sel</b><i>M</i>
+bit in (M=0..3)</p>
+
+<p style="margin-left:22%;">Together, these determine which
+<b>in</b><i>N</i> value is copied to <b>out</b>.</p>
+
+
+<p style="margin-left:11%;"><b>mux16.</b><i>N</i><b>.out-f</b>
+float out <b><br>
+mux16.</b><i>N</i><b>.out-s</b> s32 out</p>
+
+<p style="margin-left:22%;">Follows the value of one of the
+<b>in</b><i>N</i> values according to the four <b>sel</b>
+values and whether use-graycode is active. The s32 value
+will be trunuated and limited to the max and min values of
+signed values. <b><br>
+sel3=FALSE</b>, <b>sel2=FALSE</b>, <b>sel1=FALSE</b>,
+<b>sel0=FALSE</b></p>
+
+<p style="margin-left:32%;"><b>out</b> follows
+<b>in0</b></p>
+
+<p style="margin-left:22%;"><b>sel3=FALSE</b>,
+<b>sel2=FALSE</b>, <b>sel1=FALSE</b>, <b>sel0=TRUE</b></p>
+
+<p style="margin-left:32%;"><b>out</b> follows
+<b>in1</b></p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="6%">
+
+
+<p>etc.</p></td>
+<td width="72%">
+</td></tr>
+</table>
+
+
+<p style="margin-left:11%;"><b>mux16.</b><i>N</i><b>.in</b><i>MM</i>
+float in (MM=00..15)</p>
+
+<p style="margin-left:22%;">array of selectable outputs</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>mux16.</b><i>N</i><b>.elapsed</b>
+float r</p>
+
+<p style="margin-left:22%;">Current value of the internal
+debounce timer <br>
+for debugging.</p>
+
+
+<p style="margin-left:11%;"><b>mux16.</b><i>N</i><b>.selected</b>
+s32 r</p>
+
+<p style="margin-left:22%;">Current value of the internal
+selection variable after conversion <br>
+for debugging</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/mux16.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

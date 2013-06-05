@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/userforeword_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:39 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Avant-propos</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Avant-propos</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>LinuxCNC est souple et modulaire. Ces attributs l&#8217;ont fait apparaître à
+certains comme un brouillon de petits morceaux confus, ils se sont
+demandé pourquoi il en était ainsi. Cette page tentent de répondre à
+cette question avant que vous lecteurs, ne plongiez dedans pour vous
+faire votre propre idée.</p></div>
+<div class="paragraph"><p>EMC a débuté à l&#8217;institut national des standards et des technologies
+des Etats Unis, le NIST. Il a mûri comme un logiciel fonctionnant sur
+le système d&#8217;exploitation Unix. Unix le rendait différent. Très tôt des
+développeurs Unix ont apporté une série d&#8217;idées concernant l'écriture
+du code, c&#8217;est devenu une écriture selon «la tradition d&#8217;Unix». Les
+premiers auteurs de LinuxCNC ont suivi cette voie.</p></div>
+<div class="paragraph"><p>Eric S. Raymond, dans son livre The Art of Unix Programming, résume la
+philosophie Unix par la philosophie largement utilisée en ingéniérie,
+le principe KISS Keep it Simple, Stupid Reste Simple, Crétin ou Sois
+Simple et Concis. Puis il décrit sa vision selon laquelle cette
+philosophie globale s&#8217;applique en tant que norme culturelle Unix, bien
+qu&#8217;on trouve sans surprise de graves entorses à la plupart des règles
+Unix suivantes:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Règle de modularité: Ecrire des éléments simples reliés par de
+bonnes interfaces.
+</p>
+</li>
+<li>
+<p>
+Règle de clarté: La Clarté vaut mieux que l&#8217;ingéniosité.
+</p>
+</li>
+<li>
+<p>
+Règle de composition: Concevoir des programmes qui peuvent être
+reliés à d&#8217;autres programmes.
+</p>
+</li>
+<li>
+<p>
+Règle de séparation: Séparer les règles du fonctionnement; Séparer
+les interfaces du mécanisme.<span class="footnote"><br />[Trouvé
+sur <a href="http://fr.wikipedia.org/wiki/Philosophie_d'Unix">http://fr.wikipedia.org/wiki/Philosophie_d%27Unix</a>, 09/09/2008]<br /></span>
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Monsieur Raymond offre d&#8217;autres règles mais ces quatre là décrivent les
+caractéristiques essentielles du système de contrôle de mouvement LinuxCNC.</p></div>
+<div class="paragraph"><p>La règle de <em>Modularité</em> est critique. Tout au long de ces manuels,
+vous trouverez des
+discussions à propos de l&#8217;interpréteur ou à propos des planificateurs
+de tâche ou de mouvement ou encore à propos de HAL. Chacun d&#8217;eux est un
+module ou un ensemble de modules. Cette modularité vous permettra de ne
+connecter entre elles que les parties dont vous avez besoin pour le bon
+fonctionnement de votre machine.</p></div>
+<div class="paragraph"><p>La règle de <em>clarté</em> est essentielle. LinuxCNC est en perpétuelle
+évolution, il n&#8217;est pas
+terminé et ne le sera jamais. Il est assez complet pour piloter toutes
+les machines que nous avons voulu qu&#8217;il pilote. Une bonne partie de
+cette évolution est atteinte parce que les utilisateurs et les
+développeurs peuvent voir le travail des autres et construire sur ce
+qui est déjà fait.</p></div>
+<div class="paragraph"><p>La règle de <em>composition</em> nous permet de concevoir et de construire
+un contrôleur à partir des
+nombreux modules existants, en les rendant connectables entre eux. Nous
+obtenons cette connectivité en appliquant une interface standard à tous
+les modules et en suivant ce standard.</p></div>
+<div class="paragraph"><p>La règle de <em>séparation</em> exige que chaque petite chose soit faite par
+une partie distincte. En
+séparant les fonctions, le dépannage est rendu plus aisé, le
+remplacement de modules par d&#8217;autres peut être fait à l&#8217;intérieur du
+système et la comparaison s&#8217;effectuer facilement.</p></div>
+<div class="paragraph"><p>Qu&#8217;apporte la fameuse «tradition d&#8217;Unix» à vous, utilisateurs de LinuxCNC.
+Elle signifie que vous pourrez faire des choix sur la façon d&#8217;utiliser
+le système. Beaucoup de ces choix affecteront les parties intégrées à
+la machine, mais beaucoup également affecteront la manière dont vous
+utiliserez votre machine. Au cours de votre lecture, vous trouverez
+différents endroits où vous pourrez faire des comparaisons. Finalement
+vous pourrez dire «J&#8217;utiliserai cette interface plutôt que telle autre»
+ou, «J'écrirai cette nouvelle partie de telle manière plutôt que de
+telle autre.» Tout au long de ces manuels nous décrirons l'étendue des
+possibilités de LinuxCNC actuellement disponibles.</p></div>
+<div class="paragraph"><p>Puisque vous commencez votre voyage dans l&#8217;utilisation de LinuxCNC nous
+vous proposons ces deux citations de précaution.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Pour paraphraser les paroles de Doug Gwyn sur UNIX: "LinuxCNC n&#8217;a pas
+   été conçu pour empêcher ses utilisateurs de commettre des actes
+   stupides, car cela les empêcherait aussi de réaliser des
+   actes ingénieux."
+</p>
+</li>
+<li>
+<p>
+De même les paroles de Steven King: "LinuxCNC est convivial. Cependant
+   Unix ne précise pas vraiment avec qui."
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-19 14:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/userforeword_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:39 GMT -->
+</html>

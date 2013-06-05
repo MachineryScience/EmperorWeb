@@ -1,0 +1,1678 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/code/Code_Notes.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:12 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Code Notes</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Code Notes</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<h2 id="_intended_audience">1. Intended audience</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This document is a collection of notes about the internals of LinuxCNC. It
+is primarily of interest to developers, however much of the information
+here may also be of interest to system integrators and others who are
+simply curious about how LinuxCNC works. Much of this information is now
+outdated and has never been reviewed for accuracy.</p></div>
+</div>
+<h2 id="_organization">2. Organization</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>There will be a chapter for each of the major components of LinuxCNC, as
+well as chapter(s) covering how they work together. This document is
+very much a work in progress, and its layout may change in the future.</p></div>
+</div>
+<h2 id="_terms_and_definitions">3. Terms and definitions</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+<em>AXIS</em> - An axis is one of the six degrees of freedom that define a tool
+    position in three dimensional Cartesian space. Those axes are X, Y, Z,
+    A, B, and C, where X, Y, and Z are linear coordinates that determine
+    where the tip of the tool is, and A, B, and C are angular coordinates
+    that determine the tool orientation. Unfortunately “axis” is also
+    sometimes used to mean a degree of freedom of the machine itself, such
+    as the saddle, table, or quill of a Bridgeport type milling machine. On
+    a Bridgeport this causes no confusion, since movement of the table
+    directly corresponds to movement along the X axis. However, the
+    shoulder and elbow joints of a robot arm and the linear actuators of a
+    hexapod do not correspond to movement along any Cartesian axis, and in
+    general it is important to make the distinction between the Cartesian
+    axes and the machine degrees of freedom. In this document, the latter
+    will be called <em>joints</em>, not axes. (The GUIs and some other parts of
+    the code may not always follow this distinction, but the internals of
+    the motion controller do.)
+</p>
+</li>
+<li>
+<p>
+<em>JOINT</em> - A joint is one of the movable parts of the machine. Joints are
+    distinct from axes, although the two terms are sometimes (mis)used to
+    mean the same thing. In LinuxCNC, a joint is a physical thing that can be
+    moved, not a coordinate in space. For example, the quill, knee, saddle,
+    and table of a Bridgeport mill are all joints. The shoulder, elbow, and
+    wrist of a robot arm are joints, as are the linear actuators of a
+    hexapod. Every joint has a motor or actuator of some type associated
+    with it. Joints do not necessarily correspond to the X, Y, and Z axes,
+    although for machines with trivial kinematics that may be the case.
+    Even on those machines, joint position and axis position are
+    fundamentally different things. In this document, the terms <em>joint</em> and
+    <em>axis</em> are used carefully to respect their distinct meanings.
+    Unfortunately that isn&#8217;t necessarily true everywhere else. In
+    particular, GUIs for machines with trivial kinematics may gloss over or
+    completely hide the distinction between joints and axes. In addition,
+    the ini file uses the term <em>axis</em> for data that would more accurately
+    be described as joint data, such as input and output scaling, etc.
+</p>
+</li>
+<li>
+<p>
+<em>POSE</em> - A pose is a fully specified position in 3-D Cartesian space. In the
+    LinuxCNC motion controller, when we refer to a pose we mean an EmcPose
+    structure, containing three linear coordinates and three angular ones.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_architecture_overview">4. Architecture overview</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>There are four components contained in the LinuxCNC Architecture: a motion
+controller (EMCMOT), a discrete IO controller (EMCIO), a task executor
+which coordinates them (EMCTASK) and several text-mode and graphical
+User Interfaces. Each of them will be described in the current
+document, both from the design point of view and from the developers
+point of view (where to find needed data, how to easily extend/modify
+things, etc.).</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="LinuxCNC-block-diagram-small.png" alt="LinuxCNC-block-diagram-small.png" />
+</div>
+</div>
+<div class="paragraph"><p>LinuxCNC software architecture. At the coarsest level, LinuxCNC is a
+hierarchy of three controllers: the task level command handler and program
+interpreter, the motion controller, and the discrete I/O controller. The
+discrete I/O controller is implemented as a hierarchy of controllers,
+in this case for spindle, coolant, and auxiliary (e.g., estop, lube)
+subsystems. The task controller coordinates the actions of the motion and
+discrete I/O controllers. Their actions are programmed in conventional
+numerical control "G and M code" programs, which are interpreted by
+the task controller into NML messages and sent to either the motion or
+discrete I/O controllers at the appropriate times.</p></div>
+</div>
+<h2 id="_motion_controller_introduction">5. Motion Controller Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The motion controller receives commands from user space modules via a
+shared memory buffer, and executes those commands in realtime. The
+status of the controller is made available to the user space modules
+through the same shared memory area. The motion controller interacts
+with the motors and other hardware using the HAL (Hardware Abstraction
+Layer). This document assumes that the reader has a basic understanding
+of the HAL, and uses terms like HAL pins, HAL signals, etc, without
+explaining them. For more information about the HAL, see the
+HAL Manual. Another chapter of this document will
+eventually go into the internals of the HAL itself, but in this
+chapter, we only use the HAL API as defined in src/hal/hal.h.</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="LinuxCNC-motion-controller-small.png" alt="LinuxCNC-motion-controller-small.png" />
+</div>
+</div>
+</div>
+<h2 id="_block_diagrams_and_data_flow">6. Block diagrams and Data Flow</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The following figure is a block diagram
+of a joint controller. There is one joint controller per joint. The
+joint controllers work at a lower level than the kinematics, a level
+where all joints are completely independent. All the data for a joint
+is in a single joint structure. Some members of that structure are
+visible in the block diagram, such as coarse_pos, pos_cmd, and
+motor_pos_fb.</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="emc2-motion-joint-controller-block-diag.png" alt="emc2-motion-joint-controller-block-diag.png" />
+</div>
+</div>
+<div class="paragraph"><div class="title">Joint Controller Block Diagram<a id="fig:motion-joint-controller-block-diag"></a></div><p>The above figure shows five of the
+seven sets of position information that form the main data flow through
+the motion controller. The seven forms of position data are as follows:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+<em>emcmotStatus-&gt;carte_pos_cmd</em> - This is the desired position, in
+   Cartesian coordinates. It is updated at the traj rate, not the servo
+   rate. In coord mode, it is determined by the traj planner. In teleop
+   mode, it is determined by the traj planner? In free mode, it is either
+   copied from actualPos, or generated by applying forward kins to (2) or
+   (3).
+</p>
+</li>
+<li>
+<p>
+<em>emcmotStatus-&gt;joints[n].coarse_pos</em> - This is the desired position, in
+   joint coordinates, but before interpolation. It is updated at the traj
+   rate, not the servo rate. In coord mode, it is generated by applying
+   inverse kins to (1) In teleop mode, it is generated by applying inverse
+   kins to (1) In free mode, it is copied from (3), I think.
+</p>
+</li>
+<li>
+<p>
+'emcmotStatus-&gt;joints[n].pos_cmd - This is the desired position, in
+   joint coords, after interpolation. A new set of these coords is
+   generated every servo period. In coord mode, it is generated from (2)
+   by the interpolator. In teleop mode, it is generated from (2) by the
+   interpolator. In free mode, it is generated by the free mode traj
+   planner.
+</p>
+</li>
+<li>
+<p>
+<em>emcmotStatus-&gt;joints[n].motor_pos_cmd</em> - This is the desired position,
+   in motor coords. Motor coords are generated by adding backlash
+   compensation, lead screw error compensation, and offset (for homing) to
+   (3). It is generated the same way regardless of the mode, and is the
+   output to the PID loop or other position loop.
+</p>
+</li>
+<li>
+<p>
+<em>emcmotStatus-&gt;joints[n].motor_pos_fb</em> - This is the actual position, in
+   motor coords. It is the input from encoders or other feedback device
+   (or from virtual encoders on open loop machines). It is "generated" by
+   reading the feedback device.
+</p>
+</li>
+<li>
+<p>
+<em>emcmotStatus-&gt;joints[n].pos_fb</em> - This is the actual position, in joint
+   coordinates. It is generated by subtracting offset, lead screw error
+   compensation, and backlash compensation from (5). It is generated the
+   same way regardless of the operating mode.
+</p>
+</li>
+<li>
+<p>
+<em>emcmotStatus-&gt;carte_pos_fb</em> - This is the actual position, in Cartesian
+   coordinates. It is updated at the traj rate, not the servo rate.
+   Ideally, actualPos would always be calculated by applying forward
+   kinematics to (6). However, forward kinematics may not be available, or
+   they may be unusable because one or more axes aren&#8217;t homed. In that
+   case, the options are: A) fake it by copying (1), or B) admit that we
+   don&#8217;t really know the Cartesian coordinates, and simply don&#8217;t update
+   actualPos. Whatever approach is used, I can see no reason not to do it
+   the same way regardless of the operating mode. I would propose the
+   following: If there are forward kins, use them, unless they don&#8217;t work
+   because of unhomed axes or other problems, in which case do (B). If no
+   forward kins, do (A), since otherwise actualPos would <em>never</em> get
+   updated.
+</p>
+</li>
+</ol></div>
+</div>
+<h2 id="_commands">7. Commands</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This section simply lists all of the commands that can be sent to the
+motion module, along with detailed explanations of what they do. The
+command names are defined in a large typedef enum in
+emc2/src/emc/motion/motion.h, called cmd_code_t. (Note that in the
+code, each command name starts with <em>EMCMOT_</em>, which is omitted here.)</p></div>
+<div class="paragraph"><p>The commands are implemented by a large switch statement in the
+function emcmotCommandHandler(), which is called at the servo rate.
+More on that function later.</p></div>
+<div class="paragraph"><p>There are approximately 44 commands - this list is still under
+construction.</p></div>
+<h3 id="_abort">7.1. ABORT</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The ABORT command simply stops all motion. It can be issued at any
+time, and will always be accepted. It does not disable the motion
+controller or change any state information, it simply cancels any
+motion that is currently in progress.<span class="footnote"><br />[It seems that the
+higher level code (TASK and above) also use ABORT to clear faults.
+Whenever there is a persistent fault (such as being outside the
+hardware limit switches), the higher level code sends a constant
+stream of ABORTs to the motion controller trying to make the
+fault go away. Thousands of 'em&#8230;. That means that the motion
+controller should avoid persistent faults. This needs to be looked
+into.]<br /></span></p></div>
+<h4 id="_requirements">7.1.1. Requirements</h4>
+<div class="paragraph"><p>None. The command is always accepted and acted on immediately.</p></div>
+<h4 id="_results">7.1.2. Results</h4>
+<div class="paragraph"><p>In free mode, the free mode trajectory planners are disabled. That
+results in each joint stopping as fast as its accel (decel) limit
+allows. The stop is not coordinated. In teleop mode, the commanded
+Cartesian velocity is set to zero. I don&#8217;t know exactly what kind of
+stop results (coordinated, uncoordinated, etc), but will figure it out
+eventually. In coord mode, the coord mode trajectory planner is told to
+abort the current move. Again, I don&#8217;t know the exact result of this,
+but will document it when I figure it out.</p></div>
+<h3 id="_free">7.2. FREE</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The FREE command puts the motion controller in free mode. Free mode
+means that each joint is independent of all the other joints. Cartesian
+coordinates, poses, and kinematics are ignored when in free mode. In
+essence, each joint has its own simple trajectory planner, and each
+joint completely ignores the other joints. Some commands (like JOG)
+only work in free mode. Other commands, including anything that deals
+with Cartesian coordinates, do not work at all in free mode.</p></div>
+<h4 id="_requirements_2">7.2.1. Requirements</h4>
+<div class="paragraph"><p>The command handler applies no requirements to the FREE command, it
+will always be accepted. However, if any joint is in motion
+(GET_MOTION_INPOS_FLAG() == FALSE), then the command will be ignored.
+This behavior is controlled by code that is now located in the function
+<em>set_operating_mode()</em> in control.c, that code needs to be cleaned up.
+I believe the command should not be silently ignored, instead the
+command handler should determine whether it can be executed and return
+an error if it cannot.</p></div>
+<h4 id="_results_2">7.2.2. Results</h4>
+<div class="paragraph"><p>If the machine is already in free mode, nothing. Otherwise, the
+machine is placed in free mode. Each joint&#8217;s free mode trajectory
+planner is initialized to the current location of the joint, but the
+planners are not enabled and the joints are stationary.</p></div>
+<h3 id="_teleop">7.3. TELEOP</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The TELEOP command places the machine in teleoperating mode. In teleop
+mode, movement of the machine is based on Cartesian coordinates using
+kinematics, rather than on individual joints as in free mode. However
+the trajectory planner per se is not used, instead movement is
+controlled by a velocity vector. Movement in teleop mode is much like
+jogging, except that it is done in Cartesian space instead of joint
+space. On a machine with trivial kinematics, there is little difference
+between teleop mode and free mode, and GUIs for those machines might
+never even issue this command. However for non-trivial machines like
+robots and hexapods, teleop mode is used for most user commanded jog
+type movements.</p></div>
+<h4 id="_requirements_3">7.3.1. Requirements</h4>
+<div class="paragraph"><p>The command handler will reject the TELEOP command with an error
+message if the kinematics cannot be activated because the one or more
+axes have not been homed. In addition, if any joint is in motion
+(GET_MOTION_INPOS_FLAG() == FALSE), then the command will be ignored
+(with no error message). This behavior is controlled by code that is
+now located in the function <em>set_operating_mode()</em> in control.c. I
+believe the command should not be silently ignored, instead the command
+handler should determine whether it can be executed and return an error
+if it cannot.</p></div>
+<h4 id="_results_3">7.3.2. Results</h4>
+<div class="paragraph"><p>If the machine is already in teleop mode, nothing. Otherwise the
+machine is placed in teleop mode. The kinematics code is activated,
+interpolators are drained and flushed, and the Cartesian velocity
+commands are set to zero.</p></div>
+<h3 id="_coord">7.4. COORD</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The COORD command places the machine in coordinated mode. In coord
+mode, movement of the machine is based on Cartesian coordinates using
+kinematics, rather than on individual joints as in free mode. In
+addition, the main trajectory planner is used to generate motion, based
+on queued LINE, CIRCLE, and/or PROBE commands. Coord mode is the mode
+that is used when executing a G-code program.</p></div>
+<h4 id="_requirements_4">7.4.1. Requirements</h4>
+<div class="paragraph"><p>The command handler will reject the COORD command with an error
+message if the kinematics cannot be activated because the one or more
+axes have not been homed. In addition, if any joint is in motion
+(GET_MOTION_INPOS_FLAG() == FALSE), then the command will be ignored
+(with no error message). This behavior is controlled by code that is
+now located in the function <em>set_operating_mode()</em> in control.c. I
+believe the command should not be silently ignored, instead the command
+handler should determine whether it can be executed and return an error
+if it cannot.</p></div>
+<h4 id="_results_4">7.4.2. Results</h4>
+<div class="paragraph"><p>If the machine is already in coord mode, nothing. Otherwise, the
+machine is placed in coord mode. The kinematics code is activated,
+interpolators are drained and flushed, and the trajectory planner
+queues are empty. The trajectory planner is active and awaiting a LINE,
+CIRCLE, or PROBE command.</p></div>
+<h3 id="_enable">7.5. ENABLE</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The ENABLE command enables the motion controller.</p></div>
+<h4 id="_requirements_5">7.5.1. Requirements</h4>
+<div class="paragraph"><p>None. The command can be issued at any time, and will always be
+accepted.</p></div>
+<h4 id="_results_5">7.5.2. Results</h4>
+<div class="paragraph"><p>If the controller is already enabled, nothing. If not, the controller
+is enabled. Queues and interpolators are flushed. Any movement or
+homing operations are terminated. The amp-enable outputs associated
+with active joints are turned on. If forward kinematics are not
+available, the machine is switched to free mode.</p></div>
+<h3 id="_disable">7.6. DISABLE</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The DISABLE command disables the motion controller.</p></div>
+<h4 id="_requirements_6">7.6.1. Requirements</h4>
+<div class="paragraph"><p>None. The command can be issued at any time, and will always be
+accepted.</p></div>
+<h4 id="_results_6">7.6.2. Results</h4>
+<div class="paragraph"><p>If the controller is already disabled, nothing. If not, the controller
+is disabled. Queues and interpolators are flushed. Any movement or
+homing operations are terminated. The amp-enable outputs associated
+with active joints are turned off. If forward kinematics are not
+available, the machine is switched to free mode.</p></div>
+<h3 id="_enable_amplifier">7.7. ENABLE_AMPLIFIER</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The ENABLE_AMPLIFIER command turns on the amp enable output for a
+single output amplifier, without changing anything else. Can be used to
+enable a spindle speed controller.</p></div>
+<h4 id="_requirements_7">7.7.1. Requirements</h4>
+<div class="paragraph"><p>None. The command can be issued at any time, and will always be
+accepted.</p></div>
+<h4 id="_results_7">7.7.2. Results</h4>
+<div class="paragraph"><p>Currently, nothing. (A call to the old extAmpEnable function is
+currently commented out.) Eventually it will set the amp enable HAL pin
+true.</p></div>
+<h3 id="_disable_amplifier">7.8. DISABLE_AMPLIFIER</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The DISABLE_AMPLIFIER command turns off the amp enable output for a
+single amplifier, without changing anything else. Again, useful for
+spindle speed controllers.</p></div>
+<h4 id="_requirements_8">7.8.1. Requirements</h4>
+<div class="paragraph"><p>None. The command can be issued at any time, and will always be
+accepted.</p></div>
+<h4 id="_results_8">7.8.2. Results</h4>
+<div class="paragraph"><p>Currently, nothing. (A call to the old extAmpEnable function is
+currently commented out.) Eventually it will set the amp enable HAL pin
+false.</p></div>
+<h3 id="_activate_joint">7.9. ACTIVATE_JOINT</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The ACTIVATE_JOINT command turns on all the calculations associated
+with a single joint, but does not change the joint&#8217;s amp enable output
+pin.</p></div>
+<h4 id="_requirements_9">7.9.1. Requirements</h4>
+<div class="paragraph"><p>None. The command can be issued at any time, and will always be
+accepted.</p></div>
+<h4 id="_results_9">7.9.2. Results</h4>
+<div class="paragraph"><p>Calculations for the specified joint are enabled. The amp enable pin
+is not changed, however, any subsequent ENABLE or DISABLE commands will
+modify the joint&#8217;s amp enable pin.</p></div>
+<h3 id="_deactivate_joint">7.10. DEACTIVATE_JOINT</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The DEACTIVATE_JOINT command turns off all the calculations associated
+with a single joint, but does not change the joint&#8217;s amp enable output
+pin.</p></div>
+<h4 id="_requirements_10">7.10.1. Requirements</h4>
+<div class="paragraph"><p>None. The command can be issued at any time, and will always be
+accepted.</p></div>
+<h4 id="_results_10">7.10.2. Results</h4>
+<div class="paragraph"><p>Calculations for the specified joint are enabled. The amp enable pin
+is not changed, and subsequent ENABLE or DISABLE commands will not
+modify the joint&#8217;s amp enable pin.</p></div>
+<h3 id="_enable_watchdog">7.11. ENABLE_WATCHDOG</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The ENABLE_WATCHDOG command enables a hardware based watchdog (if
+present).</p></div>
+<h4 id="_requirements_11">7.11.1. Requirements</h4>
+<div class="paragraph"><p>None. The command can be issued at any time, and will always be
+accepted.</p></div>
+<h4 id="_results_11">7.11.2. Results</h4>
+<div class="paragraph"><p>Currently nothing. The old watchdog was a strange thing that used a
+specific sound card. A new watchdog interface may be designed in the
+future.</p></div>
+<h3 id="_disable_watchdog">7.12. DISABLE_WATCHDOG</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The DISABLE_WATCHDOG command disables a hardware based watchdog (if
+present).</p></div>
+<h4 id="_requirements_12">7.12.1. Requirements</h4>
+<div class="paragraph"><p>None. The command can be issued at any time, and will always be
+accepted.</p></div>
+<h4 id="_results_12">7.12.2. Results</h4>
+<div class="paragraph"><p>Currently nothing. The old watchdog was a strange thing that used a
+specific sound card. A new watchdog interface may be designed in the
+future.</p></div>
+<h3 id="_pause">7.13. PAUSE</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The PAUSE command stops the trajectory planner. It has no effect in
+free or teleop mode. At this point I don&#8217;t know if it pauses all motion
+immediately, or if it completes the current move and then pauses before
+pulling another move from the queue.</p></div>
+<h4 id="_requirements_13">7.13.1. Requirements</h4>
+<div class="paragraph"><p>None. The command can be issued at any time, and will always be
+accepted.</p></div>
+<h4 id="_results_13">7.13.2. Results</h4>
+<div class="paragraph"><p>The trajectory planner pauses.</p></div>
+<h3 id="_resume">7.14. RESUME</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The RESUME command restarts the trajectory planner if it is paused. It
+has no effect in free or teleop mode, or if the planner is not paused.</p></div>
+<h4 id="_requirements_14">7.14.1. Requirements</h4>
+<div class="paragraph"><p>None. The command can be issued at any time, and will always be
+accepted.</p></div>
+<h4 id="_results_14">7.14.2. Results</h4>
+<div class="paragraph"><p>The trajectory planner resumes.</p></div>
+<h3 id="_step">7.15. STEP</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The STEP command restarts the trajectory planner if it is paused, and
+tells the planner to stop again when it reaches a specific point. It
+has no effect in free or teleop mode. At this point I don&#8217;t know
+exactly how this works. I&#8217;ll add more documentation here when I dig
+deeper into the trajectory planner.</p></div>
+<h4 id="_requirements_15">7.15.1. Requirements</h4>
+<div class="paragraph"><p>None. The command can be issued at any time, and will always be
+accepted.</p></div>
+<h4 id="_results_15">7.15.2. Results</h4>
+<div class="paragraph"><p>The trajectory planner resumes, and later pauses when it reaches a
+specific point.</p></div>
+<h3 id="_scale">7.16. SCALE</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The SCALE command scales all velocity limits and commands by a
+specified amount. It is used to implement feed rate override and other
+similar functions. The scaling works in free, teleop, and coord modes,
+and affects everything, including homing velocities, etc. However,
+individual joint velocity limits are unaffected.</p></div>
+<h4 id="_requirements_16">7.16.1. Requirements</h4>
+<div class="paragraph"><p>None. The command can be issued at any time, and will always be
+accepted.</p></div>
+<h4 id="_results_16">7.16.2. Results</h4>
+<div class="paragraph"><p>All velocity commands are scaled by the specified constant.</p></div>
+<h3 id="_override_limits">7.17. OVERRIDE_LIMITS</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The OVERRIDE_LIMITS command prevents limits from tripping until the
+end of the next JOG command. It is normally used to allow a machine to
+be jogged off of a limit switch after tripping. (The command can
+actually be used to override limits, or to cancel a previous override.)</p></div>
+<h4 id="_requirements_17">7.17.1. Requirements</h4>
+<div class="paragraph"><p>None. The command can be issued at any time, and will always be
+accepted. (I think it should only work in free mode.)</p></div>
+<h4 id="_results_17">7.17.2. Results</h4>
+<div class="paragraph"><p>Limits on all joints are over-ridden until the end of the next JOG
+command. (This is currently broken&#8230; once an OVERRIDE_LIMITS command
+is received, limits are ignored until another OVERRIDE_LIMITS command
+re-enables them.)</p></div>
+<h3 id="_home">7.18. HOME</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The HOME command initiates a homing sequence on a specified joint. The
+actual homing sequence is determined by a number of configuration
+parameters, and can range from simply setting the current position to
+zero, to a multi-stage search for a home switch and index pulse,
+followed by a move to an arbitrary home location. For more information
+about the homing sequence, see the homing section of the Integrator Manual.</p></div>
+<h4 id="_requirements_18">7.18.1. Requirements</h4>
+<div class="paragraph"><p>The command will be ignored silently unless the machine is in free mode.</p></div>
+<h4 id="_results_18">7.18.2. Results</h4>
+<div class="paragraph"><p>Any jog or other joint motion is aborted, and the homing sequence
+starts.</p></div>
+<h3 id="_jog_cont">7.19. JOG_CONT</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The JOG_CONT command initiates a continuous jog on a single joint. A
+continuous jog is generated by setting the free mode trajectory
+planner&#8217;s target position to a point beyond the end of the joint&#8217;s
+range of travel. This ensures that the planner will move constantly
+until it is stopped by either the joint limits or an ABORT command.
+Normally, a GUI sends a JOG_CONT command when the user presses a jog
+button, and ABORT when the button is released.</p></div>
+<h4 id="_requirements_19">7.19.1. Requirements</h4>
+<div class="paragraph"><p>The command handler will reject the JOG_CONT command with an error
+message if machine is not in free mode, or if any joint is in motion
+(GET_MOTION_INPOS_FLAG() == FALSE), or if motion is not enabled. It
+will also silently ignore the command if the joint is already at or
+beyond its limit and the commanded jog would make it worse.</p></div>
+<h4 id="_results_19">7.19.2. Results</h4>
+<div class="paragraph"><p>The free mode trajectory planner for the joint identified by
+emcmotCommand-&gt;axis is activated, with a target position beyond the end
+of joint travel, and a velocity limit of emcmotCommand-&gt;vel. This
+starts the joint moving, and the move will continue until stopped by an
+ABORT command or by hitting a limit. The free mode planner accelerates
+at the joint accel limit at the beginning of the move, and will
+decelerate at the joint accel limit when it stops.</p></div>
+<h3 id="_jog_incr">7.20. JOG_INCR</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The JOG_INCR command initiates an incremental jog on a single joint.
+Incremental jogs are cumulative, in other words, issuing two JOG_INCR
+commands that each ask for 0.100 inches of movement will result in
+0.200 inches of travel, even if the second command is issued before the
+first one finishes. Normally incremental jogs stop when they have
+traveled the desired distance, however they also stop when they hit a
+limit, or on an ABORT command.</p></div>
+<h4 id="_requirements_20">7.20.1. Requirements</h4>
+<div class="paragraph"><p>The command handler will silently reject the JOG_INCR command if
+machine is not in free mode, or if any joint is in motion
+(GET_MOTION_INPOS_FLAG() == FALSE), or if motion is not enabled. It
+will also silently ignore the command if the joint is already at or
+beyond its limit and the commanded jog would make it worse.</p></div>
+<h4 id="_results_20">7.20.2. Results</h4>
+<div class="paragraph"><p>The free mode trajectory planner for the joint identified by
+emcmotCommand-&gt;axis is activated, the target position is
+incremented/decremented by emcmotCommand-&gt;offset, and the velocity
+limit is set to emcmotCommand-&gt;vel. The free mode trajectory planner
+will generate a smooth trapezoidal move from the present position to
+the target position. The planner can correctly handle changes in the
+target position that happen while the move is in progress, so multiple
+JOG_INCR commands can be issued in quick succession. The free mode
+planner accelerates at the joint accel limit at the beginning of the
+move, and will decelerate at the joint accel limit to stop at the
+target position.</p></div>
+<h3 id="_jog_abs">7.21. JOG_ABS</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The JOG_ABS command initiates an absolute jog on a single joint. An
+absolute jog is a simple move to a specific location, in joint
+coordinates. Normally absolute jogs stop when they reach the desired
+location, however they also stop when they hit a limit, or on an ABORT
+command.</p></div>
+<h4 id="_requirements_21">7.21.1. Requirements</h4>
+<div class="paragraph"><p>The command handler will silently reject the JOG_ABS command if
+machine is not in free mode, or if any joint is in motion
+(GET_MOTION_INPOS_FLAG() == FALSE), or if motion is not enabled. It
+will also silently ignore the command if the joint is already at or
+beyond its limit and the commanded jog would make it worse.</p></div>
+<h4 id="_results_21">7.21.2. Results</h4>
+<div class="paragraph"><p>The free mode trajectory planner for the joint identified by
+emcmotCommand-&gt;axis is activated, the target position is set to
+emcmotCommand-&gt;offset, and the velocity limit is set to
+emcmotCommand-&gt;vel. The free mode trajectory planner will generate a
+smooth trapezoidal move from the present position to the target
+position. The planner can correctly handle changes in the target
+position that happen while the move is in progress. If multiple JOG_ABS
+commands are issued in quick succession, each new command changes the
+target position and the machine goes to the final commanded position.
+The free mode planner accelerates at the joint accel limit at the
+beginning of the move, and will decelerate at the joint accel limit to
+stop at the target position.</p></div>
+<h3 id="_set_line">7.22. SET_LINE</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The SET_LINE command adds a straight line to the trajectory planner
+queue.</p></div>
+<div class="paragraph"><p>(More later)</p></div>
+<h3 id="_set_circle">7.23. SET_CIRCLE</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The SET_CIRCLE command adds a circular move to the trajectory planner
+queue.</p></div>
+<div class="paragraph"><p>(More later)</p></div>
+<h3 id="_set_teleop_vector">7.24. SET_TELEOP_VECTOR</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The SET_TELEOP_VECTOR command instructs the motion controller to move
+along a specific vector in Cartesian space.</p></div>
+<div class="paragraph"><p>(More later)</p></div>
+<h3 id="_probe">7.25. PROBE</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The PROBE command instructs the motion controller to move toward a
+specific point in Cartesian space, stopping and recording its
+position if the probe input is triggered.</p></div>
+<div class="paragraph"><p>(More later)</p></div>
+<h3 id="_clear_probe_flag">7.26. CLEAR_PROBE_FLAG</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The CLEAR_PROBE_FLAG command is used to reset the probe input in
+preparation for a PROBE command. (Question: why shouldn&#8217;t the PROBE
+command automatically reset the input?)</p></div>
+<div class="paragraph"><p>(More later)</p></div>
+<h3 id="_set_xix">7.27. SET_xix</h3><div style="clear:left"></div>
+<div class="paragraph"><p>There are approximately 15 SET_xxx commands, where xxx is the name of
+some configuration parameter. It is anticipated that there will be
+several more SET commands as more parameters are added. I would like to
+find a cleaner way of setting and reading configuration parameters. The
+existing methods require many lines of code to be added to multiple
+files each time a parameter is added. Much of that code is identical or
+nearly identical for every parameter.</p></div>
+</div>
+<h2 id="_backlash_and_screw_error_compensation">8. Backlash and Screw Error Compensation</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre><tt>+</tt></pre>
+</div></div>
+</div>
+<h2 id="_task_controller_emctask">9. Task controller (EMCTASK)</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre><tt>+</tt></pre>
+</div></div>
+</div>
+<h2 id="_io_controller_emcio">10. IO controller (EMCIO)</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre><tt>+</tt></pre>
+</div></div>
+</div>
+<h2 id="_user_interfaces">11. User Interfaces</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre><tt>+</tt></pre>
+</div></div>
+</div>
+<h2 id="_libnml_introduction">12. libnml Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>libnml is derived from the NIST rcslib without all the multi-platform
+support. Many of the wrappers around platform specific code has been
+removed along with much of the code that is not required by LinuxCNC. It is
+hoped that sufficient compatibility remains with rcslib so that
+applications can be implemented on non-Linux platforms and still be
+able to communicate with LinuxCNC.</p></div>
+<div class="paragraph"><p>This chapter is not intended to be a definitive guide to using libnml
+(or rcslib), instead, it will eventually provide an overview of each
+C++ class and their member functions. Initially, most of these notes
+will be random comments added as the code scrutinized and modified.</p></div>
+</div>
+<h2 id="_linkedlist">13. LinkedList</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Base class to maintain a linked list. This is one of the core building
+blocks used in passing NML messages and assorted internal data
+structures.</p></div>
+</div>
+<h2 id="_linkedlistnode">14. LinkedListNode</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Base class for producing a linked list - Purpose, to hold pointers to
+the previous and next nodes, pointer to the data, and the size of the
+data.</p></div>
+<div class="paragraph"><p>No memory for data storage is allocated.</p></div>
+</div>
+<h2 id="_sharedmemory">15. SharedMemory</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Provides a block of shared memory along with a semaphore (inherited
+from the Semaphore class). Creation and destruction of the semaphore is
+handled by the SharedMemory constructor and destructor.</p></div>
+</div>
+<h2 id="_shmbuffer">16. ShmBuffer</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Class for passing NML messages between local processes using a shared
+memory buffer. Much of internal workings are inherited from the CMS
+class.</p></div>
+</div>
+<h2 id="_timer">17. Timer</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The Timer class provides a periodic timer limited only by the
+resolution of the system clock. If, for example, a process needs to be
+run every 5 seconds regardless of the time taken to run the process,
+the following code snippet demonstrates how :</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #000000">main</span></span><span style="color: #990000">()</span>
+<span style="color: #FF0000">{</span>
+    timer <span style="color: #990000">=</span> <span style="color: #008080">new</span> <span style="font-weight: bold"><span style="color: #000000">Timer</span></span><span style="color: #990000">(</span><span style="color: #993399">5.0</span><span style="color: #990000">);</span>    <span style="font-style: italic"><span style="color: #9A1900">/* Initialize a timer with a 5 second loop */</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">while</span></span><span style="color: #990000">(</span><span style="color: #993399">0</span><span style="color: #990000">)</span> <span style="color: #FF0000">{</span>
+        <span style="font-style: italic"><span style="color: #9A1900">/* Do some process */</span></span>
+        timer<span style="color: #990000">.</span><span style="font-weight: bold"><span style="color: #000000">wait</span></span><span style="color: #990000">();</span>    <span style="font-style: italic"><span style="color: #9A1900">/* Wait till the next 5 second interval */</span></span>
+    <span style="color: #FF0000">}</span>
+    <span style="color: #008080">delete</span> timer<span style="color: #990000">;</span>
+<span style="color: #FF0000">}</span></tt></pre></div></div>
+</div>
+<h2 id="_semaphore">18. Semaphore</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The Semaphore class provides a method of mutual exclusions for
+accessing a shared resource. The function to get a semaphore can either
+block until access is available, return after a timeout, or return
+immediately with or without gaining the semaphore. The constructor will
+create a semaphore or attach to an existing one if the ID is already in
+use.</p></div>
+<div class="paragraph"><p>The Semaphore::destroy() must be called by the last process only.</p></div>
+</div>
+<h2 id="_cms">19. CMS</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>At the heart of libnml is the CMS class, it contains most of the
+functions used by libnml and ultimately NML. Many of the internal
+functions are overloaded to allow for specific hardware dependent
+methods of data passing. Ultimately, everything revolves around a
+central block of memory (referred to as the <em>message buffer</em> or just
+<em>buffer</em>). This buffer may exist as a shared memory block accessed by
+other CMS/NML processes, or a local and private buffer for data being
+transferred by network or serial interfaces.</p></div>
+<div class="paragraph"><p>The buffer is dynamically allocated at run time to allow for greater
+flexibility of the CMS/NML sub-system. The buffer size must be large
+enough to accommodate the largest message, a small amount for internal
+use and allow for the message to be encoded if this option is chosen
+(encoded data will be covered later). The following figure is an
+internal view of the buffer space.</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="CMS_buffer.png" alt="CMS_buffer.png" />
+</div>
+</div>
+<div class="paragraph"><div class="title">CMS buffer<a id="fig:CMS-buffer"></a></div><p>The CMS base class is primarily responsible for creating the
+communications pathways and interfacing to the O.S.</p></div>
+</div>
+<h2 id="_configuration_file_format">20. Configuration file format</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>NML configuration consists of two types of line formats. One for
+Buffers, and a second for Processes that connect to the buffers.</p></div>
+<h3 id="_buffer_line">20.1. Buffer line</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The original NIST format of the buffer line is:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>B name type host size neut RPC# buffer# max_procs key [type specific configs]</em>
+</p>
+</li>
+<li>
+<p>
+<em>B</em> - identifies this line as a Buffer configuration.
+</p>
+</li>
+<li>
+<p>
+<em>name</em> - is the identifier of the buffer.
+</p>
+</li>
+<li>
+<p>
+<em>type</em> - describes the buffer type - SHMEM, LOCMEM, FILEMEM, PHANTOM, or GLOBMEM.
+</p>
+</li>
+<li>
+<p>
+<em>host</em> - is either an IP address or host name for the NML server
+</p>
+</li>
+<li>
+<p>
+<em>size</em> - is the size of the buffer
+</p>
+</li>
+<li>
+<p>
+<em>neut</em> - a boolean to indicate if the data in the buffer is encoded in a
+     machine independent format, or raw.
+</p>
+</li>
+<li>
+<p>
+<em>RPC#</em> - Obsolete - Place holder retained for backward compatibility only.
+</p>
+</li>
+<li>
+<p>
+<em>buffer#</em> - A unique ID number used if a server controls multiple buffers.
+</p>
+</li>
+<li>
+<p>
+<em>max_procs</em> - is the maximum processes allowed to connect to this buffer.
+</p>
+</li>
+<li>
+<p>
+<em>key</em> - is a numerical identifier for a shared memory buffer
+</p>
+</li>
+</ul></div>
+<h3 id="_type_specific_configs">20.2. Type specific configs</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The buffer type implies additional configuration options whilst the
+host operating system precludes certain combinations. In an attempt to
+distill published documentation in to a coherent format, only the <strong>SHMEM</strong>
+buffer type will be covered.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>mutex=os_sem</em> - default mode for providing semaphore locking of the buffer memory.
+</p>
+</li>
+<li>
+<p>
+<em>mutex=none</em> - Not used
+</p>
+</li>
+<li>
+<p>
+<em>mutex=no_interrupts</em> - not applicable on a Linux system
+</p>
+</li>
+<li>
+<p>
+<em>mutex=no_switching</em> - not applicable on a Linux system
+</p>
+</li>
+<li>
+<p>
+<em>mutex=mao split</em> - Splits the buffer in to half (or more) and allows
+     one process to access part of the buffer whilst a second process is
+     writing to another part.
+</p>
+</li>
+<li>
+<p>
+<em>TCP=(port number)</em> - Specifies which network port to use.
+</p>
+</li>
+<li>
+<p>
+<em>UDP=(port number)</em> - ditto
+</p>
+</li>
+<li>
+<p>
+<em>STCP=(port number)</em> - ditto
+</p>
+</li>
+<li>
+<p>
+<em>serialPortDevName=(serial port)</em> - Undocumented.
+</p>
+</li>
+<li>
+<p>
+<em>passwd=file_name.pwd</em> - Adds a layer of security to the buffer by
+     requiring each process to provide a password.
+</p>
+</li>
+<li>
+<p>
+<em>bsem</em> - NIST documentation implies a key for a blocking semaphore,
+     and if bsem=-1, blocking reads are prevented.
+</p>
+</li>
+<li>
+<p>
+<em>queue</em> - Enables queued message passing.
+</p>
+</li>
+<li>
+<p>
+<em>ascii</em> - Encode messages in a plain text format
+</p>
+</li>
+<li>
+<p>
+<em>disp</em> - Encode messages in a format suitable for display (???)
+</p>
+</li>
+<li>
+<p>
+<em>xdr</em> - Encode messages in External Data Representation. (see rpc/xdr.h for details).
+</p>
+</li>
+<li>
+<p>
+<em>diag</em> - Enables diagnostics stored in the buffer (timings and byte counts ?)
+</p>
+</li>
+</ul></div>
+<h3 id="_process_line">20.3. Process line</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The original NIST format of the process line is:</p></div>
+<div class="paragraph"><p><strong>P name buffer type host ops server timeout master c_num [type specific configs]</strong></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>P</em> - identifies this line as a Process configuration.
+</p>
+</li>
+<li>
+<p>
+<em>name</em> - is the identifier of the process.
+</p>
+</li>
+<li>
+<p>
+<em>buffer</em> - is one of the buffers defined elsewhere in the config file.
+</p>
+</li>
+<li>
+<p>
+<em>type</em> - defines whether this process is local or remote relative to the buffer.
+</p>
+</li>
+<li>
+<p>
+<em>host</em> - specifies where on the network this process is running.
+</p>
+</li>
+<li>
+<p>
+<em>ops</em> - gives the process read only, write only, or read/write access to the buffer.
+</p>
+</li>
+<li>
+<p>
+<em>server</em> - specifies if this process will running a server for this buffer.
+</p>
+</li>
+<li>
+<p>
+<em>timeout</em> - sets the timeout characteristics for accesses to the buffer.
+</p>
+</li>
+<li>
+<p>
+<em>master</em> - indicates if this process is responsible for creating and destroying the buffer.
+</p>
+</li>
+<li>
+<p>
+<em>c_num</em> - an integer between zero and (max_procs -1)
+</p>
+</li>
+</ul></div>
+<h3 id="_configuration_comments">20.4. Configuration Comments</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Some of the configuration combinations are invalid, whilst others
+imply certain constraints. On a Linux system, GLOBMEM is obsolete,
+whilst PHANTOM is only really useful in the testing stage of an
+application, likewise for FILEMEM. LOCMEM is of little use for a
+multi-process application, and only offers limited performance
+advantages over SHMEM. This leaves SHMEM as the only buffer type to use
+with LinuxCNC.</p></div>
+<div class="paragraph"><p>The neut option is only of use in a multi-processor system where
+different (and incompatible) architectures are sharing a block of
+memory. The likelihood of seeing a system of this type outside of a
+museum or research establishment is remote and is only relevant to
+GLOBMEM buffers.</p></div>
+<div class="paragraph"><p>The RPC number is documented as being obsolete and is retained only
+for compatibility reasons.</p></div>
+<div class="paragraph"><p>With a unique buffer name, having a numerical identity seems to be
+pointless. Need to review the code to identify the logic. Likewise, the
+key field at first appears to be redundant, and it could be derived
+from the buffer name.</p></div>
+<div class="paragraph"><p>The purpose of limiting the number of processes allowed to connect to
+any one buffer is unclear from existing documentation and from the
+original source code. Allowing unspecified multiple processes to
+connect to a buffer is no more difficult to implement.</p></div>
+<div class="paragraph"><p>The mutex types boil down to one of two, the default “os_sem” or “mao
+split”. Most of the NML messages are relatively short and can be copied
+to or from the buffer with minimal delays, so split reads are not
+essential.</p></div>
+<div class="paragraph"><p>Data encoding is only relevant when transmitted to a remote process -
+Using TCP or UDP implies XDR encoding. Whilst ASCII encoding may have
+some use in diagnostics or for passing data to an embedded system that
+does not implement NML.</p></div>
+<div class="paragraph"><p>UDP protocols have fewer checks on data and allows a percentage of
+packets to be dropped. TCP is more reliable, but is marginally slower.</p></div>
+<div class="paragraph"><p>If LinuxCNC is to be connected to a network, one would hope that it is
+local and behind a firewall. About the only reason to allow access to
+LinuxCNC via the Internet would be for remote diagnostics - This can be
+achieved far more securely using other means, perhaps by a web
+interface.</p></div>
+<div class="paragraph"><p>The exact behavior when timeout is set to zero or a negative value is
+unclear from the NIST documents. Only INF and positive values are
+mentioned. However, buried in the source code of rcslib, it is apparent
+that the following applies:</p></div>
+<div class="paragraph"><p>timeout &gt; 0 Blocking access until the timeout interval is reached or
+access to the buffer is available.</p></div>
+<div class="paragraph"><p>timeout = 0 Access to the buffer is only possible if no other process
+is reading or writing at the time.</p></div>
+<div class="paragraph"><p>timeout &lt; 0 or INF Access is blocked until the buffer is available.</p></div>
+</div>
+<h2 id="_nml_base_class">21. NML base class</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Expand on the lists and the relationship between NML, NMLmsg, and the
+lower level cms classes.</p></div>
+<div class="paragraph"><p>Not to be confused with NMLmsg, RCS_STAT_MSG, or RCS_CMD_MSG.</p></div>
+<div class="paragraph"><p>NML is responsible for parsing the config file, configuring the cms
+buffers and is the mechanism for routing messages to the correct
+buffer(s). To do this, NML creates several lists for:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+cms buffers created or connected to.
+</p>
+</li>
+<li>
+<p>
+processes and the buffers they connect to
+</p>
+</li>
+<li>
+<p>
+a long list of format functions for each message type
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>This last item is probably the nub of much of the malignment of
+libnml/rcslib and NML in general. Each message that is passed via NML
+requires a certain amount of information to be attached in addition to
+the actual data. To do this, several formatting functions are called in
+sequence to assemble fragments of the overall message. The format
+functions will include NML_TYPE, MSG_TYPE, in addition to the data
+declared in derived NMLmsg classes. Changes to the order in which the
+formatting functions are called and also the variables passed will
+break compatibility with rcslib if messed with - There are reasons for
+maintaining rcslib compatibility, and good reasons for messing with the
+code. The question is, which set of reasons are overriding?</p></div>
+<h3 id="_nml_internals">21.1. NML internals</h3><div style="clear:left"></div>
+<h4 id="_nml_constructor">21.1.1. NML constructor</h4>
+<div class="paragraph"><p>NML::NML() parses the config file and stores it in a linked list to be
+passed to cms constructors in single lines. It is the function of the
+NML constructor to call the relevant cms constructor for each buffer
+and maintain a list of the cms objects and the processes associated
+with each buffer.</p></div>
+<div class="paragraph"><p>It is from the pointers stored in the lists that NML can interact with
+cms and why Doxygen fails to show the real relationships involved.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">The config is stored in memory before passing a pointer to
+a specific line to the cms constructor. The cms constructor then parses
+the line again to extract a couple of variables&#8230; It would make more
+sense to do ALL the parsing and save the variables in a struct that is
+passed to the cms constructor - This would eliminate string handling
+and reduce duplicate code in cms&#8230;.</td>
+</tr></table>
+</div>
+<h4 id="_nml_read_write">21.1.2. NML read/write</h4>
+<div class="paragraph"><p>Calls to NML::read and NML::write both perform similar tasks in so
+much as processing the message - The only real variation is in the
+direction of data flow.</p></div>
+<div class="paragraph"><p>A call to the read function first gets data from the buffer, then
+calls format_output(), whilst a write function would call
+format_input() before passing the data to the buffer. It is in
+format_xxx() that the work of constructing or deconstructing the
+message takes place. A list of assorted functions are called in turn to
+place various parts of the NML header (not to be confused with the cms
+header) in the right order - The last function called is emcFormat() in
+emc.cc.</p></div>
+<h4 id="_nmlmsg_and_nml_relationships">21.1.3. NMLmsg and NML relationships</h4>
+<div class="paragraph"><p>NMLmsg is the base class from which all message classes are derived.
+Each message class must have a unique ID defined (and passed to the
+constructor) and also an update(*cms) function. The update() will be
+called by the NML read/write functions when the NML formatter is called
+- The pointer to the formatter will have been declared in the NML
+constructor at some point. By virtue of the linked lists NML creates,
+it is able to select cms pointer that is passed to the formatter and
+therefor which buffer is to be used.</p></div>
+</div>
+<h2 id="_adding_custom_nml_commands">22. Adding custom NML commands</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>LinuxCNC is pretty awesome, but some parts need some tweaking. As you know
+communication is done through NML channels, the data sent through such
+a channel is one of the classes defined in emc.hh (implemented in
+emc.cc). If somebody needs a message type that doesn&#8217;t exist, he should
+follow these steps to add a new one. (The Message I added in the
+example is called EMC_IO_GENERIC (inherits EMC_IO_CMD_MSG (inherits
+RCS_CMD_MSG)))</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+add the definition of the EMC_IO_GENERIC class to emc2/src/emc/nml_intf/emc.hh
+</p>
+</li>
+<li>
+<p>
+add the type define: #define EMC_IO_GENERIC_TYPE ((NMLTYPE) 1605)<br />
+</p>
+<div class="olist loweralpha"><ol class="loweralpha">
+<li>
+<p>
+(I chose 1605, because it was available) to emc2/src/emc/nml_intf/emc.hh
+</p>
+</li>
+</ol></div>
+</li>
+<li>
+<p>
+add case EMC_IO_GENERIC_TYPE to emcFormat in emc2/src/emc/nml_intf/emc.cc
+</p>
+</li>
+<li>
+<p>
+add case EMC_IO_GENERIC_TYPE to emc_symbol_lookup in emc2/src/emc/nml_intf/emc.cc
+</p>
+</li>
+<li>
+<p>
+add EMC_IO_GENERIC::update function to emc2/src/emc/nml_intf/emc.cc
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Recompile, and the new message should be there. The next part is to
+send such messages from somewhere, and receive them in another place,
+and do some stuff with it.</p></div>
+</div>
+<h2 id="_the_tool_table_and_toolchanger">23. The Tool Table and Toolchanger</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>LinuxCNC interfaces with toolchanger hardware, and has an internal
+toolchanger abstraction.  LinuxCNC manages tool information in a tool
+table file.</p></div>
+<h3 id="_toolchanger_abstraction_in_linuxcnc">23.1. Toolchanger abstraction in LinuxCNC</h3><div style="clear:left"></div>
+<div class="paragraph"><p>LinuxCNC supports two kinds of toolchanger hardware,
+called <em>nonrandom</em> and <em>random</em>.  The ini setting
+<a href="../config/ini_config.html#sub:[EMCIO]-Section">[EMCIO]RANDOM_TOOLCHANGER</a> controls which of
+these kinds of hardware LinuxCNC thinks it&#8217;s connected to.</p></div>
+<h4 id="_nonrandom_toolchangers">23.1.1. Nonrandom Toolchangers</h4>
+<div class="paragraph"><p>Nonrandom toolchanger hardware puts each tool back in the pocket it was
+originally loaded from.</p></div>
+<div class="paragraph"><p>Examples of nonrandom toolchanger hardware are the "manual" toolchanger,
+lathe tool turrents, and rack toolchangers.</p></div>
+<div class="paragraph"><p>When configured for a nonrandom toolchanger, LinuxCNC does not change the
+pocket number in the tool table file as tools are loaded and unloaded.
+Internal to LinuxCNC, on tool change the tool information is <strong>copied</strong>
+from the tool table&#8217;s source pocket to pocket 0 (which represents the
+spindle), replacing whatever tool information was previously there.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">In LinuxCNC configured for nonrandom toolchanger, tool 0 (T0) has
+special meaning: "no tool".  T0 may not appear in the tool table file, and
+changing to T0 will result in LinuxCNC thinking it&#8217;s got an empty spindle.</td>
+</tr></table>
+</div>
+<h4 id="_random_toolchangers">23.1.2. Random Toolchangers</h4>
+<div class="paragraph"><p>Random toolchanger hardware swaps the tool in the spindle (if any) with
+the requested tool on tool change.  Thus the pocket that a tool resides
+in changes as it is swapped in and out of the spindle.</p></div>
+<div class="paragraph"><p>An example of random toolchanger hardware is a carousel toolchanger.</p></div>
+<div class="paragraph"><p>When configured for a random toolchanger, LinuxCNC swaps the pocket number
+of the old and the new tool in the tool table file when tools are loaded.
+Internal to LinuxCNC, on tool change, the tool information is <strong>swapped</strong>
+between the tool table&#8217;s source pocket and pocket 0 (which represents
+the spindle).  So after a tool change, pocket 0 in the tool table has
+the tool information for the new tool, and the pocket that the new tool
+came from has the tool information for the old tool (the tool that was
+in the spindle before the tool change), if any.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">In LinuxCNC configured for random toolchanger, tool 0 (T0) has <strong>no</strong>
+special meaning.  It is treated exactly like any other tool in the tool
+table.  It is customary to use T0 to represent "no tool" (ie, a tool with
+zero TLO), so that the spindle can be conveniently emptied when needed.</td>
+</tr></table>
+</div>
+<h3 id="_the_tool_table">23.2. The Tool Table</h3><div style="clear:left"></div>
+<div class="paragraph"><p>LinuxCNC keeps track of tools in a file called the <em>tool table</em>.
+The tool table records the following information for each tool:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+tool number
+</dt>
+<dd>
+<p>
+    An integer that uniquely identifies this tool.  Tool numbers are
+    handled differently by LinuxCNC when configured for random and
+    nonrandom toolchangers:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+When LinuxCNC is configured for a nonrandom toolchanger this
+        number must be positive.  T0 gets special handling and is not
+        allowed to appear in the tool table.
+</p>
+</li>
+<li>
+<p>
+When LinuxCNC is configured for a random toolchanger this number
+        must be non-negative.  T0 is allowed in the tool table, and is
+        usually used to represent "no tool", ie the empty pocket.
+</p>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+pocket number
+</dt>
+<dd>
+<p>
+    An integer that identifies the pocket or slot in the toolchanger
+    hardware where the tool resides.  Pocket numbers are handled
+    differently by LinuxCNC when configured for random and nonrandom
+    toolchangers:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+When LinuxCNC is configured for a nonrandom toolchanger, the pocket
+        number in the tool file can be any positive integer (pocket
+        0 is not allowed).  LinuxCNC silently compactifies the pocket
+        numbers when it loads the tool file, so there may be a difference
+        between the pocket numbers in the tool file and the internal
+        pocket numbers used by LinuxCNC-with-nonrandom-toolchanger.
+</p>
+</li>
+<li>
+<p>
+When LinuxCNC is configured for a random toolchanger, the pocket
+        numbers in the tool file must be between 0 and 55, inclusive.
+        Pockets 1-55 are in the toolchanger, pocket 0 is the spindle.
+</p>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+diameter
+</dt>
+<dd>
+<p>
+    Diameter of the tool, in machine units.
+</p>
+</dd>
+<dt class="hdlist1">
+tool length offset
+</dt>
+<dd>
+<p>
+    Tool length offset (also called TLO), in up to 9 axes, in machine
+    units.  Axes that don&#8217;t have a specified TLO get 0.
+</p>
+</dd>
+</dl></div>
+<h3 id="_gcodes_affecting_tools">23.3. Gcodes affecting tools</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The gcodes that use or affect tool information are:</p></div>
+<h4 id="_txxx">23.3.1. Txxx</h4>
+<div class="paragraph"><p>Tells the toolchanger hardware to prepare to switch to a specified
+tool <tt>xxx</tt>.</p></div>
+<div class="paragraph"><p>Handled by <tt>Interp::convert_tool_select()</tt>.</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+The machine is asked to prepare to switch to the selected tool by
+    calling the Canon function <tt>SELECT_POCKET()</tt> with the pocket number
+    of the requested tool.
+</p>
+<div class="olist loweralpha"><ol class="loweralpha">
+<li>
+<p>
+(saicanon) No-op.
+</p>
+</li>
+<li>
+<p>
+(emccanon) Builds an <tt>EMC_TOOL_PREPARE</tt> message with the requested
+        pocket number and sends it to Task, which sends it on
+        to IO.  IO gets the message and asks HAL to prepare
+        the pocket by setting <tt>iocontrol.0.tool-prep-pocket</tt>,
+        <tt>iocontrol.0.tool-prep-number</tt>, and <tt>iocontrol.0.tool-prepare</tt>.
+        IO then repeatedly calls <tt>read_tool_inputs()</tt> to poll the HAL pin
+        <tt>iocontrol.0.tool-prepared</tt>, which signals from the toolchanger
+        hardware, via HAL, to IO that the requested tool prep is complete.
+        When that pin goes True, IO sets <tt>emcioStatus.tool.pocketPrepped</tt>
+        to the requested tool&#8217;s pocket number.
+</p>
+</li>
+</ol></div>
+</li>
+<li>
+<p>
+Back in interp, <tt>settings-&gt;selected_pocket</tt> is assigned the pocket
+    number of the requested tool <em>xxx</em>.
+</p>
+</li>
+</ol></div>
+<h4 id="_m6">23.3.2. M6</h4>
+<div class="paragraph"><p>Tells the toolchanger to switch to the currently selected tool (selected
+by the previous Txxx command).</p></div>
+<div class="paragraph"><p>Handled by <tt>Interp::convert_tool_change()</tt>.</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+The machine is asked to change to the selected tool
+    by calling the Canon function <tt>CHANGE_TOOL()</tt> with
+    <tt>settings-&gt;selected_pocket</tt>.
+</p>
+<div class="olist loweralpha"><ol class="loweralpha">
+<li>
+<p>
+(saicanon) Sets sai&#8217;s <tt>_active_slot</tt> to the passed-in pocket
+        number.  Tool information is copied from the selected pocket
+        of of the tool table (ie, from sai&#8217;s <tt>_tools[_active_slot]</tt>)
+        to the spindle (aka sai&#8217;s <tt>_tools[0]</tt>).
+</p>
+</li>
+<li>
+<p>
+(emccanon) Sends an <tt>EMC_TOOL_LOAD</tt> message to Task, which
+        sends it to IO.  IO sets <tt>emcioStatus.tool.toolInSpindle</tt>
+        to the tool number of the tool in the pocket identified
+        by <tt>emcioStatus.tool.pocketPrepped</tt> (set by <tt>Txxx</tt>
+        aka <tt>SELECT_POCKET()</tt>).  It then requests that the
+        toolchanger hardware perform a tool change, by setting
+        the HAL pin <tt>iocontrol.0.tool-change</tt> to True.  Later,
+        IO&#8217;s <tt>read_tool_inputs()</tt> will sense that the HAL pin
+        <tt>iocontrol.0.tool_changed</tt> has been set to True, indicating the
+        toolchanger has completed the tool change.  When this happens,
+        it calls <tt>load_tool()</tt> to update the machine state.
+</p>
+<div class="olist lowerroman"><ol class="lowerroman">
+<li>
+<p>
+<tt>load_tool()</tt> with a nonrandom toolchanger
+            config copies the tool information from the selected pocket
+            to the spindle (pocket 0).
+</p>
+</li>
+<li>
+<p>
+<tt>load_tool()</tt> with a random toolchanger config swaps tool
+            information between pocket 0 (the spindle) and the selected
+            pocket, then saves the tool table.
+</p>
+</li>
+</ol></div>
+</li>
+</ol></div>
+</li>
+<li>
+<p>
+Back in interp, <tt>settings-&gt;current_pocket</tt> is assigned the new
+    tool from <tt>settings-&gt;selected_pocket</tt> (set by <tt>Txxx</tt>).  The relevant
+    numbered parameters (<a href="../gcode/overview.html#sub:numbered-parameters">#5400-#5413</a>) are
+    updated with the new tool information from pocket 0 (spindle).
+</p>
+</li>
+</ol></div>
+<h4 id="_g43_g43_1_g49">23.3.3. G43/G43.1/G49</h4>
+<div class="paragraph"><p>Apply tool length offset.  G43 uses the TLO of the currently loaded tool,
+or of a specified tool if the H-word is given in the block.  G43.1 gets
+TLO from axis-words in the block.  G49 cancels the TLO (it uses 0 for
+the offset for all axes).</p></div>
+<div class="paragraph"><p>Handled by <tt>Interp::convert_tool_length_offset()</tt>.</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+It starts by building an <tt>EmcPose</tt> containing the 9-axis offsets
+    to use.  For <tt>G43.1</tt>, these tool offsets come from axis words in the
+    current block.  For <tt>G43</tt> these offsets come from the current tool
+    (the tool in pocket 0), or from the tool specified by the H-word in
+    the block.  For G49, the offsets are all 0.
+</p>
+</li>
+<li>
+<p>
+The offsets are passed to Canon&#8217;s <tt>USE_TOOL_LENGTH_OFFSET()</tt> function.
+</p>
+<div class="olist loweralpha"><ol class="loweralpha">
+<li>
+<p>
+(saicanon) Records the TLO in <tt>_tool_offset</tt>.
+</p>
+</li>
+<li>
+<p>
+(emccanon) Builds an <tt>EMC_TRAJ_SET_OFFSET</tt> message containing the
+        offsets and sends it to Task.  Task copies the offsets to
+        <tt>emcStatus-&gt;task.toolOffset</tt> and sends them on to Motion via
+        an <tt>EMCMOT_SET_OFFSET</tt> command.  Motion copies the offsets
+        to <tt>emcmotStatus-&gt;tool_offset</tt>, where it gets used to offset
+        future motions.
+</p>
+</li>
+</ol></div>
+</li>
+<li>
+<p>
+Back in interp, the offsets are recorded in <tt>settings-&gt;tool_offset</tt>.
+    The effective pocket is recorded in <tt>settings-&gt;tool_offset_index</tt>,
+    though this value is never used.
+</p>
+</li>
+</ol></div>
+<h4 id="_g10_l1_l10_l11">23.3.4. G10 L1/L10/L11</h4>
+<div class="paragraph"><p>Modifies the tool table.</p></div>
+<div class="paragraph"><p>Handled by <tt>Interp::convert_setup_tool()</tt>.</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Picks the tool number out of the P-word in the block and finds the
+    pocket for that tool:
+</p>
+<div class="olist loweralpha"><ol class="loweralpha">
+<li>
+<p>
+With a nonrandom toolchanger config this is always the
+            pocket number in the toolchanger (even when the tool is in
+            the spindle).
+</p>
+</li>
+<li>
+<p>
+With a random toolchanger config, if the tool is currently
+            loaded it uses pocket 0 (pocket 0 means "the spindle"),
+            and if the tool is not loaded it uses the pocket number in
+            the tool changer.  (This difference is important.)
+</p>
+</li>
+</ol></div>
+</li>
+<li>
+<p>
+Figures out what the new offsets should be.
+</p>
+</li>
+<li>
+<p>
+The new tool information (diameter, offsets, angles, and orientation),
+    along with the tool number and pocket number, are passed to the Canon
+    call SET_TOOL_TABLE_ENTRY().
+</p>
+<div class="olist loweralpha"><ol class="loweralpha">
+<li>
+<p>
+(saicanon)  Copy the new tool information to the specified pocket
+        (in sai&#8217;s internal tool table, <tt>_tools</tt>).
+</p>
+</li>
+<li>
+<p>
+(emccanon)  Build an <tt>EMC_TOOL_SET_OFFSET</tt> message with the new
+        tool information, and send it to Task, which passes it
+        to IO.  IO updates the specified pocket in its internal
+        copy of the tool table (<tt>emcioStatus.tool.toolTable</tt>), and
+        if the specified tool is currently loaded (it is compared to
+        <tt>emcioStatus.tool.toolInSpindle</tt>) then the new tool information
+        is copied to pocket 0 (the spindle) as well.  (FIXME: that&#8217;s a
+        buglet, should only be copied on nonrandom machines.)  Finally IO
+        saves the new tool table.
+</p>
+</li>
+</ol></div>
+</li>
+<li>
+<p>
+Back in interp, if the modified tool is currently loaded in the
+    spindle, and if the machine is a non-random toolchanger, then
+    the new tool information is copied from the tool&#8217;s home pocket
+    to pocket 0 (the spindle) in interp&#8217;s copy of the tool table,
+    <tt>settings-&gt;tool_table</tt>.  (This copy is not needed on random tool
+    changer machines because there, tools don&#8217;t have a home pocket and
+    instead we just updated the tool in pocket 0 directly.)
+</p>
+</li>
+<li>
+<p>
+The relevant numbered parameters
+    (<a href="../gcode/overview.html#sub:numbered-parameters">#5400-#5413</a>) are updated from the tool
+    information in the spindle (by copying the information from interp&#8217;s
+    <tt>settings-&gt;tool_table</tt> to <tt>settings-&gt;parameters</tt>).  (FIXME: this is
+    a buglet, the params should only be updated if it was the current
+    tool that was modified).
+</p>
+</li>
+<li>
+<p>
+If the modified tool is currently loaded in the
+    spindle, and if the config is for a nonrandom toolchanger, then the
+    new tool information is written to the tool table&#8217;s pocket 0 as well,
+    via a second call to SET_TOOL_TABLE_ENTRY().  (This second tool-table
+    update is not needed on random toolchanger machines because there,
+    tools don&#8217;t have a home pocket and instead we just updated the tool
+    in pocket 0 directly.)
+</p>
+</li>
+</ol></div>
+<h4 id="_m61">23.3.5. M61</h4>
+<div class="paragraph"><p>FIXME!</p></div>
+<div class="paragraph"><p>Set current tool number.  This switches which tool is in the spindle,
+without actually moving the toolchanger or swapping any tools.</p></div>
+<div class="paragraph"><p>Handled by <tt>Interp::convert_tool_change()</tt>.</p></div>
+<div class="paragraph"><p>Canon: <tt>CHANGE_TOOL_NUMBER()</tt></p></div>
+<div class="paragraph"><p>settings-&gt;current_pocket is assigned the pocket number currently
+holding the tool specified by the Q-word argument.</p></div>
+<div class="paragraph"><p>I think this m-code is broken.</p></div>
+<h4 id="_g41_g41_1_g42_g42_1">23.3.6. G41/G41.1/G42/G42.1</h4>
+<div class="paragraph"><p>Enable cutter radius compensation (usually called <em>cutter comp</em>).</p></div>
+<div class="paragraph"><p>Handled by <tt>Interp::convert_cutter_compensation_on()</tt>.</p></div>
+<div class="paragraph"><p>No Canon call, cutter comp happens in the interpreter.  Uses the tool
+table in the expected way: if a D-word tool number is supplied it looks
+up the pocket number of the specified tool number in the table, and if
+no D-word is supplied it uses pocket 0 (the spindle).</p></div>
+<h4 id="_g40">23.3.7. G40</h4>
+<div class="paragraph"><p>Cancel cutter radius compensation.</p></div>
+<div class="paragraph"><p>Handled by <tt>Interp::convert_cutter_compensation_off()</tt>.</p></div>
+<div class="paragraph"><p>No Canon call, cutter comp happens in the interpreter.  Does not use
+the tool table.</p></div>
+<h3 id="_internal_state_variables">23.4. Internal state variables</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This is not an exhaustive list!  Tool information is spread through
+out LinuxCNC.</p></div>
+<h4 id="_io">23.4.1. IO</h4>
+<div class="paragraph"><p><tt>emcioStatus</tt> is of type <tt>EMC_IO_STAT</tt></p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+emcioStatus.tool.pocketPrepped
+</dt>
+<dd>
+<p>
+    When IO gets the signal from HAL that the toolchanger prep is
+    complete (after a <tt>Txxx</tt> command), this variable is set to the
+    pocket of the requested tool.  When IO gets the signal from HAL
+    that the tool change itself is complete (after an <tt>M6</tt> command),
+    this variable gets reset to -1.
+</p>
+</dd>
+<dt class="hdlist1">
+emcioStatus.tool.toolInSpindle
+</dt>
+<dd>
+<p>
+    Tool number of the tool currently installed in the spindle.
+    Exported on the HAL pin <tt>iocontrol.0.tool-number</tt> (s32).
+</p>
+</dd>
+<dt class="hdlist1">
+emcioStatus.tool.toolTable[]
+</dt>
+<dd>
+<p>
+    An array of <tt>CANON_TOOL_TABLE</tt> structures, <tt>CANON_POCKETS_MAX</tt> long.
+    Loaded from the tool table file at startup and maintained there
+    after.  Index 0 is the spindle, indexes 1-(CANON_POCKETS_MAX-1)
+    are the pockets in the toolchanger.  This is a complete copy
+    of the tool information, maintained separately from Interp&#8217;s
+    <tt>settings.tool_table</tt>.
+</p>
+</dd>
+</dl></div>
+<h4 id="_interp">23.4.2. interp</h4>
+<div class="paragraph"><p><tt>settings</tt> is of type <tt>settings</tt>, which is <tt>struct setup_struct</tt>.
+Defined in <tt>src/emc/rs274ngc/interp_internal.hh</tt>.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+settings.selected_pocket
+</dt>
+<dd>
+<p>
+    Pocket of the tool most recently selected by <tt>Txxx</tt>.
+</p>
+</dd>
+<dt class="hdlist1">
+settings.current_pocket
+</dt>
+<dd>
+<p>
+    Original pocket of the tool currently in the spindle.  In other words:
+    which toolchanger pocket the tool that&#8217;s currently in the spindle
+    was loaded from.
+</p>
+</dd>
+<dt class="hdlist1">
+settings.tool_table[]
+</dt>
+<dd>
+<p>
+    An array of tool information.  The index into the array is the "pocket
+    number" (aka "slot number").  Pocket 0 is the spindle, pockets 1
+    through (CANON_POCKETS_MAX-1) are the pockets of the toolchanger.
+</p>
+</dd>
+<dt class="hdlist1">
+settings.tool_offset_index
+</dt>
+<dd>
+<p>
+    Unused.  FIXME: Should probably be removed.
+</p>
+</dd>
+<dt class="hdlist1">
+settings.toolchange_flag
+</dt>
+<dd>
+<p>
+    Interp sets this to true when calling Canon&#8217;s CHANGE_TOOL()
+    function.  It is checked in <tt>Interp::convert_tool_length_offset()</tt>
+    to decide which pocket to use for G43 (with no H-word):
+    <tt>settings-&gt;current_pocket</tt> if the tool change is still in progress,
+    pocket 0 (the spindle) if the tool change is complete.
+</p>
+</dd>
+<dt class="hdlist1">
+settings.random_toolchanger
+</dt>
+<dd>
+<p>
+    Set from the ini variable <tt>[EMCIO]RANDOM_TOOLCHANGER</tt> at startup.
+    Controls various tool table handling logic.  (IO also reads this
+    ini variable and changes its behavior based on it.  For example,
+    when saving the tool table, random toolchanger save the tool in
+    the spindle (pocket 0), but non-random toolchanger save each tool
+    in its "home pocket".)
+</p>
+</dd>
+<dt class="hdlist1">
+settings.tool_offset
+</dt>
+<dd>
+<p>
+    This is an <tt>EmcPose</tt> variable.
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+Used to compute position in various places.
+</p>
+</li>
+<li>
+<p>
+Sent to Motion via the <tt>EMCMOT_SET_OFFSET</tt> message.
+        All motion does with the offsets is export them to the HAL pins
+        <tt>motion.0.tooloffset.[xyzabcuvw]</tt>.  FIXME: export these from
+        someplace closer to the tool table (io or interp, probably)
+        and remove the EMCMOT_SET_OFFSET message.
+</p>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+settings.pockets_max
+</dt>
+<dd>
+<p>
+    Used interchangably with <tt>CANON_POCKETS_MAX</tt> (a #defined constant,
+    set to 56 as of 2012 December 30).  FIXME: This settings variable
+    is not currently useful and should probably be removed.
+</p>
+</dd>
+<dt class="hdlist1">
+settings.tool_table
+</dt>
+<dd>
+<p>
+    This is an array of <tt>CANON_TOOL_TABLE</tt> structures (defined in
+    <tt>src/emc/nml_intf/emctool.h</tt>), with <tt>CANON_POCKETS_MAX</tt> entries.
+    Indexed by "pocket number", aka "slot number".  Index 0 is the
+    spindle, indexes 1-(CANON_POCKETS_MAX-1) are the pockets in the tool
+    changer.  On a random toolchanger pocket numbers are meaningful.
+    On a nonrandom toolchanger pockets are meaningless; the pocket
+    numbers in the tool table file are ignored and tools are assigned
+    to <tt>tool_table</tt> slots sequentially.
+</p>
+</dd>
+<dt class="hdlist1">
+settings.tool_change_at_g30
+</dt>
+<dt class="hdlist1">
+settings.tool_change_quill_up
+</dt>
+<dt class="hdlist1">
+settings.tool_change_with_spindle_on
+</dt>
+<dd>
+<p>
+    These are set from ini variables in the <tt>[EMCIO]</tt> section, and
+    control how tool changes are performed.
+</p>
+</dd>
+</dl></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-03-02 00:36:20 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/code/Code_Notes.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

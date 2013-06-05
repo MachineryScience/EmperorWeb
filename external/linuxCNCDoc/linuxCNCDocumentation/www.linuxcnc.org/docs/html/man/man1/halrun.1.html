@@ -1,0 +1,704 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Apr 18 15:36:28 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/halrun.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>HALCMD</title>
+
+</head>
+<body>
+
+<h1 align="center">HALCMD</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#COMMANDS">COMMANDS</a><br>
+<a href="#SUBSTITUTION">SUBSTITUTION</a><br>
+<a href="#EXAMPLES">EXAMPLES</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#HISTORY">HISTORY</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br>
+<a href="#COPYRIGHT">COPYRIGHT</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">halcmd &minus;
+manipulate the LinuxCNC HAL from the command line</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>halcmd</b>
+[<i>OPTIONS</i>] [<i>COMMAND</i> [<i>ARG</i>]]</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>halrun</b>
+[<i>-I</i>] [<i>HALCMD OPTIONS</i>]</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>halrun</b>
+[<i>-U</i>]</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>halcmd</b>
+is used to manipulate the HAL (Hardware Abstraction Layer)
+from the command line. <b>halcmd</b> can optionally read
+commands from a file, allowing complex HAL configurations to
+be set up with a single command.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>halrun</b>
+is a convenience script which sets up the realtime
+environment, executes <b>halcmd</b> with the given
+arguments, optionally runs an interactive <b>halcmd -kf</b>
+if <i>-I</i> is given, then tears down the realtime
+environment.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If the
+<b>readline</b> library is available when LinuxCNC is
+compiled, then <b>halcmd</b> offers commandline editing and
+completion when running interactively. Use the up arrow to
+recall previous commands, and press tab to complete the
+names of items such as pins and signals.</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p style="margin-top: 1em"><b>-I</b></p></td>
+<td width="8%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em">Before tearing down the realtime
+environment, run an interactive halcmd. <b>halrun</b> only.
+If <b>-I</b> is used, it must precede all other commandline
+arguments.</p> </td></tr>
+</table>
+
+<p style="margin-left:11%;"><b>&minus;f</b>
+[<i>file</i>]</p>
+
+<p style="margin-left:22%;">Ignore commands on command
+line, take input from <i>file</i> instead. If <i>file</i> is
+not specified, take input from <i>stdin</i>.</p>
+
+<p style="margin-left:11%;"><b>-i</b> <i>inifile</i></p>
+
+<p style="margin-left:22%;">Use variables from
+<i>inifile</i> for substitutions. See <b>SUBSTITUTION</b>
+below.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p><b>&minus;k</b></p></td>
+<td width="8%"></td>
+<td width="78%">
+
+
+<p>Keep going after failed command(s). The default is to
+stop and return failure if any command fails.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p><b>&minus;q</b></p></td>
+<td width="8%"></td>
+<td width="78%">
+
+
+<p>display errors only (default)</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p><b>&minus;Q</b></p></td>
+<td width="8%"></td>
+<td width="78%">
+
+
+<p>display nothing, execute commands silently</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p><b>&minus;s</b></p></td>
+<td width="8%"></td>
+<td width="78%">
+
+
+<p>Script-friendly mode. In this mode, <i>show</i> will not
+output titles for the items shown. Also, module names will
+be printed instead of ID codes in pin, param, and funct
+listings. Threads are printed on a single line, with the
+thread period, FP usage and name first, followed by all of
+the functions in the thread, in execution order. Signals are
+printed on a single line, with the type, value, and signal
+name first, followed by a list of pins connected to the
+signal, showing both the direction and the pin name. No
+prompt will be printed if both <b>-s</b> and <b>-f</b> are
+specified.</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p><b>-R</b></p></td>
+<td width="8%"></td>
+<td width="78%">
+
+
+<p>Release the HAL mutex. This is useful for recovering
+when a HAL component has crashed while holding the HAL
+mutex.</p> </td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p><b>-U</b></p></td>
+<td width="8%"></td>
+<td width="78%">
+
+
+<p>Forcibly cause the realtime environment to exit. It
+releases the HAL mutex, requests that all HAL components
+unload, and stops the realtime system. <b>halrun</b> only.
+<b>-U</b> must be the only commandline argument.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p><b>&minus;v</b></p></td>
+<td width="8%"></td>
+<td width="78%">
+
+
+<p>display results of each command</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p><b>&minus;V</b></p></td>
+<td width="8%"></td>
+<td width="78%">
+
+
+<p>display lots of debugging junk</p></td></tr>
+</table>
+
+<p style="margin-left:11%;"><b>&minus;h</b>
+[<i>command</i>]</p>
+
+<p style="margin-left:22%;">display a help screen and exit,
+displays extended help on <i>command</i> if specified</p>
+
+<h2>COMMANDS
+<a name="COMMANDS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Commands tell
+<b>halcmd</b> what to do. Normally <b>halcmd</b> reads a
+single command from the command line and executes it. If the
+&rsquo;<b>-f</b>&rsquo; option is used to read commands from
+a file, <b>halcmd</b> reads each line of the file as a new
+command. Anything following &rsquo;<b>#</b>&rsquo; on a line
+is a comment. <b><br>
+loadrt</b> <i>modname</i></p>
+
+<p style="margin-left:22%;">(<i>load r</i>eal<i>t</i>ime
+module) Loads a realtime HAL module called <i>modname</i>.
+<b>halcmd</b> looks for the module in a directory specified
+at compile time.</p>
+
+<p style="margin-left:22%; margin-top: 1em">In systems with
+realtime, <b>halcmd</b> calls the
+<b>linuxcnc_module_helper</b> to load realtime modules.
+<b>linuxcnc_module_helper</b> is a setuid program and is
+compiled with a whitelist of modules it is allowed to load.
+This is currently just a list of <b>LinuxCNC</b>-related
+modules. The <b>linuxcnc_module_helper</b> execs insmod, so
+return codes and error messages are those from insmod.
+Administrators who wish to restrict which users can load
+these <b>LinuxCNC</b>-related kernel modules can do this by
+setting the permissions and group on
+<b>linuxcnc_module_helper</b> appropriately.</p>
+
+<p style="margin-left:22%; margin-top: 1em">In systems
+without realtime <b>halcmd</b> calls the <b>rtapi_app</b>
+which creates the simulated realtime environment if it did
+not yet exist, and then loads the requested component with a
+call to <b>dlopen(3)</b>.</p>
+
+<p style="margin-left:11%;"><b>unloadrt</b>
+<i>modname</i></p>
+
+<p style="margin-left:22%;">(<i>unload r</i>eal<i>t</i>ime
+module) Unloads a realtime HAL module called <i>modname</i>.
+If <i>modname</i> is &quot;all&quot;, it will unload all
+currently loaded realtime HAL modules. <b>unloadrt</b> also
+works by execing <b>linuxcnc_module_helper</b> or
+<b>rtapi_app</b>, just like <b>loadrt</b>.</p>
+
+<p style="margin-left:11%;"><b>loadusr</b> <i>[flags]
+unix-command</i></p>
+
+<p style="margin-left:22%;">(<i>load Us</i>e<i>r</i>space
+component) Executes the given <i>unix-command</i>, usually
+to load a userspace component. <i>[flags]</i> may be one or
+more of:</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p><b>-W</b> to wait for the component to become ready. The
+component is assumed to have the same name as the first
+argument of the command.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p><b>-Wn name</b> to wait for the component, which will
+have the given name.</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p><b>-w</b> to wait for the program to exit</p></td></tr>
+<tr valign="top" align="left">
+<td width="22%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="72%">
+
+
+<p><b>-i</b> to ignore the program return value (with
+-w)</p> </td></tr>
+</table>
+
+<p style="margin-left:11%;"><b>waitusr</b> <i>name</i></p>
+
+<p style="margin-left:22%;">(<i>wait</i> for
+<i>Us</i>e<i>r</i>space component) Waits for user space
+component <i>name</i> to disconnect from HAL (usually on
+exit). The component must already be loaded. Usefull near
+the end of a HAL file to wait until the user closes some
+user interface component before cleaning up and exiting.</p>
+
+<p style="margin-left:11%;"><b>unloadusr</b>
+<i>compname</i></p>
+
+<p style="margin-left:22%;">(<i>unload Us</i>e<i>r</i>space
+component) Unloads a userspace component called
+<i>compname</i>. If <i>compname</i> is &quot;all&quot;, it
+will unload all userspace components. <b>unloadusr</b> works
+by sending SIGTERM to all userspace components.</p>
+
+<p style="margin-left:11%;"><b>unload</b>
+<i>compname</i></p>
+
+<p style="margin-left:22%;">Unloads a userspace component
+or realtime module. If <i>compname</i> is &quot;all&quot;,
+it will unload all userspace components and realtime
+modules.</p>
+
+<p style="margin-left:11%;"><b>newsig</b> <i>signame
+type</i></p>
+
+<p style="margin-left:22%;">(<i>new sig</i>nal) Creates a
+new HAL signal called <i>signame</i> that may later be used
+to connect two or more HAL component pins. <i>type</i> is
+the data type of the new signal, and must be one of
+&quot;<b>bit</b>&quot;, &quot;<b>s32</b>&quot;,
+&quot;<b>u32</b>&quot;, or &quot;<b>float</b>&quot;. Fails
+if a signal of the same name already exists.</p>
+
+<p style="margin-left:11%;"><b>delsig</b>
+<i>signame</i></p>
+
+<p style="margin-left:22%;">(<i>del</i>ete <i>sig</i>nal)
+Deletes HAL signal <i>signame</i>. Any pins currently linked
+to the signal will be unlinked. Fails if <i>signame</i> does
+not exist.</p>
+
+<p style="margin-left:11%;"><b>sets</b> <i>signame
+value</i></p>
+
+<p style="margin-left:22%;">(<i>set s</i>ignal) Sets the
+value of signal <i>signame</i> to <i>value</i>. Fails if
+<i>signame</i> does not exist, if it already has a writer,
+or if <i>value</i> is not a legal value. Legal values depend
+on the signals&rsquo;s type.</p>
+
+<p style="margin-left:11%;"><b>stype</b> <i>name</i></p>
+
+<p style="margin-left:22%;">(<i>s</i>ignal type) Gets the
+type of signal <i>name</i>. Fails if <i>name</i> does not
+exist as a signal.</p>
+
+<p style="margin-left:11%;"><b>gets</b> <i>signame</i></p>
+
+<p style="margin-left:22%;">(<i>get s</i>ignal) Gets the
+value of signal <i>signame</i>. Fails if <i>signame</i> does
+not exist.</p>
+
+<p style="margin-left:11%;"><b>linkps</b> <i>pinname</i>
+[<i>arrow</i>] <i>signame</i></p>
+
+<p style="margin-left:22%;">(<i>link p</i>in to
+<i>s</i>ignal) Establishs a link between a HAL component pin
+<i>pinname</i> and a HAL signal <i>signame</i>. Any previous
+link to <i>pinname</i> will be broken. <i>arrow</i> can be
+&quot;<b>=&gt;</b>&quot;, &quot;<b>&lt;=</b>&quot;,
+&quot;<b>&lt;=&gt;</b>&quot;, or omitted. <b>halcmd</b>
+ignores arrows, but they can be useful in command files to
+document the direction of data flow. Arrows should not be
+used on the command line since the shell might try to
+interpret them. Fails if either <i>pinname</i> or
+<i>signame</i> does not exist, or if they are not the same
+type type.</p>
+
+<p style="margin-left:11%;"><b>linksp</b> <i>signame</i>
+[<i>arrow</i>] <i>pinname</i></p>
+
+<p style="margin-left:22%;">(<i>link s</i>ignal to
+<i>p</i>in) Works like <b>linkps</b> but reverses the order
+of the arguments. <b>halcmd</b> treats both link commands
+exactly the same. Use whichever you prefer.</p>
+
+<p style="margin-left:11%;"><b>linkpp</b> <i>pinname1</i>
+[<i>arrow</i>] <i>pinname2</i></p>
+
+<p style="margin-left:22%;">(OBSOLETE - use <b>net</b>
+instead) (<i>link p</i>in to <i>p</i>in) Shortcut for
+<b>linkps</b> that creates the signal (named like the first
+pin), then links them both to that signal. <b>halcmd</b>
+treats this just as if it were: <b><br>
+halcmd newsig</b> pinname1 <b><br>
+halcmd linksp</b> pinname1 pinname1 <b><br>
+halcmd linksp</b> pinname1 pinname2</p>
+
+<p style="margin-left:11%;"><b>net</b> <i>signame pinname
+...</i></p>
+
+<p style="margin-left:22%;">Create <i>signname</i> to match
+the type of <i>pinname</i> if it does not yet exist. Then,
+link <i>signame</i> to each <i>pinname</i> in turn. Arrows
+may be used as in <b>linkps</b>.</p>
+
+<p style="margin-left:11%;"><b>unlinkp</b>
+<i>pinname</i></p>
+
+<p style="margin-left:22%;">(<i>unlink p</i>in) Breaks any
+previous link to <i>pinname</i>. Fails if <i>pinname</i>
+does not exist.</p>
+
+<p style="margin-left:11%;"><b>setp</b> <i>name
+value</i></p>
+
+<p style="margin-left:22%;">(<i>set p</i>arameter or
+<i>p</i>in) Sets the value of parameter or pin <i>name</i>
+to <i>value</i>. Fails if <i>name</i> does not exist as a
+pin or parameter, if it is a parameter that is not writable,
+if it is a pin that is an output, if it is a pin that is
+already attached to a signal, or if <i>value</i> is not a
+legal value. Legal values depend on the type of the pin or
+parameter. If a pin and a parameter both exist with the
+given name, the parameter is acted on.</p>
+
+<p style="margin-left:11%;"><i>paramname</i> <b>=</b>
+<i>value <br>
+pinname</i> <b>=</b> <i>value</i></p>
+
+<p style="margin-left:22%;">Identical to <b>setp</b>. This
+alternate form of the command may be more convenient and
+readable when used in a file.</p>
+
+<p style="margin-left:11%;"><b>ptype</b> <i>name</i></p>
+
+<p style="margin-left:22%;">(<i>p</i>arameter or <i>p</i>in
+<i>type</i>) Gets the type of parameter or pin <i>name</i>.
+Fails if <i>name</i> does not exist as a pin or parameter.
+If a pin and a parameter both exist with the given name, the
+parameter is acted on.</p>
+
+<p style="margin-left:11%;"><b>getp</b> <i>name</i></p>
+
+<p style="margin-left:22%;">(<i>get p</i>arameter or
+<i>p</i>in) Gets the value of parameter or pin <i>name</i>.
+Fails if <i>name</i> does not exist as a pin or parameter.
+If a pin and a parameter both exist with the given name, the
+parameter is acted on.</p>
+
+<p style="margin-left:11%;"><b>addf</b> <i>functname
+threadname</i></p>
+
+<p style="margin-left:22%;">(<i>add f</i>unction) Adds
+function <i>functname</i> to realtime thread
+<i>threadname</i>. <i>functname</i> will run after any
+functions that were previously added to the thread. Fails if
+either <i>functname</i> or <i>threadname</i> does not exist,
+or if they are incompatible.</p>
+
+<p style="margin-left:11%;"><b>delf</b> <i>functname
+threadname</i></p>
+
+<p style="margin-left:22%;">(<i>del</i>ete <i>f</i>unction)
+Removes function <i>functname</i> from realtime thread
+<i>threadname</i>. Fails if either <i>functname</i> or
+<i>threadname</i> does not exist, or if <i>functname</i> is
+not currently part of <i>threadname</i>.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p><b>start</b></p></td>
+<td width="4%"></td>
+<td width="78%">
+
+
+<p>Starts execution of realtime threads. Each thread
+periodically calls all of the functions that were added to
+it with the <b>addf</b> command, in the order in which they
+were added.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p><b>stop</b></p></td>
+<td width="4%"></td>
+<td width="78%">
+
+
+<p>Stops execution of realtime threads. The threads will no
+longer call their functions.</p></td></tr>
+</table>
+
+<p style="margin-left:11%;"><b>show</b> [<i>item</i>]</p>
+
+<p style="margin-left:22%;">Prints HAL items to
+<i>stdout</i> in human readable format. <i>item</i> can be
+one of &quot;<b>comp</b>&quot; (components),
+&quot;<b>pin</b>&quot;, &quot;<b>sig</b>&quot; (signals),
+&quot;<b>param</b>&quot; (parameters),
+&quot;<b>funct</b>&quot; (functions), or
+&quot;<b>thread</b>&quot;. The type &quot;<b>all</b>&quot;
+can be used to show matching items of all the preceeding
+types. If <i>item</i> is omitted, <b>show</b> will print
+everything.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><b>item</b></p></td>
+<td width="5%"></td>
+<td width="58%">
+
+
+<p>This is equivalent to <b>show all [item]</b>.</p></td>
+<td width="20%">
+</td></tr>
+</table>
+
+<p style="margin-left:11%;"><b>save</b> [<i>item</i>]</p>
+
+<p style="margin-left:22%;">Prints HAL items to
+<i>stdout</i> in the form of HAL commands. These commands
+can be redirected to a file and later executed using
+<b>halcmd -f</b> to restore the saved configuration.
+<i>item</i> can be one of the following:
+&quot;<b>comp</b>&quot; generates a <b>loadrt</b> command
+for realtime component. &quot;<b>sig</b>&quot; generates a
+<b>newsig</b> command for each signal, and
+&quot;<b>sigu</b>&quot; generates a <b>newsig</b> command
+for each unlinked signal (for use with <b>netl</b> and
+<b>netla</b>). &quot;<b>link</b>&quot; and
+&quot;<b>linka</b>&quot; both generate <b>linkps</b>
+commands for each link. (<b>linka</b> includes arrows, while
+<b>link</b> does not.) &quot;<b>net</b>&quot; and
+&quot;<b>neta</b>&quot; both generate one <b>newsig</b>
+command for each signal, followed by <b>linksp</b> commands
+for each pin linked to that signal. (<b>neta</b> includes
+arrows.) &quot;<b>netl</b>&quot; generates one <b>net</b>
+command for each linked signal, and &quot;<b>netla</b>&quot;
+generates a similar command using arrows.
+&quot;<b>param</b>&quot; generates one <b>setp</b> command
+for each parameter. &quot;<b>thread</b>&quot; generates one
+<b>addf</b> command for each function in each realtime
+thread. If <i>item</i> is omitted, <b>save</b> does the
+equivalent of <b>comp</b>, <b>sigu</b>, <b>link</b>,
+<b>param</b>, and <b>thread</b>.</p>
+
+<p style="margin-left:11%;"><b>source</b>
+<i>filename.hal</i></p>
+
+<p style="margin-left:22%;">Execute the commands from
+<i>filename.hal</i>.</p>
+
+<h2>SUBSTITUTION
+<a name="SUBSTITUTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">After a command
+is read but before it is executed, several types of variable
+substitution take place.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Environment
+Variables</b> <br>
+Environment variables have the following formats:</p>
+
+<p style="margin-left:22%; margin-top: 1em"><b>$ENVVAR</b>
+followed by end-of-line or whitespace</p>
+
+
+<p style="margin-left:22%; margin-top: 1em"><b>$(ENVVAR)</b></p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Inifile
+Variables</b> <br>
+Inifile variables are available only when an inifile was
+specified with the halcmd <b>-i</b> flag. They have the
+following formats:</p>
+
+
+<p style="margin-left:22%; margin-top: 1em"><b>[SECTION]VAR</b>
+followed by end-of-line or whitespace</p>
+
+
+<p style="margin-left:22%; margin-top: 1em"><b>[SECTION](VAR)</b></p>
+
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+
+
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">None known at
+this time.</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Original
+version by John Kasunich, as part of the LinuxCNC project.
+Now includes major contributions by several members of the
+project.</p>
+
+<h2>REPORTING BUGS
+<a name="REPORTING BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Report bugs to
+the LinuxCNC bug tracker &lang;URL:
+http://sf.net/tracker/?group_id=6744&amp;atid=106744
+&rang;.</p>
+
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Copyright
+&copy; 2003 John Kasunich. <br>
+This is free software; see the source for copying
+conditions. There is NO warranty; not even for
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/halrun.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

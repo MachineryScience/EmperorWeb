@@ -1,0 +1,549 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/pyvcp_examples_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Exemples d&#8217;utilisation de PyVCP</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Exemples d&#8217;utilisation de PyVCP</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<h2 id="_panneau_pyvcp_dans_axis">1. Panneau PyVCP dans AXIS</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Procédure pour créer un panneau PyVCP et l&#8217;utiliser, attaché dans la partie
+droite de l&#8217;interface AXIS.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Créer un fichier .xml contenant la description du panneau et le placer dans
+   le répertoire de la configuration.
+</p>
+</li>
+<li>
+<p>
+Ajouter une entrée, avec le nom du fichier .xml, dans la section [DISPLAY]
+   du fichier ini.
+</p>
+</li>
+<li>
+<p>
+Ajouter une entrée POSTGUI_HALFILE, avec le nom du fichier postgui HAL.
+</p>
+</li>
+<li>
+<p>
+Ajouter les liens vers les pins de HAL pour le panneau dans le fichier
+   postgui.hal pour "connecter" le panneau PyVCP avec LinuxCNC.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_panneaux_flottants">2. Panneaux flottants</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Pour créer des panneaux flottants PyVCP pouvant être utilisés avec
+n&#8217;importe quelle interface, suivre les points suivants:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Créer un fichier .xml contenant la description du panneau et le placer dans
+   le répertoire de configuration.
+</p>
+</li>
+<li>
+<p>
+Ajouter les lignes <em>loadusr</em> dans le fichier.hal pour charger chaque panneau.
+</p>
+</li>
+<li>
+<p>
+Ajouter les liens vers les pins de HAl du panneau dans le fichier postgui.hal,
+   pour "connecter" les panneaux PyVCP à LinuxCNC.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>L&#8217;exemple suivant montre le chargement de deux panneaux PyVCP.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadusr -Wn btnpanel pyvcp -c btnpanel panel1.xml
+loadusr -Wn sppanel pyvcp -c sppanel panel2.xml</tt></pre>
+</div></div>
+<div class="paragraph"><p>Les paramètres -Wn font que HAL <strong>W</strong>ait for <strong>n</strong>ame, attends le composant
+nommé <em>btnpanel</em>.</p></div>
+<div class="paragraph"><p>Les paramètres pyvcp -c font que PyVCP nomme le panneau.</p></div>
+<div class="paragraph"><p>Les pins de HAL de panel1.xml seront nommées <em>btnpanel.&lt;pin name&gt;</em></p></div>
+<div class="paragraph"><p>Les pins de HAL de panel2.xml seront nommées <em>sppanel.&lt;pin name&gt;</em></p></div>
+<div class="paragraph"><p>Bien s&#8217;assurer qu&#8217;aucune ligne <em>loadusr</em> ne fasse déjà appel à une de ces pins
+PyVCP.</p></div>
+</div>
+<h2 id="_boutons_de_jog">3. Boutons de Jog</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Dans cet exemple nous allons créer un panneau PyVCP avec 3 boutons utilisables
+pour déplacer en manuel les axes X, Y et Z. Cette configuration sera réalisée
+avec l&#8217;assistant Stepconf qui générera la configuration de la machine.
+Premièrement, nous lançons l&#8217;assistant Stepconf et le configurons pour la
+machine, ensuite dans la page <em>Advanced Configuration Options</em> nous effectuons
+les sélections pour ajouter un panneau PyVCP vierge, comme indiqué sur l&#8217;image
+suivante. Pour cet exemple nous avons nommé la configuration <em>pyvcp_xyz</em> sur la
+page <em>Basic Machine Information</em> de l&#8217;assistant Stepconf.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/xyz_ACO.png" alt="images/xyz_ACO.png" />
+</div>
+<div class="title">Figure 1. Assistant de configuration XYZ<a id="cap:XYZ-Wizard-Configuration"></a></div>
+</div>
+<div class="paragraph"><p>L&#8217;assistant Stepconf Wizard va créer plusieurs fichiers et les placer dans le
+répertoire <em>/emc/configs/pyvcp_xyz</em>. Si la case <em>Créer un lien</em> est cochée,
+un lien vers ces fichiers sera créé sur le bureau.</p></div>
+<h3 id="_cr_er_les_widgets">3.1. Créer les Widgets</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Ouvrir le fichier custompanel.xml par un clic droit sur son nom, puis en
+sélectionnant <em>Ouvrir avec l'éditeur de texte</em>. Entre les balises
+<em>&lt;pyvcp&gt;</em> et <em>&lt;/pyvcp&gt;</em> nous ajouterons les widgets pour le panneau.</p></div>
+<div class="paragraph"><p>Tous les détails sur chacun des Widgets de PyVCP sont donnés dans la
+<a href="pyvcp_fr.html#sec:Documentation-des-widgets">documentation des widgets</a>.</p></div>
+<div class="paragraph"><p>Dans le fichier custompanel.xml nous ajoutons la description des widgets.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;pyvcp&gt;</span></span>
+
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;labelframe</span></span> <span style="color: #009900">text</span><span style="color: #990000">=</span><span style="color: #FF0000">"Boutons de Jog"</span><span style="font-weight: bold"><span style="color: #0000FF">&gt;</span></span>
+       <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",16)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+
+        <span style="font-style: italic"><span style="color: #9A1900">&lt;!-- le bouton de jog de l'axe X --&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;hbox&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;relief&gt;</span></span>RAISED<span style="font-weight: bold"><span style="color: #0000FF">&lt;/relief&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;bd&gt;</span></span>3<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bd&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;button&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",20)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;width&gt;</span></span>3<span style="font-weight: bold"><span style="color: #0000FF">&lt;/width&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"x-plus"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"X+"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;/button&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;button&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",20)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;width&gt;</span></span>3<span style="font-weight: bold"><span style="color: #0000FF">&lt;/width&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"x-moins"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"X-"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;/button&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;/hbox&gt;</span></span>
+
+        <span style="font-style: italic"><span style="color: #9A1900">&lt;!-- le bouton de jog de l'axe Y --&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;hbox&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;relief&gt;</span></span>RAISED<span style="font-weight: bold"><span style="color: #0000FF">&lt;/relief&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;bd&gt;</span></span>3<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bd&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;button&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",20)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;width&gt;</span></span>3<span style="font-weight: bold"><span style="color: #0000FF">&lt;/width&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"y-plus"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Y+"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;/button&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;button&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",20)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;width&gt;</span></span>3<span style="font-weight: bold"><span style="color: #0000FF">&lt;/width&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"y-moins"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Y-"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;/button&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;/hbox&gt;</span></span>
+
+        <span style="font-style: italic"><span style="color: #9A1900">&lt;!-- le bouton de jog de l'axe Z --&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;hbox&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;relief&gt;</span></span>RAISED<span style="font-weight: bold"><span style="color: #0000FF">&lt;/relief&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;bd&gt;</span></span>3<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bd&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;button&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",20)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;width&gt;</span></span>3<span style="font-weight: bold"><span style="color: #0000FF">&lt;/width&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"z-plus"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Z+"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;/button&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;button&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",20)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;width&gt;</span></span>3<span style="font-weight: bold"><span style="color: #0000FF">&lt;/width&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"z-moins"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Z-"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;/button&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;/hbox&gt;</span></span>
+
+        <span style="font-style: italic"><span style="color: #9A1900">&lt;!-- le curseur de vitesse de jog --&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;vbox&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;relief&gt;</span></span>RAISED<span style="font-weight: bold"><span style="color: #0000FF">&lt;/relief&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;bd&gt;</span></span>3<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bd&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;label&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Vitesse de Jog"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",16)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;/label&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;scale&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",14)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"jog-speed"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;resolution&gt;</span></span>1<span style="font-weight: bold"><span style="color: #0000FF">&lt;/resolution&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;orient&gt;</span></span>HORIZONTAL<span style="font-weight: bold"><span style="color: #0000FF">&lt;/orient&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;min_&gt;</span></span>0<span style="font-weight: bold"><span style="color: #0000FF">&lt;/min_&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;max_&gt;</span></span>80<span style="font-weight: bold"><span style="color: #0000FF">&lt;/max_&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;/scale&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;/vbox&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/labelframe&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/pyvcp&gt;</span></span></tt></pre></div></div>
+<div class="paragraph"><p>Après les ajouts précédents, nous avons un panneau PyVCP tel que celui
+de l&#8217;image suivante, attaché à droite d&#8217;Axis. Il est beau mais ne fait rien tant
+que les boutons ne sont pas "connectés" à halui. Si, à ce stade, une erreur se
+produit lors du déplacement de la fenêtre vers le bas, c&#8217;est généralement dû à
+une erreur de syntaxe ou d'écriture, elle est donc dans cette partie qu&#8217;il
+conviendra tout d&#8217;abord de vérifier soigneusement.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/xyz_buttons.png" alt="images/xyz_buttons.png" />
+</div>
+<div class="title">Figure 2. Boutons de Jog<a id="cap:Jog-Buttons"></a></div>
+</div>
+<h3 id="_effectuer_les_connections">3.2. Effectuer les connections</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Pour effectuer les connections nécessaires, ouvrir le fichier custom_postgui.hal
+et y ajouter le code suivant:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># connecte</span></span> les boutons PyVCP pour X
+<span style="color: #008080">net</span> my<span style="color: #990000">-</span><span style="color: #008080">jogxmoins</span> halui<span style="color: #990000">.</span>jog<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>minus <span style="color: #990000">&lt;=</span> pyvcp<span style="color: #990000">.</span>x<span style="color: #990000">-</span>moins
+<span style="color: #008080">net</span> my<span style="color: #990000">-</span><span style="color: #008080">jogxplus</span> halui<span style="color: #990000">.</span>jog<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>plus <span style="color: #990000">&lt;=</span> pyvcp<span style="color: #990000">.</span>x<span style="color: #990000">-</span>plus
+
+<span style="font-weight: bold"><span style="color: #000080"># connecte</span></span> les boutons PyVCP pour Y
+<span style="color: #008080">net</span> my<span style="color: #990000">-</span><span style="color: #008080">jogymoins</span> halui<span style="color: #990000">.</span>jog<span style="color: #990000">.</span><span style="color: #993399">1</span><span style="color: #990000">.</span>minus <span style="color: #990000">&lt;=</span> pyvcp<span style="color: #990000">.</span>y<span style="color: #990000">-</span>moins
+<span style="color: #008080">net</span> my<span style="color: #990000">-</span><span style="color: #008080">jogyplus</span> halui<span style="color: #990000">.</span>jog<span style="color: #990000">.</span><span style="color: #993399">1</span><span style="color: #990000">.</span>plus <span style="color: #990000">&lt;=</span> pyvcp<span style="color: #990000">.</span>y<span style="color: #990000">-</span>plus
+
+<span style="font-weight: bold"><span style="color: #000080"># connecte</span></span> les boutons PyVCP pour Z
+<span style="color: #008080">net</span> my<span style="color: #990000">-</span><span style="color: #008080">jogzmoins</span> halui<span style="color: #990000">.</span>jog<span style="color: #990000">.</span><span style="color: #993399">2</span><span style="color: #990000">.</span>minus <span style="color: #990000">&lt;=</span> pyvcp<span style="color: #990000">.</span>z<span style="color: #990000">-</span>moins
+<span style="color: #008080">net</span> my<span style="color: #990000">-</span><span style="color: #008080">jogzplus</span> halui<span style="color: #990000">.</span>jog<span style="color: #990000">.</span><span style="color: #993399">2</span><span style="color: #990000">.</span>plus <span style="color: #990000">&lt;=</span> pyvcp<span style="color: #990000">.</span>z<span style="color: #990000">-</span>plus
+
+<span style="font-weight: bold"><span style="color: #000080"># connecte</span></span> le curseur de vitesse de jog PyVCP
+<span style="color: #008080">net</span> my<span style="color: #990000">-</span><span style="color: #008080">jogspeed</span> halui<span style="color: #990000">.</span>jog<span style="color: #990000">-</span>speed <span style="color: #990000">&lt;=</span> pyvcp<span style="color: #990000">.</span>jog<span style="color: #990000">-</span>speed<span style="color: #990000">-</span>f</tt></pre></div></div>
+<div class="paragraph"><p>Après avoir désactivé l&#8217;A/U (E-Stop) et activé la marche machine en mode Jog,
+le déplacement du curseur du panneau PyVCP devrait agir dès qu&#8217;il est placé au
+delà de zéro et les boutons de jog devraient fonctionner. Il est impossible de
+jogger alors qu&#8217;un fichier G-code s&#8217;exécute ou pendant qu&#8217;il est en pause ni
+quand l&#8217;onglet <em>Données manuelles [F5]</em> du (MDI), est ouvert.</p></div>
+</div>
+<h2 id="_testeur_de_port">4. Testeur de port</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Cet exemple montre comment faire un simple testeur de port parallèle en utilisant
+PyVCP et HAL.</p></div>
+<div class="paragraph"><p>Premièrement, créer le fichier ptest.xml qui contiendra le code suivant pour créer
+la description du panneau.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-style: italic"><span style="color: #9A1900">&lt;!-- Panneau de test pour la config. du port parallèle --&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;pyvcp&gt;</span></span>
+  <span style="font-weight: bold"><span style="color: #0000FF">&lt;hbox&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;relief&gt;</span></span>RIDGE<span style="font-weight: bold"><span style="color: #0000FF">&lt;/relief&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;bd&gt;</span></span>2<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bd&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;button&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"btn01"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Pin 01"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/button&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;led&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"led-01"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;size&gt;</span></span>25<span style="font-weight: bold"><span style="color: #0000FF">&lt;/size&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;on_color&gt;</span></span>"green"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/on_color&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;off_color&gt;</span></span>"red"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/off_color&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/led&gt;</span></span>
+  <span style="font-weight: bold"><span style="color: #0000FF">&lt;/hbox&gt;</span></span>
+  <span style="font-weight: bold"><span style="color: #0000FF">&lt;hbox&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;relief&gt;</span></span>RIDGE<span style="font-weight: bold"><span style="color: #0000FF">&lt;/relief&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;bd&gt;</span></span>2<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bd&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;button&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"btn02"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Pin 02"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/button&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;led&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"led-02"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;size&gt;</span></span>25<span style="font-weight: bold"><span style="color: #0000FF">&lt;/size&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;on_color&gt;</span></span>"green"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/on_color&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;off_color&gt;</span></span>"red"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/off_color&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/led&gt;</span></span>
+  <span style="font-weight: bold"><span style="color: #0000FF">&lt;/hbox&gt;</span></span>
+  <span style="font-weight: bold"><span style="color: #0000FF">&lt;hbox&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;relief&gt;</span></span>RIDGE<span style="font-weight: bold"><span style="color: #0000FF">&lt;/relief&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;bd&gt;</span></span>2<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bd&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;label&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Pin 10"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",14)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/label&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;led&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"led-10"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;size&gt;</span></span>25<span style="font-weight: bold"><span style="color: #0000FF">&lt;/size&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;on_color&gt;</span></span>"green"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/on_color&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;off_color&gt;</span></span>"red"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/off_color&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/led&gt;</span></span>
+  <span style="font-weight: bold"><span style="color: #0000FF">&lt;/hbox&gt;</span></span>
+  <span style="font-weight: bold"><span style="color: #0000FF">&lt;hbox&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;relief&gt;</span></span>RIDGE<span style="font-weight: bold"><span style="color: #0000FF">&lt;/relief&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;bd&gt;</span></span>2<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bd&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;label&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Pin 11"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",14)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/label&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;led&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"led-11"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;size&gt;</span></span>25<span style="font-weight: bold"><span style="color: #0000FF">&lt;/size&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;on_color&gt;</span></span>"green"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/on_color&gt;</span></span>
+      <span style="font-weight: bold"><span style="color: #0000FF">&lt;off_color&gt;</span></span>"red"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/off_color&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/led&gt;</span></span>
+  <span style="font-weight: bold"><span style="color: #0000FF">&lt;/hbox&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/pyvcp&gt;</span></span></tt></pre></div></div>
+<div class="paragraph"><p>Le panneau flottant contenant deux pins de HAL d&#8217;entrée et deux pins de
+HAL de sortie.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/ptest.png" alt="images/ptest.png" />
+</div>
+<div class="title">Figure 3. Panneau flottant testeur de port parallèle<a id="cap:Port-Tester-Panel"></a></div>
+</div>
+<div class="paragraph"><p>Pour lancer les commandes de HAL dont nous avons besoin et démarrer tout ce
+qi&#8217;il nous faut, nous avons mis le code suivant dans notre fichier ptest.hal.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="color: #008080">loadrt</span> <span style="color: #008080">hal_parport</span> cfg<span style="color: #990000">=</span><span style="color: #FF0000">"0x378 out"</span>
+loadusr <span style="color: #990000">-</span>Wn <span style="color: #008080">ptest</span> pyvcp <span style="color: #990000">-</span>c <span style="color: #008080">ptest</span> ptest<span style="color: #990000">.</span>xml
+loadrt <span style="color: #008080">threads</span> name1<span style="color: #990000">=</span><span style="color: #008080">porttest</span> period1<span style="color: #990000">=</span><span style="color: #993399">1000000</span>
+<span style="color: #008080">addf</span> parport<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>read porttest
+<span style="color: #008080">addf</span> parport<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>write porttest
+net <span style="color: #008080">pin01</span> ptest<span style="color: #990000">.</span><span style="color: #008080">btn01</span> parport<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>pin<span style="color: #990000">-</span><span style="color: #993399">01</span><span style="color: #990000">-</span><span style="color: #008080">out</span> ptest<span style="color: #990000">.</span>led<span style="color: #990000">-</span><span style="color: #993399">01</span>
+net <span style="color: #008080">pin02</span> ptest<span style="color: #990000">.</span><span style="color: #008080">btn02</span> parport<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>pin<span style="color: #990000">-</span><span style="color: #993399">02</span><span style="color: #990000">-</span><span style="color: #008080">out</span> ptest<span style="color: #990000">.</span>led<span style="color: #990000">-</span><span style="color: #993399">02</span>
+net <span style="color: #008080">pin10</span> parport<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>pin<span style="color: #990000">-</span><span style="color: #993399">10</span><span style="color: #990000">-</span><span style="color: #008080">in</span> ptest<span style="color: #990000">.</span>led<span style="color: #990000">-</span><span style="color: #993399">10</span>
+net <span style="color: #008080">pin11</span> parport<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>pin<span style="color: #990000">-</span><span style="color: #993399">11</span><span style="color: #990000">-</span><span style="color: #008080">in</span> ptest<span style="color: #990000">.</span>led<span style="color: #990000">-</span><span style="color: #993399">11</span>
+start</tt></pre></div></div>
+<div class="paragraph"><p>Pour lancer le fichier HAL, nous utilisons, dans un terminal, les commandes
+suivantes:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>~$ halrun -I -f ptest.hal</tt></pre>
+</div></div>
+<div class="paragraph"><p>La figure suivante montre à quoi ressemble le panneau complet.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/ptest-final.png" alt="images/ptest-final.png" />
+</div>
+<div class="title">Figure 4. Testeur de port parallèle, complet<a id="cap:Port-Tester-Complete"></a></div>
+</div>
+<div class="paragraph"><p>Pour ajouter le reste des pins du port parallèle, il suffi de modifier les
+fichiers .xml et .hal.</p></div>
+<div class="paragraph"><p>Pour visualiser les pins après avoir lancé le script HAL, utiliser la
+commande suivante au prompt <em>halcmd:</em></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: show pin
+Component Pins:
+Owner Type  Dir Value  Name
+    2 bit   IN  FALSE  parport.0.pin-01-out &lt;== pin01
+    2 bit   IN  FALSE  parport.0.pin-02-out &lt;== pin02
+    2 bit   IN  FALSE  parport.0.pin-03-out
+    2 bit   IN  FALSE  parport.0.pin-04-out
+    2 bit   IN  FALSE  parport.0.pin-05-out
+    2 bit   IN  FALSE  parport.0.pin-06-out
+    2 bit   IN  FALSE  parport.0.pin-07-out
+    2 bit   IN  FALSE  parport.0.pin-08-out
+    2 bit   IN  FALSE  parport.0.pin-09-out
+    2 bit   OUT TRUE   parport.0.pin-10-in ==&gt; pin10
+    2 bit   OUT FALSE  parport.0.pin-10-in-not
+    2 bit   OUT TRUE   parport.0.pin-11-in ==&gt; pin11
+    2 bit   OUT FALSE  parport.0.pin-11-in-not
+    2 bit   OUT TRUE   parport.0.pin-12-in
+    2 bit   OUT FALSE  parport.0.pin-12-in-not
+    2 bit   OUT TRUE   parport.0.pin-13-in
+    2 bit   OUT FALSE  parport.0.pin-13-in-not
+    2 bit   IN  FALSE  parport.0.pin-14-out
+    2 bit   OUT TRUE   parport.0.pin-15-in
+    2 bit   OUT FALSE  parport.0.pin-15-in-not
+    2 bit   IN  FALSE  parport.0.pin-16-out
+    2 bit   IN  FALSE  parport.0.pin-17-out
+    4 bit   OUT FALSE  ptest.btn01 ==&gt; pin01
+    4 bit   OUT FALSE  ptest.btn02 ==&gt; pin02
+    4 bit   IN  FALSE  ptest.led-01 &lt;== pin01
+    4 bit   IN  FALSE  ptest.led-02 &lt;== pin02
+    4 bit   IN  TRUE   ptest.led-10 &lt;== pin10
+    4 bit   IN  TRUE   ptest.led-11 &lt;== pin11</tt></pre>
+</div></div>
+<div class="paragraph"><p>Cela montre quelles pins sont IN est lesquelles sont OUT, ainsi que toutes les
+connections.</p></div>
+</div>
+<h2 id="_compte_tours_pour_gs2_a_id_sec_exemple_compte_tours_gs2_a">5. Compte tours pour GS2<a id="sec:Exemple-Compte-Tours-GS2"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>L&#8217;exemple suivant utilise un variateur de fréquence GS2 de la société Automation
+Direct. <span class="footnote"><br />[ En Europe on trouve ce type de variateur sous la marque Omron.]<br /></span>
+ Il permet le pilotage du moteur, la visualisation de la vitesse ainsi que
+d&#8217;autres informations dans un panneau PyVCP. Cet exemple est basé sur un autre,
+relatif au variateur GS2 et se trouvant dans la section des exemples matériels
+de ce manuel.
+Ce dernier exemple s&#8217;appuie lui même sur la description du composant de
+HAL gs2_vfd.</p></div>
+<h3 id="_le_panneau">5.1. Le panneau</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Pour créer le panneau nous ajoutons ce code au fichier .xml.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;pyvcp&gt;</span></span>
+
+    <span style="font-style: italic"><span style="color: #9A1900">&lt;!-- Compte tours --&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;hbox&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;relief&gt;</span></span>RAISED<span style="font-weight: bold"><span style="color: #0000FF">&lt;/relief&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;bd&gt;</span></span>3<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bd&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;meter&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"spindle_rpm"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Broche"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;subtext&gt;</span></span>"tr/mn"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/subtext&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;size&gt;</span></span>200<span style="font-weight: bold"><span style="color: #0000FF">&lt;/size&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;min_&gt;</span></span>0<span style="font-weight: bold"><span style="color: #0000FF">&lt;/min_&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;max_&gt;</span></span>3000<span style="font-weight: bold"><span style="color: #0000FF">&lt;/max_&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;majorscale&gt;</span></span>500<span style="font-weight: bold"><span style="color: #0000FF">&lt;/majorscale&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;minorscale&gt;</span></span>100<span style="font-weight: bold"><span style="color: #0000FF">&lt;/minorscale&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;region1&gt;</span></span>0,10,"yellow"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/region1&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;/meter&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/hbox&gt;</span></span>
+
+    <span style="font-style: italic"><span style="color: #9A1900">&lt;!-- La Led On --&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;hbox&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;relief&gt;</span></span>RAISED<span style="font-weight: bold"><span style="color: #0000FF">&lt;/relief&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;bd&gt;</span></span>3<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bd&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;vbox&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;relief&gt;</span></span>RAISED<span style="font-weight: bold"><span style="color: #0000FF">&lt;/relief&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;bd&gt;</span></span>2<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bd&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;label&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"On"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",18)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;/label&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;width&gt;</span></span>5<span style="font-weight: bold"><span style="color: #0000FF">&lt;/width&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;hbox&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;label</span></span> <span style="color: #009900">width</span><span style="color: #990000">=</span><span style="color: #FF0000">"2"</span><span style="font-weight: bold"><span style="color: #0000FF">/&gt;</span></span> <span style="font-style: italic"><span style="color: #9A1900">&lt;!-- utilisé pour centrer la Led --&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;rectled&gt;</span></span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"on-led"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">&lt;height&gt;</span></span>"30"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/height&gt;</span></span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">&lt;width&gt;</span></span>"30"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/width&gt;</span></span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">&lt;on_color&gt;</span></span>"green"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/on_color&gt;</span></span>
+                    <span style="font-weight: bold"><span style="color: #0000FF">&lt;off_color&gt;</span></span>"red"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/off_color&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;/rectled&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;/hbox&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;/vbox&gt;</span></span>
+
+        <span style="font-style: italic"><span style="color: #9A1900">&lt;!-- La Led Sens horaire --&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;vbox&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;relief&gt;</span></span>RAISED<span style="font-weight: bold"><span style="color: #0000FF">&lt;/relief&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;bd&gt;</span></span>2<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bd&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;label&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Sens horaire"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",18)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;width&gt;</span></span>5<span style="font-weight: bold"><span style="color: #0000FF">&lt;/width&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;/label&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;label</span></span> <span style="color: #009900">width</span><span style="color: #990000">=</span><span style="color: #FF0000">"2"</span><span style="font-weight: bold"><span style="color: #0000FF">/&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;rectled&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"fwd-led"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;height&gt;</span></span>"30"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/height&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;width&gt;</span></span>"30"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/width&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;on_color&gt;</span></span>"green"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/on_color&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;off_color&gt;</span></span>"red"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/off_color&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;/rectled&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;/vbox&gt;</span></span>
+
+        <span style="font-style: italic"><span style="color: #9A1900">&lt;!-- La Led Sens inverse --&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;vbox&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;relief&gt;</span></span>RAISED<span style="font-weight: bold"><span style="color: #0000FF">&lt;/relief&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;bd&gt;</span></span>2<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bd&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;label&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Sens inverse"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",18)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;width&gt;</span></span>5<span style="font-weight: bold"><span style="color: #0000FF">&lt;/width&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;/label&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;label</span></span> <span style="color: #009900">width</span><span style="color: #990000">=</span><span style="color: #FF0000">"2"</span><span style="font-weight: bold"><span style="color: #0000FF">/&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;rectled&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"rev-led"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;height&gt;</span></span>"30"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/height&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;width&gt;</span></span>"30"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/width&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;on_color&gt;</span></span>"red"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/on_color&gt;</span></span>
+                <span style="font-weight: bold"><span style="color: #0000FF">&lt;off_color&gt;</span></span>"green"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/off_color&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;/rectled&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;/vbox&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/hbox&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/pyvcp&gt;</span></span></tt></pre></div></div>
+<div class="paragraph"><p>L&#8217;image ci-dessous montre notre panneau PyVCP en fonctionnement.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/gs2_panel.png" alt="images/gs2_panel.png" />
+</div>
+<div class="title">Figure 5. Panneau pour GS2<a id="cap:Panneau-GS2"></a></div>
+</div>
+<h3 id="_les_connections">5.2. Les connections</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Pour qu&#8217;il fonctionne, il est nécessaire d&#8217;ajouter le code suivant au fichier
+custom_postgui.hal, il réalise les connections entre PyVCP et LinuxCNC.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #000080"># affiche</span></span> le <span style="color: #008080">compte</span> tours<span style="color: #990000">,</span> calcul basé <span style="color: #008080">sur</span> freq <span style="color: #990000">*</span> rpm par hz
+loadrt mult2
+<span style="color: #008080">addf</span> mult2<span style="color: #990000">.</span><span style="color: #993399">0</span> servo<span style="color: #990000">-</span>thread
+<span style="color: #008080">setp</span> mult2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>in1 <span style="color: #993399">28.75</span>
+<span style="color: #008080">net</span> <span style="color: #008080">cypher_speed</span> mult2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>in0 <span style="color: #990000">&lt;=</span> spindle<span style="color: #990000">-</span>vfd<span style="color: #990000">.</span>frequency<span style="color: #990000">-</span>out
+<span style="color: #008080">net</span> <span style="color: #008080">speed_out</span> pyvcp<span style="color: #990000">.</span>spindle_rpm <span style="color: #990000">&lt;=</span> mult2<span style="color: #990000">.</span><span style="color: #993399">0</span><span style="color: #990000">.</span>out
+
+<span style="font-weight: bold"><span style="color: #000080"># la</span></span> led On
+<span style="color: #008080">net</span> gs2<span style="color: #990000">-</span>run <span style="color: #990000">=&gt;</span> pyvcp<span style="color: #990000">.</span>on<span style="color: #990000">-</span>led
+
+<span style="font-weight: bold"><span style="color: #000080"># la</span></span> led Sens horaire
+<span style="color: #008080">net</span> gs2<span style="color: #990000">-</span>fwd <span style="color: #990000">=&gt;</span> pyvcp<span style="color: #990000">.</span>fwd<span style="color: #990000">-</span>led
+
+<span style="font-weight: bold"><span style="color: #000080"># la</span></span> led <span style="color: #008080">Sens</span> anti<span style="color: #990000">-</span>horaire
+<span style="color: #008080">net</span> running<span style="color: #990000">-</span><span style="color: #008080">rev</span> spindle<span style="color: #990000">-</span>vfd<span style="color: #990000">.</span>spindle<span style="color: #990000">-</span>rev <span style="color: #990000">=&gt;</span> pyvcp<span style="color: #990000">.</span>rev<span style="color: #990000">-</span>led</tt></pre></div></div>
+<div class="paragraph"><p>Certaines lignes demandent quelques explications.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+La ligne de la led Sens horaire utilise le signal créé dans le fichier
+    custom.hal dans lequel la led Sens inverse doit utiliser le bit <em>spindle-rev</em>.
+</p>
+</li>
+<li>
+<p>
+On ne <em>peut pas</em> lier deux fois le bit <em>spindle-fwd</em> pour utiliser le signal
+    auquel il est déjà lié.
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-05-10 18:36:10 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/pyvcp_examples_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+</html>

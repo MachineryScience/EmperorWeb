@@ -1,0 +1,427 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/tklinuxcnc.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:12:25 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>TkLinuxCNC GUI</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>TkLinuxCNC GUI</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:tklinuxcnc-gui"></a> </p></div>
+</div>
+</div>
+<h2 id="_introduction">1. Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>TkLinuxCNC is one of the first graphical front-ends
+for LinuxCNC. It is written in Tcl and uses the Tk toolkit
+for the display. Being written in Tcl makes it very portable (it runs on a
+multitude of platforms). A separate backplot window can be displayed as
+shown.</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/tkemc.png" alt="images/tkemc.png" />
+</div>
+<div class="title">Figure 1. TkLinuxCNC Window<a id="cap:TkLinuxCNC-Window"></a></div>
+</div>
+</div>
+<h2 id="_getting_started">2. Getting Started</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>To select TkLinuxCNC as the front-end for LinuxCNC, edit the .ini file. In the
+section <em>[DISPLAY]</em> change the <em>DISPLAY</em> line to read</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>DISPLAY = tklinuxcnc</tt></pre>
+</div></div>
+<div class="paragraph"><p>Then, start LinuxCNC and select that ini file. The sample configuration
+<em>sim/tklinuxcnc/tklinuxcnc.ini</em> is already configured to use TkLinuxCNC as its front-end.</p></div>
+<h3 id="_a_typical_session_with_tklinuxcnc">2.1. A typical session with TkLinuxCNC</h3><div style="clear:left"></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Start LinuxCNC and select a configuration file.
+</p>
+</li>
+<li>
+<p>
+Clear the <em>E-STOP</em> condition and turn the machine on (by
+ pressing F1 then F2).
+</p>
+</li>
+<li>
+<p>
+<em>Home</em> each axis.
+</p>
+</li>
+<li>
+<p>
+Load the file to be milled.
+</p>
+</li>
+<li>
+<p>
+Put the stock to be milled on the table.
+</p>
+</li>
+<li>
+<p>
+Set the proper offsets for each axis by jogging and either homing
+ again or right-clicking an axis name and entering an offset value.
+ <span class="footnote"><br />[For some of these actions it might be necessary to change the
+ mode LinuxCNC is currently running in.]<br /></span>
+</p>
+</li>
+<li>
+<p>
+Run the program.
+</p>
+</li>
+<li>
+<p>
+To mill the same file again, return to step 6. To mill a different
+ file, return to step 4. When you&#8217;re done, exit LinuxCNC.
+</p>
+</li>
+</ol></div>
+</div>
+<h2 id="_elements_of_the_tklinuxcnc_window">3. Elements of the TkLinuxCNC window</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The TkLinuxCNC window contains the following elements:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+A menubar that allows you to perform various actions
+</p>
+</li>
+<li>
+<p>
+A set of buttons that allow you to change the current working mode,
+  start/stop spindle and other relevant I/O
+</p>
+</li>
+<li>
+<p>
+Status bar for various offset related displays
+</p>
+</li>
+<li>
+<p>
+Coordinate display area
+</p>
+</li>
+<li>
+<p>
+A set of sliders which control <em>Jogging speed</em>, <em>Feed Override</em>
+  , and <em>Spindle speed Override</em> which allow you to increase or
+  decrease those settings
+</p>
+</li>
+<li>
+<p>
+Manual data input text box <em>MDI</em>
+</p>
+</li>
+<li>
+<p>
+Status bar display with active G-codes, M-codes, F- and S-words
+</p>
+</li>
+<li>
+<p>
+Interpreter related buttons
+</p>
+</li>
+<li>
+<p>
+A text display area that shows the G-code source of the loaded file
+</p>
+</li>
+</ul></div>
+<h3 id="_main_buttons">3.1. Main buttons</h3><div style="clear:left"></div>
+<div class="paragraph"><p>From left to right, the buttons are:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Machine enable: <em>ESTOP</em> &gt; <em>ESTOP RESET</em> &gt; <em>ON</em>
+</p>
+</li>
+<li>
+<p>
+Toggle mist coolant
+</p>
+</li>
+<li>
+<p>
+Decrease spindle speed
+</p>
+</li>
+<li>
+<p>
+Set spindle direction <em>SPINDLE OFF</em> &gt; <em>SPINDLE FORWARD</em> .
+ <em>SPINDLE REVERSE</em>
+</p>
+</li>
+<li>
+<p>
+Increase spindle speed
+</p>
+</li>
+<li>
+<p>
+Abort
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>then on the second line:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Operation mode: <em>MANUAL</em> &gt; <em>MDI</em> &gt; <em>AUTO</em>
+</p>
+</li>
+<li>
+<p>
+Toggle flood coolant
+</p>
+</li>
+<li>
+<p>
+Toggle spindle brake control
+</p>
+</li>
+</ul></div>
+<h3 id="_offset_display_status_bar">3.2. Offset display status bar</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The Offset display status bar displays the currently selected tool
+(selected with Txx M6), the tool length offset (if active), and the
+work offsets (set by right-clicking the coordinates).</p></div>
+<h3 id="_coordinate_display_area">3.3. Coordinate Display Area</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The main part of the display shows the current position of the tool.
+The color of the position readout depends on the state of the axis. If
+the axis is unhomed the axis will be displayed in yellow letters. Once
+homed it will be displayed in green letters. If there is an error with
+the current axis TkLinuxCNC will use red letter to show that. (for example
+if an hardware limit switch is tripped).</p></div>
+<div class="paragraph"><p>To properly interpret these numbers, refer to the radio boxes on the
+right. If the position is <em>Machine</em>, then the displayed number is in
+the machine coordinate system. If it is <em>Relative</em>, then the displayed
+number is in the offset coordinate system. Further down the choices can
+be <em>actual</em> or <em>commanded</em>. Actual refers to the feedback coming from
+encoders (if you have a servo machine), and the <em>commanded</em> refers to
+the position command send out to the motors. These values can differ
+for several reasons: Following error, deadband, encoder resolution, or
+step size. For instance, if you command a movement to X 0.0033 on your
+mill, but one step of your stepper motor is 0.00125, then the
+<em>Commanded</em> position will be 0.0033 but the <em>Actual</em> position will be
+0.0025 (2 steps) or 0.00375 (3 steps).</p></div>
+<div class="paragraph"><p>Another set of radio buttons allows you to choose between <em>joint</em> and
+<em>world</em> view. These make little sense on a normal type of machine (e.g.
+trivial kinematics), but help on machines with non-trivial kinematics
+like robots or stewart platforms. (you can read more about kinematics
+in the Integrator Manual).</p></div>
+<h4 id="_backplot">3.3.1. Backplot</h4>
+<div class="paragraph"><p>When the machine moves, it leaves a trail called the backplot. You can
+start the backplot window by selecting View→Backplot.</p></div>
+<h3 id="_automatic_control">3.4. Automatic control</h3><div style="clear:left"></div>
+<h4 id="_buttons_for_control">3.4.1. Buttons for control</h4>
+<div class="paragraph"><p>The buttons in the lower part of TkLinuxCNC are used to control the execution of a
+program: <em>Open</em> to load a program, <em>Verify</em> to
+check it for errors, <em>Run</em> to start the actual cutting,
+<em>Pause</em> to stop it while running, <em>Resume</em> to
+resume an already paused program, <em>Step</em> to advance one line
+in the program and <em>Optional Stop</em> to toggle the
+optional stop switch (if the button is green the program execution will
+be stopped on any M1 encountered).</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/tkemc-interp.png" alt="images/tkemc-interp.png" />
+</div>
+<div class="title">Figure 2. TkLinuxCNC Interpreter / program control<a id="cap:TkLinuxCNC-Interpreter"></a></div>
+</div>
+<h4 id="_text_program_display_area">3.4.2. Text Program Display Area</h4>
+<div class="paragraph"><p>When the program is running, the line currently being executed is
+highlighted in white. The text display will automatically scroll to
+show the current line.</p></div>
+<h3 id="_manual_control">3.5. Manual Control</h3><div style="clear:left"></div>
+<h4 id="_implicit_keys">3.5.1. Implicit keys</h4>
+<div class="paragraph"><p>TkLinuxCNC allows you to manually move the machine. This action is known as
+<em>jogging</em>. First, select the axis to be moved by clicking it. Then,
+click and hold the <em>+</em> or <em>-</em> button depending on the desired direction
+of motion. The first four axes can also be moved by the keyboard arrow keys
+(X and Y), the PAGE UP and PAGE DOWN keys (Z) and the <em>[</em> and <em>]</em> keys (A/4th).</p></div>
+<div class="paragraph"><p>If <em>Continuous</em> is selected, the motion will continue as long as the
+button or key is pressed. If another value is selected, the machine
+will move exactly the displayed distance each time the button is
+clicked or the key is pressed. The available values are:
+<em>1.0000, 0.1000, 0.0100, 0.0010, 0.0001</em></p></div>
+<div class="paragraph"><p>By pressing <em>Home</em> or the HOME key, the selected axis will be homed.
+Depending on your configuration, this may just set the axis value to be
+the absolute position 0.0, or it may make the machine move to a
+specific home location through use of <em>home switches</em>. See the
+Integrator Manual for more information on homing.</p></div>
+<div class="paragraph"><p>By pressing <em>Override Limits</em>, the machine will temporarily be
+permitted to jog outside the limits defined in the .ini file. (Note: if
+<em>Override Limits</em> is active the button will be displayed using a red
+color).</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/tkemc-override-limits.png" alt="images/tkemc-override-limits.png" />
+</div>
+<div class="title">Figure 3. TkLinuxCNC Override Limits &amp; Jogging increments example<a id="cap:Override-Limits"></a></div>
+</div>
+<h4 id="_the_spindle_group">3.5.2. The Spindle group</h4>
+<div class="paragraph"><p>The button on the first row selects the direction for the spindle to
+rotate: Counterclockwise, Stopped, Clockwise. The buttons next to it
+allow the user to increase or decrease the rotation speed. The button
+on the second row allows the spindle brake to be engaged or released.
+Depending on your machine configuration, not all the items in this
+group may have an effect.</p></div>
+<h4 id="_the_coolant_group">3.5.3. The Coolant group</h4>
+<div class="paragraph"><p>The two buttons allow the <em>Mist</em> and <em>Flood</em> coolants to be turned on
+and off. Depending on your machine configuration, not all the items in
+this group may appear.</p></div>
+<h3 id="_code_entry">3.6. Code Entry</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Manual Data Input (also called MDI), allows G-code programs to be
+entered manually, one line at a time. When the machine is not turned
+on, and not set to MDI mode, the code entry controls are unavailable.</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/tkemc-mdi.png" alt="images/tkemc-mdi.png" />
+</div>
+<div class="title">Figure 4. The Code Entry tab<a id="cap:The-Code-Entry"></a></div>
+</div>
+<h4 id="_mdi">3.6.1. MDI:</h4>
+<div class="paragraph"><p>This allows you to enter a g-code command to be executed. Execute the
+command by pressing Enter.</p></div>
+<h4 id="_active_g_codes">3.6.2. Active G-Codes</h4>
+<div class="paragraph"><p>This shows the <em>modal codes</em> that are active in the interpreter. For
+instance, <em>G54</em> indicates that the <em>G54 offset</em> is applied to all
+coordinates that are entered.</p></div>
+<h3 id="_jog_speed">3.7. Jog Speed</h3><div style="clear:left"></div>
+<div class="paragraph"><p>By moving this slider, the speed of jogs can be modified. The numbers
+above refer to axis units / second. The text box with the number is
+clickable. Once clicked a popup window will appear, allowing for a
+number to be entered.</p></div>
+<h3 id="_feed_override">3.8. Feed Override</h3><div style="clear:left"></div>
+<div class="paragraph"><p>By moving this slider, the programmed feed rate can be modified. For
+instance, if a program requests <em>F60</em>  and the slider is set to 120%,
+then the resulting feed rate will be
+72. The text box with the number is clickable. Once clicked a popup
+window will appear, allowing for a number to be entered.</p></div>
+<h3 id="_spindle_speed_override">3.9. Spindle speed Override</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The spindle speed override slider works exactly like the feed override
+slider, but it controls to the spindle speed. If a program requested
+S500 (spindle speed 500 RPM), and the slider is set to 80%, then the
+resulting spindle speed will be 400 RPM. This slider has a minimum and
+maximum value defined in the ini file. If those are missing the slider
+is stuck at 100%. The text box with the number is clickable. Once
+clicked a popup window will appear, allowing for a number to be
+entered.</p></div>
+</div>
+<h2 id="_keyboard_controls">4. Keyboard Controls</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Almost all actions in TkLinuxCNC can be accomplished with the keyboard.
+Many of the shortcuts are unavailable when in MDI mode.</p></div>
+<div class="paragraph"><p>The most frequently used keyboard shortcuts are shown in the
+following table.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="75%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 1. Most Common Keyboard Shortcuts<a id="cap:TkLinuxCNC-Common-Keyboard"></a></caption>
+<col width="25%" />
+<col width="75%" />
+<thead>
+<tr>
+<th align="center" valign="top">Keystroke </th>
+<th align="left" valign="top"> Action Taken</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">F1</p></td>
+<td align="left" valign="top"><p class="table">Toggle Emergency Stop</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">F2</p></td>
+<td align="left" valign="top"><p class="table">Turn machine on/off</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">`, 1 .. 9, 0</p></td>
+<td align="left" valign="top"><p class="table">Set feed override from 0% to 100%</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">X, `</p></td>
+<td align="left" valign="top"><p class="table">Activate first axis</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">Y, 1</p></td>
+<td align="left" valign="top"><p class="table">Activate second axis</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">Z, 2</p></td>
+<td align="left" valign="top"><p class="table">Activate third axis</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">A, 3</p></td>
+<td align="left" valign="top"><p class="table">Activate fourth axis</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">Home</p></td>
+<td align="left" valign="top"><p class="table">Send active axis Home</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">Left, Right</p></td>
+<td align="left" valign="top"><p class="table">Jog first axis</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">Up, Down</p></td>
+<td align="left" valign="top"><p class="table">Jog second axis</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">Pg Up, Pg Dn</p></td>
+<td align="left" valign="top"><p class="table">Jog third axis</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">[, ]</p></td>
+<td align="left" valign="top"><p class="table">Jog fourth axis</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">ESC</p></td>
+<td align="left" valign="top"><p class="table">Stop execution</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-03-30 16:36:04 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/tklinuxcnc.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:12:26 GMT -->
+</html>

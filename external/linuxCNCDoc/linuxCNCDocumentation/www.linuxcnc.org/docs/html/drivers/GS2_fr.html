@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/drivers/GS2_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Variateur de fréquence GS2</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Variateur de fréquence GS2</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:Variateur-GS2"></a> </p></div>
+<div class="paragraph"><p>Composant de HAL pour la série de variateurs de fréquence GS2 fournie par
+la société Automation Direct.
+<span class="footnote"><br />[ En Europe on trouve l'équivalent sous la marque Omron.]<br /></span></p></div>
+</div>
+</div>
+<h2 id="_chargement_du_composant">1. Chargement du composant</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+Ce composant est chargé en utilisant la commande suivante:
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadusr -Wn spindle-vfd gs2_vfd -n spindle-vfd</tt></pre>
+</div></div>
+<div class="paragraph"><p>La commande de HAL <em>loadusr</em> est détaillée au chapitre: <a href="../hal/basic_hal_fr.html#sec:loadusr">loadusr</a>.</p></div>
+</div>
+<h2 id="_options_sp_cifiques_au_chargement">2. Options spécifiques au chargement</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Les options spécifiques au chargement du composant gs2_vfd:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>-b</em> ou <em>--bits &lt;n&gt;</em> (défaut 8) Fixe le nombre de bits de donnée à <em>&lt;n&gt;</em>, dans
+    lequel <em>&lt;n&gt;</em> doit être compris entre 5 et 8 inclus.
+</p>
+</li>
+<li>
+<p>
+<em>-d</em> ou <em>--device &lt;path&gt;</em> (défaut /dev/ttyS0) Fixe le nom de la liaison série
+    à utiliser.
+</p>
+</li>
+<li>
+<p>
+<em>-g</em> ou <em>--debug</em> Active les messages de débogage.
+    Le drapeau du mode verbeux pourra être activé. Le débogage affichera tous
+    les messages modbus en hexadécimal sur terminal.
+</p>
+</li>
+<li>
+<p>
+<em>-n</em> ou <em>--name &lt;string&gt;</em> (défaut gs2_vfd) Fixe le nom du composant de HAL à
+    <em>&lt;string&gt;</em>, les noms de toutes ses pins et paramètres commenceront également
+    par <em>&lt;string&gt;</em>.
+</p>
+</li>
+<li>
+<p>
+<em>-p</em> ou <em>--parity {even, odd, none}</em> (défaut odd) Fixe la parité de la liaison
+    série à parité paire, parité impaire ou sans parité.
+</p>
+</li>
+<li>
+<p>
+<em>-r</em> ou <em>--rate &lt;n&gt;</em> (défaut 38400) Fixe le débit de la liaisons à <em>&lt;n&gt;</em>.
+    C&#8217;est une erreur si le débit n&#8217;est pas une des valeurs suivantes: 110, 300,
+    600, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200.
+</p>
+</li>
+<li>
+<p>
+<em>-s</em> ou <em>--stopbits {1,2}</em> (défaut 1) Fixe le nombre de bits de stop de la
+    liaison série à 1 ou 2.
+</p>
+</li>
+<li>
+<p>
+<em>-t</em> ou <em>--target &lt;n&gt;</em> (défaut 1) Fixe le nombre de cibles MODBUS (esclaves).
+    Doit correspondre au nombre de périphériques réglé dans le GS2.
+</p>
+</li>
+<li>
+<p>
+<em>-v</em> ou <em>--verbose</em> Active les messages de débogage. Noter qu&#8217;en cas d&#8217;erreurs
+    série, cela ne fera pas beaucoup de différence ce qui peut être gênant.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_consignes_de_dialogue_avec_le_variateur">3. Consignes de dialogue avec le variateur</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Les valeurs <em>&lt;name&gt;</em> sont les noms donnés par l&#8217;option <em>-n</em> durant la phase
+    de chargement du composant.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>&lt;name&gt;.DC-bus-volts</em> (float, out) La tension du bus DC sur le variateur.
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.at-speed</em> (bit, out) Quand la consigne vitesse est atteinte.
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.err-reset</em> (bit, in) Envoi d&#8217;un <em>reset errors</em> au variateur.
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.firmware-revision</em> (s32, out) envoyé par le variateur.
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.frequency-command</em> (float, out) envoyé par le variateur.
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.frequency-out</em> (float, out) envoyé par le variateur.
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.is-stopped</em> (bit, out) when the VFD reports 0 Hz output.
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.load-percentage</em> (float, out) envoyé par le variateur.
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.motor-RPM</em> (float, out) envoyé par le variateur.
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.output-current</em> (float, out) envoyé par le variateur.
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.output-voltage</em> (float, out) envoyé par le variateur.
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.power-factor</em> (float, out) envoyé par le variateur.
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.scale-frequency</em> (float, out) envoyé par le variateur.
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.speed-command</em> (float, in) Consigne vitesse envoyée.
+   au variateur en tr.mn<sup>-1</sup>. C&#8217;est une erreur d&#8217;envoyer une consigne de
+   vitesse supérieure à la valeur maximum réglée dans le variateur.
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.spindle-fwd</em> (bit, in) Sens de rotation envoyé au variateur, 1 pour
+   le sens horaire et 0 pour le sens anti-horaire.
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.spindle-rev</em> (bit, in) 1 pour marche en sens anti-horaire et 0 pour
+   ARRÊT.
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.spindle-on</em> (bit, in) 1 pour MARCHE et 0 pour ARRÊT du variateur.
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.status-1</em> (s32, out) Drive Status du VFD (voir le manuel du GS2).
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.status-2</em> (s32, out) Drive Status du VFD (voir le manuel du GS2).
+   Note: la valeur est la somme de tous les bits à 1. Ainsi, 163 signifie
+   que le pilote est dans le mode de marche qui est la somme de:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+3 (marche)
+</p>
+</li>
+<li>
+<p>
++ 32 (fréquence fixée par liaison série)
+</p>
+</li>
+<li>
+<p>
++128 (opération fixée par liaison série).
+</p>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</div>
+<h2 id="_param_tres_de_r_glage_du_variateur">4. Paramètres de réglage du variateur</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Les valeurs <em>&lt;name&gt;</em> sont les noms donnés par l&#8217;option <em>-n</em> durant la
+   phase de chargement du composant.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>&lt;name&gt;.error-count</em> (s32, RW)
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.loop-time</em> (float, RW) Nombre d&#8217;interrogation d modbus (défaut 0.1).
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.nameplate-HZ</em> (float, RW) Vitesse plaquée du moteur en Hz (défaut 50).
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.nameplate-RPM</em> (float, RW) Vitesse plaquée du moteur en tr.mn<sup>-1</sup> (défaut 1500).
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.retval</em> (s32, RW) la valeur de retour d&#8217;une erreur dans HAL.
+</p>
+</li>
+<li>
+<p>
+<em>&lt;name&gt;.tolerance</em> (s32, RW) Tolérance en vitesse (défaut 0.01).
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Un exemple d&#8217;utilisation d&#8217;un variateur de fréquence pour piloter une broche
+est donné dans le manuel de l&#8217;intégrateur au chapitre Exemples: utiliser un GS2.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-02-03 18:36:08 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/drivers/GS2_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+</html>

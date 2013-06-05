@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/System_Requirements.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:10:15 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>System Requirements</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>System Requirements</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:system-requirements"></a> </p></div>
+</div>
+</div>
+<h2 id="_minimum_requirements">1. Minimum Requirements </h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The minimum system to run LinuxCNC and Ubuntu may vary depending on the
+exact usage. Stepper systems in general require faster threads to
+generate step pulses than servo systems. Using the Live-CD you can test
+the software before committing a computer. Keep in mind that the
+Latency Test numbers are more important than the processor speed for
+software step generation. More information on the Latency Test is
+<a href="../config/stepconf.html#latency-test">here</a>.</p></div>
+<div class="paragraph"><p>Additional information is on the LinuxCNC Wiki site:</p></div>
+<div class="paragraph"><p><a href="http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?Hardware_Requirements">Wiki.LinuxCNC.org, Hardware_Requirements</a></p></div>
+<div class="paragraph"><p>LinuxCNC and Ubuntu should run reasonably well on a computer with the
+following minimum hardware specification. These numbers are not the
+absolute minimum but will give reasonable performance for most stepper
+systems.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+700 MHz x86 processor (1.2 GHz x86 processor recommended)
+</p>
+</li>
+<li>
+<p>
+384 MB of RAM (512 MB up to 1 GB recommended)
+</p>
+</li>
+<li>
+<p>
+8 GB hard disk
+</p>
+</li>
+<li>
+<p>
+Graphics card capable of at least 1024x768 resolution, which is not
+   using the NVidia or ATI fglrx proprietary drivers, and which is not an
+   onboard video chipset that shares main memory with the CPU
+</p>
+</li>
+<li>
+<p>
+A network or Internet connection (not strictly needed, but very useful
+   for updates and for communicating with the LinuxCNC community)
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Minimum hardware requirements change as Ubuntu evolves so check the
+<a href="https://help.ubuntu.com/">Ubuntu</a> web site for details on the LiveCD your using.
+Older hardware may benefit from selecting an older version of the LiveCD when
+available.</p></div>
+</div>
+<h2 id="_problematic_hardware">2. Problematic Hardware</h2>
+<div class="sectionbody">
+<h3 id="_laptops">2.1. Laptops</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Laptops are not generally suited to real time software step
+generation. Again a Latency Test run for an extended time will give you
+the info you need to determine suitability.</p></div>
+<h3 id="_video_cards">2.2. Video Cards</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If your installation pops up with 800 x 600 screen resolution then
+most likely Ubuntu does not recognize your video card or monitor.
+Onboard video many times causes bad real time performance.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-18 12:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/System_Requirements.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:10:15 GMT -->
+</html>

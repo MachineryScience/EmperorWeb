@@ -1,0 +1,475 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/tklinuxcnc_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:49 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>L&#8217;interface graphique TkLinuxCNC</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>L&#8217;interface graphique TkLinuxCNC</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:TkLinuxCNC"></a> </p></div>
+</div>
+</div>
+<h2 id="_introduction">1. Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>TkLinuxCNC est l&#8217;interface utilisateur graphique la plus
+populaire après Axis, c&#8217;est l&#8217;interface traditionnelle de LinuxCNC. Elle est
+écrite en Tcl et utilise le toolkit Tk pour
+l&#8217;affichage. Le fait d'être écrite en TCL la rend vraiment très
+portable (elle fonctionne sur une multitude de plateformes).</p></div>
+<div class="imageblock" id="cap:affichage-TkLinuxCNC">
+<div class="content">
+<img src="images/tklinuxcnc_fr.png" alt="images/tklinuxcnc_fr.png" />
+</div>
+<div class="title">Figure 1. L&#8217;affichage de TkLinuxCNC</div>
+</div>
+</div>
+<h2 id="_utiliser_tklinuxcnc">2. Utiliser TkLinuxCNC</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Pour sélectionner l&#8217;interface graphique TkLinuxCNC avec LinuxCNC, éditer le
+fichier .ini et dans la section [DISPLAY] modifier l&#8217;affichage comme
+ci-dessous:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>DISPLAY = tklinuxcnc</tt></pre>
+</div></div>
+<div class="paragraph"><p>Puis, lancer LinuxCNC et choisir ce fichier ini. La configuration qui se
+trouve dans <em>sim/tklinuxcnc/tklinuxcnc.ini</em> est déjà configurée pour utiliser TkLinuxCNC
+comme interface utilisateur.</p></div>
+<div class="paragraph"><p>Quand LinuxCNC est lancé avec TkLinuxCNC, une fenêtre
+<a href="#cap:affichage-TkLinuxCNC">comme celle-ci s&#8217;affiche</a>.</p></div>
+<h3 id="_une_session_typique_avec_tklinuxcnc">2.1. Une session typique avec TkLinuxCNC</h3><div style="clear:left"></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Lancer LinuxCNC et sélectionner un fichier de configuration.
+</p>
+</li>
+<li>
+<p>
+Libérer l'<em>Arrêt d&#8217;Urgence</em> et mettre la machine en marche
+   (en pressant F1 puis F2).
+</p>
+</li>
+<li>
+<p>
+Faire l'<em>Origine Machine</em> de chacun des axes.
+</p>
+</li>
+<li>
+<p>
+Charger un fichier d&#8217;usinage.
+</p>
+</li>
+<li>
+<p>
+Brider le brut à usiner sur la table.
+</p>
+</li>
+<li>
+<p>
+Faire l'<em>Origine Pièce</em> de chacun des axes, à
+   l&#8217;aide du jog ou en introduisant une valeur de décalage d&#8217;origine après
+   un clic droit sur le nom d&#8217;un axe.
+</p>
+</li>
+<li>
+<p>
+Lancer le programme.
+</p>
+</li>
+<li>
+<p>
+Pour refaire une autre pièce identique, reprendre à l'étape 6. Pour
+   usiner une pièce différente, reprendre à l'étape 4. Quand c&#8217;est
+   terminé, quitter LinuxCNC.
+</p>
+</li>
+</ol></div>
+</div>
+<h2 id="_l_ments_affich_s_par_tklinuxcnc">3. Éléments affichés par TkLinuxCNC</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>La fenêtre TkLinuxCNC contient les éléments suivants:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Une barre de menu permettant diverses actions;
+</p>
+</li>
+<li>
+<p>
+Un jeu de boutons permettant d&#8217;agir sur le mode de travail,
+   Marche/Arrêt de la broche et autres éléments;
+</p>
+</li>
+<li>
+<p>
+Une barre de statut pour l&#8217;affichage des différents offsets;
+</p>
+</li>
+<li>
+<p>
+Une zone d&#8217;affichage des coordonnées;
+</p>
+</li>
+<li>
+<p>
+Un jeu de curseurs pour contrôler la
+   <em>vitesse de jog</em>, le
+   <em>Correcteur de vitesse d&#8217;avance</em> et
+   le <em>Correcteur de vitesse broche</em> qui
+   permettent d&#8217;augmenter ou de diminuer ces vitesses ;
+</p>
+</li>
+<li>
+<p>
+Une boîte d&#8217;entrée de données manuelles;
+</p>
+</li>
+<li>
+<p>
+Une barre de statut affichant le bloc de programme actif, G-codes,
+   M-codes, mots F et S;
+</p>
+</li>
+<li>
+<p>
+Les boutons relatifs à l&#8217;interpréteur;
+</p>
+</li>
+<li>
+<p>
+Une zone d&#8217;affichage de texte montrant le G-code du programme chargé.
+</p>
+</li>
+</ul></div>
+<h3 id="_boutons_principaux">3.1. Boutons principaux</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Dans la première ligne de la gauche vers la droite et cycliquement:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Marche Machine: <em>Arrêt d&#8217;Urgence</em>
+   <em>Arrêt d&#8217;Urgence relâché</em> / <em>Marche</em>
+</p>
+</li>
+<li>
+<p>
+Bascule gouttelettes
+</p>
+</li>
+<li>
+<p>
+Broche moins vite
+</p>
+</li>
+<li>
+<p>
+Direction de rotation de la broche <em>Arrêt broche</em> /
+   <em>Broche sens horaire</em> / <em>Broche sens anti-horaire</em>
+</p>
+</li>
+<li>
+<p>
+Broche plus vite
+</p>
+</li>
+<li>
+<p>
+Annuler
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>puis dans la deuxième ligne:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Mode de marche: <em>MANUEL</em> / <em>MDI</em> / <em>AUTO</em>
+</p>
+</li>
+<li>
+<p>
+Bascule d&#8217;arrosage
+</p>
+</li>
+<li>
+<p>
+Bascule du contrôle frein de broche
+</p>
+</li>
+</ol></div>
+<h3 id="_barre_de_statut_des_diff_rents_offsets">3.2. Barre de statut des différents offsets</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Elle affiche, l&#8217;offset de rayon de l&#8217;outil courant (sélectionné avec
+Txx M6), l&#8217;offset éventuel de longueur d&#8217;outil si il est actif et les
+offsets de travail (ajustables par un clic droit sur les coordonnées).</p></div>
+<h3 id="_zone_d_8217_affichage_des_coordonn_es">3.3. Zone d&#8217;affichage des coordonnées</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La partie principale affiche la position courante de l&#8217;outil. La
+couleur varie selon l'état de l&#8217;axe. Si l&#8217;axe n&#8217;est pas référencé il
+est affiché en caractères jaunes. Si il est référencé il s&#8217;affiche en
+vert. Si il est en erreur, TkLinuxCNC l&#8217;affiche en rouge pour montrer un
+défaut. (par exemple si un contact de fin de course est activé).</p></div>
+<div class="paragraph"><p>Pour interpréter correctement les différentes valeurs, se référer aux
+boutons de droite. Si la position est <em>Machine</em>, alors la valeur
+affichée est en coordonnées machine. Si elle est <em>Relative</em>, la valeur
+affichée est en coordonnées pièce. Deux autres en dessous indiquent
+<em>actuelle</em> ou <em>commandée</em>. Actuelle fait référence aux valeurs retournées
+par les codeurs (si la machine est équipée de servomoteurs) et
+<em>commandée</em> fait référence à la position à atteindre envoyée aux
+moteurs. Ces valeurs peuvent différer pour certaines raisons: Erreur de
+suivi, bande morte, résolution d&#8217;encodeur ou taille de pas. Par
+exemple, si un mouvement est commandé vers X0.08 sur une fraiseuse,
+mais qu&#8217;un pas moteur fait 0.03, alors la position <em>Commandée</em> sera
+0.03 mais la position <em>Actuelle</em> sera soit 0.06 (2 pas) soit 0.09 (3
+pas).</p></div>
+<div class="paragraph"><p>Deux autres boutons permettent de choisir entre la vue <em>Articulation</em> et
+la vue <em>Globale</em>. Cela a peu de sens avec les machines de type normal
+(cinématiques triviales), mais se révèle très utile sur les machines
+avec des cinématiques non triviales telles que les robots ou plateforme
+de Stewart. (Des informations plus complètes se trouvent dans le manuel
+de l&#8217;intégrateur).</p></div>
+<h4 id="_parcours_d_8217_outil">3.3.1. Parcours d&#8217;outil</h4>
+<div class="paragraph"><p>Quand la machine se déplace, elle laisse un tracé appelé parcours
+d&#8217;outil. La fenêtre d&#8217;affichage du parcours d&#8217;outil s&#8217;active via le
+menu <em>Vues → Parcours d&#8217;outil</em>.</p></div>
+<h3 id="_contr_le_en_automatique">3.4. Contrôle en automatique</h3><div style="clear:left"></div>
+<div class="imageblock" id="cap:TkLinuxCNC-Interpreteur">
+<div class="content">
+<img src="images/tklinuxcnc_interp_fr.png" alt="images/tklinuxcnc_interp_fr.png" />
+</div>
+<div class="title">Figure 2. Interpréteur de TkLinuxCNC</div>
+</div>
+<h4 id="_boutons_de_contr_le">3.4.1. Boutons de contrôle</h4>
+<div class="paragraph"><p>Les boutons de contrôle de la partie inférieure de TkLinuxCNC, visibles sur
+l&#8217;image ci-dessus, sont utilisés pour l&#8217;exécution du
+programme:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Ouvrir</em>  pour charger un fichier,
+</p>
+</li>
+<li>
+<p>
+<em>Lancer</em>  pour commencer l&#8217;usinage,
+</p>
+</li>
+<li>
+<p>
+<em>Pause</em>  pour stopper temporairement l&#8217;usinage,
+</p>
+</li>
+<li>
+<p>
+<em>Reprise</em>  pour reprendre un programme mis en pause,
+</p>
+</li>
+<li>
+<p>
+<em>Pas à pas</em>  pour avancer d&#8217;une seule ligne de programme,
+</p>
+</li>
+<li>
+<p>
+<em>Vérifier</em>  pour vérifier si il contient des erreurs,
+</p>
+</li>
+<li>
+<p>
+<em>Arrêt optionnel</em>  pour basculer l&#8217;arrêt optionnel, si
+   ce bouton est vert l&#8217;exécution du programme est stoppée quand un code M1
+   est rencontré.
+</p>
+</li>
+</ul></div>
+<h4 id="_zone_texte_d_8217_affichage_du_programme">3.4.2. Zone texte d&#8217;affichage du programme</h4>
+<div class="paragraph"><p>Quand un programme est lancé, la ligne courante est affichée en
+surbrillance blanche. L&#8217;affichage du texte défile automatiquement pour
+montrer la ligne courante.</p></div>
+<h3 id="_contr_le_en_manuel">3.5. Contrôle en manuel</h3><div style="clear:left"></div>
+<h4 id="_touches_implicites">3.5.1. Touches implicites</h4>
+<div class="paragraph"><p>TkLinuxCNC permet les déplacements manuels de la machine. Cette action
+s&#8217;appelle le <em>jog</em>. Premièrement, sélectionner l&#8217;axe à déplacer en
+cliquant dessus. Puis, cliquer et maintenir les boutons <strong>+</strong> ou <strong>-</strong>
+selon la direction du mouvement souhaité. Les quatre premiers axes
+peuvent aussi être déplacés à l&#8217;aide des touches fléchées pour les axes
+X et Y, Pg.préc et Pg.suiv pour l&#8217;axe Z et les touches [ et ] pour
+l&#8217;axe A.</p></div>
+<div class="paragraph"><p>Si <em>Continu</em> est activé, le mouvement sera continu tant que la touche
+sera pressée, si une valeur d&#8217;incrément est sélectionnée, le mobile se
+déplacera exactement de cette valeur à chaque appui sur la touche ou à
+chaque clic. Les valeurs disponibles sont:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>1.0000 0.1000 0.0100 0.0010 0.0001</tt></pre>
+</div></div>
+<div class="paragraph"><p>En cliquant le bouton <em>Origine</em> ou en pressant la touche Origine,
+l&#8217;axe actif est référencé sur son origine machine. Selon la
+configuration, la valeur de l&#8217;axe peut être simplement mise à la
+position absolue 0.0, ou la machine peut se déplacer vers un point
+spécifique matérialisé par le <em>contact d&#8217;origine</em>. Voir le manuel de
+l&#8217;intégrateur pour plus de détails sur les prises d&#8217;origine.</p></div>
+<div class="paragraph"><p>En cliquant le bouton <em>Dépassement de limite</em>, la machine permet un
+jog temporaire pour même si l&#8217;axe à franchi une limite d&#8217;axe fixée dans
+le fichier .ini. Noter que si <em>Dépassement de limite</em> est activé il
+s&#8217;affiche en rouge.</p></div>
+<div class="imageblock" id="cap:Override-Limits">
+<div class="content">
+<img src="images/tkemc-override-limits.png" alt="images/tkemc-override-limits.png" />
+</div>
+<div class="title">Figure 3. Exemple de dépassement de limite et incréments de jog</div>
+</div>
+<h4 id="_le_groupe_de_boutons_em_broche_em">3.5.2. Le groupe de boutons <em>Broche</em></h4>
+<div class="paragraph"><p>Le bouton central du dessus sélectionne le sens de rotation de la
+broche: Anti-horaire, Arrêt, Horaire. Les boutons fléchés augmentent ou
+diminuent la vitesse de rotation. Le bouton central du dessous permet
+d&#8217;engager ou de relâcher le frein de broche. Selon la configuration de
+la machine, les items de ce groupe ne sont peut être pas tous visibles.</p></div>
+<h4 id="_le_groupe_de_boutons_em_arrosage_em">3.5.3. Le groupe de boutons <em>Arrosage</em></h4>
+<div class="paragraph"><p>Ces deux boutons permettent d&#8217;activer ou non les lubrifiants
+<em>Gouttelettes</em> et <em>Arrosage</em>. Selon la configuration de la machine, les
+items de ce groupe ne sont peut être pas tous visibles.</p></div>
+<h3 id="_entr_e_manuelle_de_g_code_mdi">3.6. Entrée manuelle de G-code (MDI)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>L&#8217;entrée manuelle de données (aussi appelée MDI), permet d&#8217;entrer et
+d&#8217;exécuter des lignes de G-code, une à la fois. Quand la machine n&#8217;est
+pas en marche ni mise en mode MDI, l&#8217;entrée de code n&#8217;est pas possible.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tkemc-mdi.png" alt="images/tkemc-mdi.png" />
+</div>
+<div class="title">Figure 4. Le champ de saisie des entrées manuelles</div>
+</div>
+<h4 id="_mdi">3.6.1. MDI:</h4>
+<div class="paragraph"><p>Le mode MDI permet d&#8217;exécuter une commande en G-code en pressant la
+touche <em>Entrée</em>.</p></div>
+<h4 id="_g_codes_actifs">3.6.2. G-Codes actifs</h4>
+<div class="paragraph"><p>Ce champs montre les <em>codes modaux</em> actuellement actifs dans
+l&#8217;interpréteur. Par exemple, <strong>G54</strong> indique que le système de
+coordonnées courant est celui de G54 et qu&#8217;il s&#8217;applique à toutes les
+coordonnées entrées.</p></div>
+<h3 id="_vitesse_de_jog">3.7. Vitesse de Jog</h3><div style="clear:left"></div>
+<div class="paragraph"><p>En déplaçant ce curseur, la vitesse de jog peut être modifiée. Le
+nombre indique une vitesse en unités par minute. Le champs de texte est
+cliquable. Un clic ouvre un dialogue permettant d&#8217;entrer un nombre.</p></div>
+<h3 id="_correcteur_de_vitesse_d_8217_avance_travail">3.8. Correcteur de vitesse d&#8217;avance travail</h3><div style="clear:left"></div>
+<div class="paragraph"><p>En déplaçant ce curseur, la vitesse d&#8217;avance travail peut être
+modifiée. Par exemple, si la vitesse d&#8217;avance travail du programme est
+<strong>F600</strong>  et que le curseur est placé sur 120%, alors la vitesse d&#8217;avance
+travail sera de 720. Le champs de texte est cliquable. Un clic ouvre un
+dialogue permettant d&#8217;entrer un nombre.</p></div>
+<h3 id="_correcteur_de_vitesse_de_broche">3.9. Correcteur de vitesse de broche</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le fonctionnement de ce curseur est le même que celui de la vitesse
+d&#8217;avance, mais il contrôle la vitesse de rotation de la broche. Si le
+programme demande S500 (broche à 500 tr/mn) et que le curseur est placé
+sur 80%, alors la vitesse de broche résultante sera de 400 tr/mn. Le
+minimum et le maximum pour ce curseur sont définis dans le fichier ini.
+Par défaut le curseur est placé sur 100%. Le champs de texte est
+cliquable. Un clic ouvre un dialogue permettant d&#8217;entrer un nombre.</p></div>
+</div>
+<h2 id="_raccourcis_clavier">4. Raccourcis clavier</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>La plupart des actions de TkLinuxCNC peuvent être accomplies au clavier.
+Beaucoup des raccourcis clavier ne sont pas accessibles en mode MDI.</p></div>
+<div class="paragraph"><p>Les raccourcis clavier les plus fréquemment utilisés sont montrés dans
+la table ci-dessous.</p></div>
+<div class="tableblock" id="cap:Raccourcis-clavier-frequents">
+<table rules="all"
+width="90%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Tableau 1. Les raccourcis clavier les plus utilisés</caption>
+<col width="50%" />
+<col width="50%" />
+<thead>
+<tr>
+<th align="left" valign="top">Touche           </th>
+<th align="left" valign="top"> Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">F1</p></td>
+<td align="left" valign="top"><p class="table">Bascule de l&#8217;Arrêt d&#8217;Urgence</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">F2</p></td>
+<td align="left" valign="top"><p class="table">Marche/Arrêt machine</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">*, 1 .. 9, 0</p></td>
+<td align="left" valign="top"><p class="table">Correcteur vitesse d&#8217;avance 0% à 100%</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">X, *</p></td>
+<td align="left" valign="top"><p class="table">Active le premier axe</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Y, 1</p></td>
+<td align="left" valign="top"><p class="table">Active le deuxième axe</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Z, 2</p></td>
+<td align="left" valign="top"><p class="table">Active le troisième axe</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">A, 3</p></td>
+<td align="left" valign="top"><p class="table">Active le quatrième axe</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Origine</p></td>
+<td align="left" valign="top"><p class="table">POM de l&#8217;axe actif</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Gauche, Droite</p></td>
+<td align="left" valign="top"><p class="table">Jog du premier axe</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Haut, Bas</p></td>
+<td align="left" valign="top"><p class="table">Jog du deuxième axe</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Pg.prec, Pg.suiv</p></td>
+<td align="left" valign="top"><p class="table">Jog du troisième axe</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">[, ]</p></td>
+<td align="left" valign="top"><p class="table">Jog du quatrième axe</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Echap</p></td>
+<td align="left" valign="top"><p class="table">Arrête l&#8217;exécution</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-03-30 16:36:04 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/tklinuxcnc_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:50 GMT -->
+</html>

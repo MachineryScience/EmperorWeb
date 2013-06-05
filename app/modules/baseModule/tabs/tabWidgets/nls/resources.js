@@ -103,12 +103,18 @@ define({
         "DisplaySettingsTabTitle": "Display",
         "BackplotSettingsTabTitle" : "Backplot",
         "JogSettingsTabTitle" : "Jogging",
+        "ServerSettingsTabTitle" : "Server",
 
         "DisplayTabLegend" : "Settings for Display of Information",
         "NetworkTabLegend" : "Settings for Connecting to LinuxCNC Server over the Network",
         "OffsetsTabLegend" : "Settings for Measuring Work Coordinates and Probing",
         "BackplotTabLegend": "Settings for Backplot Colors and Display",
         "JogTabLegend"     : "Settings for Keyboard Controlled Jogging",
+        "ServerTabLegend"  : "Settings for The LinuxCNC Server",
+
+        "ServerConfigLabel": "Linux CNC Server Web Configuration",
+        "Launch" : "Launch In New Window",
+
 
         "HostIP" : "Host IP Address",
         "HostPort" : "Host Port",

@@ -1,0 +1,302 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/parallel_port.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:14:29 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Parallel Port Driver</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Parallel Port Driver</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:Parport"></a> </p></div>
+</div>
+</div>
+<h2 id="_parport">1. Parport</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Parport is a driver for the traditional PC parallel port. The port has
+a total of 17 physical pins. The original parallel port divided those
+pins into three groups: data, control, and status. The data group
+consists of 8 output pins, the control group consists of 4 pins, and
+the status group consists of 5 input pins.</p></div>
+<div class="paragraph"><p>In the early 1990&#8217;s, the bidirectional parallel port was introduced,
+which allows the data group to be used for output or input. The HAL
+driver supports the bidirectional port, and allows the user to set the
+data group as either input or output. If configured as output, a port
+provides a total of 12 outputs and 5 inputs. If configured as input, it
+provides 4 outputs and 13 inputs.</p></div>
+<div class="paragraph"><p>In some parallel ports, the control group pins are open collectors,
+which may also be driven low by an external gate. On a board with open
+collector control pins, the <em>x</em> mode allows a more flexible mode with 8
+outputs, and 9 inputs. In other parallel ports, the control group has
+push-pull drivers and cannot be used as an input.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="title">HAL and Open Collectors</div>
+<div class="paragraph"><p>HAL cannot automatically determine if the <em>x</em> mode bidirectional pins
+are actually open collectors (OC). If they are not, they cannot be used
+as inputs, and attempting to drive them LOW from an external source can
+damage the hardware.</p></div>
+<div class="paragraph"><p>To determine whether your port has <em>open collector</em> pins, load
+hal_parport in <em>x</em> mode.  With no device attached, HAL should read the
+pin as TRUE. Next, insert a 470 ohm resistor from one of the
+control pins to GND. If the resulting voltage on the control pin is
+close to 0V, and HAL now reads the pin as FALSE, then you have an OC
+port. If the resulting voltage is far from 0V, or HAL does not read the
+pin as FALSE, then your port cannot be used in <em>x</em> mode.</p></div>
+<div class="paragraph"><p>The external hardware that drives the control pins should also use
+open collector gates (e.g., 74LS05).</p></div>
+<div class="paragraph"><p>On some machines, BIOS settings may affect whether <em>x</em> mode can be
+used. <em>SPP</em> mode is most likely to work.</p></div>
+</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>No other combinations are supported, and a port cannot be changed from
+input to output once the driver is installed. The
+<a href="#fig:Parport-block-diag">Parport Block Diagram</a> shows two block diagrams,
+one showing the driver when the data group is configured for output, and one
+showing it configured for input.  For <em>x</em> mode, refer to the pin listing of
+<em>halcmd show pin</em> for pin direction assignment.</p></div>
+<div class="paragraph"><p>The parport driver can control up to 8 ports (defined by MAX_PORTS in
+hal_parport.c). The ports are numbered starting at zero.</p></div>
+<h3 id="_installing">1.1. Installing</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt hal_parport cfg="&lt;config-string&gt;"</tt></pre>
+</div></div>
+<div class="paragraph"><div class="title">Using the Port Index</div><p>I/O addresses below 16 are treated as port indexes. This is the
+simplest way to install the parport driver and cooperates with the
+Linux parport_pc driver if it is loaded. This will use the address
+Linux has detected for parport 0.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt hal_parport cfg="0"</tt></pre>
+</div></div>
+<div class="paragraph"><div class="title">Using the Port Address</div><p>The configure string consists of a hex port address, followed by an
+optional direction, repeated for each port. The direction is <em>in</em>,
+<em>out</em>, or <em>x</em> and determines the direction of the physical pins 2
+through 9, and whether to create input HAL pins for the physical
+control pins. If the direction is not specified, the data group
+defaults to output. For example:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt hal_parport cfg="0x278 0x378 in 0x20A0 out"</tt></pre>
+</div></div>
+<div class="paragraph"><p>This example installs drivers for one port at 0x0278, with pins 2-9 as
+outputs (by default, since neither <em>in</em> nor <em>out</em> was specified), one
+at 0x0378, with pins 2-9 as inputs, and one at 0x20A0, with pins 2-9
+explicitly specified as outputs. Note that you must know the base
+address of the parallel port to properly configure the driver. For ISA
+bus ports, this is usually not a problem, since the port is almost
+always at a <em>well known</em> address, like 0278 or 0378 which is typically
+configured in the system BIOS. The address for a PCI card is usually
+shown in <em>lspci -v</em> in an <em>I/O ports</em> line, or in the kernel message
+log after executing <em>sudo modprobe -a parport_pc</em>. There is no
+default address; if <em>&lt;config-string&gt;</em> does not contain at least one
+address, it is an error.</p></div>
+<div class="imageblock" id="fig:Parport-block-diag" style="text-align:center;">
+<div class="content">
+<img src="images/parport-block-diag.png" alt="images/parport-block-diag.png" />
+</div>
+<div class="title">Figure 1. Parport Block Diagram</div>
+</div>
+<h3 id="_pins">1.2. Pins</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>parport.&lt;p&gt;.pin-&lt;n&gt;-out</em> (bit) Drives a physical output pin.
+</p>
+</li>
+<li>
+<p>
+<em>parport.&lt;p&gt;.pin-&lt;n&gt;-in</em> (bit) Tracks a physical input pin.
+</p>
+</li>
+<li>
+<p>
+<em>parport.&lt;p&gt;.pin-&lt;n&gt;-in-not</em> (bit) Tracks a physical input pin, but inverted.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>For each pin, <em>&lt;p&gt;</em> is the port number, and <em>&lt;n&gt;</em> is the
+physical pin number in the 25 pin D-shell connector.</p></div>
+<div class="paragraph"><p>For each physical output pin, the driver creates a single HAL pin, for example:
+<em>parport.0.pin-14-out</em>.</p></div>
+<div class="paragraph"><p>Pins 2 through 9 are part of the data group and are output pins if
+the port is defined as an output port. (Output is the default.) Pins 1,
+14, 16, and 17 are outputs in all modes. These HAL pins control the
+state of the corresponding physical pins.</p></div>
+<div class="paragraph"><p>For each physical input pin, the driver creates two HAL pins, for example:
+<em>parport.0.pin-12-in</em> and <em>parport.0.pin-12-in-not</em>.</p></div>
+<div class="paragraph"><p>Pins 10, 11, 12, 13, and 15 are always input pins. Pins 2 through 9
+are input pins only if the port is defined as an input port. The <em>-in</em>
+HAL pin is TRUE if the physical pin is high, and FALSE if the
+physical pin is low. The <em>-in-not</em> HAL pin is inverted&#8201;&#8212;&#8201;it is FALSE
+if the physical pin is high. By
+connecting a signal to one or the other, the user can determine the
+state of the input. In <em>x</em> mode, pins 1, 14, 16, and 17 are also input
+pins.</p></div>
+<h3 id="_parameters">1.3. Parameters</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>parport.&lt;p&gt;.pin-&lt;n&gt;-out-invert</em> (bit) Inverts an output pin.
+</p>
+</li>
+<li>
+<p>
+<em>parport.&lt;p&gt;.pin-&lt;n&gt;-out-reset</em> (bit) (only for <em>out</em> pins) TRUE if this
+pin should be reset when the <em>-reset</em> function is executed.
+</p>
+</li>
+<li>
+<p>
+parport.&lt;p&gt;.reset-time' (U32) The time (in nanoseconds)
+between a pin is set by <em>write</em> and reset by the <em>reset</em> function if it
+is enabled.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The <em>-invert</em>  parameter determines whether an output pin is active
+high or active
+low. If <em>-invert</em> is FALSE, setting the HAL <em>-out</em> pin TRUE drives the
+physical pin high, and FALSE drives it low. If <em>-invert</em> is TRUE, then
+setting the HAL <em>-out</em> pin TRUE will drive the physical pin low.</p></div>
+<h3 id="_functions_a_id_parport_functions_a">1.4. Functions <a id="parport-functions"></a> </h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>parport.&lt;p&gt;.read</em> (funct) Reads physical input pins of port
+   <em>&lt;portnum&gt;</em> and updates HAL <em>-in</em> and <em>-in-not</em> pins.
+</p>
+</li>
+<li>
+<p>
+<em>parport.read-all</em> (funct) Reads physical input pins of all ports
+   and updates HAL <em>-in</em> and <em>-in-not</em> pins.
+</p>
+</li>
+<li>
+<p>
+<em>parport.&lt;p&gt;.write</em> (funct) Reads HAL <em>-out</em> pins of port
+   <em>&lt;p&gt;</em> and updates that port&#8217;s physical output pins.
+</p>
+</li>
+<li>
+<p>
+<em>parport.write-all</em> (funct) Reads HAL <em>-out</em> pins of all ports
+   and updates all physical output pins.
+</p>
+</li>
+<li>
+<p>
+<em>parport.&lt;p&gt;.reset</em> (funct) Waits until <em>reset-time</em> has
+   elapsed since the associated <em>write</em>, then resets pins to values
+   indicated by <em>-out-invert</em> and <em>-out-invert</em> settings. <em>reset</em> must be
+   later in the same thread as <em>write. 'If '-reset</em> is TRUE, then the
+   <em>reset</em> function will set the pin to the value of <em>-out-invert</em>. This
+   can be used in conjunction with stepgen&#8217;s <em>doublefreq</em> to produce one
+   step per period. The <a href="rtcomps.html#stepgen-parameters">stepgen stepspace</a> for that pin
+   must be set to 0 to enable doublefreq.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The individual functions are provided for situations where one port
+needs to be updated in a very fast thread, but other ports can be
+updated in a slower thread to save CPU time. It is probably not a good
+idea to use both an <em>-all</em> function and an individual function at the
+same time.</p></div>
+<h3 id="_common_problems">1.5. Common problems</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If loading the module reports</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>insmod: error inserting '/home/jepler/emc2/rtlib/hal_parport.ko':
+-1 Device or resource busy</tt></pre>
+</div></div>
+<div class="paragraph"><p>then ensure that the standard kernel module <em>parport_pc</em>  is not
+loaded<span class="footnote"><br />[In the LinuxCNC packages for Ubuntu, the file
+/etc/modprobe.d/emc2
+generally prevents <em>parport_pc</em> from being automatically loaded.]<br /></span>
+and that no other device in the system has claimed the I/O ports.</p></div>
+<div class="paragraph"><p>If the module loads but does not appear to function, then the port
+address is incorrect or the <em>probe_parport</em> module is required.</p></div>
+<h3 id="_using_doublestep">1.6. Using DoubleStep</h3><div style="clear:left"></div>
+<div class="paragraph"><p>To setup DoubleStep on the parallel port you must add the function
+parport.n.reset after parport.n.write and configure stepspace to 0 and
+the reset time wanted. So that step can be asserted on every period in
+HAL and then toggled off by parport after being asserted for time
+specificed by parport.n.reset-time.</p></div>
+<div class="paragraph"><p>For example:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt hal_parport cfg="0x378 out"
+setp parport.0.reset-time 5000
+loadrt stepgen step_type=0,0,0
+addf parport.0.read base-thread
+addf stepgen.make-pulses base-thread
+addf parport.0.write base-thread
+addf parport.0.reset base-thread
+addf stepgen.capture-position servo-thread
+...
+setp stepgen.0.steplen 1
+setp stepgen.0.stepspace 0</tt></pre>
+</div></div>
+<div class="paragraph"><p>More information on DoubleStep can be found on the
+<a href="http://wiki.linuxcnc.org/cgi-bin/wiki.pl?TweakingSoftwareStepGeneration">wiki</a>.</p></div>
+</div>
+<h2 id="sec:probe_parport">2. probe_parport</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>In modern PCs, the parallel port may require plug and play (PNP)
+configuration before it can be used. The <em>probe_parport</em>  module
+performs configuration of any PNP ports present, and should be
+loaded before <em>hal_parport</em>. On machines without PNP ports, it may be
+loaded but has no effect.</p></div>
+<h3 id="_installing_2">2.1. Installing</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt probe_parport
+
+loadrt hal_parport ...</tt></pre>
+</div></div>
+<div class="paragraph"><p>If the Linux kernel prints a message similar to</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>parport: PnPBIOS parport detected.</tt></pre>
+</div></div>
+<div class="paragraph"><p>when the parport_pc module is loaded (<em>sudo modprobe -a parport_pc;
+sudo rmmod parport_pc)</em> then use of this module is probably required.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-09-29 08:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/parallel_port.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:14:30 GMT -->
+</html>

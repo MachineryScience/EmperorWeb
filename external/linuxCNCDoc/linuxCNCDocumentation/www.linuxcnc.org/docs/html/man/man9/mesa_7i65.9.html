@@ -1,0 +1,161 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Mon Dec  5 07:46:21 2011 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/mesa_7i65.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>MESA_7I65</title>
+
+</head>
+<body>
+
+<h1 align="center">MESA_7I65</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">mesa_7i65
+&minus; Support for the Mesa 7i65 Octuple Servo Card</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="24%">
+
+
+<p style="margin-top: 1em"><b>loadrt mesa_7i65</b></p></td>
+<td width="65%">
+</td></tr>
+</table>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The component
+takes parameters in the form of a comma-separated list of
+bspi (buffered SPI) instance names, for example:</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+mesa_7i65 bspi_chans=hm2_5i23.0.bspi.0,
+hm2_5i23.0.bspi.1</b></p>
+
+<p style="margin-left:11%; margin-top: 1em">The BSPI
+instances are printed to the dmesg buffer during the
+Hostmot2 setup sequence, one for each bspi instance included
+in the bitfile loaded to each installed card during the
+Hostmot2 setup sequence. Type &quot;dmesg&quot; at the
+terminal prompt to view the output.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>mesa-7i65.</b><i>N</i><b>.analogue.</b><i>M</i><b>.out</b>
+float in (M=0..7)</p>
+
+<p style="margin-left:22%;">Analogue output values. The
+value will be limited to a -1.0 to +1.0 range</p>
+
+
+<p style="margin-left:11%;"><b>mesa-7i65.</b><i>N</i><b>.analogue.</b><i>M</i><b>.in</b>
+float out (M=0..7)</p>
+
+<p style="margin-left:22%;">Analogue outputs read by the
+7i65 (in Volts)</p>
+
+
+<p style="margin-left:11%;"><b>mesa-7i65.</b><i>N</i><b>.digital.</b><i>M</i><b>.in</b>
+bit out (M=0..3)</p>
+
+<p style="margin-left:22%;">Miscellaneous Digital
+Inputs</p>
+
+
+<p style="margin-left:11%;"><b>mesa-7i65.</b><i>N</i><b>.enable.</b><i>M</i><b>.out</b>
+bit in (M=0..7)</p>
+
+<p style="margin-left:22%;">Amplifier-enable control
+pins</p>
+
+
+<p style="margin-left:11%;"><b>mesa-7i65.</b><i>N</i><b>.watchdog.has-bit</b>
+bit out</p>
+
+<p style="margin-left:22%;">Indicates the status of the
+7i65 Watchdog (which is separate from the FPGA card
+watchdog</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>mesa-7i65.</b><i>N</i><b>.scale-</b><i>M</i>
+float rw (M=0..7) (default: <i>10</i>)</p>
+
+<p style="margin-left:22%;">Analogue output scale factor.
+For example if the scale is 7 then an input of 1.0 will give
+7V on the output terminals</p>
+
+
+<p style="margin-left:11%;"><b>mesa-7i65.</b><i>N</i><b>.is-bipolar-</b><i>M</i>
+bit rw (M=0..7) (default: <i>1</i>)</p>
+
+<p style="margin-left:22%;">Set this value to TRUE for a
+plus/minus &quot;scale&quot; output. Set to 0 for a
+0-&quot;scale&quot; output</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Andy Pugh /
+Cliff Blackburn</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/mesa_7i65.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

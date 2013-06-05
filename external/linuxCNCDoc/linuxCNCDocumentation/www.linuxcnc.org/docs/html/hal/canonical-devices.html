@@ -1,0 +1,249 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/canonical-devices.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:05 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Canonical Device Interfaces</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Canonical Device Interfaces</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="sidebar-title">Note</div>
+<div class="paragraph"><p>By version 2.1, the HAL drivers should have all been updated to
+match these specs. Send an email if you spot any problems.</p></div>
+</div></div>
+</div>
+</div>
+<h2 id="cha:Canonical-Device-Interfaces">1. Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The following sections show the pins, parameters, and functions that
+are supplied by “canonical devices”. All HAL device drivers should
+supply the same pins and parameters, and implement the same behavior.</p></div>
+<div class="paragraph"><p>Note that the only the <tt>&lt;io-type&gt;</tt> and <tt>&lt;specific-name&gt;</tt> fields are
+defined for a canonical device. The <tt>&lt;device-name&gt;</tt>, <tt>&lt;device-num&gt;</tt>,
+and <tt>&lt;chan-num&gt;</tt> fields are set based on the characteristics of the
+real device.</p></div>
+</div>
+<h2 id="_digital_input_a_id_sec_canondigin_a">2. Digital Input<a id="sec:CanonDigIn"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The canonical digital input (I/O type field: <tt>digin</tt>) is quite simple.</p></div>
+<h3 id="_pins">2.1. Pins</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+(bit) <strong>in</strong>&#8201;&#8212;&#8201;State of the hardware input.
+</p>
+</li>
+<li>
+<p>
+(bit) <strong>in-not</strong>&#8201;&#8212;&#8201;Inverted state of the input.
+</p>
+</li>
+</ul></div>
+<h3 id="_parameters">2.2. Parameters</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+None
+</p>
+</li>
+</ul></div>
+<h3 id="_functions">2.3. Functions</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+(funct) <strong>read</strong>&#8201;&#8212;&#8201;Read hardware and set <tt>in</tt> and <tt>in-not</tt> HAL pins.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_digital_output_a_id_sec_canondigout_a">3. Digital Output<a id="sec:CanonDigOut"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The canonical digital output (I/O type field: <tt>digout</tt>) is also very
+simple.</p></div>
+<h3 id="_pins_2">3.1. Pins</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+(bit) <strong>out</strong>&#8201;&#8212;&#8201;Value to be written (possibly inverted) to the hardware
+   output.
+</p>
+</li>
+</ul></div>
+<h3 id="_parameters_2">3.2. Parameters</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+(bit) <strong>invert</strong>&#8201;&#8212;&#8201;If TRUE, <strong>out</strong> is inverted before writing to the
+   hardware.
+</p>
+</li>
+</ul></div>
+<h3 id="_functions_2">3.3. Functions</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+(funct) <strong>write</strong>&#8201;&#8212;&#8201;Read <strong>out</strong> and <strong>invert</strong>, and set hardware output
+   accordingly.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_analog_input">4. Analog Input</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The canonical analog input (I/O type: <tt>adcin</tt> ). This is expected to
+be used for analog to digital converters, which
+convert e.g. voltage to a continuous range of values.</p></div>
+<h3 id="_pins_3">4.1. Pins</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+(float) <strong>value</strong>&#8201;&#8212;&#8201;The hardware reading, scaled according to the
+   <strong>scale</strong> and <strong>offset</strong> parameters. <strong>Value</strong> = ((input reading, in
+   hardware-dependent units) * <strong>scale</strong>) - <strong>offset</strong>
+</p>
+</li>
+</ul></div>
+<h3 id="_parameters_3">4.2. Parameters</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+(float) <strong>scale</strong>&#8201;&#8212;&#8201;The input voltage (or current) will be multiplied
+   by <strong>scale</strong> before being output to <strong>value</strong>.
+</p>
+</li>
+<li>
+<p>
+(float) <strong>offset</strong>&#8201;&#8212;&#8201;This will be subtracted from the hardware input
+   voltage (or current) after the scale multiplier has been applied.
+</p>
+</li>
+<li>
+<p>
+(float) <strong>bit_weight</strong>&#8201;&#8212;&#8201;The value of one least significant bit (LSB).
+   This is effectively the granularity of the input reading.
+</p>
+</li>
+<li>
+<p>
+(float) <strong>hw_offset</strong>&#8201;&#8212;&#8201;The value present on the input when 0 volts is
+   applied to the input pin(s).
+</p>
+</li>
+</ul></div>
+<h3 id="_functions_3">4.3. Functions</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+(funct) <strong>read</strong>&#8201;&#8212;&#8201;Read the values of this analog input channel. This
+   may be used for
+   individual channel reads, or it may cause all channels to be read
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_analog_output">5. Analog Output</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The canonical analog output (I/O Type: <strong>adcout</strong>). This is intended
+for any kind of hardware that can output a
+more-or-less continuous range of values. Examples are digital to analog
+converters or PWM generators.</p></div>
+<h3 id="_pins_4">5.1. Pins</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+(float) <strong>value</strong>&#8201;&#8212;&#8201;The value to be written. The actual value output
+   to the hardware will depend on the scale and offset parameters.
+</p>
+</li>
+<li>
+<p>
+(bit) <strong>enable</strong>&#8201;&#8212;&#8201;If false, then output 0 to the hardware, regardless
+   of the <strong>value</strong> pin.
+</p>
+</li>
+</ul></div>
+<h3 id="_parameters_4">5.2. Parameters</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+(float) <strong>offset</strong>&#8201;&#8212;&#8201;This will be added to the <strong>value</strong> before the
+   hardware is updated
+</p>
+</li>
+<li>
+<p>
+(float) <strong>scale</strong>&#8201;&#8212;&#8201;This should be set so that an input of 1 on the
+   <strong>value</strong> pin will cause the analog output pin to read 1 volt.
+</p>
+</li>
+<li>
+<p>
+(float) <strong>high_limit</strong> (optional)&#8201;&#8212;&#8201;When calculating the value to
+   output to the hardware, if <strong>value</strong> + <strong>offset</strong> is greater than
+   <strong>high_limit</strong>, then <strong>high_limit</strong> will be used instead.
+</p>
+</li>
+<li>
+<p>
+(float) <strong>low_limit</strong> (optional)&#8201;&#8212;&#8201;When calculating the value to output
+   to the hardware, if <strong>value</strong> + <strong>offset</strong> is less than <strong>low_limit</strong>, then
+   <strong>low_limit</strong> will be used instead.
+</p>
+</li>
+<li>
+<p>
+(float) <strong>bit_weight</strong> (optional)&#8201;&#8212;&#8201;The value of one least significant
+   bit (LSB), in volts (or mA, for current outputs)
+</p>
+</li>
+<li>
+<p>
+(float) <strong>hw_offset</strong>  (optional)&#8201;&#8212;&#8201;The actual voltage (or current)
+   that will be output if 0 is written to the hardware.
+</p>
+</li>
+</ul></div>
+<h3 id="_functions_4">5.3. Functions</h3><div style="clear:left"></div>
+<div class="paragraph"><p>(funct) <strong>write</strong> &#8201;&#8212;&#8201;This causes the calculated value to be output to
+the hardware. If enable is false, then the output will be 0,
+regardless of <strong>value</strong>, <strong>scale</strong>, and <strong>offset</strong>.
+The meaning of “0” is dependent on the hardware. For example, a
+bipolar 12-bit A/D may need to write 0x1FF (mid scale) to the D/A get 0
+volts from the hardware pin. If enable is true, read scale, offset and
+value and output to the adc (<strong>scale</strong> * <strong>value</strong>) + <strong>offset</strong>. If enable
+is false, then output 0.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-01-24 16:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/canonical-devices.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:05 GMT -->
+</html>

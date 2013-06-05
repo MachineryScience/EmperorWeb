@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/user_intro_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:39 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>LinuxCNC</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>LinuxCNC</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:linuxcnc-user-introduction"></a> </p></div>
+</div>
+</div>
+<h2 id="_introduction">1. Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Ce document est centré sur l&#8217;utilisation de LinuxCNC,
+il est plutôt destiné aux lecteurs l&#8217;ayant déjà installé et configuré.
+Quelques informations sur l&#8217;installation sont données dans les
+chapitres suivants.
+La documentation complète sur l&#8217;installation et
+la configuration se trouve dans le manuel de l&#8217;intégrateur.</p></div>
+</div>
+<h2 id="sec:Comment-Fonctionne-LinuxCNC">2. Comment fonctionne LinuxCNC</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>LinuxCNC est un peu plus que juste un autre programme de fraiseuse
+CNC. Il est capable de contrôler des machines-outils, des
+robots ou d&#8217;autres automatismes. Il est capable de contrôler des
+servomoteurs, des moteurs pas à pas, des relais ainsi que d&#8217;autres
+mécanismes relatifs aux machines-outils.</p></div>
+<div class="paragraph"><p>Il y a quatre principales composantes du logiciel LinuxCNC:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+un contrôleur de mouvement (EMCMOT),
+</p>
+</li>
+<li>
+<p>
+une contrôleur d&#8217;entrées/sorties discrètes (EMCIO),
+</p>
+</li>
+<li>
+<p>
+un exécuteur des tâches qui les coordonne (EMCTASK),
+</p>
+</li>
+<li>
+<p>
+et les interfaces utilisateur graphiques.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>En outre il existe une couche appelée HAL (couche d&#8217;abstraction du matériel)
+qui permet la configuration de LinuxCNC sans avoir besoin de recompiler.</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/whatstep1.png" alt="images/whatstep1.png" />
+</div>
+<div class="title">Figure 1. Machine simple contrôlée par LinuxCNC</div>
+</div>
+<div class="paragraph"><p>La figure ci-dessus montre un diagramme bloc
+représentant une machine 3 axes typique comme LinuxCNC les aime. Cette
+figure montre un système basé sur des moteurs pas à pas. Le PC,
+tournant sous Linux contrôle les interfaces de puissance des
+moteurs pas à pas en leur envoyant des signaux au travers du port
+parallèle. Ces signaux (impulsionnels) font que la puissance adéquate
+est fournie aux moteurs. LinuxCNC peut également contrôler des servomoteurs
+via une interface de puissance pour servomoteurs ou utiliser le port
+parallèle étendu connecté à une carte de contrôle externe. Quand nous
+examinerons chacun des composants qui forment un système LinuxCNC, nous
+nous référerons à cette machine typique.</p></div>
+</div>
+<h2 id="sub:Interfaces-utilisateur-graphiques">3. Interfaces utilisateur graphiques</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>L&#8217;interface graphique est la partie de LinuxCNC qui interagit avec
+l&#8217;opérateur de la machine. LinuxCNC est fourni avec plusieurs
+interfaces utilisateurs graphiques:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="../gui/axis_fr.html#cha:Axis"><em>Axis</em></a>, l&#8217;interface utilisateur standard.
+</p>
+</li>
+</ul></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/axis_2.5_fr.png" alt="images/axis_2.5_fr.png" />
+</div>
+<div class="title">Figure 2. L&#8217;interface graphique AXIS<a id="fig:Interface-graphique-AXIS"></a></div>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="../gui/touchy_fr.html#cha:touchy-gui"><em>Touchy</em></a>, une interface graphique pour écran tactile.
+</p>
+</li>
+</ul></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/touchy_fr.png" alt="images/touchy_fr.png" />
+</div>
+<div class="title">Figure 3. L&#8217;interface graphique Touchy<a id="fig:touchy-gui"></a></div>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="../gui/ngcgui_fr.html#cha:ngcgui"><em>NGCGUI</em></a>, une interface graphique gérant les sous-programmes.
+Elle permet très simplement de créer des programme G-code. Elle supporte
+surtout la concaténation de fichiers de sous-programmes, ce qui permet de
+construire des programmes G-code complets sans aucune programmation.
+</p>
+</li>
+</ul></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/ngcgui_fr.png" alt="images/ngcgui_fr.png" />
+</div>
+<div class="title">Figure 4. L&#8217;interface graphique NGCGUI intégrée dans Axis<a id="fig:ngcgui-gui"></a></div>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="../gui/mini_fr.html#cha:Mini"><em>Mini</em></a>, une interface en Tcl/Tk.
+</p>
+</li>
+</ul></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/mini_fr.png" alt="images/mini_fr.png" />
+</div>
+<div class="title">Figure 5. L&#8217;interface graphique Mini<a id="fig:Interface-graphique-Mini"></a></div>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="../gui/tklinuxcnc_fr.html#cha:TkLinuxCNC"><em>TkLinuxCNC</em></a>, une autre interface basée sur Tcl/Tk.
+C&#8217;est l&#8217;interface la plus populaire après Axis
+</p>
+</li>
+</ul></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/tklinuxcnc_fr.png" alt="images/tklinuxcnc_fr.png" />
+</div>
+<div class="title">Figure 6. L&#8217;interface graphique tklinuxcnc<a id="fig:L-interface-graphique-tklinuxcnc"></a></div>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="../gui/keystick_fr.html#cha:keystick-gui"><em>Keystick</em></a>, une interface graphique textuelle et
+minimaliste, appropriée pour les installations légères (sans serveur X par
+exemple).
+</p>
+</li>
+</ul></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/keystick.png" alt="images/keystick.png" />
+</div>
+<div class="title">Figure 7. L&#8217;interface textuelle Keystick<a id="fig:L-interface-Keystick"></a></div>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Xemc</em>, un programme X-Windows
+</p>
+</li>
+<li>
+<p>
+<em>halui</em>, une interface utilisateur basée sur HAL, qui permet de contrôler
+LinuxCNC en utilisant des boutons et des interrupteurs
+</p>
+</li>
+<li>
+<p>
+<em>linuxcncrsh</em>, une interface utilisateur basée sur telnet, qui permet
+d&#8217;envoyer des commandes à partir d&#8217;ordinateurs distants de celui de LinuxCNC
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_panneaux_de_contr_le_virtuels">4. Panneaux de contrôle virtuels</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+<em>PyVCP</em>, un panneau de contrôle virtuel basé sur Python, il peut être intégré
+dans l&#8217;interface graphique Axis ou utilisé en autonome.
+</p>
+</li>
+<li>
+<p>
+<em>GladeVCP</em>, un panneau de contrôle virtuel basé sur Glade, il peut être
+intégré dans l&#8217;interface graphique Axis ou utilisé en autonome.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_langues">5. Langues</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>LinuxCNC utilise des fichiers traduits pour les interfaces utilisateur.
+Il fonctionne dans plusieurs langues et démarre dans la langue de la
+session ouverte par l&#8217;utilisateur au démarrage du PC. Si votre langue n&#8217;a pas
+encore été traduite contactez un développeur sur l&#8217;IRC ou sur la mailing liste
+si vous pouvez aider à la traduction.</p></div>
+</div>
+<h2 id="_penser_comme_un_op_rateur_sur_cnc_a_id_sec_penser_operateur_a">6. Penser comme un opérateur sur CNC<a id="sec:Penser-operateur"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Ce manuel ne prétend pas vous apprendre à utiliser un tour ou une
+fraiseuse. Devenir un opérateur expérimenté prends beaucoup de temps et
+demande beaucoup de travail. Un auteur a dit un jour, <em>Nous apprenons
+par l&#8217;expérience, si on la possède toute</em>. Les outils cassés, les étaux
+attaqués et les cicatrices sont les preuves des leçons apprises. Une
+belle finition, des tolérances serrées et la prudence pendant le
+travail sont les preuves des leçons retenues. Aucune machine, aucun
+programme ne peut remplacer l&#8217;expérience humaine.</p></div>
+<div class="paragraph"><p>Maintenant que vous commencez à travailler avec le programme LinuxCNC,
+vous devez vous placer dans la peau d&#8217;un opérateur. Vous devez être 
+dans le rôle de quelqu&#8217;un qui a la charge d&#8217;une machine. C&#8217;est une
+machine qui attendra vos commandes puis qui exécutera les ordres que
+vous lui donnerez. Dans ces pages, nous donnerons les explications qui
+vous aideront à devenir un bon opérateur de CNC avec LinuxCNC. Vous aurez besoin
+de bonnes informations ici, devant vous, c&#8217;est là que les pages suivantes
+prendront tout leur sens.</p></div>
+</div>
+<h2 id="_modes_op_ratoires_a_id_sub_modes_operatoires_a">7. Modes opératoires<a id="sub:Modes-operatoires"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Quand LinuxCNC fonctionne, il existe trois différents modes majeurs pour
+entrer des commandes. Les modes <em>Manuel</em>, <em>Auto</em> et
+<em>MDI</em>. Passer d&#8217;un mode à un autre marque une grande différence
+dans le comportement de LinuxCNC. Des choses spécifiques à un mode ne
+peuvent pas être faites dans un autre. L&#8217;opérateur peut faire une prise
+d&#8217;origine sur un axe en mode manuel mais pas en mode auto ou MDI.
+L&#8217;opérateur peut lancer l&#8217;exécution complète d&#8217;un programme de G-codes
+en mode auto mais pas en mode manuel ni en MDI.</p></div>
+<div class="paragraph"><p>En mode manuel, chaque commande est entrée séparément. En termes
+humains, une commande manuelle pourrait être <em>active l&#8217;arrosage</em> ou <em>jog
+l&#8217;axe X à 250 millimètres par minute</em>. C&#8217;est en gros, équivalent à
+basculer un interrupteur ou à tourner la manivelle d&#8217;un axe. Ces
+commandes sont normalement contrôlées en pressant un bouton de
+l&#8217;interface graphique avec la souris ou en maintenant appuyée une
+touche du clavier. En mode auto, un bouton similaire ou l&#8217;appui d&#8217;une
+touche peut être utilisé pour charger ou lancer l&#8217;exécution
+complète d&#8217;un programme de G-codes stocké dans un fichier. En mode
+d&#8217;entrée de données manuelles (MDI) l&#8217;opérateur peut saisir un bloc de
+codes est dire à la machine de l&#8217;exécuter en pressant la touche
+<em>Return</em> ou <em>Entrée</em> du clavier.</p></div>
+<div class="paragraph"><p>Certaines commandes de mouvement sont disponibles et produisent les
+mêmes effets dans tous les modes. Il s&#8217;agit des commandes
+<em>Abandon</em>, <em>Arrêt d&#8217;Urgence</em> et <em>Correcteur de vitesse
+travail</em> . Ces commandes se dispensent d&#8217;explications.</p></div>
+<div class="paragraph"><p>L&#8217;interface utilisateur graphique AXIS supprime certaines distinctions
+entre Auto et les autres modes en rendant automatique la disponibilité
+des commandes, la plupart du temps. Il rend également floue la
+distinction entre Manuel et MDI parce que certaines commandes manuelles
+comme <em>Toucher</em>, sont également implémentées en envoyant une commande
+MDI. Il fait cela en changeant automatiquement le mode qui est
+nécessaire pour l&#8217;action que l&#8217;utilisateur a demandé.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-01-25 16:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/user_intro_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:41 GMT -->
+</html>

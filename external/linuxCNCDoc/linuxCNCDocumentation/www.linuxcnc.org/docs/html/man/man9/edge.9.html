@@ -1,0 +1,146 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:44 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/edge.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>EDGE</title>
+
+</head>
+<body>
+
+<h1 align="center">EDGE</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">edge &minus;
+Edge detector</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="67%">
+
+
+<p style="margin-top: 1em"><b>loadrt edge
+[count=</b><i>N</i><b>|names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p> </td>
+<td width="22%">
+</td></tr>
+</table>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p style="margin-top: 1em"><b>edge.</b><i>N</i></p></td>
+<td width="2%"></td>
+<td width="58%">
+
+
+<p style="margin-top: 1em">Produce output pulses from input
+edges</p> </td>
+<td width="20%">
+</td></tr>
+</table>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>edge.</b><i>N</i><b>.in</b>
+bit in <b><br>
+edge.</b><i>N</i><b>.out</b> bit out</p>
+
+<p style="margin-left:22%;">Goes high when the desired edge
+is seen on &rsquo;in&rsquo;</p>
+
+
+<p style="margin-left:11%;"><b>edge.</b><i>N</i><b>.out-invert</b>
+bit out</p>
+
+<p style="margin-left:22%;">Goes low when the desired edge
+is seen on &rsquo;in&rsquo;</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>edge.</b><i>N</i><b>.in-edge</b>
+bit rw (default: <i>TRUE</i>)</p>
+
+<p style="margin-left:22%;">Selects the desired edge: TRUE
+means falling, FALSE means rising</p>
+
+
+<p style="margin-left:11%;"><b>edge.</b><i>N</i><b>.out-width-ns</b>
+s32 rw (default: <i>0</i>)</p>
+
+<p style="margin-left:22%;">Time in nanoseconds of the
+output pulse</p>
+
+
+<p style="margin-left:11%;"><b>edge.</b><i>N</i><b>.time-left-ns</b>
+s32 r</p>
+
+<p style="margin-left:22%;">Time left in this output
+pulse</p>
+
+
+<p style="margin-left:11%;"><b>edge.</b><i>N</i><b>.last-in</b>
+bit r</p>
+
+<p style="margin-left:22%;">Previous input value</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/edge.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

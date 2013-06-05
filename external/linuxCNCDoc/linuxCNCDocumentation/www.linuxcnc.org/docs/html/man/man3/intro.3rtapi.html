@@ -1,0 +1,130 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:21 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/intro.3rtapi.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>intro</title>
+
+</head>
+<body>
+
+<h1 align="center">intro</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#HEADER FILES">HEADER FILES</a><br>
+<a href="#REALTIME CONSIDERATIONS">REALTIME CONSIDERATIONS</a><br>
+<a href="#RTAPI STATUS CODES">RTAPI STATUS CODES</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">rtapi &minus;
+Introduction to the RTAPI API</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">RTAPI is a
+library providing a uniform API for several real time
+operating systems. As of ver 2.1, RTLinux, RTAI, and a pure
+userspace simulator are supported.</p>
+
+<h2>HEADER FILES
+<a name="HEADER FILES"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi.h</b>
+<br>
+The file <b>rtapi.h</b> defines the RTAPI for both realtime
+and non-realtime code. This is a change from Rev 2, where
+the non-realtime (user space) API was defined in ulapi.h and
+used different function names. The symbols RTAPI and ULAPI
+are used to determine which mode is being compiled, RTAPI
+for realtime and ULAPI for non-realtime.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_math.h</b>
+<br>
+The file rtapi_math.h defines floating-point functions and
+constants. It should be used instead of &lt;math.h&gt; in
+rtapi real-time components.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_string.h</b>
+<br>
+The file rtapi_string.h defines string-related functions. It
+should be used instead of &lt;string.h&gt; in rtapi
+real-time components.</p>
+
+<h2>REALTIME CONSIDERATIONS
+<a name="REALTIME CONSIDERATIONS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>Userspace
+code</b> <br>
+Certain functions are not available in userspace code. This
+includes functions that perform direct device access such as
+<b>rtapi_inb(3)</b>.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>Init/cleanup
+code</b> <br>
+Certain functions may only be called from realtime
+init/cleanup code. This includes functions that perform
+memory allocation, such as <b>rtapi_shmem_new(3)</b>.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Realtime
+code</b> <br>
+Only a few functions may be called from realtime code. This
+includes functions that perform direct device access such as
+<b>rtapi_inb(3)</b>. It excludes most Linux kernel APIs such
+as do_gettimeofday(3) and many rtapi APIs such as
+rtapi_shmem_new(3).</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>Simulator</b>
+<br>
+For an RTAPI module to be buildable in the &quot;sim&quot;
+environment (fake realtime system without special
+privileges), it must not use <b>any</b> linux kernel APIs,
+and must not use the RTAPI APIs for direct device access
+such as <b>rtapi_inb(3)</b>. This automatically includes any
+hardware device drivers, and also devices which use Linux
+kernel APIs to do things like create special devices or
+entries in the <b>/proc</b> filesystem.</p>
+
+<h2>RTAPI STATUS CODES
+<a name="RTAPI STATUS CODES"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Except as noted
+in specific manual pages, RTAPI returns negative errno
+values for errors, and nonnegative values for success.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/intro.3rtapi.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+</html>

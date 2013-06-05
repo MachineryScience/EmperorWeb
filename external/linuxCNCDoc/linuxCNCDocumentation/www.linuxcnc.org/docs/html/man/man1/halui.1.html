@@ -1,0 +1,921 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Apr 18 15:36:28 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/halui.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>HALUI</title>
+
+</head>
+<body>
+
+<h1 align="center">HALUI</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#USAGE">USAGE</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#HISTORY">HISTORY</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br>
+<a href="#COPYRIGHT">COPYRIGHT</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">halui &minus;
+observe HAL pins and command LinuxCNC through NML</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>halui</b>
+[<b>-ini &lt;path-to-ini&gt;</b>]</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>halui</b> is
+used to build a User Interface using hardware knobs and
+switches. It exports a big number of pins, and acts
+accordingly when these change.</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>-ini
+name</b></p>
+
+<p style="margin-left:22%;">use the <i>name</i> as the
+configuration file. Note: halui must find the nml file
+specified in the ini, usually that file is in the same
+folder as the ini, so it makes sense to run halui from that
+folder.</p>
+
+<h2>USAGE
+<a name="USAGE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">When run,
+<b>halui</b> will export a large number of pins. A user can
+connect those to his physical knobs &amp; switches &amp;
+leds, and when a change is noticed halui triggers an
+appropriate event.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>halui</b>
+expects the signals to be debounced, so if needed (bad knob
+contact) connect the physical button to a HAL debounce
+filter first.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>abort <br>
+halui.abort</b> bit in</p>
+
+<p style="margin-left:22%;">pin for clearing most
+errors</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>tool <br>
+halui.tool.length-offset.a</b> float out</p>
+
+<p style="margin-left:22%;">current applied tool length
+offset for the A axis</p>
+
+
+<p style="margin-left:11%;"><b>halui.tool.length-offset.b</b>
+float out</p>
+
+<p style="margin-left:22%;">current applied tool length
+offset for the B axis</p>
+
+
+<p style="margin-left:11%;"><b>halui.tool.length-offset.c</b>
+float out</p>
+
+<p style="margin-left:22%;">current applied tool length
+offset for the C axis</p>
+
+
+<p style="margin-left:11%;"><b>halui.tool.length-offset.u</b>
+float out</p>
+
+<p style="margin-left:22%;">current applied tool length
+offset for the U axis</p>
+
+
+<p style="margin-left:11%;"><b>halui.tool.length-offset.v</b>
+float out</p>
+
+<p style="margin-left:22%;">current applied tool length
+offset for the V axis</p>
+
+
+<p style="margin-left:11%;"><b>halui.tool.length-offset.w</b>
+float out</p>
+
+<p style="margin-left:22%;">current applied tool length
+offset for the W axis</p>
+
+
+<p style="margin-left:11%;"><b>halui.tool.length-offset.x</b>
+float out</p>
+
+<p style="margin-left:22%;">current applied tool length
+offset for the X axis</p>
+
+
+<p style="margin-left:11%;"><b>halui.tool.length-offset.y</b>
+float out</p>
+
+<p style="margin-left:22%;">current applied tool length
+offset for the Y axis</p>
+
+
+<p style="margin-left:11%;"><b>halui.tool.length-offset.z</b>
+float out</p>
+
+<p style="margin-left:22%;">current applied tool length
+offset for the Z axis</p>
+
+<p style="margin-left:11%;"><b>halui.tool.number</b> u32
+out</p>
+
+<p style="margin-left:22%;">current selected tool</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>spindle <br>
+halui.spindle.brake-is-on</b> bit out</p>
+
+<p style="margin-left:22%;">status pin that tells us if
+brake is on</p>
+
+<p style="margin-left:11%;"><b>halui.spindle.brake-off</b>
+bit in</p>
+
+<p style="margin-left:22%;">pin for deactivating the
+spindle brake</p>
+
+<p style="margin-left:11%;"><b>halui.spindle.brake-on</b>
+bit in</p>
+
+<p style="margin-left:22%;">pin for activating the spindle
+brake</p>
+
+<p style="margin-left:11%;"><b>halui.spindle.decrease</b>
+bit in</p>
+
+<p style="margin-left:22%;">a rising edge on this pin
+decreases the current spindle speed by 100</p>
+
+<p style="margin-left:11%;"><b>halui.spindle.forward</b>
+bit in</p>
+
+<p style="margin-left:22%;">a rising edge on this pin makes
+the spindle go forward</p>
+
+<p style="margin-left:11%;"><b>halui.spindle.increase</b>
+bit in</p>
+
+<p style="margin-left:22%;">a rising edge on this pin
+increases the current spindle speed by 100</p>
+
+<p style="margin-left:11%;"><b>halui.spindle.is-on</b> bit
+out</p>
+
+<p style="margin-left:22%;">status pin telling if the
+spindle is on</p>
+
+<p style="margin-left:11%;"><b>halui.spindle.reverse</b>
+bit in</p>
+
+<p style="margin-left:22%;">a rising edge on this pin makes
+the spindle go reverse</p>
+
+
+<p style="margin-left:11%;"><b>halui.spindle.runs-backward</b>
+bit out</p>
+
+<p style="margin-left:22%;">status pin telling if the
+spindle is running backward</p>
+
+
+<p style="margin-left:11%;"><b>halui.spindle.runs-forward</b>
+bit out</p>
+
+<p style="margin-left:22%;">status pin telling if the
+spindle is running forward</p>
+
+<p style="margin-left:11%;"><b>halui.spindle.start</b> bit
+in</p>
+
+<p style="margin-left:22%;">a rising edge on this pin
+starts the spindle</p>
+
+<p style="margin-left:11%;"><b>halui.spindle.stop</b> bit
+in</p>
+
+<p style="margin-left:22%;">a rising edge on this pin stops
+the spindle</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>spindle
+override <br>
+halui.spindle-override.count-enable</b> bit in (default:
+<b>TRUE</b>)</p>
+
+<p style="margin-left:22%;">When TRUE, modify spindle
+override when counts changes.</p>
+
+
+<p style="margin-left:11%;"><b>halui.spindle-override.counts</b>
+s32 in</p>
+
+<p style="margin-left:22%;">counts X scale = spindle
+override percentage</p>
+
+
+<p style="margin-left:11%;"><b>halui.spindle-override.decrease</b>
+bit in</p>
+
+<p style="margin-left:22%;">pin for decreasing the SO
+(-=scale)</p>
+
+
+<p style="margin-left:11%;"><b>halui.spindle-override.direct-value</b>
+bit in</p>
+
+<p style="margin-left:22%;">pin to enable direct spindle
+override value input</p>
+
+
+<p style="margin-left:11%;"><b>halui.spindle-override.increase</b>
+bit in</p>
+
+<p style="margin-left:22%;">pin for increasing the SO
+(+=scale)</p>
+
+
+<p style="margin-left:11%;"><b>halui.spindle-override.scale</b>
+float in</p>
+
+<p style="margin-left:22%;">pin for setting the scale of
+counts for SO</p>
+
+
+<p style="margin-left:11%;"><b>halui.spindle-override.value</b>
+float out</p>
+
+<p style="margin-left:22%;">current FO value</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>program <br>
+halui.program.block-delete.is-on</b> bit out</p>
+
+<p style="margin-left:22%;">status pin telling that block
+delete is on</p>
+
+
+<p style="margin-left:11%;"><b>halui.program.block-delete.off</b>
+bit in</p>
+
+<p style="margin-left:22%;">pin for requesting that block
+delete is off</p>
+
+
+<p style="margin-left:11%;"><b>halui.program.block-delete.on</b>
+bit in</p>
+
+<p style="margin-left:22%;">pin for requesting that block
+delete is on</p>
+
+<p style="margin-left:11%;"><b>halui.program.is-idle</b>
+bit out</p>
+
+<p style="margin-left:22%;">status pin telling that no
+program is running</p>
+
+<p style="margin-left:11%;"><b>halui.program.is-paused</b>
+bit out</p>
+
+<p style="margin-left:22%;">status pin telling that a
+program is paused</p>
+
+
+<p style="margin-left:11%;"><b>halui.program.is-running</b>
+bit out</p>
+
+<p style="margin-left:22%;">status pin telling that a
+program is running</p>
+
+
+<p style="margin-left:11%;"><b>halui.program.optional-stop.is-on</b>
+bit out</p>
+
+<p style="margin-left:22%;">status pin telling that the
+optional stop is on</p>
+
+
+<p style="margin-left:11%;"><b>halui.program.optional-stop.off</b>
+bit in</p>
+
+<p style="margin-left:22%;">pin requesting that the
+optional stop is off</p>
+
+
+<p style="margin-left:11%;"><b>halui.program.optional-stop.on</b>
+bit in</p>
+
+<p style="margin-left:22%;">pin requesting that the
+optional stop is on</p>
+
+<p style="margin-left:11%;"><b>halui.program.pause</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for pausing a program</p>
+
+<p style="margin-left:11%;"><b>halui.program.resume</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for resuming a program</p>
+
+<p style="margin-left:11%;"><b>halui.program.run</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for running a program</p>
+
+<p style="margin-left:11%;"><b>halui.program.step</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for stepping in a
+program</p>
+
+<p style="margin-left:11%;"><b>halui.program.stop</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for stopping a program
+(note: this pin does the same thing as halui.abort)</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>mode <br>
+halui.mode.auto</b> bit in</p>
+
+<p style="margin-left:22%;">pin for requesting auto
+mode</p>
+
+<p style="margin-left:11%;"><b>halui.mode.is-auto</b> bit
+out</p>
+
+<p style="margin-left:22%;">pin for auto mode is on</p>
+
+<p style="margin-left:11%;"><b>halui.mode.is-joint</b> bit
+out</p>
+
+<p style="margin-left:22%;">pin showing joint by joint jog
+mode is on</p>
+
+<p style="margin-left:11%;"><b>halui.mode.is-manual</b> bit
+out</p>
+
+<p style="margin-left:22%;">pin for manual mode is on</p>
+
+<p style="margin-left:11%;"><b>halui.mode.is-mdi</b> bit
+out</p>
+
+<p style="margin-left:22%;">pin for mdi mode is on</p>
+
+<p style="margin-left:11%;"><b>halui.mode.is-teleop</b> bit
+out</p>
+
+<p style="margin-left:22%;">pin showing coordinated jog
+mode is on</p>
+
+<p style="margin-left:11%;"><b>halui.mode.joint</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for requesting joint by
+joint jog mode</p>
+
+<p style="margin-left:11%;"><b>halui.mode.manual</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for requesting manual
+mode</p>
+
+<p style="margin-left:11%;"><b>halui.mode.mdi</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for requesting mdi mode</p>
+
+<p style="margin-left:11%;"><b>halui.mode.teleop</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for requesting coordinated
+jog mode</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>mdi</b>
+(optional) <b><br>
+halui.mdi-command-XX</b> bit in</p>
+
+<p style="margin-left:22%;"><b>halui</b> looks for ini
+variables named [HALUI]MDI_COMMAND, and exports a pin for
+each command it finds. When the pin is driven TRUE,
+<b>halui</b> runs the specified MDI command. XX is a two
+digit number starting at 00. If no [HALUI]MDI_COMMAND
+variables are set in the ini file, no halui.mdi-command-XX
+pins will be exported by halui.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>mist <br>
+halui.mist.is-on</b> bit out</p>
+
+<p style="margin-left:22%;">pin for mist is on</p>
+
+<p style="margin-left:11%;"><b>halui.mist.off</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for stopping mist</p>
+
+<p style="margin-left:11%;"><b>halui.mist.on</b> bit in</p>
+
+<p style="margin-left:22%;">pin for starting mist</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>max-velocity
+<br>
+halui.max-velocity.count-enable</b> bit in (default:
+<b>TRUE</b>)</p>
+
+<p style="margin-left:22%;">When TRUE, modify max velocity
+when counts changes.</p>
+
+
+<p style="margin-left:11%;"><b>halui.max-velocity.counts</b>
+s32 in</p>
+
+<p style="margin-left:22%;">counts from an encoder for
+example to change maximum velocity</p>
+
+
+<p style="margin-left:11%;"><b>halui.max-velocity.decrease</b>
+bit in</p>
+
+<p style="margin-left:22%;">pin for decreasing the maximum
+velocity (-=scale)</p>
+
+
+<p style="margin-left:11%;"><b>halui.max-velocity.direct-value</b>
+bit in</p>
+
+<p style="margin-left:22%;">pin for using a direct value
+for max velocity</p>
+
+
+<p style="margin-left:11%;"><b>halui.max-velocity.increase</b>
+bit in</p>
+
+<p style="margin-left:22%;">pin for increasing the maximum
+velocity (+=scale)</p>
+
+
+<p style="margin-left:11%;"><b>halui.max-velocity.scale</b>
+float in</p>
+
+<p style="margin-left:22%;">pin for setting the scale on
+changing the maximum velocity</p>
+
+
+<p style="margin-left:11%;"><b>halui.max-velocity.value</b>
+float out</p>
+
+<p style="margin-left:22%;">Current value for maximum
+velocity</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>machine <br>
+halui.machine.is-on</b> bit out</p>
+
+<p style="margin-left:22%;">pin for machine is On/Off</p>
+
+<p style="margin-left:11%;"><b>halui.machine.off</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for setting machine Off</p>
+
+<p style="margin-left:11%;"><b>halui.machine.on</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for setting machine On</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>lube <br>
+halui.lube.is-on</b> bit out</p>
+
+<p style="margin-left:22%;">pin for lube is on</p>
+
+<p style="margin-left:11%;"><b>halui.lube.off</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for stopping lube</p>
+
+<p style="margin-left:11%;"><b>halui.lube.on</b> bit in</p>
+
+<p style="margin-left:22%;">pin for starting lube</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>joint <br>
+halui.joint.N.has-fault</b> bit out</p>
+
+<p style="margin-left:22%;">status pin telling that joint N
+has a fault</p>
+
+<p style="margin-left:11%;"><b>halui.joint.N.home</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for homing joint N</p>
+
+<p style="margin-left:11%;"><b>halui.joint.N.is-homed</b>
+bit out</p>
+
+<p style="margin-left:22%;">status pin telling that joint N
+is homed</p>
+
+
+<p style="margin-left:11%;"><b>halui.joint.N.is-selected</b>
+bit out</p>
+
+<p style="margin-left:22%;">status pin that joint N is
+selected</p>
+
+
+<p style="margin-left:11%;"><b>halui.joint.N.on-hard-max-limit</b>
+bit out</p>
+
+<p style="margin-left:22%;">status pin telling that joint N
+is on the positive hardware limit</p>
+
+
+<p style="margin-left:11%;"><b>halui.joint.N.on-hard-min-limit</b>
+bit out</p>
+
+<p style="margin-left:22%;">status pin telling that joint N
+is on the negative hardware limit</p>
+
+
+<p style="margin-left:11%;"><b>halui.joint.N.on-soft-max-limit</b>
+bit out</p>
+
+<p style="margin-left:22%;">status pin telling that joint N
+is on the positive software limit</p>
+
+
+<p style="margin-left:11%;"><b>halui.joint.N.on-soft-min-limit</b>
+bit out</p>
+
+<p style="margin-left:22%;">status pin telling that joint N
+is on the negative software limit</p>
+
+<p style="margin-left:11%;"><b>halui.joint.N.select</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for selecting joint N</p>
+
+<p style="margin-left:11%;"><b>halui.joint.N.unhome</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for unhoming joint N</p>
+
+<p style="margin-left:11%;"><b>halui.joint.selected</b> u32
+out</p>
+
+<p style="margin-left:22%;">selected joint</p>
+
+
+<p style="margin-left:11%;"><b>halui.joint.selected.has-fault</b>
+bit out</p>
+
+<p style="margin-left:22%;">status pin selected joint is
+faulted</p>
+
+
+<p style="margin-left:11%;"><b>halui.joint.selected.home</b>
+bit in</p>
+
+<p style="margin-left:22%;">pin for homing the selected
+joint</p>
+
+
+<p style="margin-left:11%;"><b>halui.joint.selected.is-homed</b>
+bit out</p>
+
+<p style="margin-left:22%;">status pin telling that the
+selected joint is homed</p>
+
+
+<p style="margin-left:11%;"><b>halui.joint.selected.on-hard-max-limit</b>
+bit out</p>
+
+<p style="margin-left:22%;">status pin telling that the
+selected joint is on the positive hardware limit</p>
+
+
+<p style="margin-left:11%;"><b>halui.joint.selected.on-hard-min-limit</b>
+bit out</p>
+
+<p style="margin-left:22%;">status pin telling that the
+selected joint is on the negative hardware limit</p>
+
+
+<p style="margin-left:11%;"><b>halui.joint.selected.on-soft-max-limit</b>
+bit out</p>
+
+<p style="margin-left:22%;">status pin telling that the
+selected joint is on the positive software limit</p>
+
+
+<p style="margin-left:11%;"><b>halui.joint.selected.on-soft-min-limit</b>
+bit out</p>
+
+<p style="margin-left:22%;">status pin telling that the
+selected joint is on the negative software limit</p>
+
+
+<p style="margin-left:11%;"><b>halui.joint.selected.unhome</b>
+bit in</p>
+
+<p style="margin-left:22%;">pin for unhoming the selected
+joint</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>jog <br>
+halui.jog.deadband</b> float in</p>
+
+<p style="margin-left:22%;">pin for setting jog analog
+deadband (jog analog inputs smaller/slower than this are
+ignored)</p>
+
+<p style="margin-left:11%;"><b>halui.jog-speed</b> float
+in</p>
+
+<p style="margin-left:22%;">pin for setting jog speed for
+plus/minus jogging.</p>
+
+<p style="margin-left:11%;"><b>halui.jog.N.analog</b> float
+in</p>
+
+<p style="margin-left:22%;">pin for jogging the axis N
+using an float value (e.g. joystick)</p>
+
+<p style="margin-left:11%;"><b>halui.jog.N.increment</b>
+float in</p>
+
+<p style="margin-left:22%;">pin for setting the jog
+increment for axis N when using increment-plus/minus</p>
+
+
+<p style="margin-left:11%;"><b>halui.jog.N.increment-minus</b>
+float in</p>
+
+<p style="margin-left:22%;">a rising edge will will make
+axis N jog in the negative direction by the increment
+amount</p>
+
+
+<p style="margin-left:11%;"><b>halui.jog.N.increment-plus</b>
+float in</p>
+
+<p style="margin-left:22%;">a rising edge will will make
+axis N jog in the positive direction by the increment
+amount</p>
+
+<p style="margin-left:11%;"><b>halui.jog.N.minus</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for jogging axis N in
+negative direction at the halui.jog-speed velocity</p>
+
+<p style="margin-left:11%;"><b>halui.jog.N.plus</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for jogging axis N in
+positive direction at the halui.jog-speed velocity</p>
+
+
+<p style="margin-left:11%;"><b>halui.jog.selected.increment</b>
+float in</p>
+
+<p style="margin-left:22%;">pin for setting the jog
+increment for the selected axis when using
+increment-plus/minus</p>
+
+
+<p style="margin-left:11%;"><b>halui.jog.selected.increment-minus</b>
+float in</p>
+
+<p style="margin-left:22%;">a rising edge will will make
+the selected axis jog in the negative direction by the
+increment amount</p>
+
+
+<p style="margin-left:11%;"><b>halui.jog.selected.increment-plus</b>
+float in</p>
+
+<p style="margin-left:22%;">a rising edge will will make
+the selected axis jog in the positive direction by the
+increment amount</p>
+
+
+<p style="margin-left:11%;"><b>halui.jog.selected.minus</b>
+bit in</p>
+
+<p style="margin-left:22%;">pin for jogging the selected
+axis in negative direction at the halui.jog-speed
+velocity</p>
+
+
+<p style="margin-left:11%;"><b>halui.jog.selected.plus</b></p>
+
+<p style="margin-left:22%;">pin for jogging the selected
+axis bit in in positive direction at the halui.jog-speed
+velocity</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>flood <br>
+halui.flood.is-on</b> bit out</p>
+
+<p style="margin-left:22%;">pin for flood is on</p>
+
+<p style="margin-left:11%;"><b>halui.flood.off</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for stopping flood</p>
+
+<p style="margin-left:11%;"><b>halui.flood.on</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for starting flood</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>feed
+override <br>
+halui.feed-override.count-enable</b> bit in (default:
+<b>TRUE</b>)</p>
+
+<p style="margin-left:22%;">When TRUE, modify feed override
+when counts changes.</p>
+
+
+<p style="margin-left:11%;"><b>halui.feed-override.counts</b>
+s32 in</p>
+
+<p style="margin-left:22%;">counts X scale = feed override
+percentage</p>
+
+
+<p style="margin-left:11%;"><b>halui.feed-override.decrease</b>
+bit in</p>
+
+<p style="margin-left:22%;">pin for decreasing the FO
+(-=scale)</p>
+
+
+<p style="margin-left:11%;"><b>halui.feed-override.direct-value</b>
+bit in</p>
+
+<p style="margin-left:22%;">pin to enable direct value feed
+override input</p>
+
+
+<p style="margin-left:11%;"><b>halui.feed-override.increase</b>
+bit in</p>
+
+<p style="margin-left:22%;">pin for increasing the FO
+(+=scale)</p>
+
+
+<p style="margin-left:11%;"><b>halui.feed-override.scale</b>
+float in</p>
+
+<p style="margin-left:22%;">pin for setting the scale on
+changing the FO</p>
+
+
+<p style="margin-left:11%;"><b>halui.feed-override.value</b>
+float out</p>
+
+<p style="margin-left:22%;">current Feed Override value</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>estop <br>
+halui.estop.activate</b> bit in</p>
+
+<p style="margin-left:22%;">pin for setting Estop (LinuxCNC
+internal) On</p>
+
+
+<p style="margin-left:11%;"><b>halui.estop.is-activated</b>
+bit out</p>
+
+<p style="margin-left:22%;">pin for displaying Estop state
+(LinuxCNC internal) On/Off</p>
+
+<p style="margin-left:11%;"><b>halui.estop.reset</b> bit
+in</p>
+
+<p style="margin-left:22%;">pin for resetting Estop
+(LinuxCNC internal) Off</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>axis <br>
+halui.axis.N.pos-commanded</b> float out float out</p>
+
+<p style="margin-left:22%;">Commanded axis position in
+machine coordinates</p>
+
+
+<p style="margin-left:11%;"><b>halui.axis.N.pos-feedback</b>
+float out float out</p>
+
+<p style="margin-left:22%;">Feedback axis position in
+machine coordinates</p>
+
+
+<p style="margin-left:11%;"><b>halui.axis.N.pos-relative</b>
+float out float out</p>
+
+<p style="margin-left:22%;">Commanded axis position in
+relative coordinates</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>home <br>
+halui.home-all</b> bit in</p>
+
+<p style="margin-left:22%;">pin for requesting home-all
+(only available when a valid homing sequence is
+specified)</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+
+
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">none known at
+this time.</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Written by Alex
+Joni, as part of the LinuxCNC project. Updated by John
+Thornton</p>
+
+<h2>REPORTING BUGS
+<a name="REPORTING BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Report bugs to
+alex_joni AT users DOT sourceforge DOT net</p>
+
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Copyright
+&copy; 2006 Alex Joni. <br>
+This is free software; see the source for copying
+conditions. There is NO warranty; not even for
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/halui.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

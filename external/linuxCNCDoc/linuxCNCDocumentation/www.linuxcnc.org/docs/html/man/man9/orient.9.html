@@ -1,0 +1,198 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Mon Dec  5 07:46:22 2011 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/orient.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>ORIENT</title>
+
+</head>
+<body>
+
+<h1 align="center">ORIENT</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#HAL USAGE">HAL USAGE</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">orient &minus;
+Provide a PID command input for orientation mode based on
+current spindle position, target angle and orient mode</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="71%">
+
+
+<p style="margin-top: 1em"><b>loadrt orient
+[count=</b><i>N</i><b>|names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p> </td>
+<td width="18%">
+</td></tr>
+</table>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">This component
+is designed to support a spindle orientation PID loop by
+providing a command value, and fit with the motion
+spindle-orient support pins to support the M19 code.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The spindle is
+assumed to have stopped in an arbitrary position. The
+spindle encoder positon is linked to the <b>position</b>
+pin. The current value of the position pin is sampled on a
+positive edge on the <b>enable</b> pin, and <b>command</b>
+is computed and set as follows: floor(number of full spindle
+revolutions in the <b>position</b> sampled on positive edge)
+plus <b>angle</b>/360 (the fractional revolution) +1/-1/0
+depending on <b>mode</b>.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The <b>mode</b>
+pin is interpreted as follows:</p>
+
+<p style="margin-left:11%; margin-top: 1em">0: the spindle
+rotates in the direction with the lesser angle, which may be
+clockwise or counterclockwise.</p>
+
+<p style="margin-left:11%; margin-top: 1em">1: the spindle
+rotates always rotates clockwise to the new angle.</p>
+
+<p style="margin-left:11%; margin-top: 1em">2: the spindle
+rotates always rotates counterclockwise to the new
+angle.</p>
+
+<h2>HAL USAGE
+<a name="HAL USAGE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">On
+<b>motion.spindle-orient</b> disconnect the spindle control
+and connect to the orient-pid loop:</p>
+
+<p style="margin-left:11%; margin-top: 1em">loadrt orient
+names=orient <br>
+loadrt pid names=orient-pid <br>
+net orient-angle motion.spindle-orient-angle orient.angle
+<br>
+net orient-mode motion.spindle-orient-mode orient.mode <br>
+net orient-enable motion.spindle-orient orient.enable
+orient-pid.enable <br>
+net spindle-pos ...encoder..position orient.position
+orient-pid.position <br>
+net orient-command orient.command orient-pid.command</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>orient.</b><i>N</i>
+(requires a floating-point thread)</p>
+
+<p style="margin-left:22%;">Update <b>command</b> based on
+<b>enable</b>, <b>position</b>, <b>mode</b> and
+<b>angle</b>.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>orient.</b><i>N</i><b>.enable</b>
+bit in</p>
+
+<p style="margin-left:22%;">enable angular output for
+orientation mode</p>
+
+
+<p style="margin-left:11%;"><b>orient.</b><i>N</i><b>.mode</b>
+s32 in</p>
+
+<p style="margin-left:22%;">0: rotate - shortest move; 1:
+always rotate clockwise; 2: always rotate
+counterclockwise</p>
+
+
+<p style="margin-left:11%;"><b>orient.</b><i>N</i><b>.position</b>
+float in</p>
+
+<p style="margin-left:22%;">spindle position input, unit 1
+rev</p>
+
+
+<p style="margin-left:11%;"><b>orient.</b><i>N</i><b>.angle</b>
+float in</p>
+
+<p style="margin-left:22%;">orient target position in
+degrees, 0 &lt;= angle &lt; 360</p>
+
+
+<p style="margin-left:11%;"><b>orient.</b><i>N</i><b>.command</b>
+float out</p>
+
+<p style="margin-left:22%;">target spindle position, input
+to PID command</p>
+
+
+<p style="margin-left:11%;"><b>orient.</b><i>N</i><b>.poserr</b>
+float out</p>
+
+<p style="margin-left:22%;">in degrees - aid for PID
+tuning</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Michael
+Haberler</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/orient.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

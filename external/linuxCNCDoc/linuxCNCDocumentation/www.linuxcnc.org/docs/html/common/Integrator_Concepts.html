@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/Integrator_Concepts.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:13:19 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Integrator Concepts</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Integrator Concepts</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:integrator-concepts"></a> </p></div>
+</div>
+</div>
+<h2 id="_stepper_systems">1. Stepper Systems</h2>
+<div class="sectionbody">
+<h3 id="_base_period">1.1. Base Period</h3><div style="clear:left"></div>
+<div class="paragraph"><p>BASE_PERIOD is the <em>heartbeat</em> of your LinuxCNC computer.<span class="footnote"><br />[This
+section refers to using <strong>stepgen</strong>, LinuxCNC&#8217;s built-in
+step generator. Some hardware devices have their own step
+generator and do not use LinuxCNC&#8217;s built-in one. In that case, refer to
+your hardware manual.]<br /></span> Every period, the
+software step generator decides if it is time for another step pulse.
+A shorter period will allow you to generate more pulses per second,
+within limits. But if you go too short, your computer will spend so
+much time generating step pulses that everything else will slow to a
+crawl, or maybe even lock up. Latency and stepper drive requirements
+affect the shortest period you can use.</p></div>
+<div class="paragraph"><p>Worst case latencies might only happen a few times a minute, and the
+odds of bad latency happening just as the motor is changing direction
+are low. So you can get very rare errors that ruin a part every once in
+a while and are impossible to troubleshoot.</p></div>
+<div class="paragraph"><p>The simplest way to avoid this problem is to choose a BASE_PERIOD that
+is the sum of the longest timing requirement of your drive, and the
+worst case latency of your computer. This is not always the best choice.
+For example, if you are running a drive with a 20 us  direction signal hold time
+requirement, and your latency test said you have a maximum latency of
+11 us , then if you set the BASE_PERIOD to 20+11 = 31 us  you get a
+not-so-nice 32,258 steps per second in one mode and 16,129 steps per
+second in another mode.</p></div>
+<div class="paragraph"><p>The problem is with the 20 us  hold time requirement. That plus the 11 us
+latency is what forces us to use a slow 31 us  period. But the LinuxCNC
+software step generator has some parameters that let you increase the
+various times from one period to several. For example, if <em>steplen</em> <span class="footnote"><br />[steplen
+refers to a parameter that adjusts the performance of LinuxCNC&#8217;s built-in step generator,
+<em>stepgen</em>, which is a HAL component. This parameter adjusts the length of the
+step pulse itself. Keep reading, all will be explained eventually.]<br /></span> is
+changed from 1 to 2, then there will be two periods between the
+beginning and end of the step pulse. Likewise, if <em>dirhold</em> <span class="footnote"><br />[dirhold
+refers to a parameter that adjusts the length of the direction hold time.]<br /></span> is
+changed from 1 to 3, there will be at least three periods between the step
+pulse and a change of the direction pin.</p></div>
+<div class="paragraph"><p>If we can use <em>dirhold</em> to meet the 20 us  hold time requirement, then the
+next longest time is the 4.5 us  high time. Add the 11 us  latency to the
+4.5 us  high time, and you get a minimum period of 15.5 us . When you try
+15.5 us , you find that the computer is sluggish, so you settle on 16 us .
+If we leave <em>dirhold</em> at 1 (the default), then the minimum time between
+step and direction is the 16 us  period minus the 11 us  latency = 5 us ,
+which is not enough. We need another 15 us . Since the period is 16 us , we
+need one more period. So we change <em>dirhold</em> from 1 to 2. Now the minimum
+time from the end of the step pulse to the changing direction pin is
+5+16=21 us , and we don&#8217;t have to worry about the drive stepping the
+wrong direction because of latency.</p></div>
+<div class="paragraph"><p>For more information on stepgen see the stepgen section of the HAL manual.</p></div>
+<h3 id="_step_timing">1.2. Step Timing</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Step Timing and Step Space on some drives are different. In this case
+the Step point becomes important. If the drive steps on the falling
+edge then the output pin should be inverted.</p></div>
+</div>
+<h2 id="_servo_systems">2. Servo Systems</h2>
+<div class="sectionbody">
+<h3 id="_basic_operation">2.1. Basic Operation</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Servo systems are capable of greater speed and accuracy than equivalent
+stepper systems, but are more costly and complex.
+Unlike stepper systems, servo systems require some type of position
+feedback device, and must be adjusted or <em>tuned</em>, as they don&#8217;t quite
+work right out of the box as a stepper system might. These differences
+exist because servos are a <em>closed loop</em> system,
+unlike stepper motors which are generally run <em>open loop</em>. What does
+<em>closed loop</em> mean? Let&#8217;s look at a simplified diagram of how a servomotor
+system is connected.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/servo-feedback.png" alt="images/servo-feedback.png" />
+</div>
+<div class="title">Figure 1. Servo Loop</div>
+</div>
+<div class="paragraph"><p>This diagram shows that the input signal (and the feedback signal) drive
+the summing amplifier, the summing amplifier drives the power amplifier,
+the power amplifier drives the motor, the motor drives the load
+(and the feedback device), and the feedback device (and the input signal)
+drive the motor.  This looks very much like a circle (a closed loop) where
+A controls B, B controls C, C controls D, and D controls A.</p></div>
+<div class="paragraph"><p>If you have not worked with servo systems before, this will no doubt seem a
+very strange idea at first, especially as compared to more normal electronic
+circuits, where the inputs proceed smoothly to the outputs, and never go
+back.<span class="footnote"><br />[If it helps, the closest equivalent to this in the digital
+world are <em>state machines</em>, <em>sequential machines</em> and so forth, where what
+the outputs are doing <em>now</em> depends on what the inputs (and the outputs)
+were doing <em>before</em>. If it doesn&#8217;t help, then nevermind.]<br /></span> If <em>everything</em>
+controls <em>everything else</em>, how can that ever work, who&#8217;s in
+charge? The answer is that LinuxCNC <em>can</em> control this system,
+but it has to do it by choosing one of several control methods.
+The control method that LinuxCNC uses, one of the simplest and best,
+is called PID.</p></div>
+<div class="paragraph"><p>PID stands for Proportional, Integral, and Derivative. The Proportional
+value determines the reaction to the current error, the Integral value
+determines the reaction based on the sum of recent errors, and the
+Derivative value determines the reaction based on the rate at which the
+error has been changing. They are three common mathematical techniques
+that are applied to the task of getting a working process to follow a
+set point. In the case of LinuxCNC the process we want to control is actual
+axis position and the set point is the commanded axis position.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pid-feedback.png" alt="images/pid-feedback.png" />
+</div>
+<div class="title">Figure 2. PID Loop</div>
+</div>
+<div class="paragraph"><p>By <em>tuning</em> the three constants in the PID controller algorithm, the
+controller can provide control action designed for specific process
+requirements. The response of the controller can be described in terms
+of the responsiveness of the controller to an error, the degree to
+which the controller overshoots the set point and the degree of system
+oscillation.</p></div>
+<h3 id="_proportional_term">2.2. Proportional term</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The proportional term (sometimes called gain) makes a change to the
+output that is proportional to the current error value. A high
+proportional gain results in a large change in the output for a given
+change in the error. If the proportional gain is too high, the system
+can become unstable. In contrast, a small gain results in a small
+output response to a large input error. If the proportional gain is too
+low, the control action may be too small when responding to system
+disturbances.</p></div>
+<div class="paragraph"><p>In the absence of disturbances, pure proportional control will not
+settle at its target value, but will retain a steady state error that
+is a function of the proportional gain and the process gain. Despite
+the steady-state offset, both tuning theory and industrial practice
+indicate that it is the proportional term that should contribute the
+bulk of the output change.</p></div>
+<h3 id="_integral_term">2.3. Integral term</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The contribution from the integral term (sometimes called reset) is
+proportional to both the magnitude of the error and the duration of the
+error. Summing the instantaneous error over time (integrating the
+error) gives the accumulated offset that should have been corrected
+previously. The accumulated error is then multiplied by the integral
+gain and added to the controller output.</p></div>
+<div class="paragraph"><p>The integral term (when added to the proportional term) accelerates
+the movement of the process towards set point and eliminates the
+residual steady-state error that occurs with a proportional only
+controller. However, since the integral term is responding to
+accumulated errors from the past, it can cause the present value to
+overshoot the set point value (cross over the set point and then create
+a deviation in the other direction).</p></div>
+<h3 id="_derivative_term">2.4. Derivative term</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The rate of change of the process error is calculated by determining
+the slope of the error over time (i.e. its first derivative with
+respect to time) and multiplying this rate of change by the derivative
+gain.</p></div>
+<div class="paragraph"><p>The derivative term slows the rate of change of the controller output
+and this effect is most noticeable close to the controller set point.
+Hence, derivative control is used to reduce the magnitude of the
+overshoot produced by the integral component and improve the combined
+controller-process stability.</p></div>
+<h3 id="_loop_tuning">2.5. Loop tuning</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If the PID controller parameters (the gains of the proportional,
+integral and derivative terms) are chosen incorrectly, the controlled
+process input can be unstable, i.e. its output diverges, with or
+without oscillation, and is limited only by saturation or mechanical
+breakage. Tuning a control loop is the adjustment of its control
+parameters (gain/proportional band, integral gain/reset, derivative
+gain/rate) to the optimum values for the desired control response.</p></div>
+<h3 id="_manual_tuning">2.6. Manual tuning</h3><div style="clear:left"></div>
+<div class="paragraph"><p>A simple tuning method is to first set the I and D values to zero.
+Increase the P until the output of the loop oscillates, then the P
+should be set to be approximately half of that value for a <em>quarter
+amplitude decay</em> type response. Then increase I until any offset is
+correct in sufficient time for the process. However, too much I will
+cause instability. Finally, increase D, if required, until the loop is
+acceptably quick to reach its reference after a load disturbance.
+However, too much D will cause excessive response and overshoot. A fast
+PID loop tuning usually overshoots slightly to reach the set point more
+quickly; however, some systems cannot accept overshoot, in which case
+an <em>over-damped</em> closed-loop system is required, which will require a P
+setting significantly less than half that of the P setting causing
+oscillation.</p></div>
+</div>
+<h2 id="_rtai">3. RTAI</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The Real Time Application Interface (RTAI) is used to provide the best
+Real Time (RT) performance. The RTAI patched kernel lets you write
+applications with strict timing constraints. RTAI gives you the ability
+to have things like software step generation which require precise
+timing.</p></div>
+<h3 id="_acpi">3.1. ACPI</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The Advanced Configuration and Power Interface (ACPI) has a lot of
+different functions, most of which interfere with RT performance (for
+example: power management, CPU power down, CPU frequency scaling, etc).
+The LinuxCNC kernel (and probably all RTAI-patched kernels) has ACPI
+disabled. ACPI also takes care of powering down the system after a
+shutdown has been started, and that&#8217;s why you might need to push the power
+button to completely turn off your computer. The RTAI group has been
+improving this in recent releases, so your LinuxCNC system may shut off by
+itself after all.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-18 14:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/Integrator_Concepts.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:13:23 GMT -->
+</html>

@@ -9,6 +9,8 @@ define(function(require) {
         self.Panel = null;
         self.linuxCNCServer = moduleContext.getSettings().linuxCNCServer;
 
+        self.serverUpdate = false;
+
         this.getTemplate = function()
         {
             return template;
@@ -24,28 +26,38 @@ define(function(require) {
                 self.Panel = Panel;
                 $('.switch', self.Panel.getJQueryElement()).bootstrapSwitch();
 
+                self.serverUpdate = true;
+
                 self.linuxCNCServer.vars.mist.data.subscribe( function(newVal)
                 {
+                    self.serverUpdate = true;
                     $(self.Panel.getJQueryElement()).find('#mist_toggle').bootstrapSwitch('setState',newVal);
+                    self.serverUpdate = false;
                 });
                 $(self.Panel.getJQueryElement()).find('#mist_toggle').bootstrapSwitch('setState',self.linuxCNCServer.vars.mist.data());
 
                 self.linuxCNCServer.vars.flood.data.subscribe( function(newVal)
                 {
+                    self.serverUpdate = true;
                     $(self.Panel.getJQueryElement()).find('#flood_toggle').bootstrapSwitch('setState',newVal);
+                    self.serverUpdate = false;
                 });
                 $(self.Panel.getJQueryElement()).find('#flood_toggle').bootstrapSwitch('setState',self.linuxCNCServer.vars.flood.data());
+
+                self.serverUpdate = false;
             }
         };
 
         self.setMist = function()
         {
-            self.linuxCNCServer.setMist( $( '#mist_toggle', self.Panel.getJQueryElement() ).bootstrapSwitch('status'));
+            if (!self.serverUpdate)
+                self.linuxCNCServer.setMist( $( '#mist_toggle', self.Panel.getJQueryElement() ).bootstrapSwitch('status'));
         }
 
         self.setFlood = function()
         {
-            self.linuxCNCServer.setFlood( $( '#flood_toggle', self.Panel.getJQueryElement() ).bootstrapSwitch('status'));
+            if (!self.serverUpdate)
+                self.linuxCNCServer.setFlood( $( '#flood_toggle', self.Panel.getJQueryElement() ).bootstrapSwitch('status'));
         }
 
 	};

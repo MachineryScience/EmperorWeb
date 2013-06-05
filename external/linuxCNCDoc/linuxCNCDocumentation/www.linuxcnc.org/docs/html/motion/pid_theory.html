@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/motion/pid_theory.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:12 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>PID Tuning</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>PID Tuning</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<h2 id="_pid_controller">1. PID Controller</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>A proportional-integral-derivative controller (PID controller) is a
+common feedback loop component in industrial control
+systems.<span class="footnote"><br />[This Subsection is taken from an much more extensive
+article found at <a href="http://en.wikipedia.org/wiki/PID_controller">http://en.wikipedia.org/wiki/PID_controller</a>]<br /></span></p></div>
+<div class="paragraph"><p>The Controller compares a measured value from a process (typically an
+industrial process) with a reference set point value. The difference
+(or <em>error</em> signal) is then used to calculate a new value for a
+manipulable input to the process that brings the process measured value
+back to its desired set point.</p></div>
+<div class="paragraph"><p>Unlike simpler control algorithms, the PID controller can adjust
+process outputs based on the history and rate of change of the error
+signal, which gives more accurate and stable control. (It can be shown
+mathematically that a PID loop will produce accurate, stable control in
+cases where a simple proportional control would either have a
+steady-state error or would cause the process to oscillate).</p></div>
+<h3 id="_control_loop_basics">1.1. Control loop basics</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Intuitively, the PID loop tries to automate what an intelligent
+operator with a gauge and a control knob would do. The operator would
+read a gauge showing the output measurement of a process, and use the
+knob to adjust the input of the process (the <em>action</em>) until the
+process&#8217;s output measurement stabilizes at the desired value on the
+gauge.</p></div>
+<div class="paragraph"><p>In older control literature this adjustment process is called a
+<em>reset</em> action. The position of the needle on the gauge is a
+<em>measurement</em>, <em>process value</em> or <em>process variable</em>. The desired value
+on the gauge is called a <em>set point</em> (also called <em>set value</em>). The
+difference between the gauge&#8217;s needle and the set point is the <em>error</em>.</p></div>
+<div class="paragraph"><p>A control loop consists of three parts:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Measurement by a sensor connected to the process (e.g. encoder),
+</p>
+</li>
+<li>
+<p>
+Decision in a controller element,
+</p>
+</li>
+<li>
+<p>
+Action through an output device such as an motor.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>As the controller reads a sensor, it subtracts this measurement from
+the <em>set point</em> to determine the <em>error</em>. It then uses the error to
+calculate a correction to the process&#8217;s input variable (the <em>action</em>)
+so that this correction will remove the error from the process&#8217;s output
+measurement.</p></div>
+<div class="paragraph"><p>In a PID loop, correction is calculated from the error in three ways:
+cancel out the current error directly (Proportional), the amount of
+time the error has continued uncorrected (Integral), and anticipate the
+future error from the rate of change of the error over time
+(Derivative).</p></div>
+<div class="paragraph"><p>A PID controller can be used to control any measurable variable which
+can be affected by manipulating some other process variable. For
+example, it can be used to control temperature, pressure, flow rate,
+chemical composition, speed, or other variables. Automobile cruise
+control is an example of a process outside of industry which utilizes
+crude PID control.</p></div>
+<div class="paragraph"><p>Some control systems arrange PID controllers in cascades or networks.
+That is, a <em>master</em> control produces signals used by <em>slave</em>
+controllers. One common situation is motor controls: one often wants
+the motor to have a controlled speed, with the <em>slave</em> controller
+(often built into a variable frequency drive) directly managing the
+speed based on a proportional input. This <em>slave</em> input is fed by the
+<em>master</em> controller&#8217;s output, which is controlling based upon a related
+variable.</p></div>
+<h3 id="_theory">1.2. Theory</h3><div style="clear:left"></div>
+<div class="paragraph"><p><em>PID</em> is named after its three correcting calculations, which all add
+to and adjust the controlled quantity. These additions are actually
+<em>subtractions</em> of error, because the proportions are usually negative:</p></div>
+<h4 id="_proportional">1.2.1. Proportional</h4>
+<div class="paragraph"><p>To handle the present, the error is multiplied by a (negative)
+constant P (for <em>proportional</em>), and added to (subtracting error from)
+the controlled quantity. P is only valid in the band over which a
+controller&#8217;s output is proportional to the error of the system. Note
+that when the error is zero, a proportional controller&#8217;s output is
+zero.</p></div>
+<h4 id="_integral">1.2.2. Integral</h4>
+<div class="paragraph"><p>To learn from the past, the error is integrated (added up) over a
+period of time, and then multiplied by a (negative) constant I (making
+an average), and added to (subtracting error from) the controlled
+quantity. I averages the measured error to find the process output&#8217;s
+average error from the set point. A simple proportional system either
+oscillates, moving back and forth around the set point because there&#8217;s
+nothing to remove the error when it overshoots, or oscillates and/or
+stabilizes at a too low or too high value. By adding a negative
+proportion of (i.e. subtracting part of) the average error from the
+process input, the average difference between the process output and
+the set point is always being reduced. Therefore, eventually, a
+well-tuned PID loop&#8217;s process output will settle down at the set point.</p></div>
+<h4 id="_derivative">1.2.3. Derivative</h4>
+<div class="paragraph"><p>To handle the future, the first derivative (the slope of the error)
+over time is calculated, and multiplied by another (negative) constant
+D, and also added to (subtracting error from) the controlled quantity.
+The derivative term controls the response to a change in the system.
+The larger the derivative term, the more rapidly the controller
+responds to changes in the process&#8217;s output.</p></div>
+<div class="paragraph"><p>More technically, a PID loop can be characterized as a filter applied
+to a complex frequency-domain system. This is useful in order to
+calculate whether it will actually reach a stable value. If the values
+are chosen incorrectly, the controlled process input can oscillate, and
+the process output may never stay at the set point.</p></div>
+<h3 id="_loop_tuning">1.3. Loop Tuning</h3><div style="clear:left"></div>
+<div class="paragraph"><p><em>Tuning</em> a control loop is the adjustment of its control parameters
+(gain/proportional band, integral gain/reset, derivative gain/rate) to
+the optimum values for the desired control response. The optimum
+behavior on a process change or set point change varies depending on
+the application. Some processes must not allow an overshoot of the
+process variable from the set point. Other processes must minimize the
+energy expended in reaching a new set point. Generally stability of
+response is required and the process must not oscillate for any
+combination of process conditions and set points.</p></div>
+<div class="paragraph"><p>Tuning of loops is made more complicated by the response time of the
+process; it may take minutes or hours for a set point change to produce
+a stable effect. Some processes have a degree of non-linearity and so
+parameters that work well at full-load conditions don&#8217;t work when the
+process is starting up from no-load. This section describes some
+traditional manual methods for loop tuning.</p></div>
+<div class="paragraph"><p>There are several methods for tuning a PID loop. The choice of method
+will depend largely on whether or not the loop can be taken <em>offline</em>
+for tuning, and the response speed of the system. If the system can be
+taken offline, the best tuning method often involves subjecting the
+system to a step change in input, measuring the output as a function of
+time, and using this response to determine the control parameters.</p></div>
+<h4 id="_simple_method">1.3.1. Simple method</h4>
+<div class="paragraph"><p>If the system must remain on line, one tuning method is to first set
+the I and D values to zero. Increase the P until the output of the loop
+oscillates. Then increase I until oscillation stops. Finally, increase
+D until the loop is acceptably quick to reach its reference. A fast PID
+loop tuning usually overshoots slightly to reach the set point more
+quickly; however, some systems cannot accept overshoot.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="90%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<thead>
+<tr>
+<th align="center" valign="top">Parameter </th>
+<th align="left" valign="top"> Rise Time </th>
+<th align="left" valign="top"> Overshoot </th>
+<th align="left" valign="top"> Settling Time </th>
+<th align="left" valign="top"> Steady State Error</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">P</p></td>
+<td align="left" valign="top"><p class="table">Decrease</p></td>
+<td align="left" valign="top"><p class="table">Increase</p></td>
+<td align="left" valign="top"><p class="table">Small Change</p></td>
+<td align="left" valign="top"><p class="table">Decrease</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">I</p></td>
+<td align="left" valign="top"><p class="table">Decrease</p></td>
+<td align="left" valign="top"><p class="table">Increase</p></td>
+<td align="left" valign="top"><p class="table">Increase</p></td>
+<td align="left" valign="top"><p class="table">Eliminate</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">D</p></td>
+<td align="left" valign="top"><p class="table">Small Change</p></td>
+<td align="left" valign="top"><p class="table">Decrease</p></td>
+<td align="left" valign="top"><p class="table">Decrease</p></td>
+<td align="left" valign="top"><p class="table">Small Change</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Effects of increasing parameters</p></div>
+<h4 id="_ziegler_nichols_method">1.3.2. Ziegler-Nichols method</h4>
+<div class="paragraph"><p>Another tuning method is formally known as the <em>Ziegler-Nichols
+method</em>, introduced by John G. Ziegler and Nathaniel B. Nichols. It
+starts in the same way as the method described before: first set the I
+and D gains to zero and then increase the P gain and expose the loop to
+external interference for example knocking the motor axis to cause it
+to move out of equilibrium in order to determine critical gain and
+period of oscillation until the output of the loop starts to oscillate.
+Write down the critical gain (K<sub>c</sub>) and the oscillation
+period of the output (P<sub>c</sub>). Then adjust the P, I and D
+controls as the table shows:</p></div>
+<div class="tableblock">
+<table rules="all"
+width="90%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<thead>
+<tr>
+<th align="center" valign="top">Control type </th>
+<th align="center" valign="top"> P       </th>
+<th align="center" valign="top"> I        </th>
+<th align="center" valign="top"> D</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">P</p></td>
+<td align="center" valign="top"><p class="table">.5K<sub>c</sub></p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">PI</p></td>
+<td align="center" valign="top"><p class="table">.45K<sub>c</sub></p></td>
+<td align="center" valign="top"><p class="table">P<sub>c</sub>/1.2</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">PID</p></td>
+<td align="center" valign="top"><p class="table">.6K<sub>c</sub></p></td>
+<td align="center" valign="top"><p class="table">P<sub>c</sub>/2</p></td>
+<td align="center" valign="top"><p class="table">P<sub>c</sub>/8</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="_final_steps">1.3.3. Final Steps</h4>
+<div class="paragraph"><p>After tuning the axis check the following error with Halscope to make
+sure it is within your machine requirements. More information on
+Halscope is in the HAL User manual.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-21 06:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/motion/pid_theory.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:12 GMT -->
+</html>

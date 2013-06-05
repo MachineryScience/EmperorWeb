@@ -1,0 +1,1668 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/axis_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:41 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>L&#8217;interface graphique AXIS</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>L&#8217;interface graphique AXIS</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:Axis"></a> </p></div>
+</div>
+</div>
+<h2 id="_introduction">1. Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>AXIS est une interface utilisateur graphique pour LinuxCNC, il
+offre un aperçu permanent du parcours de l&#8217;outil. Il est écrit en
+Python, utilise Tk et OpenGL pour
+l&#8217;affichage de l&#8217;interface graphique.</p></div>
+<div class="imageblock" id="cap:Fenetre-AXIS">
+<div class="content">
+<img src="images/axis_2.5_fr.png" alt="images/axis_2.5_fr.png" />
+</div>
+<div class="title">Figure 1. Fenêtre d&#8217;AXIS</div>
+</div>
+</div>
+<h2 id="_commencer_avec_axis">2. Commencer avec AXIS</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Pour choisir AXIS comme interface graphique de LinuxCNC, éditez le fichier
+.ini et dans la section [DISPLAY] changez la ligne DISPLAY comme
+ceci:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>DISPLAY = axis</tt></pre>
+</div></div>
+<div class="paragraph"><p>Puis, lancez LinuxCNC et choisissez le fichier ini. La configuration
+simplifiée <em>sim/axis.ini</em> est déjà configurée pour utiliser AXIS comme
+interface graphique.</p></div>
+<div class="paragraph"><p>Quand AXIS démarre, une fenêtre telle que celle de la figure
+<a href="#cap:Fenetre-AXIS">ci-dessus</a> s&#8217;ouvre.</p></div>
+<h3 id="_une_session_typique_avec_axis">2.1. Une session typique avec AXIS</h3><div style="clear:left"></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Lancer LinuxCNC et sélectionner un fichier de configuration.
+</p>
+</li>
+<li>
+<p>
+Relâcher le bouton d&#8217;arrêt d&#8217;urgence <em>A/U</em> et presser
+   celui de <em>Marche</em> machine.
+</p>
+</li>
+<li>
+<p>
+Faire les prises d&#8217;origine machine <em>POM</em> pour chacun des axes.
+</p>
+</li>
+<li>
+<p>
+Charger un fichier d&#8217;usinage.
+</p>
+</li>
+<li>
+<p>
+Utiliser l&#8217;affichage du parcours d&#8217;outil pour vérifier que le
+   programme est correct.
+</p>
+</li>
+<li>
+<p>
+Brider le brut à usiner sur la table.
+</p>
+</li>
+<li>
+<p>
+Faire les prises d&#8217;origine pièce <em>POP</em> de chacun des axes avec le jog
+   et en utilisant le bouton <em>Toucher</em>.
+</p>
+</li>
+<li>
+<p>
+Lancer le programme.
+</p>
+</li>
+<li>
+<p>
+Pour usiner le même fichier une nouvelle fois, retourner à l'étape 6.
+   Pour usiner un fichier différent, retourner à l'étape 4. Quand le travail
+   est terminé, quitter AXIS.
+</p>
+</li>
+</ol></div>
+</div>
+<h2 id="_el_ments_de_la_fen_tre_d_8217_axis">3. Eléments de la fenêtre d&#8217;AXIS</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>La fenêtre d&#8217;AXIS contient les éléments suivants:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Un espace d&#8217;affichage qui montre une pré-visualisation du fichier
+   chargé (dans ce cas, <em>axis.ngc</em>), ainsi que la position courante du
+   point programmé par la machine. Plus tard, cette zone
+   affichera le parcours de l&#8217;outil déplacé par la machine, cette zone
+   est appelée le parcours d&#8217;outil (backplot)
+</p>
+</li>
+<li>
+<p>
+Une barre de menus, une barre d&#8217;outils, des curseurs et des onglets
+   permettant d&#8217;effectuer différentes actions.
+</p>
+</li>
+<li>
+<p>
+L&#8217;onglet <em>Contrôle manuel</em>, qui permet de faire
+   des mouvements d&#8217;axe, de mettre la broche en rotation ou de l&#8217;arrêter,
+   de mettre l&#8217;arrosage en marche ou de l&#8217;arrêter.
+</p>
+</li>
+<li>
+<p>
+L&#8217;onglet <em>Données manuelles</em> (appelé aussi MDI), 
+   où les blocs de programme G-code peuvent être entrés et exécutés à
+   la main, une ligne à la fois.
+</p>
+</li>
+<li>
+<p>
+Les curseurs <em>Correcteurs de vitesse</em>,
+   qui permettent d&#8217;augmenter ou de diminuer la vitesse de la
+   fonction concernée.
+</p>
+</li>
+<li>
+<p>
+Une zone de textes qui affiche le G-code du fichier chargé.
+</p>
+</li>
+<li>
+<p>
+Une barre d'état qui affiche l'état de la machine. Dans cette capture
+   d'écran, la machine est en marche, aucun outil n&#8217;est monté, la position
+   affichée est <em>relative</em> à l&#8217;origine machine
+   (par opposition à une position <em>absolue</em>) et
+   <em>actuelle</em> (par opposition à une position
+   <em>commandée</em>)
+</p>
+</li>
+</ul></div>
+<h3 id="_options_des_menus">3.1. Options des menus</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Certaines options de menu peuvent s&#8217;afficher en grisé, c&#8217;est dépendant des
+options du fichier de configuration ini.</p></div>
+<h4 id="_menu_fichier">3.1.1. Menu Fichier</h4>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Ouvrir&#8230;
+</dt>
+<dd>
+<p>
+     C&#8217;est une boîte de dialogue standard pour ouvrir un fichier G-code
+    à charger dans AXIS. Si un filtre de programme a été configuré, il
+    peut aussi être ouvert ici.
+</p>
+</dd>
+<dt class="hdlist1">
+Fichiers récents&#8230;
+</dt>
+<dd>
+<p>
+    Affiche la liste des fichiers ouverts récemment.
+</p>
+</dd>
+<dt class="hdlist1">
+Éditer&#8230;
+</dt>
+<dd>
+<p>
+     Ouvre le fichier G-code courant pour édition si un éditeur a été
+    déclaré dans le fichier ini.
+</p>
+</dd>
+<dt class="hdlist1">
+Recharger&#8230;
+</dt>
+<dd>
+<p>
+     Recharge le fichier G-code courant. Si le fichier a été édité, il doit
+    être rechargé pour que les modifications prennent effet. Si un programme
+    a été stoppé, pour le reprendre depuis le début, le recharger.
+    Le bouton <em>Recharger</em> a le même effet que l&#8217;option de menu.
+</p>
+</dd>
+<dt class="hdlist1">
+Enregistrer le G-code sous&#8230;
+</dt>
+<dd>
+<p>
+     Enregistre le fichier courant sous un nouveau nom.
+</p>
+</dd>
+<dt class="hdlist1">
+Propriétés&#8230;
+</dt>
+<dd>
+<p>
+     Donne la somme des mouvements en vitesse rapide et celle en vitesse travail.
+    Ne tient pas compte des accélérations, ni des décélérations, ni des modes de
+    trajectoire, de sorte qu&#8217;il ne donne jamais de temps inférieur au temps réel
+    d&#8217;exécution.
+</p>
+</dd>
+<dt class="hdlist1">
+Éditer la table d&#8217;outils&#8230;
+</dt>
+<dd>
+<p>
+     Ouvre un dialogue permettant d'éditer les valeurs de la table d&#8217;outils.
+</p>
+</dd>
+<dt class="hdlist1">
+Recharger la table d&#8217;outils&#8230;
+</dt>
+<dd>
+<p>
+     Après avoir édité la table d&#8217;outil, il convient de la recharger pour que les
+    nouvelles valeurs soient prisent en compte.
+</p>
+</dd>
+<dt class="hdlist1">
+Éditeur de Ladder&#8230;
+</dt>
+<dd>
+<p>
+     Si Classic Ladder a été chargé, il est possible de l'éditer ici.
+</p>
+</dd>
+<dt class="hdlist1">
+Quitter&#8230;
+</dt>
+<dd>
+<p>
+    Termine la session courante de LinuxCNC.
+</p>
+</dd>
+</dl></div>
+<h4 id="_menu_machine">3.1.2. Menu Machine</h4>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Arrêt d&#8217;Urgence F1&#8230;
+</dt>
+<dd>
+<p>
+     (bascule) Active/désactive l&#8217;arrêt d&#8217;urgence.
+</p>
+</dd>
+<dt class="hdlist1">
+Marche/Arrêt F2&#8230;
+</dt>
+<dd>
+<p>
+     (bascule) Active/désactive la puissance machine.
+</p>
+</dd>
+<dt class="hdlist1">
+Démarrer le programme&#8230;
+</dt>
+<dd>
+<p>
+     Lance l&#8217;exécution du programme G-code.
+</p>
+</dd>
+<dt class="hdlist1">
+Démarrer à la ligne sélectionnée&#8230;
+</dt>
+<dd>
+<p>
+     Prudence avec cette commande, respecter la démarche suivante:
+    Premièrement, sélectionner à la souris, la ligne à laquelle démarrer.
+    Déplacer ensuite manuellement, l&#8217;outil à la position de la ligne
+    précédente puis, cette commande exécutera le reste du code.
+</p>
+</dd>
+<dt class="hdlist1">
+Pas à pas&#8230;
+</dt>
+<dd>
+<p>
+    Avance d&#8217;un seul pas de programme.
+</p>
+</dd>
+<dt class="hdlist1">
+Pause&#8230;
+</dt>
+<dd>
+<p>
+    Effectue une pause dans le programme.
+</p>
+</dd>
+<dt class="hdlist1">
+Reprise&#8230;
+</dt>
+<dd>
+<p>
+    Reprends la marche après une pause.
+</p>
+</dd>
+<dt class="hdlist1">
+Stopper&#8230;
+</dt>
+<dd>
+<p>
+    Stoppe le programme en marche.
+</p>
+</dd>
+<dt class="hdlist1">
+Arrêt sur M1&#8230;
+</dt>
+<dd>
+<p>
+     Si un M1 est rencontré et que cette option est cochée, l&#8217;exécution
+    du programme s&#8217;interrompra à la ligne du M1.
+    Presser <em>Reprise</em> pour continuer.
+</p>
+</dd>
+<dt class="hdlist1">
+Sauter les lignes avec "/"&#8230;
+</dt>
+<dd>
+<p>
+     Si une ligne commençant par / est rencontrée et que cette option est
+    cochée, cette ligne sera sautée.
+</p>
+</dd>
+<dt class="hdlist1">
+Vider l&#8217;historique du MDI&#8230;
+</dt>
+<dd>
+<p>
+    Efface l&#8217;historique des données manuelles.
+</p>
+</dd>
+<dt class="hdlist1">
+Copier depuis l&#8217;historique du MDI&#8230;
+</dt>
+<dd>
+<p>
+    Copier l&#8217;historique des données manuelles dans le presse-papier.
+</p>
+</dd>
+<dt class="hdlist1">
+Coller dans l&#8217;historique du MDI&#8230;
+</dt>
+<dd>
+<p>
+     Coller le contenu du presse-papier dans la fenêtre d&#8217;historique
+    des données manuelles.
+</p>
+</dd>
+<dt class="hdlist1">
+Calibration&#8230;
+</dt>
+<dd>
+<p>
+     Lance un assistant de réglage de PID. Cette option n&#8217;est utile qu&#8217;avec
+    un système à servomoteurs.
+</p>
+</dd>
+<dt class="hdlist1">
+Afficher configuration de HAL&#8230;
+</dt>
+<dd>
+<p>
+     Ouvre une fenêtre sur la configuration de HAL depuis laquelle il est
+    possible de visualiser tous les <em>Components</em>, <em>Pins</em>, <em>Parameters</em>,
+    <em>Signals</em>, <em>Functions</em> et <em>Threads</em> de HAL.
+</p>
+</dd>
+<dt class="hdlist1">
+HAL Mètre&#8230;
+</dt>
+<dd>
+<p>
+     Ouvre une fenêtre dans laquelle il est possible de visualiser un seul
+    <em>Signal, HAL Pin</em>, ou <em>Parameter</em> de HAL.
+</p>
+</dd>
+<dt class="hdlist1">
+HAL Scope&#8230;
+</dt>
+<dd>
+<p>
+     Ouvre un oscilloscope virtuel qui permet de tracer dans le temps,
+    les valeurs de HAL.
+</p>
+</dd>
+<dt class="hdlist1">
+Afficher l'état de LinuxCNC&#8230;
+</dt>
+<dd>
+<p>
+     Ouvre une fenêtre montrant l'état de LinuxCNC.
+</p>
+</dd>
+<dt class="hdlist1">
+Choisir le niveau de Debug&#8230;
+</dt>
+<dd>
+<p>
+     Ouvre une fenêtre dans laquelle les niveaux de débogage sont visibles
+    et certains réglables.
+</p>
+</dd>
+<dt class="hdlist1">
+Prise d&#8217;origine&#8230;
+</dt>
+<dd>
+<p>
+    Effectue la prise d&#8217;origine machine d&#8217;un ou de tous les axes.
+</p>
+</dd>
+<dt class="hdlist1">
+Annulation OM&#8230;
+</dt>
+<dd>
+<p>
+    Annule les origines d&#8217;un ou de tous les axes.
+</p>
+</dd>
+<dt class="hdlist1">
+Annulation décalage d&#8217;origine&#8230;
+</dt>
+<dd>
+<p>
+    Annule les décalages d&#8217;origine du système de coordonnées choisi.
+</p>
+</dd>
+<dt class="hdlist1">
+L&#8217;outil touchera la pièce&#8230;
+</dt>
+<dd>
+<p>
+     Lorsqu&#8217;un <em>Toucher</em> est effectué, la valeur entrée est relative au
+    système de coordonnées pièce actuel (G5x), tel que modifié par
+    le décalage d&#8217;axe (G92). Quand la séquence de <em>Toucher</em> est
+    complète, la coordonnée relative pour l&#8217;axe choisi prendra la valeur
+    entrée. (Voir aussi G10 L10)
+</p>
+</dd>
+<dt class="hdlist1">
+L&#8217;outil touchera le porte-pièce&#8230;
+</dt>
+<dd>
+<p>
+     Lorsqu&#8217;un <em>Toucher</em> est effectué, la valeur entrée est relative au 9ème
+    système de coordonnées (G59.3), le décalage d&#8217;axe (G92) est ignoré.
+    Mode destiné aux machines possédant un porte-pièce référencé à un endroit,
+    sur lequel s&#8217;effectue le <em>Toucher</em>. Le 9ème système de coordonnées doit
+    être ajusté pour que la pointe d&#8217;un outil de longueur nulle
+    (le nez de broche), soit à l&#8217;origine du porte-pièce quand les coordonnées
+    relatives sont à 0. Voir aussi <a href="../gcode/gcode_fr.html#sec:G10-L11">G10 L11</a>.
+</p>
+</dd>
+</dl></div>
+<h4 id="_menu_vues">3.1.3. Menu Vues</h4>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="sidebar-title">Tout est dans le point de vue&#8230;</div>
+<div class="paragraph"><p>Les icônes de choix du type d&#8217;affichage et du menu <em>Vues</em> d&#8217;AXIS se référent
+à des <em>Vue de dessus</em>, <em>Vue de face</em> et <em>Vue de côté</em>.
+Ces termes sont corrects si la machine CNC a un axe Z vertical, avec une valeur
+de Z positive en haut. C&#8217;est vrai pour les fraiseuses verticales, qui sont
+probablement les plus populaires, c&#8217;est également vrai pour toutes les machines
+d'électro-érosion et aussi les tours verticaux, sur lesquels la pièce tourne
+sous l&#8217;outil.</p></div>
+<div class="paragraph"><p>Les termes <em>Vue de dessus</em>, <em>Vue de face</em> et <em>Vue de côté</em> sont cependant
+source de confusion sur d&#8217;autres machines CNC, comme un tour standard, sur
+lequel l&#8217;axe Z est horizontal, ou sur une fraiseuse horizontale, qui a également
+l&#8217;axe Z horizontal, ou même un tour vertical inversé, sur lequel la pièce tourne
+au dessus de l&#8217;outil et qui a son axe Z positif vers le bas!</p></div>
+<div class="paragraph"><p>Il faut juste se rappeler que l&#8217;axe Z est toujours parallèle a la broche et
+plus positif en s'éloignant de celle-ci.
+Soyez familiarisé avec la cinématique de vos machines, vous interpréterez alors
+l&#8217;affichage comme il se doit.</p></div>
+</div></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Vue de dessus&#8230;
+</dt>
+<dd>
+<p>
+     La vue de dessus (ou vue de Z) affiche l&#8217;aspect du G-code vu depuis le côté
+    positif de l&#8217;axe Z et en regardant vers son côté négatif. Cette vue convient
+    bien pour visualiser les axes X et Y.
+</p>
+</dd>
+<dt class="hdlist1">
+Vue de dessus basculée&#8230;
+</dt>
+<dd>
+<p>
+     La vue de dessus basculée (ou vue de Z basculé) affiche également l&#8217;aspect
+    du G-code vu depuis le côté positif de l&#8217;axe Z et en regardant vers son côté
+    négatif. Mais cette fois, les axes X et Y sont représentés pivotés de
+    90 degrés pour mieux occuper l&#8217;espace d&#8217;affichage. Cette vue convient bien
+    également, pour visualiser les axes X et Y.
+</p>
+</dd>
+<dt class="hdlist1">
+Vue de côté&#8230;
+</dt>
+<dd>
+<p>
+     La vue de côté (ou vue de X) affiche l&#8217;aspect du G-code vu depuis le côté
+    positif de l&#8217;axe X et en regardant vers son côté négatif. Cette vue
+    convient pour visualiser les axes Y et Z.
+</p>
+</dd>
+<dt class="hdlist1">
+Vue de face&#8230;
+</dt>
+<dd>
+<p>
+     La vue de face (ou vue de Y) affiche l&#8217;aspect du G-code vu depuis le côté
+    positif de l&#8217;axe Y et en regardant vers son côté négatif. Cette vue
+    convient bien pour visualiser les axes X et Z.
+</p>
+</dd>
+<dt class="hdlist1">
+Vue en perspective&#8230;
+</dt>
+<dd>
+<p>
+     La vue en perspective (ou vue P) affiche l&#8217;aspect du G-code en regardant
+    vers la pièce depuis un point de vue orientable, par défaut vers
+    X+, Y-, Z+. Cette position est orientable en la sélectionnant à la souris.
+     L&#8217;affichage est un compromis, il tente d&#8217;afficher en 3D, entre trois et
+    neuf axes, sur un écran en deux dimensions. Il y aura donc souvent
+    certaines caractéristiques difficiles à voir, ce qui requerra un
+    changement de point de vue. Cette vue convient bien pour voir les trois
+    axes à la fois.
+</p>
+</dd>
+<dt class="hdlist1">
+Affichage en pouces&#8230;
+</dt>
+<dd>
+<p>
+    Ajuste l'échelle d&#8217;affichage d&#8217;AXIS pour les pouces.
+</p>
+</dd>
+<dt class="hdlist1">
+Affichage en mm&#8230;
+</dt>
+<dd>
+<p>
+    Ajuste l'échelle d&#8217;affichage d&#8217;AXIS pour les millimètres.
+</p>
+</dd>
+<dt class="hdlist1">
+Afficher le programme&#8230;
+</dt>
+<dd>
+<p>
+     L&#8217;affichage à l'écran de l&#8217;aspect du G-code peut être entièrement
+    désactivé si l&#8217;opérateur le souhaite.
+</p>
+</dd>
+<dt class="hdlist1">
+Parcours d&#8217;outil en vitesse rapide&#8230;
+</dt>
+<dd>
+<p>
+     L&#8217;affichage du parcours d&#8217;outil du programme G-code courant représente
+    toujours les mouvements en vitesse travail (G1,G2,G3) en blanc. Mais
+    l&#8217;affichage des mouvements en vitesse rapide (G0) en cyan peut être
+    désactivé si si l&#8217;opérateur le souhaite.
+</p>
+</dd>
+<dt class="hdlist1">
+Simulation de transparence&#8230;
+</dt>
+<dd>
+<p>
+     Cette option rends plus lisible le tracé des parcours affichés par les
+    programmes complexes, mais il peut rendre l&#8217;affichage plus lent.
+</p>
+</dd>
+<dt class="hdlist1">
+Parcours d&#8217;outil en temps réel&#8230;
+</dt>
+<dd>
+<p>
+     La surbrillance des chemins d&#8217;outils en vitesse travail (G1,G2,G3) quand
+    l&#8217;outil se déplace peut être désactivée si l&#8217;opérateur le souhaite.
+</p>
+</dd>
+<dt class="hdlist1">
+Afficher l&#8217;outil&#8230;
+</dt>
+<dd>
+<p>
+     Le symbole d&#8217;un outil, représenté par un cône ou un cylindre peut être
+    désactivé si l&#8217;opérateur le souhaite.
+</p>
+</dd>
+<dt class="hdlist1">
+Afficher les étendues&#8230;
+</dt>
+<dd>
+<p>
+     L&#8217;affichage des étendues du programme G-code chargé (déplacements
+    maximum de chacun des axes), peut être désactivé si l&#8217;opérateur le souhaite.
+</p>
+</dd>
+<dt class="hdlist1">
+Afficher les offsets&#8230;
+</dt>
+<dd>
+<p>
+     L&#8217;emplacement de l&#8217;origine du système de coordonnées pièce (G54 à G59.3)
+    peut être représenté par un jeu de trois lignes orthogonales, une
+    rouge, une bleue et une verte.
+    L&#8217;affichage de cette origine pièce (ou zéro pièce), peut être désactivé si
+    l&#8217;opérateur le souhaite.
+</p>
+</dd>
+<dt class="hdlist1">
+Afficher les limites machine&#8230;
+</dt>
+<dd>
+<p>
+     Les limites maximales de déplacement machine pour chacun des axes, qui sont
+    fixées dans le fichier ini, s&#8217;affichent comme une boîte rectangulaire
+    en lignes pointillées rouges. Il est facile, au chargement d&#8217;un nouveau
+    programme G-code, de voir si la pièce est contenue dans le volume
+    représenté. Ou de vérifier de combien l'étau doit être décalé, pour que le
+    G-code puisse être usiné sans dépasser les limites de déplacements de la
+    machine. Cette option peut être désactivée si l&#8217;opérateur le souhaite.
+</p>
+</dd>
+<dt class="hdlist1">
+Afficher la vitesse d&#8217;avance&#8230;
+</dt>
+<dd>
+<p>
+     L&#8217;affichage de la vitesse peut être utile pour voir la précision avec
+    laquelle la machine suit la vitesse commandée. Cette option peut être
+    désactivée si l&#8217;opérateur le souhaite.
+</p>
+</dd>
+<dt class="hdlist1">
+Afficher la distance restante&#8230;
+</dt>
+<dd>
+<p>
+     La distance restante est une valeur très utile à suivre, au lancement
+    d&#8217;un programme de G-code inconnu pour la première fois. En combinaison avec
+    les curseurs des correcteurs de vitesse, des dégâts sur l&#8217;outil ou la
+    machine peuvent être évités. Quand le programme G-code sera débogué et qu&#8217;il
+    fonctionnera en douceur, l&#8217;affichage de la distance restante pourra être
+    désactivée si l&#8217;opérateur le souhaite.
+</p>
+</dd>
+<dt class="hdlist1">
+Coordonnées en police large&#8230;
+</dt>
+<dd>
+<p>
+     Les coordonnées des axes et la vitesse d&#8217;avance, s&#8217;afficheront en
+    police large dans la vue du parcours d&#8217;outil.
+</p>
+</dd>
+<dt class="hdlist1">
+Rafraîchir le parcours d&#8217;outil&#8230;
+</dt>
+<dd>
+<p>
+     Au fur et à mesure des déplacements de l&#8217;outil, les parcours s&#8217;affichent
+    sur l'écran d&#8217;Axis en surbrillance. Avant de répéter le programme, ou pour
+    avoir un affichage clair sur une zone intéressante, la surbrillance des
+    parcours précédents peut être rafraîchie.
+</p>
+</dd>
+<dt class="hdlist1">
+Afficher la position commandée&#8230;
+</dt>
+<dd>
+<p>
+     C&#8217;est la position que LinuxCNC cherche à atteindre. Quand le mouvement est
+    stoppé, c&#8217;est la position que LinuxCNC cherchera à maintenir.
+</p>
+</dd>
+<dt class="hdlist1">
+Afficher la position actuelle&#8230;
+</dt>
+<dd>
+<p>
+     La position actuelle est la position mesurée grâce aux informations issues
+    des codeurs ou simulées par le générateur de pas. Elle peut différer
+    légèrement de la position commandée pour diverses raisons, comme les
+    réglages des boucles PID, les contraintes physiques ou les efforts de coupe.
+</p>
+</dd>
+<dt class="hdlist1">
+Afficher la position machine&#8230;
+</dt>
+<dd>
+<p>
+    C&#8217;est la position par rapport à l&#8217;origine machine, telle qu'établie par la
+   prise d&#8217;origine machine <em>(POM)</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+Afficher la position relative&#8230;
+</dt>
+<dd>
+<p>
+    C&#8217;est la position par rapport à l&#8217;origine pièce, telle qu'établie par la
+   prise d&#8217;origine pièce <em>(POP)</em>.
+   On peut aussi représenter cette position comme étant l&#8217;origine machine
+   à laquelle on a appliqué les codes de décalages des systèmes de
+   coordonnées G5x, G92 et G43.
+</p>
+</dd>
+</dl></div>
+<h4 id="_menu_aide">3.1.4. Menu Aide</h4>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+A propos d&#8217;Axis&#8230;
+</dt>
+<dd>
+<p>
+     Donne la version et quelques informations relatives au copyright.
+</p>
+</dd>
+<dt class="hdlist1">
+Aide rapide&#8230;
+</dt>
+<dd>
+<p>
+    Affiche la liste des raccourcis clavier.
+</p>
+</dd>
+</dl></div>
+<h3 id="_boutons_de_la_barre_d_8217_outils">3.2. Boutons de la barre d&#8217;outils</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Signification des boutons de la fenêtre d&#8217;AXIS, de gauche à droite:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+<span class="image">
+<img src="images/tool_estop.gif" alt="images/tool_estop.gif" />
+</span> <em>Arrêt d&#8217;urgence</em> (A/U)
+    (en Anglais, E-Stop)
+</p>
+</li>
+<li>
+<p>
+<span class="image">
+<img src="images/tool_power.gif" alt="images/tool_power.gif" />
+</span> Marche/Arrêt puissance machine
+</p>
+</li>
+<li>
+<p>
+<span class="image">
+<img src="images/tool_open.gif" alt="images/tool_open.gif" />
+</span> Ouvrir un fichier
+</p>
+</li>
+<li>
+<p>
+<span class="image">
+<img src="images/tool_reload.gif" alt="images/tool_reload.gif" />
+</span> Recharger le fichier courant
+</p>
+</li>
+<li>
+<p>
+<span class="image">
+<img src="images/tool_run.gif" alt="images/tool_run.gif" />
+</span> Départ cycle
+</p>
+</li>
+<li>
+<p>
+<span class="image">
+<img src="images/tool_step.gif" alt="images/tool_step.gif" />
+</span> Cycle en pas à pas
+</p>
+</li>
+<li>
+<p>
+<span class="image">
+<img src="images/tool_pause.gif" alt="images/tool_pause.gif" />
+</span> Pause/Reprise
+</p>
+</li>
+<li>
+<p>
+<span class="image">
+<img src="images/tool_stop.gif" alt="images/tool_stop.gif" />
+</span> Stopper l&#8217;exécution du programme
+</p>
+</li>
+<li>
+<p>
+<span class="image">
+<img src="images/tool_blockdelete.gif" alt="images/tool_blockdelete.gif" />
+</span> Sauter ou non les lignes commençant par <strong>/</strong>
+</p>
+</li>
+<li>
+<p>
+<span class="image">
+<img src="images/tool_optpause.gif" alt="images/tool_optpause.gif" />
+</span> Avec ou sans pause optionnelle
+</p>
+</li>
+<li>
+<p>
+<span class="image">
+<img src="images/tool_zoomin.gif" alt="images/tool_zoomin.gif" />
+</span> Zoom plus
+</p>
+</li>
+<li>
+<p>
+<span class="image">
+<img src="images/tool_zoomout.gif" alt="images/tool_zoomout.gif" />
+</span> Zoom moins
+</p>
+</li>
+<li>
+<p>
+<span class="image">
+<img src="images/tool_axis_z.gif" alt="images/tool_axis_z.gif" />
+</span> Vue prédéfinie <strong>Z</strong> (vue de dessus)
+</p>
+</li>
+<li>
+<p>
+<span class="image">
+<img src="images/tool_axis_z2.gif" alt="images/tool_axis_z2.gif" />
+</span> Vue prédéfinie <strong>Z basculée</strong>
+</p>
+</li>
+<li>
+<p>
+<span class="image">
+<img src="images/tool_axis_x.gif" alt="images/tool_axis_x.gif" />
+</span> Vue prédéfinie <strong>X</strong> (vue de côté)
+</p>
+</li>
+<li>
+<p>
+<span class="image">
+<img src="images/tool_axis_y.gif" alt="images/tool_axis_y.gif" />
+</span> Vue prédéfinie <strong>Y</strong> (vue de face)
+</p>
+</li>
+<li>
+<p>
+<span class="image">
+<img src="images/tool_axis_p.gif" alt="images/tool_axis_p.gif" />
+</span> Vue prédéfinie <strong>P</strong> (vue en perspective)
+</p>
+</li>
+<li>
+<p>
+<span class="image">
+<img src="images/tool_rotate.gif" alt="images/tool_rotate.gif" />
+</span> Orienter la vue avec le bouton
+gauche de la souris
+</p>
+</li>
+<li>
+<p>
+<span class="image">
+<img src="images/tool_clear.gif" alt="images/tool_clear.gif" />
+</span> Rafraîchir le parcours d&#8217;outil
+</p>
+</li>
+</ol></div>
+<h3 id="_zones_d_8217_affichage_graphique_du_programme">3.3. Zones d&#8217;affichage graphique du programme</h3><div style="clear:left"></div>
+<h4 id="_affichage_des_coordonn_es">3.3.1. Affichage des coordonnées</h4>
+<div class="paragraph"><p>L&#8217;affichage des coordonnées est situé en haut à gauche de l'écran graphique.
+Il montre les positions de la machine.
+A gauche du nom de l&#8217;axe, un symbole d&#8217;origine est visible
+si la prise d&#8217;origine de l&#8217;axe a été faite.</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="images/axis-homed.png" alt="images/axis-homed.png" />
+</span> Symbole de prise d&#8217;origine faite.</p></div>
+<div class="paragraph"><p>A droite du nom de l&#8217;axe, un symbole de limite est visible si l&#8217;axe est sur
+un de ses capteurs de limite.</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="images/axis-limit.png" alt="images/axis-limit.png" />
+</span> Symbole de limite d&#8217;axe.</p></div>
+<div class="paragraph"><p>Pour interpréter correctement ces valeurs, référez vous à l&#8217;indicateur
+<em>Position</em> de la barre d'état. Si la position est <em>Absolue</em>, alors les
+valeurs affichées sont exprimées en coordonnées machine. Si la position
+est <em>Relative</em>, alors les valeurs affichées sont exprimées en
+coordonnées relatives à la pièce. Quand les coordonnées affichées sont
+relatives, une marque d&#8217;origine de couleur cyan est visible pour
+représenter l&#8217;origine machine.</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="images/axis-machineorigin.png" alt="images/axis-machineorigin.png" />
+</span> Symbole d&#8217;origine machine.</p></div>
+<div class="paragraph"><p>Si la position est <em>Commandée</em>, alors il s&#8217;agit de la position à atteindre.
+Par exemple, les coordonnées passées dans une commande <strong>G0</strong>.
+Si la position est <em>Actuelle</em>, alors il s&#8217;agit de la position à
+laquelle la machine vient de se déplacer.
+Ces valeurs peuvent varier pour certaines raisons:
+erreur de suivi, bande morte, résolution d&#8217;encodeur, ou taille de pas.
+Par exemple, si vous demandez un mouvement à X 0.08 à votre fraiseuse,
+mais un pas du moteur fait 0.03,
+alors la position <em>Commandée</em> sera de 0.08,
+mais la position <em>Actuelle</em> sera de 0.06 (2 pas) ou 0.09 (3 pas).</p></div>
+<h4 id="_vue_du_parcours_d_8217_outil">3.3.2. Vue du parcours d&#8217;outil</h4>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Quand un fichier est chargé,
+une vue du parcours d&#8217;outil qu&#8217;il produira est visible dans la zone graphique.
+Les mouvements en vitesse rapide (tels ceux produits par une commande <strong>G0</strong>)
+sont affichés en lignes pointillées vertes.
+Les déplacements en vitesse travail (tels ceux produits par une commande <strong>G1</strong>)
+sont affichés en lignes continues blanches.
+Les arrêts temporisés (tels ceux produits par la commande <strong>G4</strong>)
+sont représentés par une petite marque <strong>X</strong>.</p></div>
+<div class="paragraph"><p>Un mouvement G0 (Vitesse rapide) avant un déplacement en vitesse travail
+ne sera pas affiché sur l'écran des parcours d&#8217;outil.
+Un mouvement en vitesse rapide, après un appel d&#8217;outil T&lt;n&gt;,
+n&#8217;apparaîtra sur l'écran des parcours d&#8217;outil qu&#8217;après le mouvement en vitesse
+travail suivant. Pour contourner une de ces caractéristiques,
+programmer un G1 sans déplacement, juste avant le G0.</p></div>
+<h4 id="_tendues_du_programme">3.3.3. Étendues du programme</h4>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Les <em>étendues</em> du programme sont affichées pour chacun des axes.
+Aux extrémités, les coordonnées minimales et maximales sont indiquées.
+Au centres, la différence, entre ces deux coordonnées, est indiquée.</p></div>
+<div class="paragraph"><p>Quand une coordonnée dépasse la limite logicielle fixée dans le fichier .ini,
+la coordonnée correspondante s&#8217;affiche en rouge, entourée d&#8217;un rectangle.
+Dans la figure ci-dessous, la limite maximale est dépassée
+sur l&#8217;axe X, comme l&#8217;indique le rectangle entourant la valeur de la coordonnée.
+Le déplacement X minimal du programme est de -1.95, la course maximale est
+de 1.88 en X et le programme nécessite un déplacement en X de 3.83 pouces.
+Le déplacement total demandé par le programme est donc possible. Pour cela,
+se déplacer en jog vers la gauche puis <em>Toucher</em> à nouveau pour corriger
+l&#8217;origine pièce.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/axis-outofrange.png" alt="images/axis-outofrange.png" />
+</div>
+<div class="title">Figure 2. Limites logicielles<a id="cap:Etendues-Depassees"></a></div>
+</div>
+<h4 id="_le_c_ne_d_8217_outil">3.3.4. Le cône d&#8217;outil</h4>
+<div class="paragraph"><p>Si aucun outil n&#8217;est chargé, l&#8217;emplacement de la pointe de l&#8217;outil est
+indiqué par le <em>cône d&#8217;outil</em>.
+Le cône d&#8217;outil ne donne aucune indication sur la forme,
+la longueur, ou le rayon de l&#8217;outil.</p></div>
+<div class="paragraph"><p>Quand un outil est chargé, par exemple dans le MDI, avec la commande <strong>T1 M6</strong>,
+le cône d&#8217;outil passe de conique à cylindrique, il indique alors la proportion
+du diamètre de l&#8217;outil lu dans le fichier de la table d&#8217;outils.</p></div>
+<h4 id="_parcours_d_8217_outil">3.3.5. Parcours d&#8217;outil</h4>
+<div class="paragraph"><p>Quand la machine se déplace, elle laisse une trace appelée le parcours d&#8217;outil.
+La couleur des lignes indique le type de mouvement:
+jaune pour les mouvementq jog, vert clair pour les mouvements en vitesse rapide,
+rouge pour les mouvements en vitesse d&#8217;avance programmée et magenta pour les
+mouvements circulaires en vitesse d&#8217;avance programmée.</p></div>
+<h4 id="_interaction_avec_l_8217_affichage">3.3.6. Interaction avec l&#8217;affichage</h4>
+<div class="paragraph"><p>Par un clic gauche sur une portion du parcours d&#8217;outil,
+la ligne sous la souris passe en surbrillance
+à la fois dans le parcours d&#8217;outil et dans le texte.
+Un clic droit dans une zone vide enlève la surbrillance</p></div>
+<div class="paragraph"><p>En déplaçant la souris avec son bouton gauche appuyé,
+la vue est glissée sur l'écran.</p></div>
+<div class="paragraph"><p>En déplaçant la souris avec le bouton <em>Maj</em> enfoncé,
+ou en glissant avec la molette de la souris appuyée, la vue est tournée.
+Si une ligne du tracé est en surbrillance, elle devient le centre de rotation
+de la vue. Autrement, le centre de rotation est le milieu du fichier dans son
+ensemble.</p></div>
+<div class="paragraph"><p>En tournant la molette de la souris, ou en glissant la souris avec son
+bouton droit enfoncé, ou encore en glissant la souris avec son bouton gauche
+enfoncé et la touche <em>Ctrl</em> appuyée, le tracé sera zoomé en plus ou en moins.</p></div>
+<div class="paragraph"><p>En cliquant sur une des icônes de vue pré-définie de la barre d&#8217;outils,
+ou en pressant la touche <strong>V</strong>, cette vue est sélectionnée.</p></div>
+<h3 id="_zone_texte_d_8217_affichage_du_programme">3.4. Zone texte d&#8217;affichage du programme</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Un clic gauche sur une ligne du programme passe la ligne en
+surbrillance à la fois dans la zone texte et dans le parcours d&#8217;outil.</p></div>
+<div class="paragraph"><p>Quand le programme est lancé, la ligne en cours d&#8217;exécution est en
+surbrillance rouge. Si aucune ligne n&#8217;est sélectionnée par l&#8217;utilisateur,
+le texte défile automatiquement pour toujours laisser la ligne courante visible.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/axis-currentandselected_fr.png" alt="images/axis-currentandselected_fr.png" />
+</div>
+<div class="title">Figure 3. Ligne courante et ligne en surbrillance</div>
+</div>
+<h3 id="_contr_le_manuel">3.5. Contrôle manuel</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Quand la machine est en marche mais qu&#8217;aucun programme n&#8217;est exécuté,
+les éléments graphiques de l&#8217;onglet <em>Contrôle manuel</em> peuvent être utilisés pour
+actionner la machine ou mettre en marche et arrêter ses différents organes.</p></div>
+<div class="paragraph"><p>Quand la machine n&#8217;est pas en marche, ou quand un programme est en cours
+d&#8217;exécution, le contrôle manuel n&#8217;est pas disponible.</p></div>
+<div class="paragraph"><p>Certains des éléments décrits plus bas ne sont pas disponibles sur toutes
+les machines. Quand AXIS détecte qu&#8217;une pin particulière n&#8217;est pas connectée
+dans le fichier HAL, l'élément correspondant de l&#8217;onglet <em>Contrôle manuel</em> est
+supprimé. Par exemple, si la pin HAL <em>motion.spindle-brake</em> n&#8217;est pas connectée,
+alors le bouton <em>Frein de broche</em> n&#8217;apparaîtra pas sur l'écran.
+Si la variable d&#8217;environnement AXIS_NO_AUTOCONFIGURE est mise à 1,
+ce comportement est désactivé et tous les boutons sont visibles.</p></div>
+<h4 id="_le_groupe_de_cases_et_boutons_em_axes_em">3.5.1. Le groupe de cases et boutons <em>Axes</em></h4>
+<div class="paragraph"><p>Les cases à cocher du groupe <em>Axes</em> permettent de choisir l&#8217;axe de la machine
+à actionner manuellement. Cette action s&#8217;appelle le <em>jog</em>.
+Premièrement sélectionner l&#8217;axe à actionner en cochant sa case.
+Puis cliquer sur le bouton <strong>+</strong> ou <strong>-</strong> selon le sens de déplacement souhaité.
+Les quatre premiers axes peuvent aussi être déplacés avec les touches fléchées
+pour X et Y, avec les touches Page précédente et Page suivante pour (Z) et les
+touches [ et ] pour A.</p></div>
+<div class="paragraph"><p>Si <em>En continu</em> est sélectionné, le mouvement continuera tant que la touche ou
+le bouton resteront appuyés. Si une autre valeur est sélectionnée, la machine
+se déplacera juste de la distance affichée à chaque fois que la touche ou le
+bouton seront appuyés. Par défaut, les valeurs disponibles sont:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>0.1000 0.0100 0.0010 0.0001</tt></pre>
+</div></div>
+<div class="paragraph"><p>Voir le Manuel de l&#8217;intégrateur pour plus d&#8217;informations sur la configuration
+des incréments de jog.</p></div>
+<h4 id="_la_prise_d_8217_origine_machine">3.5.2. La prise d&#8217;origine machine</h4>
+<div class="paragraph"><p>Si votre machine dispose de contacts d&#8217;origine machine et a une séquence de
+prise d&#8217;origine définie dans le fichier ini, le bouton <em>POM générale</em> lancera
+cette séquence pour tous les axes, les touches <em>Ctrl-HOME</em> auront le même effet.</p></div>
+<div class="paragraph"><p>Si votre machine dispose de contacts d&#8217;origine mais n&#8217;a pas de séquence de
+prise d&#8217;origine définie dans le fichier ini, le bouton <em>POM générale</em> effectuera
+uniquement la prise d&#8217;origine de l&#8217;axe sélectionné.
+Cette procédure doit alors être réalisée, séparément pour chacun des axes.</p></div>
+<div class="paragraph"><p>Si votre machine ne dispose d&#8217;aucun contact d&#8217;origine défini dans
+la configuration, le bouton <em>POM générale</em> définira la position actuelle de
+l&#8217;axe comme étant la position d&#8217;origine machine et l&#8217;axe sera marqué comme
+ayant sa prise d&#8217;origine machine faite.</p></div>
+<h4 id="cap:Toucher">3.5.3. Toucher</h4>
+<div class="paragraph"><p>Si le bouton <em>Toucher</em> ou la touche <em>FIN</em> sont appuyés, le décalage
+d&#8217;origine pièce de l&#8217;axe Z, sur la figure ci-dessous: P1 G54,
+prendra la valeur spécifiée dans le champ de la boite de dialogue. Les
+expressions peuvent être entrées en suivant les règles de programmation
+rs274ngc, sauf les variables qui ne peuvent pas être utilisées. La
+valeur résultante sera affichée sous le champ. Exemple, pour faire la prise
+d&#8217;origine pièce, on affleure l&#8217;outil sur une cale de 5mm d'épaisseur posée
+sur le bloc, on presse le bouton <em>Toucher</em> et on saisi 5 dans le champ de la
+boîte de dialogue. La pointe de l&#8217;outil sera alors référencée à 0 sur la surface
+du bloc.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/touchoff_fr.png" alt="images/touchoff_fr.png" />
+</div>
+<div class="title">Figure 4. Fenêtre du Toucher</div>
+</div>
+<div class="paragraph"><p>Voir aussi les options du menu Machine: <em>Toucher la pièce</em> et
+<em>Toucher le porte-pièce</em>.</p></div>
+<h4 id="_d_passement_de_limite">3.5.4. Dépassement de limite</h4>
+<div class="paragraph"><p>En appuyant sur <em>Dépassement de limite</em>, la machine sera temporairement
+autorisée à se déplacer au delà d&#8217;un contact de limite physique.
+Cette case à cocher n&#8217;est disponible que lorsqu&#8217;un fin de course est pressé.
+Elle est désactivée après chaque mouvement de jogging.
+Si l&#8217;axe est configuré avec des contacts positifs et négatifs séparés,
+LinuxCNC permettra le jogging uniquement dans le sens du dégagement.
+<em>Dépassement de limite</em> ne permettra pas un jogging au delà d&#8217;une limite
+logicielle. La seule façon de désactiver une limite logicielle sur un axe
+est d&#8217;annuler sa prise d&#8217;origine.</p></div>
+<h4 id="_le_groupe_em_broche_em">3.5.5. Le groupe <em>Broche</em></h4>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Les boutons de la première rangée permettent de sélectionner la
+direction de rotation de la broche: Sens anti-horaire, Arrêt, Sens
+horaire. Les boutons de la rangée suivante augmentent ou diminuent la
+fréquence de rotation. La case à cocher de la troisième rangée permet
+d&#8217;engager ou de relâcher le frein de broche. Selon la configuration de
+votre machine, ces éléments n&#8217;apparaîtront peut être pas tous.</p></div>
+<h4 id="_le_groupe_em_arrosage_em">3.5.6. Le groupe <em>Arrosage</em></h4>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Ces deux boutons permettent d&#8217;activer les <em>gouttelettes</em> et l'<em>Arrosage fluide</em>
+ou de les désactiver. Selon la configuration de votre machine, ces
+boutons n&#8217;apparaîtront peut être pas tous.</p></div>
+<h3 id="_donn_es_manuelles_mdi">3.6. Données manuelles (MDI)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>L&#8217;onglet d&#8217;entrée de données manuelles (encore appelé MDI), 
+permet d&#8217;entrer et d&#8217;exécuter manuellement et une par une, des lignes de
+programme en G-code. Quand la machine n&#8217;est pas en marche, ou quand un
+programme est en cours d&#8217;exécution, cet onglet n&#8217;est pas opérationnel.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/axis-codeentry_fr.png" alt="images/axis-codeentry_fr.png" />
+</div>
+<div class="title">Figure 5. L&#8217;onglet <em>Données manuelles</em></div>
+</div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+<em>Historique</em>
+</dt>
+<dd>
+<p>
+     Affiche les commandes précédemment tapées et au cours des session
+    précédentes.
+</p>
+</dd>
+<dt class="hdlist1">
+<em>Commande MDI</em>
+</dt>
+<dd>
+<p>
+     Ce champ permet la saisie d&#8217;une ligne de commande à exécuter. La
+    commande sera exécutée par l&#8217;appui de la touche &lt;Entrée&gt; ou un appui sur
+    le bouton <em>Envoi</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+<em>G-Codes actifs</em>
+</dt>
+<dd>
+<p>
+    Cette fenêtre affiche les <em>codes modaux</em> actuellement actifs dans
+    l&#8217;interpréteur. Par exemple, <strong>G54</strong> indique que le système de décalage
+    d&#8217;origine actuel est <strong>G54</strong> qu&#8217;il s&#8217;appliquera à toutes les coordonnées
+    qui seront entrées.
+</p>
+</dd>
+</dl></div>
+<h3 id="_correcteurs_de_vitesse">3.7. Correcteurs de vitesse</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>En déplaçant le curseur, la vitesse de déplacement programmée peut
+être modifiée. Par exemple, si un programme requiert une vitesse à
+<strong>F600</strong> et que le curseur est placé sur 120%, alors la vitesse
+résultante sera de <strong>F720</strong>.</p></div>
+<h3 id="_correcteur_de_vitesse_de_broche">3.8. Correcteur de vitesse de broche</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>En déplaçant ce curseur, la vitesse programmée de la broche peut être
+modifiée. Par exemple, si un programme requiert une vitesse à F8000 et
+que le curseur est placé sur 80%, alors la fréquence de rotation
+résultante sera de <strong>F6400</strong>. Cet élément n&#8217;apparaît que si la <em>HAL pin</em>
+<em>motion.spindle-speed-out</em> est connectée dans le fichier .hal.</p></div>
+<h3 id="_vitesse_de_jog">3.9. Vitesse de Jog</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>En déplaçant ce curseur, la vitesse de jog peut être modifiée. Par
+exemple, si ce curseur est placé sur 100 mm/mn, alors un jog de 1 mm
+durera .6 secondes, ou 1/100 de minute. Du côté gauche du curseur (jog
+lent) l&#8217;espacement des valeurs est petit alors que du côté droit (jog
+rapide) l&#8217;espacement des valeurs est plus grand, cela permet une large
+étendue de vitesses de jog avec un contrôle plus fin du curseur dans
+les zones les plus importantes.</p></div>
+<div class="paragraph"><p>Sur les machines avec axes rotatifs, un second curseur de vitesse est
+présent. Il permet d&#8217;ajuster la vitesse de rotation des axes rotatifs
+(A, B et C).</p></div>
+<h3 id="_vitesse_maxi">3.10. Vitesse Maxi</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>En déplaçant ce curseur, la vitesse maximale peut être réglée.
+Ceci couvre la vitesse maximale de tous les mouvements programmés,
+sauf les mouvements avec broche synchronisée.</p></div>
+</div>
+<h2 id="_raccourcis_clavier">4. Raccourcis clavier</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>La plupart des actions d&#8217;AXIS sont accessibles depuis le clavier. La
+liste complète des raccourcis clavier est disponible dans l&#8217;aide rapide
+d&#8217;AXIS qui s&#8217;affiche en cliquant sur Aide &gt; Aide rapide . Beaucoup de
+ces raccourcis sont inaccessible en mode Entrées manuelles.</p></div>
+<div class="paragraph"><p>Touches des correcteurs de vitesse.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Les touches des correcteurs de vitesse se comportent différemment en mode manuel.
+Les touches <em>12345678</em> sélectionneront l&#8217;axe correspondant, si il est programmé.
+</p>
+</li>
+<li>
+<p>
+Si vous avez 3 axes, alors <strong>*</strong> sélectionnera l&#8217;axe 0, 1 sélectionnera l&#8217;axe 1,
+et 2 sélectionnera l&#8217;axe 2.
+</p>
+</li>
+<li>
+<p>
+Pendant l&#8217;exécution d&#8217;un programme, les touches <em>1234567890</em> fixeront la
+correction de vitesse travail entre 10% et 100%.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Les raccourcis clavier les plus fréquents sont visibles dans la table ci-dessous.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="90%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Tableau 1. Raccourcis clavier usuels<a id="cap:Raccourcis-clavier-usuels"></a></caption>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+<thead>
+<tr>
+<th align="left" valign="top">Touches          </th>
+<th align="left" valign="top"> Actions produites                           </th>
+<th align="left" valign="top"> Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">F1</p></td>
+<td align="left" valign="top"><p class="table">Bascule l&#8217;arrêt d&#8217;urgence</p></td>
+<td align="left" valign="top"><p class="table">Tous</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">F2</p></td>
+<td align="left" valign="top"><p class="table">Bascule le marche/arrêt machine</p></td>
+<td align="left" valign="top"><p class="table">Tous</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">`, 1 .. 9, 0</p></td>
+<td align="left" valign="top"><p class="table">Correcteurs de vitesse de 10% à 100%</p></td>
+<td align="left" valign="top"><p class="table">Varie</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">X, *</p></td>
+<td align="left" valign="top"><p class="table">Active le premier axe</p></td>
+<td align="left" valign="top"><p class="table">Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Y, 1</p></td>
+<td align="left" valign="top"><p class="table">Active le deuxième axe</p></td>
+<td align="left" valign="top"><p class="table">Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Z, 2</p></td>
+<td align="left" valign="top"><p class="table">Active le troisième axe</p></td>
+<td align="left" valign="top"><p class="table">Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">A, 3</p></td>
+<td align="left" valign="top"><p class="table">Active le quatrième axe</p></td>
+<td align="left" valign="top"><p class="table">Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">I</p></td>
+<td align="left" valign="top"><p class="table">Sélection d&#8217;incrément du jog</p></td>
+<td align="left" valign="top"><p class="table">Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">C</p></td>
+<td align="left" valign="top"><p class="table">jog en mode continu</p></td>
+<td align="left" valign="top"><p class="table">Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Ctrl+origine</p></td>
+<td align="left" valign="top"><p class="table">Lance une séquence de POM</p></td>
+<td align="left" valign="top"><p class="table">Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Fin</p></td>
+<td align="left" valign="top"><p class="table">Toucher: valide l&#8217;offset G54 de l&#8217;axe actif</p></td>
+<td align="left" valign="top"><p class="table">Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Gauche, Droite</p></td>
+<td align="left" valign="top"><p class="table">Jog du premier axe</p></td>
+<td align="left" valign="top"><p class="table">Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Up, Down</p></td>
+<td align="left" valign="top"><p class="table">Jog du deuxième axe</p></td>
+<td align="left" valign="top"><p class="table">Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Pg Up, Pg Dn</p></td>
+<td align="left" valign="top"><p class="table">Jog du troisième axe</p></td>
+<td align="left" valign="top"><p class="table">Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">[, ]</p></td>
+<td align="left" valign="top"><p class="table">Jog du quatrième axe</p></td>
+<td align="left" valign="top"><p class="table">Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">O</p></td>
+<td align="left" valign="top"><p class="table">Ouvrir un fichier</p></td>
+<td align="left" valign="top"><p class="table">Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Ctrl+R</p></td>
+<td align="left" valign="top"><p class="table">Recharger le fichier courant</p></td>
+<td align="left" valign="top"><p class="table">Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">R</p></td>
+<td align="left" valign="top"><p class="table">Exécuter le programme</p></td>
+<td align="left" valign="top"><p class="table">Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">P</p></td>
+<td align="left" valign="top"><p class="table">Pause dans l&#8217;exécution du programme</p></td>
+<td align="left" valign="top"><p class="table">Auto</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">S</p></td>
+<td align="left" valign="top"><p class="table">Reprise de l&#8217;exécution du programme</p></td>
+<td align="left" valign="top"><p class="table">Auto</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">ESC</p></td>
+<td align="left" valign="top"><p class="table">Stopper l&#8217;exécution</p></td>
+<td align="left" valign="top"><p class="table">Auto</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Ctrl+K</p></td>
+<td align="left" valign="top"><p class="table">Rafraichi le tracé d&#8217;outil</p></td>
+<td align="left" valign="top"><p class="table">Auto/Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">V</p></td>
+<td align="left" valign="top"><p class="table">Défilement cyclique des vues prédéfinies</p></td>
+<td align="left" valign="top"><p class="table">Auto/Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Maj-gauche,droite</p></td>
+<td align="left" valign="top"><p class="table">Axe X vitesse rapide</p></td>
+<td align="left" valign="top"><p class="table">Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Maj-haut, bas</p></td>
+<td align="left" valign="top"><p class="table">Axe Y vitesse rapide</p></td>
+<td align="left" valign="top"><p class="table">Manuel</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Maj-PgUp, PgDn</p></td>
+<td align="left" valign="top"><p class="table">Axe Z vitesse rapide</p></td>
+<td align="left" valign="top"><p class="table">Manuel</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<h2 id="_affichage_de_l_tat_de_linuxcnc_linuxcnctop">5. Affichage de l'état de LinuxCNC (LinuxCNCtop)</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>AXIS inclut un programme appelé <em>linuxcnctop</em> qui affiche en détail l'état
+de LinuxCNC. Ce programme est accessible dans le menu Machine &gt; Fenêtre
+d'état de LinuxCNC.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/axis-emc-status.png" alt="images/axis-emc-status.png" />
+</div>
+<div class="title">Figure 6. Fenêtre d'état de LinuxCNC</div>
+</div>
+<div class="paragraph"><p>Le nom de chaque entrée est affiché dans la colonne de gauche. La
+valeur courante de chaque entrée s&#8217;affiche dans la colonne de droite.
+Si la valeur a changé récemment, elle s&#8217;affiche en surbrillance rouge.</p></div>
+</div>
+<h2 id="_entr_e_de_donn_es_en_texte_mdi">6. Entrée de données en texte (MDI)</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>AXIS inclut un programme appelé <em>mdi</em>, il permet d&#8217;envoyer des
+commandes à la session de LinuxCNC en cours, sous forme de lignes de texte.
+Vous pouvez lancer ce programme en ouvrant une console et en tapant:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>mdi /chemin/vers/linuxcnc.nml</tt></pre>
+</div></div>
+<div class="paragraph"><p>En cours d&#8217;exécution il affiche le prompt: <em>MDI&gt;</em>. Quand une ligne
+vide est entrée, la position courante de la machine est affichée.
+Quand une commande est entrée, elle est passée à LinuxCNC qui l&#8217;exécute.</p></div>
+<div class="paragraph"><p>C&#8217;est un exemple de session de MDI.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ MDI ~/linuxcnc/configs/sim/emc.nml
+MDI&gt;
+(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+MDI&gt; G1 F5 X1
+MDI&gt;
+(0.5928500000000374, 0.0, 0.0, 0.0, 0.0, 0.0)
+MDI&gt;
+(1.0000000000000639, 0.0, 0.0, 0.0, 0.0, 0.0)</tt></pre>
+</div></div>
+</div>
+<h2 id="_axis_remote_commande_distance_de_l_8217_interface_graphique_d_8217_axis">7. axis-remote: Commande à distance de l&#8217;interface graphique d&#8217;AXIS</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>AXIS inclut un programme appelé <em>axis-remote</em> qui permet d&#8217;envoyer
+certaines commandes vers l&#8217;application AXIS fonctionnant à distance.
+Les commandes disponibles sont visibles en faisant: <em>axis-remote
+--help</em> pour vérifier qu&#8217;AXIS est en marche, inclure: (<em>--ping</em>),
+charger un fichier, recharger le fichier courant avec: (<em>--reload</em>) et
+quitter le programme AXIS avec: (<em>--quit</em>).</p></div>
+</div>
+<h2 id="sec:Changement-D-Outil-Manuel">8. hal_manualtoolchange: Dialogue de changement d&#8217;outil manuel</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>LinuxCNC inclut un composant userspace HAL de appelé <em>hal_manualtoolchange</em>,
+il ouvre une fenêtre d&#8217;appel d&#8217;outil visible ci-dessous,
+quand la commande <strong>M6</strong> est invoquée. Dés que le bouton <em>Continuer</em> est
+pressé, l&#8217;exécution du programme reprend.</p></div>
+<div class="paragraph"><p>Le fichier de configuration HAL <em>configs/sim/axis_manualtoolchange.hal</em>
+montre les commandes HAL nécessaires pour l&#8217;utilisation de ce composant.</p></div>
+<div class="paragraph"><p>hal_manualtoolchange peut être utilisé même si l&#8217;interface graphique
+AXIS n&#8217;est pas en service. Cette composante est particulièrement
+utile si vous avez des outils de pré-réglage et que vous utilisez la
+table d&#8217;outils.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">Le parcours d&#8217;outil d&#8217;un mouvement en vitesse rapide ne sera pas
+visible s&#8217;il suit un changement d&#8217;outil T&lt;n&gt; et ce jusqu&#8217;au prochain mouvement
+en vitesse travail. Ceci peut être source de confusion pour l&#8217;opérateur.
+Pour contourner cette particularité, ajoutez toujours un G1 sans mouvement
+après un M6 T&lt;n&gt;.</td>
+</tr></table>
+</div>
+<div class="imageblock" id="cap:Changement-manuel-d-outil">
+<div class="content">
+<img src="images/manualtoolchange_fr.png" alt="images/manualtoolchange_fr.png" />
+</div>
+<div class="title">Figure 7. La fenêtre de changement manuel d&#8217;outil</div>
+</div>
+</div>
+<h2 id="_modules_en_python">9. Modules en Python</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>AXIS inclut plusieurs modules en Python qui
+peuvent être très utiles. Pour des informations complètes sur ces
+modules, faites: <em>pydoc &lt;nom du module</em> ou lisez son code source.
+Modules inclus:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<strong>LinuxCNC</strong> fournit l&#8217;accès aux commandes de LinuxCNC, à son état et aux chaînes d&#8217;erreur
+</p>
+</li>
+<li>
+<p>
+<strong>gcode</strong> fournit l&#8217;accès à l&#8217;interpréteur RS274NGC
+</p>
+</li>
+<li>
+<p>
+<strong>rs274</strong> fournit des outils supplémentaires pour travailler sur les fichiers RS274NGC
+</p>
+</li>
+<li>
+<p>
+<strong>hal</strong> permet la création par l&#8217;utilisateur de composants de HAL écrits en Python
+</p>
+</li>
+<li>
+<p>
+<strong>_togl</strong> fournit des éléments OpenGL utilisables dans les applications Tkinter
+</p>
+</li>
+<li>
+<p>
+<strong>minigl</strong> fournit l&#8217;accès aux sous-ensembles d&#8217;OpenGL utilisés par AXIS
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Pour utiliser ces modules dans vos propres scripts, assurez-vous que
+le répertoire où ils se trouvent est dans le chemin d&#8217;accès des modules
+Python. Avec une version installée de LinuxCNC, ça se fera automatiquement.
+Avec une version installée en <em>in-place</em>, ça peut être fait avec l&#8217;aide
+de: <em>/scripts/rip-environment</em>.</p></div>
+</div>
+<h2 id="_utiliser_axis_en_mode_tour">10. Utiliser AXIS en mode tour</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>En incluant la ligne</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>LATHE = 1</tt></pre>
+</div></div>
+<div class="paragraph"><p>dans la section [DISPLAY] du fichier ini, AXIS sélectionnera le mode tour.
+L&#8217;axe Y ne s&#8217;affiche pas parmi les coordonnées, la vue est modifiée pour
+placer la broche à gauche, l&#8217;axe Z horizontalement avec son côté positif vers
+la droite <strong>(Z+)</strong> et l&#8217;axe X s'étendant vers le bas de l'écran <strong>(X+)</strong>.
+Plusieurs contrôles (tels que ceux des vues prédéfinies) sont supprimés.
+Les lectures de coordonnées pour X sont désormais en diamètre et en rayon.</p></div>
+<div class="paragraph"><p>La touche <strong>V</strong> agit alors sur le zoom pour afficher le tracé complet du
+fichier chargé.</p></div>
+<div class="paragraph"><p>En mode tour (lathe), la forme et l&#8217;orientation de l&#8217;outil chargé sont
+représentés.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/axis-lathe-tool.png" alt="images/axis-lathe-tool.png" />
+</div>
+<div class="title">Figure 8. Représentation de l&#8217;outil en mode tour</div>
+</div>
+</div>
+<h2 id="_configuration_avanc_e_d_8217_axis">11. Configuration avancée d&#8217;AXIS</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Pour plus d&#8217;informations sur les paramètres du fichier ini pouvant modifier le
+fonctionnement d&#8217;AXIS, voir le fichier ini, sections [DISPLAY] et le chapitre
+sur la configuration dans le manuel de l&#8217;intégrateur.</p></div>
+<h3 id="_filtres_de_programme">11.1. Filtres de programme</h3><div style="clear:left"></div>
+<div class="paragraph"><p>AXIS a la capacité d&#8217;envoyer des fichiers chargés à travers un
+<em>filtre de programme</em>. Ce filtre peut faire diverses tâches:
+Simple, comme s&#8217;assurer que le programme se termine bien par un <em><strong>M2</strong></em> ou
+complexe, comme détecter que l&#8217;entrée est une image et générer le g-code
+qui permettra d&#8217;usiner sa forme.</p></div>
+<div class="paragraph"><p>La section [FILTER] du fichier ini défini comment les filtres
+doivent agir. Premièrement, pour chaque type de fichier, écrire une ligne
+ PROGRAM_EXTENSION puis, spécifier le programme à exécuter pour chaque
+type de fichier. Ce programme reçoit comme argument le nom du fichier d&#8217;entrée,
+il doit produire le G-code selon le standard rs274ngc, en sortie. Les lignes de
+cette sortie s&#8217;affichent alors dans la zone de texte, le parcours d&#8217;outil
+résultant est visible dans la zone graphique, enfin il sera exécuté quand LinuxCNC
+recevra la commande <em>Exécuter le programme</em>. Les lignes suivantes fournissent
+la possibilité d&#8217;utiliser <em>image-to-gcode</em>, le convertisseur d&#8217;images
+fourni avec LinuxCNC:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[FILTER]
+PROGRAM_EXTENSION = .png,.gif Greyscale Depth Image
+png = image-to-gcode
+gif = image-to-gcode</tt></pre>
+</div></div>
+<div class="paragraph"><p>Il est également possible de spécifier un interpréteur:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>PROGRAM_EXTENSION = .py Python Script
+py = python</tt></pre>
+</div></div>
+<div class="paragraph"><p>De cette manière, n&#8217;importe quel script Python pourra être ouvert et
+sa sortie traitée comme du G-code. Un autre exemple est disponible
+dans: <em>/nc_files/holecircle.py</em> . Ce script crée le G-code pour percer
+une série de trous suivant un arc de cercle.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/holes.png" alt="images/holes.png" />
+</div>
+<div class="title">Figure 9. Perçages circulaires</div>
+</div>
+<div class="paragraph"><p>Si la variable d&#8217;environnement: AXIS_PROGRESS_BAR est active, alors
+les lignes seront écrites sur stderr de la forme:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>FILTER_PROGRESS=%d</tt></pre>
+</div></div>
+<div class="paragraph"><p>AXIS fixera la barre de progression selon le pourcentage donné. Cette
+fonction devrait être utilisée pour un filtre qui fonctionne
+suffisamment longtemps.</p></div>
+<h3 id="_la_base_de_donn_es_des_ressources_x">11.2. La base de données des ressources X</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les couleurs de la plupart des éléments de l&#8217;interface utilisateur
+d&#8217;AXIS peuvent être personnalisées grâce à la base de données X. Le
+fichier <em>axis_light_background</em> modifie les couleurs de la fenêtre du
+parcours d&#8217;outil sur le modèle <em>lignes noires et fond blanc</em>,
+il sert aussi de référence des éléments configurables dans l'écran graphique.
+L&#8217;exemple de fichier <em>axis_big_dro</em> évolution de la position de lecture
+à une police plus grande taille. Pour utiliser ces fichiers:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>xrdb -merge /usr/share/doc/linuxcnc/axis_light_background
+
+xrdb -merge /usr/share/doc/linuxcnc/axis_big_dro</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour plus d&#8217;informations au sujet des éléments configurables dans les
+applications Tk, référez vous aux manuels de Tk.</p></div>
+<div class="paragraph"><p>Les bureaux graphiques modernes effectuent certains réglages dans la
+base de données des ressources X ces réglages peuvent affecter ceux
+d&#8217;AXIS, par défaut ces réglages sont ignorés. Pour que les éléments des
+ressources X écrasent ceux par défaut dans AXIS, il faut inclure cette
+ligne dans vos ressources X:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>    *Axis*optionLevel: widgetDefault</tt></pre>
+</div></div>
+<div class="paragraph"><p>ce qui entraînera la construction des options au niveau
+<em>widgetDefault</em>, de sorte que les ressources X (qui sont elles, au
+niveau <em>userDefault</em>) puissent l&#8217;emporter.</p></div>
+<h3 id="sub:Manivelle-de-jog">11.3. Manivelle de jog</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Pour accroître l&#8217;interaction d&#8217;AXIS avec une manivelle de jog
+physique, l&#8217;axe actif courant sélectionné dans l&#8217;interface graphique
+est aussi reporté sur une <em>pin HAL</em> avec un nom comme <em>axisui.jog.x</em>.
+Excepté pendant un court instant après que l&#8217;axe courant ait changé,
+une seule de ces pins à la fois est <em>TRUE</em>, les autres restent <em>FALSE</em>.</p></div>
+<div class="paragraph"><p>Après qu&#8217;AXIS ait créé ces <em>HAL pins</em>, il exécute le fichier hal
+déclaré avec: [HAL]POSTGUI_HALFILE. Ce qui diffère de [HAL]HALFILE,
+qui lui ne s&#8217;utilise qu&#8217;une seule fois.</p></div>
+<h3 id="_axisrc">11.4. ~/.axisrc</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Si il existe, le contenu de: <em>~/.axisrc</em> est exécuté comme un code
+source Python juste avant l&#8217;ouverture de
+l&#8217;interface graphique d&#8217;AXIS. Les détails de ce qui peut être écrit
+dans .axisrc sont sujets à changement durant le cycle de développement.</p></div>
+<div class="paragraph"><p>Les lignes visibles ci-dessous ajoutent un Ctrl+Q comme raccourci clavier
+pour Quitter et activer l&#8217;option <em>Distance restante</em> par défaut.</p></div>
+<div class="listingblock">
+<div class="title">Exemple de fichier .axisrc<a id="cap:Exemple-de-fichier-axisrc"></a></div>
+<div class="content">
+<pre><tt>root_window.bind("&lt;Control-q&gt;", "destroy .")
+help2.append(("Control-Q", "Quit"))</tt></pre>
+</div></div>
+<h3 id="_diteur_externe">11.5. Éditeur externe</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>En définissant: [DISPLAY]EDITOR , les options de menu: <em>Fichier</em> →
+<em>Éditer</em> ainsi que <em>Fichier</em> → <em>Éditer la table d&#8217;outils</em>, deviennent accessibles.
+Deux valeurs qui fonctionnent bien: EDITOR=gedit et
+<em>EDITOR=gnome-terminal -e nano</em>.</p></div>
+<h3 id="_panneau_de_contr_le_virtuel">11.6. Panneau de contrôle virtuel</h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>AXIS peut afficher un panneau de commande virtuel personnalisé dans le
+volet de droite. Il est possible d&#8217;y placer des boutons, des indicateurs qui
+afficheront des données et plus encore. Voir le manuel de l&#8217;intégrateur.</p></div>
+<h3 id="_commentaires_sp_ciaux_a_id_sub_commentaires_speciaux_a">11.7. Commentaires spéciaux<a id="sub:Commentaires-speciaux"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les commentaires spéciaux peuvent être insérés dans le fichier de G-code pour
+contrôler le comportement de l&#8217;affichage d&#8217;AXIS. Pour limiter l&#8217;aperçu au seul
+affichage du parcours d&#8217;outil, utiliser ces commentaires spéciaux. Rien ne
+s&#8217;affichera entre le commentaire (AXIS,hide) et le commentaire (AXIS,show) sauf
+le parcours d&#8217;outil. Les (AXIS,hide) et (AXIS,show) doivent être utilisés par
+paires avec le (AXIS, hide) en premier. Tout ce qui est après un (AXIS,stop)
+ne sera pas visible.</p></div>
+<div class="paragraph"><p>Ces commentaires sont utiles pour désencombrer l&#8217;affichage d&#8217;aperçu (Par exemple
+ pendant le débogage d&#8217;un grand fichier G-code, on peut désactiver l'
+aperçu sur certaines parties qui sont déjà fonctionnelles).</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+(AXIS,hide) Arrête le parcours d&#8217;outil (à placer en premier)
+</p>
+</li>
+<li>
+<p>
+(AXIS,show) Reprend le parcours d&#8217;outil (il faut suivre un cache)
+</p>
+</li>
+<li>
+<p>
+(AXIS,stop) Arrête le parcours d&#8217;outil d&#8217;ici à la fin du fichier.
+</p>
+</li>
+<li>
+<p>
+(AXIS,notify,le_texte) Affiche <em>le_texte</em> à l'écran, comme une info.
+Cet affichage peut être très utile lors du pré-affichage du parcours d&#8217;outil,
+quand les commentaires (debug,message) ne sont pas affichés.
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-11-01 22:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/axis_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:45 GMT -->
+</html>

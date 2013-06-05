@@ -1,0 +1,138 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:22 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/rtapi_mutex.3rtapi.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>rtapi_mutex</title>
+
+</head>
+<body>
+
+<h1 align="center">rtapi_mutex</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNTAX">SYNTAX</a><br>
+<a href="#ARGUMENTS">ARGUMENTS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#REALTIME CONSIDERATIONS">REALTIME CONSIDERATIONS</a><br>
+<a href="#RETURN VALUE">RETURN VALUE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">rtapi_mutex
+&minus; Mutex-related functions</p>
+
+<h2>SYNTAX
+<a name="SYNTAX"></a>
+</h2>
+
+
+<p style="margin-left:22%; margin-top: 1em">int
+rtapi_mutex_try(unsigned long *<i>mutex</i>)</p></table>
+
+<p style="margin-left:22%; margin-top: 1em">void
+rtapi_mutex_get(unsigned long *<i>mutex</i>)</p></table>
+
+<p style="margin-left:22%; margin-top: 1em">void
+rtapi_mutex_give(unsigned long *<i>mutex</i>)</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+
+
+<h2>ARGUMENTS
+<a name="ARGUMENTS"></a>
+</h2>
+<td width="11%"></td>
+<td width="7%"></td>
+<td width="4%"></td>
+<td width="35%">
+</td>
+<td width="43%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p><i>mutex</i></p></td>
+<td width="4%"></td>
+<td width="35%">
+
+
+<p>A pointer to the mutex.</p></td>
+<td width="43%">
+</td></tr>
+</table>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_mutex_try</b>
+makes a non-blocking attempt to get the mutex. If the mutex
+is available, it returns 0, and the mutex is no longer
+available. Otherwise, it returns a nonzero value.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_mutex_get</b>
+blocks until the mutex is available.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_mutex_give</b>
+releases a mutex acquired by <b>rtapi_mutex_try</b> or
+<b>rtapi_mutex_get</b>.</p>
+
+<h2>REALTIME CONSIDERATIONS
+<a name="REALTIME CONSIDERATIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_mutex_give</b>
+and <b>rtapi_mutex_try</b> may be used from user,
+init/cleanup, and realtime code.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_mutex_get</b>
+may not be used from realtime code.</p>
+
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_mutex_try</b>
+returns 0 for if the mutex was claimed, and nonzero
+otherwise.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_mutex_get</b>
+and <b>rtapi_mutex_gif</b> have no return value.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/rtapi_mutex.3rtapi.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+</html>

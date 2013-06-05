@@ -1,0 +1,353 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:18 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/hal_input.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>HAL_INPUT</title>
+
+</head>
+<body>
+
+<h1 align="center">HAL_INPUT</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#INPUT SPECIFICATION">INPUT SPECIFICATION</a><br>
+<a href="#DEVICE FEATURES SUPPORTED">DEVICE FEATURES SUPPORTED</a><br>
+<a href="#HAL PINS AND PARAMETERS">HAL PINS AND PARAMETERS</a><br>
+<a href="#PERMISSIONS AND UDEV">PERMISSIONS AND UDEV</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">hal_input
+&minus; control HAL pins with any Linux input device,
+including USB HID devices</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><i>loadusr</i>
+<b>hal_input</b> <i>[-KRAL] inputspec ...</i></p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">hal_input is an
+interface between HAL and any Linux input device, including
+USB HID devices. For each device named, <b>hal_input</b>
+creates pins corresponding to its keys, absolute axes, and
+LEDs. At a fixed rate of approximately 10ms, it synchronizes
+the device and the HAL pins.</p>
+
+<h2>INPUT SPECIFICATION
+<a name="INPUT SPECIFICATION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The
+<i>inputspec</i> may be in one of several forms: <br>
+A string <i>S</i></p>
+
+<p style="margin-left:22%;">A substring or shell-style
+pattern match will be tested against the &quot;name&quot; of
+the device, the &quot;phys&quot; (which gives information
+about how it is connected), and the &quot;id&quot;, which is
+a string of the form &quot;Bus=... Vendor=... Product=...
+Version=...&quot;. You can view the name, phys, and id of
+attached devices by executing <b>less
+/proc/bus/input/devices</b>. Examples:</p>
+
+<p style="margin-left:29%;">SpaceBall <br>
+&quot;Vendor=001f Product=0001&quot; <br>
+serio*/input0</p>
+
+<p style="margin-left:11%;">A number <i>N</i></p>
+
+<p style="margin-left:22%;">This opens
+<b>/dev/input/event</b><i>N</i>. Except for devices that are
+always attached to the system, this number may change over
+reboots or when the device is removed. For this reason,
+using an integer is not recommended.</p>
+
+<p style="margin-left:11%; margin-top: 1em">When several
+devices are identified by the same string, add
+&quot;<b>:</b><i>N</i>&quot; where <i>N</i> is the index of
+the desired device. For example, if <b>Mouse</b> matches
+<b>input3</b> and <b>input10</b>, then <b>Mouse</b> and
+<b>Mouse:0</b> select <b>input3</b>. Specifying
+<b>mouse:1</b> selects input10.</p>
+
+<p style="margin-left:11%; margin-top: 1em">For devices
+that appear as multiple entries in /dev/input, these indices
+are likely to stay the same every time. For multiple
+identical devices, these indices are likely to depend on the
+insertion order, but stay the same across reboots as long as
+the devices are not moved to different ports or unplugged
+while the machine is booted.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If the first
+character of the <i>inputspec</i> is a &quot;+&quot;, then
+<b>hal_input</b> requests exclusive access to the device.
+The first device matching an <i>inputspec</i> is used. Any
+number of <i>inputspec</i>s may be used.</p>
+
+<p style="margin-left:11%; margin-top: 1em">A <i>subset
+option may preceed each inputspec</i>. The subset option
+begins with a dash. Each letter in the subset option
+specifies a device feature to <b>include</b>. Features that
+are not specified are excluded. For instance, to export
+keyboard LEDs to HAL without exporting keys, use</p>
+
+<p style="margin-left:29%;">hal_input -L <i>keyboard</i>
+...</p>
+
+<h2>DEVICE FEATURES SUPPORTED
+<a name="DEVICE FEATURES SUPPORTED"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p style="margin-top: 1em">&bull;</p></td>
+<td width="5%"></td>
+<td width="66%">
+
+
+<p style="margin-top: 1em">EV_KEY (buttons and keys).
+Subset -K</p></td>
+<td width="17%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="66%">
+
+
+<p>EV_ABS (absolute analog inputs). Subset -A</p></td>
+<td width="17%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="66%">
+
+
+<p>EV_REL (relative analog inputs). Subset -R</p></td>
+<td width="17%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="1%">
+
+
+<p>&bull;</p></td>
+<td width="5%"></td>
+<td width="66%">
+
+
+<p>EV_LED (LED outputs). Subset -L</p></td>
+<td width="17%">
+</td></tr>
+</table>
+
+<h2>HAL PINS AND PARAMETERS
+<a name="HAL PINS AND PARAMETERS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>For buttons
+<br>
+input.</b><i>N</i><b>.btn-</b><i>name</i> bit out <b><br>
+input.</b><i>N</i><b>.btn-</b><i>name</i><b>-not</b> bit
+out</p>
+
+<p style="margin-left:22%;">Created for each button on the
+device.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>For keys
+<br>
+input.</b><i>N</i><b>.key-</b><i>name</i> <b><br>
+input.</b><i>N</i><b>.key-</b><i>name</i><b>-not</b></p>
+
+<p style="margin-left:22%;">Created for each key on the
+device.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>For absolute
+axes <br>
+input.</b><i>N</i><b>.abs-</b><i>name</i><b>-counts</b> s32
+out <b><br>
+input.</b><i>N</i><b>.abs-</b><i>name</i><b>-position</b>
+float out <b><br>
+input.</b><i>N</i><b>.abs-</b><i>name</i><b>-scale</b>
+parameter float rw <b><br>
+input.</b><i>N</i><b>.abs-</b><i>name</i><b>-offset</b>
+parameter float rw <b><br>
+input.</b><i>N</i><b>.abs-</b><i>name</i><b>-fuzz</b>
+parameter s32 rw <b><br>
+input.</b><i>N</i><b>.abs-</b><i>name</i><b>-flat</b>
+parameter s32 rw <b><br>
+input.</b><i>N</i><b>.abs-</b><i>name</i><b>-min</b>
+parameter s32 r <b><br>
+input.</b><i>N</i><b>.abs-</b><i>name</i><b>-max</b>
+parameter s32 r</p>
+
+<p style="margin-left:22%;">Created for each absolute axis
+on the device. Device positions closer than <b>flat</b> to
+<b>offset</b> are reported as <b>offset</b> in
+<b>counts</b>, and <b>counts</b> does not change until the
+device position changes by at least <b>fuzz</b>. The
+position is computed as <b>position</b> = (<b>counts</b> -
+<b>offset</b>) / <b>scale</b>. The default value of
+<b>scale</b> and <b>offset</b> map the range of the axis
+reported by the operating system to [-1,1]. The default
+values of <b>fuzz</b> and <b>flat</b> are those reported by
+the operating system. The values of <b>min</b> and
+<b>max</b> are those reported by the operating system.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>For relative
+axes <br>
+input.</b><i>N</i><b>.rel-</b><i>name</i><b>-counts</b> s32
+out <b><br>
+input.</b><i>N</i><b>.rel-</b><i>name</i><b>-position</b>
+float out <b><br>
+input.</b><i>N</i><b>.rel-</b><i>name</i><b>-reset</b> bit
+in <b><br>
+input.</b><i>N</i><b>.rel-</b><i>name</i><b>-scale</b>
+parameter float rw <b><br>
+input.</b><i>N</i><b>.rel-</b><i>name</i><b>-absolute</b>
+parameter s32 rw <b><br>
+input.</b><i>N</i><b>.rel-</b><i>name</i><b>-precision</b>
+parameter s32 rw <b><br>
+input.</b><i>N</i><b>.rel-</b><i>name</i><b>-last</b>
+parameter s32 rw</p>
+
+<p style="margin-left:22%;">Created for each relative axis
+on the device. As long as <b>reset</b> is true,
+<b>counts</b> is reset to zero regardless of any past or
+current axis movement. Otherwise, <b>counts</b> increases or
+decreases according to the motion of the axis. <b>counts</b>
+is divided by position-scale to give <b>position</b>. The
+default value of <b>position</b> is 1. There are some
+devices, notably scroll wheels, which return signed values
+with less resolution than 32 bits. The default value of
+<b>precision</b> is 32. <b>precision</b> can be set to 8 for
+a device that returns signed 8 bit values, or any other
+value from 1 to 32. <b>absolute</b>, when set true, ignores
+duplicate events with the same value. This allows for
+devices that repeat events without any user action to work
+correctly. <b>last</b> shows the most recent count value
+returned by the device, and is used in the implementation of
+<b>absolute</b>.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>For LEDs
+<br>
+input.</b><i>N</i><b>.led-</b><i>name</i> bit out <b><br>
+input.</b><i>N</i><b>.led-</b><i>name</i><b>-invert</b>
+parameter bit rw</p>
+
+<p style="margin-left:22%;">Created for each LED on the
+device.</p>
+
+<h2>PERMISSIONS AND UDEV
+<a name="PERMISSIONS AND UDEV"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">By default, the
+input devices may not be accessible to regular
+users--<b>hal_input</b> requires read-write access, even if
+the device has no outputs. To change the default permission
+of a device, add a new file to /etc/udev/rules.d to set the
+device&rsquo;s GROUP to &quot;plugdev&quot;. You can do this
+for all input devices with this rule:</p>
+
+<p style="margin-left:22%;">SUBSYSTEM==&quot;input&quot;,
+MODE=&quot;0660&quot;, GROUP=&quot;plugdev&quot;</p>
+
+<p style="margin-left:11%;">You can also make more specific
+rules for particular devices. For instance, a SpaceBall
+input device uses the &rsquo;spaceball&rsquo; kernel module,
+so a udev entry for it would read:</p>
+
+<p style="margin-left:22%;">DRIVER==&quot;spaceball&quot;,
+MODE=&quot;0660&quot;, GROUP=&quot;plugdev&quot;</p>
+
+<p style="margin-left:11%;">the next time the device is
+attached to the system, it will be accessible to the
+&quot;plugdev&quot; group.</p>
+
+<p style="margin-left:11%; margin-top: 1em">For USB
+devices, the udev line would refer to the device&rsquo;s
+Vendor and Product values, such as</p>
+
+
+<p style="margin-left:22%;">SYSFS{idProduct}==&quot;c00e&quot;,
+SYSFS{idVendor}==&quot;046d&quot;, MODE=&quot;0660&quot;,
+GROUP=&quot;plugdev&quot;</p>
+
+<p style="margin-left:11%;">for a particular
+logictech-brand mouse.</p>
+
+<p style="margin-left:11%; margin-top: 1em">For more
+information on writing udev rules, see <b>udev(8)</b>.</p>
+
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The initial
+state of keys, buttons, and absolute axes are erroneously
+reported as FALSE or 0 until an event is received for that
+key, button, or axis.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>udev(8)</b></p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/hal_input.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

@@ -1,0 +1,232 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/starting-emc.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:13:23 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Starting LinuxCNC</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Starting LinuxCNC</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:starting-linuxcnc"></a> </p></div>
+</div>
+</div>
+<h2 id="_running_linuxcnc">1. Running LinuxCNC</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>LinuxCNC is started with the script file <em>linuxcnc</em>.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>linuxcnc [options] [&lt;ini-file&gt;]</tt></pre>
+</div></div>
+<div class="ulist"><div class="title">linuxcnc script options</div><ul>
+<li>
+<p>
+<em>-v</em> = verbose - prints info as it works
+</p>
+</li>
+<li>
+<p>
+<em>-d</em> = echoes script commands to screen for debugging
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>If the linuxcnc script is passed an ini file it reads the ini file and starts
+LinuxCNC. The ini file [HAL] section specifies the order of loading up HAL
+files if more than one is used. Once the HAL=xxx.hal files are loaded then the
+GUI is loaded then the POSTGUI=.xxx.hal file is loaded. If you create PyVCP or
+GladeVCP objects with HAL pins you must use the postgui HAL file to make any
+connections to those pins. See the <a href="../config/ini_config.html#sub:[HAL]-section">HAL</a> section of the
+INI configuration for more information.</p></div>
+<h3 id="_a_id_sub_configuration_selector_a_configuration_selector" class="float"><a id="sub:configuration-selector"></a> Configuration Selector</h3>
+<div class="paragraph"><p>If no ini file is passed to the linuxcnc script it loads the configuration
+selector so you can choose and save a sample configuration. Once a sample
+configuration has been saved it can be modified to suit your application.</p></div>
+<div class="imageblock" id="fig:configuration-selector" style="text-align:center;">
+<div class="content">
+<img src="images/configuration-selector.png" alt="images/configuration-selector.png" />
+</div>
+<div class="title">Figure 1. Configuration Selector</div>
+</div>
+</div>
+<h2 id="_files_used_for_configuration">2. Files Used for Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>LinuxCNC is configured with human readable text files. All of these
+files can be read and edited in any of the common text file editors
+available with most any Linux distribution.<span class="footnote"><br />[Don&#8217;t confuse a
+text editor with a word processor. A text editor like
+gedit or kwrite produce files that are plain text. They also produce
+lines of text that are separated from each other. A word processor like
+Libre Office produces files with paragraphs and word wrapping and lots of
+embedded codes that control font size and such. A text editor does none
+of this.]<br /></span> You&#8217;ll need to be a bit careful when you edit these files. Some
+mistakes will cause the start up to fail. These files are read whenever
+the software starts up. Some of them are read repeatedly while the CNC
+is running.</p></div>
+<div class="paragraph"><p>Configuration files include</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>INI</em>  The ini file overrides defaults that are compiled into the
+    LinuxCNC code. It also provides sections that are read directly by the
+    Hardware Abstraction Layer.
+</p>
+</li>
+<li>
+<p>
+<em>HAL</em>  The HAL files start up process modules and provide linkages
+    between LinuxCNC signals and specific hardware pins.
+</p>
+</li>
+<li>
+<p>
+<em>VAR</em>  The var file is a way for the interpreter to save some
+    values from one run to the next. These values are saved from one run to
+    another but not always saved immediately. See the Parameters section of
+    the G Code Manual for information on what each parameter is.
+</p>
+</li>
+<li>
+<p>
+<em>TBL</em>  The tbl file saves tool information. See the User Manual
+    Tool File section for more info.
+</p>
+</li>
+<li>
+<p>
+<em>NML</em>  The nml file configures the communication channels used by
+    the LinuxCNC. It is normally setup to run all of the communication within a
+    single computer but can be modified to communicate between several
+    computers.
+</p>
+</li>
+<li>
+<p>
+<em>linuxcncrc</em>  This file saves user specific information and is created
+    to save the name of the directory when the user first selects an LinuxCNC
+    configuration.<span class="footnote"><br />[Usually this file is in the users home
+    directory (e.g. /home/user/ )]<br /></span>
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Items marked <strong>(in HAL)</strong> are used by the sample HAL files and are
+suggested as a good convention.
+Other items are used by LinuxCNC directly, and must always have
+the section and item names given.</p></div>
+</div>
+<h2 id="_twopass">3. TWOPASS</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>LinuxCNC 2.5 supports TWOPASS processing of hal configuration files
+that can help in the modularization and readability of hal files.
+(Hal files are specified in an LinuxCNC ini file in the HAL stanza
+as [HAL]HALFILE=filename).</p></div>
+<div class="paragraph"><p>Normally, a set of one or more hal configuration files must use
+a single, unique loadrt line to load a kernel module that may
+handle multiple instances of a component.  For example, if you
+use a two input AND gate component (and2) in three different
+places in your setup, you would need to have a single line
+somewhere to specify:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>   loadrt and2 count=3</tt></pre>
+</div></div>
+<div class="paragraph"><p>resulting in components and2.0, and2.1, and2.2.</p></div>
+<div class="paragraph"><p>Configurations are more readable if you specify with the
+names=option for components where it is supported, e.g.,:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt and2 names=aa,ab,ac</tt></pre>
+</div></div>
+<div class="paragraph"><p>resulting in components aa,ab,ac.</p></div>
+<div class="paragraph"><p>It can be a maintenance problem to keep track of the components
+and their names since when you add (or remove) a component, you
+must find and update the single loadrt directive applicable to
+the component.</p></div>
+<div class="paragraph"><p>TWOPASS processing is enabled by including an ini file parameter:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[HAL]TWOPASS=anything</tt></pre>
+</div></div>
+<div class="paragraph"><p>Where "anything" can be any non-null string.
+With this setting, you can have multiple specifications like:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt and2 names=aa
+...
+loadrt and2 names=ab,ac
+...
+loadrt and2 names=ad</tt></pre>
+</div></div>
+<div class="paragraph"><p>These commands can appear in different HALFILES.  The HALFILES
+are processed in the order of their appearance in the ini file.</p></div>
+<div class="paragraph"><p>With TWOPASS processing, all [HAL]HALFILES are first read and
+multiple appearances of loadrt directives for each module are
+accumulated.  No hal commands are executed in this initial pass.</p></div>
+<div class="paragraph"><p>After the initial pass, the modules are loaded automatically
+with a number equal to the total number when using the count=
+option or with all of the individual names specified when using
+the names= option.</p></div>
+<div class="paragraph"><p>A second pass is then made to execute all of the other hal
+instructions specified in the HALFILES.  The addf commands that
+associate a component&#8217;s functions with thread execution are
+executed in the order of appearance with other commands during
+this second pass.</p></div>
+<div class="paragraph"><p>While you can use either the count= or names= options, they are
+mutually exclusive&#8201;&#8212;&#8201;only one type can  be specified for a
+given module.</p></div>
+<div class="paragraph"><p>TWOPASS processing is most effective when using the names=
+option.  This option allows you to provide unique names that
+are mnemonic or otherwise relevant to the configuration.   For
+example, if you use a derivative component to estimate the
+velocities and accelerations on each (x,y,z) coordinate, using
+the count= method will give arcane component names like ddt.0,
+ddt.1, ddt.2, etc.</p></div>
+<div class="paragraph"><p>Alternatively, using the names= option like:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt ddt names=xvel,yvel,zvel
+...
+loadrt ddt names=xacel,yacel,zacel</tt></pre>
+</div></div>
+<div class="paragraph"><p>results in components sensibly named xvel,yvel,zvel, xacel,yacel,zacel.</p></div>
+<div class="paragraph"><p>Many comps supplied with the distribution are created with the
+comp utility and support the names= option.  These include the
+common logic components that are the glue of many hal configurations.</p></div>
+<div class="paragraph"><p>User-created comps that use the comp utility automatically
+support the names= option as well.  In addition to comps generated
+with the comp utility, numerous other comps support the names=option.
+Comps that support names= option include: at_pid, encoder,
+encoder_ratio, pid, siggen, and sim_encoder.</p></div>
+<div class="paragraph"><p>Examples of TWOPASS usage for a simulator are included in the
+configs/simtcl directory.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-01-24 16:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/starting-emc.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:13:34 GMT -->
+</html>

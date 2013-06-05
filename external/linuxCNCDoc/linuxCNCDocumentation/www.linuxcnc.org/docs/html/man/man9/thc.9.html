@@ -1,0 +1,257 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:47 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/thc.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>THC</title>
+
+</head>
+<body>
+
+<h1 align="center">THC</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">thc &minus;
+Torch Height Control</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="15%">
+
+
+<p style="margin-top: 1em"><b>loadrt thc</b></p></td>
+<td width="74%">
+</td></tr>
+</table>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Torch Height
+Control Mesa THC &gt; Encoder &gt; LinuxCNC THC
+component</p>
+
+<p style="margin-left:11%; margin-top: 1em">The Mesa THC
+sends a frequency based on the voltage detected to the
+encoder. The velocity from the encoder is converted to volts
+with the velocity scale parameter inside the THC
+component.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The THCAD card
+sends a frequency at 0 volts so the scale offset parameter
+is used to zero the calculated voltage.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Component
+Functions If enabled and torch is on and X + Y velocity is
+within tolerance of set speed allow the THC to offset the Z
+axis as needed to maintain voltage.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If enabled and
+torch is off and the Z axis is moving up remove any
+correction at a rate not to exceed the rate of movement of
+the Z axis.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If enabled and
+torch is off and there is no correction pass the Z position
+and feed back untouched.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If not enabled
+pass the Z position and feed back untouched.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Physical
+Connections <br>
+Plasma Torch Arc Voltage Signal =&gt; 6 x 487k 1% resistors
+=&gt; THC Arc Voltage In <br>
+THC Frequency Signal =&gt; Encoder #0, pin A (Input) <br>
+Plasma Torch Arc OK Signal =&gt; input pin <br>
+output pin =&gt; Plasma Torch Start Arc Contacts</p>
+
+<p style="margin-left:11%; margin-top: 1em">HAL Plasma
+Connections <br>
+encoder.nn.velocity =&gt; thc.encoder-vel (tip voltage) <br>
+motion.spindle-on =&gt; output pin (start the arc) <br>
+thc.arc-ok &lt;= motion.digital-in-00 &lt;= input pin (arc
+ok signal)</p>
+
+<p style="margin-left:11%; margin-top: 1em">HAL Motion
+Connections <br>
+thc.requested-vel &lt;= motion.requested-vel <br>
+thc.current-vel &lt;= motion.current-vel</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>thc</b>
+(requires a floating-point thread)</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>thc.encoder-vel</b>
+float in</p>
+
+<p style="margin-left:22%;">Connect to
+hm2_5i20.0.encoder.00.velocity</p>
+
+<p style="margin-left:11%;"><b>thc.current-vel</b> float
+in</p>
+
+<p style="margin-left:22%;">Connect to
+motion.current-vel</p>
+
+<p style="margin-left:11%;"><b>thc.requested-vel</b> float
+in</p>
+
+<p style="margin-left:22%;">Connect to
+motion.requested-vel</p>
+
+<p style="margin-left:11%;"><b>thc.volts-requested</b>
+float in</p>
+
+<p style="margin-left:22%;">Tip Volts current_vel &gt;=
+min_velocityequested (SP)</p>
+
+<p style="margin-left:11%;"><b>thc.vel-tol</b> float in</p>
+
+<p style="margin-left:22%;">Velocity Tolerance (Corner
+Lock)</p>
+
+<p style="margin-left:11%;"><b>thc.torch-on</b> bit in</p>
+
+<p style="margin-left:22%;">Connect to
+motion.spindle-on</p>
+
+<p style="margin-left:11%;"><b>thc.arc-ok</b> bit in</p>
+
+<p style="margin-left:22%;">Arc OK from Plasma Torch</p>
+
+<p style="margin-left:11%;"><b>thc.enable</b> bit in</p>
+
+<p style="margin-left:22%;">Enable the THC, if not enabled
+Z position is passed through</p>
+
+<p style="margin-left:11%;"><b>thc.z-pos-in</b> float
+in</p>
+
+<p style="margin-left:22%;">Z Motor Position Command in
+from axis.n.motor-pos-cmd</p>
+
+<p style="margin-left:11%;"><b>thc.z-pos-out</b> float
+out</p>
+
+<p style="margin-left:22%;">Z Motor Position Command
+Out</p>
+
+<p style="margin-left:11%;"><b>thc.z-fb-out</b> float
+out</p>
+
+<p style="margin-left:22%;">Z Position Feedback to Axis</p>
+
+<p style="margin-left:11%;"><b>thc.volts</b> float out</p>
+
+<p style="margin-left:22%;">The Calculated Volts</p>
+
+<p style="margin-left:11%;"><b>thc.vel-status</b> bit
+out</p>
+
+<p style="margin-left:22%;">When the THC thinks we are at
+requested speed</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>thc.vel-scale</b>
+float rw</p>
+
+<p style="margin-left:22%;">The scale to convert the
+Velocity signal to Volts</p>
+
+<p style="margin-left:11%;"><b>thc.scale-offset</b> float
+rw</p>
+
+<p style="margin-left:22%;">The offset of the velocity
+input at 0 volts</p>
+
+<p style="margin-left:11%;"><b>thc.velocity-tol</b> float
+rw</p>
+
+<p style="margin-left:22%;">The deviation percent from
+planned velocity</p>
+
+<p style="margin-left:11%;"><b>thc.voltage-tol</b> float
+rw</p>
+
+<p style="margin-left:22%;">The deviation of Tip Voltage
+before correction takes place</p>
+
+<p style="margin-left:11%;"><b>thc.correction-vel</b> float
+rw</p>
+
+<p style="margin-left:22%;">The amount of change in user
+units per period to move Z to correct</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">John
+Thornton</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">GPLv2 or
+greater</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/thc.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

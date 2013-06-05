@@ -1,0 +1,743 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/Glossary.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Glossary</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Glossary</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>A listing of terms and what they mean. Some terms have a general
+meaning and several additional meanings for users, installers, and
+developers.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Acme Screw
+</dt>
+<dd>
+<p>
+     <a id="glo:AcmeScrew"></a> A type of lead-screw that uses an Acme
+    thread form. Acme threads have somewhat lower friction and wear than
+    simple triangular threads, but ball-screws are lower yet. Most manual
+    machine tools use acme lead-screws.
+</p>
+</dd>
+<dt class="hdlist1">
+Axis
+</dt>
+<dd>
+<p>
+     <a id="glo:Axis"></a> One of the computer controlled movable parts of the
+    machine. For a typical vertical mill, the table is the X axis, the
+    saddle is the Y axis, and the quill or knee is the Z axis. Angular
+    axes like rotary tables are referred to as A, B, and C. Additional
+    linear axes relative to the tool are called U, V, and W
+    respectively.
+</p>
+</dd>
+<dt class="hdlist1">
+Axis(GUI)
+</dt>
+<dd>
+<p>
+      One of the Graphical User Interfaces available to users of
+    LinuxCNC. It features the modern use of menus and mouse buttons while
+    automating and hiding some of the more traditional LinuxCNC controls. It is
+    the only open-source interface that displays the entire tool path as
+    soon as a file is opened.
+</p>
+</dd>
+<dt class="hdlist1">
+Backlash
+</dt>
+<dd>
+<p>
+     <a id="glo:Backlash"></a> The amount of "play" or lost motion that
+    occurs when direction is reversed in a lead screw. or other mechanical
+    motion driving system. It can result from nuts that are loose on
+    leadscrews, slippage in belts, cable slack, "wind-up" in rotary
+    couplings, and other places where the mechanical system is not "tight".
+    Backlash will result in inaccurate motion, or in the case of motion
+    caused by external forces (think cutting tool pulling on the work
+    piece) the result can be broken cutting tools. This can happen because
+    of the sudden increase in chip load on the cutter as the work piece is
+    pulled across the backlash distance by the cutting tool.
+</p>
+</dd>
+<dt class="hdlist1">
+Backlash Compensation
+</dt>
+<dd>
+<p>
+      Any technique that attempts to reduce
+    the effect of backlash without actually removing it from the mechanical
+    system. This is typically done in software in the controller. This can
+    correct the final resting place of the part in motion but fails to
+    solve problems related to direction changes while in motion (think
+    circular interpolation) and motion that is caused when external forces
+    (think cutting tool pulling on the work piece) are the source of the
+    motion.
+</p>
+</dd>
+<dt class="hdlist1">
+Ball Screw
+</dt>
+<dd>
+<p>
+     <a id="glo:Ballscrew"></a> A type of lead-screw that uses small
+    hardened steel balls between the nut and screw to reduce friction.
+    Ball-screws have very low friction and backlash, but are usually quite
+    expensive.
+</p>
+</dd>
+<dt class="hdlist1">
+Ball Nut
+</dt>
+<dd>
+<p>
+     <a id="glo:Ballnut"></a> A special nut designed for use with a
+    ball-screw. It contains an internal passage to re-circulate the balls
+    from one end of the screw to the other.
+</p>
+</dd>
+<dt class="hdlist1">
+CNC
+</dt>
+<dd>
+<p>
+     <a id="glo:CNC"></a> Computer Numerical Control. The general term used to
+    refer to computer control of machinery. Instead of a human operator
+    turning cranks to move a cutting tool, CNC uses a computer and motors
+    to move the tool, based on a part program.
+</p>
+</dd>
+<dt class="hdlist1">
+Comp
+</dt>
+<dd>
+<p>
+     <a id="glo:comp"></a> A tool used to build, compile and install LinuxCNC HAL
+    components.
+</p>
+</dd>
+<dt class="hdlist1">
+Configuration(n)
+</dt>
+<dd>
+<p>
+     A directory containing a set of configuration files. Custom
+    configurations are normally saved in the users home/linuxcnc/configs
+    directory. These files include LinuxCNC&#8217;s traditional INI file and HAL
+    files. A configuration may also contain several general files that
+    describe tools, parameters, and NML connections.
+</p>
+</dd>
+<dt class="hdlist1">
+Configuration(v)
+</dt>
+<dd>
+<p>
+     The task of setting up LinuxCNC so that it matches the hardware on a
+    machine tool.
+</p>
+</dd>
+<dt class="hdlist1">
+Coordinate Measuring Machine
+</dt>
+<dd>
+<p>
+      A Coordinate Measuring Machine is
+    used to make many accurate measurements on parts. These machines can be
+    used to create CAD data for parts where no drawings can be found, when
+    a hand-made prototype needs to be digitized for moldmaking, or to check
+    the accuracy of machined or molded parts.
+</p>
+</dd>
+<dt class="hdlist1">
+Display units
+</dt>
+<dd>
+<p>
+      The linear and angular units used for onscreen
+    display.
+</p>
+</dd>
+<dt class="hdlist1">
+DRO
+</dt>
+<dd>
+<p>
+      A Digital Read Out is a system of position-measuring devices
+    attached to the slides of a machine tool, which are connected to a
+    numeric display showing the current location of the tool with respect to
+    some reference position.
+    DROs are very popular on hand-operated machine tools because they
+    measure the true tool position without backlash, even if the machine
+    has very loose Acme screws.
+    Some DROs use linear quadrature encoders to pick up position
+    information from the machine, and some use methods similar to a
+    resolver which keeps rolling over.
+</p>
+</dd>
+<dt class="hdlist1">
+EDM
+</dt>
+<dd>
+<p>
+      EDM is a method of removing metal in hard or difficult to
+    machine or tough metals, or where rotating tools would not be able to
+    produce the desired shape in a cost-effective manner. An excellent
+    example is rectangular punch dies, where sharp internal corners are
+    desired. Milling operations can not give sharp internal corners with
+    finite diameter tools. A <em>wire</em> EDM machine can make internal corners
+    with a radius only slightly larger than the wire&#8217;s radius. A <em>sinker</em>
+    EDM can make internal corners with a radius only slightly larger
+    than the radius on the corner of the sinking electrode.
+</p>
+</dd>
+<dt class="hdlist1">
+EMC
+</dt>
+<dd>
+<p>
+     <a id="glo:EMC"></a> The Enhanced Machine Controller. Initially a NIST
+    project. Renamed to LinuxCNC in 2012.
+</p>
+</dd>
+<dt class="hdlist1">
+EMCIO
+</dt>
+<dd>
+<p>
+     <a id="glo:EMCIO"></a> The module within LinuxCNC that handles general
+    purpose I/O, unrelated to the actual motion of the axes.
+</p>
+</dd>
+<dt class="hdlist1">
+EMCMOT
+</dt>
+<dd>
+<p>
+     <a id="glo:EMCMOT"></a> The module within LinuxCNC that handles
+    the actual motion of the cutting tool. It runs as a real-time program
+    and directly controls the motors.
+</p>
+</dd>
+<dt class="hdlist1">
+Encoder
+</dt>
+<dd>
+<p>
+     <a id="glo:Encoder"></a> A device to measure position. Usually a
+    mechanical-optical device, which outputs a quadrature signal. The
+    signal can be counted by special hardware, or directly by the parport
+    with LinuxCNC.
+</p>
+</dd>
+<dt class="hdlist1">
+Feed
+</dt>
+<dd>
+<p>
+     <a id="glo:Feed"></a> Relatively slow, controlled motion of the tool used
+    when making a cut.
+</p>
+</dd>
+<dt class="hdlist1">
+Feed rate
+</dt>
+<dd>
+<p>
+      The speed at which a cutting motion occurs.
+    In auto or mdi mode, feed rate is commanded using an F word.
+    F10 would mean ten machine units per minute.
+</p>
+</dd>
+<dt class="hdlist1">
+Feedback
+</dt>
+<dd>
+<p>
+     <a id="glo:Feedback"></a> A method (e.g., quadrature encoder signals)
+    by which LinuxCNC receives information about the position of motors
+</p>
+</dd>
+<dt class="hdlist1">
+Feedrate Override
+</dt>
+<dd>
+<p>
+     <a id="glo:FeedrateOveride"></a> A manual, operator controlled
+    change in the rate at which the tool moves while cutting. Often used to
+    allow the operator to adjust for tools that are a little dull, or
+    anything else that requires the feed rate to be “tweaked”.
+</p>
+</dd>
+<dt class="hdlist1">
+Floating Point Number
+</dt>
+<dd>
+<p>
+    A number that has a decimal point. (12.300) In HAL it is known as float.
+</p>
+</dd>
+<dt class="hdlist1">
+G-Code
+</dt>
+<dd>
+<p>
+     <a id="glo:G-Code"></a> The generic term used to refer to the most
+    common part programming language. There are several dialects of G-code,
+    LinuxCNC uses RS274/NGC.
+</p>
+</dd>
+<dt class="hdlist1">
+GUI
+</dt>
+<dd>
+<p>
+    <a id="glo:GUI"></a> Graphical User Interface.
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+General
+</dt>
+<dd>
+<p>
+         A type of interface that allows communications between a computer
+        and a human (in most cases) via the manipulation of icons and other
+        elements (widgets) on a computer screen.
+</p>
+</dd>
+<dt class="hdlist1">
+LinuxCNC
+</dt>
+<dd>
+<p>
+         An application that presents a graphical screen to the machine
+        operator allowing manipulation of the machine and the corresponding
+        controlling program.
+</p>
+</dd>
+</dl></div>
+</dd>
+<dt class="hdlist1">
+HAL
+</dt>
+<dd>
+<p>
+     <a id="glo:HAL"></a> Hardware Abstraction Layer. At the highest
+    level, it is simply a way to allow a number of
+    building blocks to be loaded and interconnected to assemble a complex
+    system. Many of the building blocks are drivers for hardware devices.
+    However, HAL can do more than just configure hardware drivers.
+</p>
+</dd>
+<dt class="hdlist1">
+Home
+</dt>
+<dd>
+<p>
+     <a id="glo:Home"></a> A specific location in the machine&#8217;s work envelope
+    that is used to make sure the computer and the actual machine both
+    agree on the tool position.
+</p>
+</dd>
+<dt class="hdlist1">
+ini file
+</dt>
+<dd>
+<p>
+     <a id="glo:inifile"></a> A text file that contains most of the information
+    that configures LinuxCNC for a particular machine.
+</p>
+</dd>
+<dt class="hdlist1">
+Instance
+</dt>
+<dd>
+<p>
+     <a id="glo:Instance"></a> One can have an instance of a class or a
+    particular object. The instance is the actual object created at
+    runtime. In programmer jargon, the Lassie object is an instance of the
+    Dog class.
+</p>
+</dd>
+<dt class="hdlist1">
+Joint Coordinates
+</dt>
+<dd>
+<p>
+     <a id="glo:Joint_Coordinates"></a> These specify the angles
+    between the individual joints of the machine. See also Kinematics
+</p>
+</dd>
+<dt class="hdlist1">
+Jog
+</dt>
+<dd>
+<p>
+      Manually moving an axis of a machine. Jogging either moves
+    the axis a fixed amount for each key-press, or moves the axis at a
+    constant speed as long as you hold down the key. In manual mode,
+    jog speed can be set from the graphical interface.
+</p>
+</dd>
+<dt class="hdlist1">
+kernel-space
+</dt>
+<dd>
+<p>
+    <a id="glo:kernel-space"></a> See real-time.
+</p>
+</dd>
+<dt class="hdlist1">
+Kinematics
+</dt>
+<dd>
+<p>
+     <a id="glo:Kinematics"></a> The position relationship between world
+    coordinates and joint coordinates of a machine. There are two types of
+    kinematics. Forward kinematics is used to calculate world coordinates
+    from joint coordinates. Inverse kinematics is used for exactly the opposite
+    purpose. Note that kinematics does not take into account, the forces,
+    moments etc. on the machine. It is for positioning only.
+</p>
+</dd>
+<dt class="hdlist1">
+Lead-screw
+</dt>
+<dd>
+<p>
+     <a id="glo:Leadscrew"></a> An screw that is rotated by a motor to
+    move a table or other part of a machine. Lead-screws are usually either
+    ball-screws or acme screws, although conventional triangular threaded
+    screws may be used where accuracy and long life are not as important as
+    low cost.
+</p>
+</dd>
+<dt class="hdlist1">
+Machine units
+</dt>
+<dd>
+<p>
+      The linear and angular units used for machine
+    configuration. These units are specified and used in the ini file.
+    HAL pins and parameters are also generally in machine units.
+</p>
+</dd>
+<dt class="hdlist1">
+MDI
+</dt>
+<dd>
+<p>
+     <a id="glo:MDI"></a> Manual Data Input. This is a mode of operation where
+    the controller executes single lines of G-code as they are typed by the
+    operator.
+</p>
+</dd>
+<dt class="hdlist1">
+NIST
+</dt>
+<dd>
+<p>
+     <a id="glo:NIST"></a> National Institute of Standards and Technology.
+    An agency of the Department of Commerce in the United States.
+</p>
+</dd>
+<dt class="hdlist1">
+NML
+</dt>
+<dd>
+<p>
+     <a id="glo:NML"></a> Neutral Message Language provides a mechanism for
+     handling multiple types of messages in the same buffer as well as
+     simplifying the interface for encoding and decoding buffers in neutral
+     format and the configuration mechanism.
+</p>
+</dd>
+<dt class="hdlist1">
+Offsets
+</dt>
+<dd>
+<p>
+     <a id="glo:Offsets"></a>
+    An arbitrary amount, added to the value of something to make it
+    equal to some desired value. For example, gcode programs are
+    often written around some convenient point, such as X0, Y0.
+    Fixture offsets can be used to shift the actual execution point
+    of that gcode program to properly fit the true location
+    of the vise and jaws.
+    Tool offsets can be used to shift the "uncorrected" length
+    of a tool to equal that tool&#8217;s actual length.
+</p>
+</dd>
+<dt class="hdlist1">
+Part Program
+</dt>
+<dd>
+<p>
+     <a id="glo:PartProgram"></a> A description of a part,
+    in a language that the controller can understand. For LinuxCNC,
+    that language is RS-274/NGC, commonly known as G-code.
+</p>
+</dd>
+<dt class="hdlist1">
+Program Units
+</dt>
+<dd>
+<p>
+     The linear and angular units used in a part program.
+    The linear program units do not have to be the same as the linear machine units.
+    See G20 and G21 for more information. The angular program units are always
+    measured in degrees.
+</p>
+</dd>
+<dt class="hdlist1">
+Python
+</dt>
+<dd>
+<p>
+     General-purpose, very high-level programming language. Used in LinuxCNC
+    for the Axis GUI, the Stepconf configuration tool, and several G-code
+    programming scripts.
+</p>
+</dd>
+<dt class="hdlist1">
+Rapid
+</dt>
+<dd>
+<p>
+     <a id="glo:Rapid"></a> Fast, possibly less precise motion of the tool,
+    commonly used to move between cuts. If the tool meets the workpiece
+    or the fixturing during a rapid, it is probably a bad thing!
+</p>
+</dd>
+<dt class="hdlist1">
+Rapid rate
+</dt>
+<dd>
+<p>
+     <a id="glo:RapidRate"></a>The speed at which a rapid motion occurs.
+    In auto or mdi mode, rapid rate is usually the maximum speed of the machine.
+    It is often desirable to limit the rapid rate when
+    testing a g-code program for the first time.
+</p>
+</dd>
+<dt class="hdlist1">
+Real-time
+</dt>
+<dd>
+<p>
+     <a id="glo:real-time"></a> Software that is intended to meet very
+    strict timing deadlines. Under Linux, in order to meet these
+    requirements it is necessary to install RTAI or RTLINUX and build the
+    software to run in those special environments. For this reason
+    real-time software runs in kernel-space.
+</p>
+</dd>
+<dt class="hdlist1">
+RTAI
+</dt>
+<dd>
+<p>
+     <a id="glo:RTAI"></a> Real Time Application Interface, see
+    <a href="https://www.rtai.org/">https://www.rtai.org/</a>, one of two real-time
+    extensions for Linux that LinuxCNC can use to achieve real-time
+    performance.
+</p>
+</dd>
+<dt class="hdlist1">
+RTLINUX
+</dt>
+<dd>
+<p>
+     <a id="glo:RTLINUX"></a> See
+    <a href="http://www.rtlinux.org/">http://www.rtlinux.org</a>, one of two real-time
+    extensions for Linux that LinuxCNC can use to achieve real-time
+    performance.
+</p>
+</dd>
+<dt class="hdlist1">
+RTAPI
+</dt>
+<dd>
+<p>
+     A portable interface to real-time operating systems
+    including RTAI and RTLINUX
+</p>
+</dd>
+<dt class="hdlist1">
+RS-274/NGC
+</dt>
+<dd>
+<p>
+     <a id="glo:RS274NGC"></a> The formal name for the language
+    used by LinuxCNC part programs.
+</p>
+</dd>
+<dt class="hdlist1">
+Servo Motor
+</dt>
+<dd>
+<p>
+     <a id="glo:ServoMotor"></a> Generally, any motor that is used
+    with error-sensing feedback to correct the position of an actuator.
+    Also, a motor which is specially-designed to provide improved
+    performance in such applications.
+</p>
+</dd>
+<dt class="hdlist1">
+Servo Loop
+</dt>
+<dd>
+<p>
+     <a id="glo:ServoLoop"></a> A control loop used to control position or
+    velocity of an motor equipped with a feedback device.
+</p>
+</dd>
+<dt class="hdlist1">
+Signed Integer
+</dt>
+<dd>
+<p>
+      A whole number that can have a positive or
+    negative sign. In HAL it is known as s32. (A signed 32-bit
+    integer has a usable range of -2,147,483,647 to +2,147,483,647.)
+</p>
+</dd>
+<dt class="hdlist1">
+Spindle
+</dt>
+<dd>
+<p>
+     <a id="glo:Spindle"></a> The part of a machine tool that spins
+    to do the cutting. On a mill or drill, the spindle holds the
+    cutting tool. On a lathe, the spindle holds the workpiece.
+</p>
+</dd>
+<dt class="hdlist1">
+Spindle Speed Override
+</dt>
+<dd>
+<p>
+     A manual, operator controlled change in the rate at which the tool
+    rotates while cutting. Often used to allow the operator to adjust for
+    chatter caused by the cutter&#8217;s teeth. Spindle Speed Override assumes
+    that the LinuxCNC software has been configured to control spindle speed.
+</p>
+</dd>
+<dt class="hdlist1">
+Stepconf
+</dt>
+<dd>
+<p>
+     An LinuxCNC configuration wizard. It is able to handle many
+    step-and-direction motion command based machines. It writes a full
+    configuration after the user answers a few questions about the computer
+    and machine that LinuxCNC is to run on.
+</p>
+</dd>
+<dt class="hdlist1">
+Stepper Motor
+</dt>
+<dd>
+<p>
+     <a id="glo:StepperMotor"></a> A type of motor that turns in
+    fixed steps. By counting steps, it is possible to determine how far the
+    motor has turned. If the load exceeds the torque capability of the
+    motor, it will skip one or more steps, causing position errors.
+</p>
+</dd>
+<dt class="hdlist1">
+TASK
+</dt>
+<dd>
+<p>
+     <a id="glo:TASK"></a> The module within LinuxCNC that coordinates
+    the overall execution and interprets the part program.
+</p>
+</dd>
+<dt class="hdlist1">
+Tcl/Tk
+</dt>
+<dd>
+<p>
+     <a id="glo:Tcl/Tk"></a> A scripting language and graphical widget toolkit
+    with which several of LinuxCNCs GUIs and selection wizards were
+    written.
+</p>
+</dd>
+<dt class="hdlist1">
+Traverse Move
+</dt>
+<dd>
+<p>
+      A move in a straight line from the start point to
+    the end point.
+</p>
+</dd>
+<dt class="hdlist1">
+Units
+</dt>
+<dd>
+<p>
+     See "Machine Units", "Display Units", or "Program Units".
+</p>
+</dd>
+<dt class="hdlist1">
+Unsigned Integer
+</dt>
+<dd>
+<p>
+      A whole number that has no sign. In HAL
+    it is known as u32. (An unsigned 32-bit integer has a usable range of
+    zero to 4,294,967,296.)
+</p>
+</dd>
+<dt class="hdlist1">
+World Coordinates
+</dt>
+<dd>
+<p>
+     <a id="glo:World_Coordinates"></a> This is the absolute
+    frame of reference. It gives coordinates in terms of a fixed reference
+    frame that is attached to some point (generally the base) of the
+    machine tool.
+</p>
+</dd>
+</dl></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-05-19 11:36:15 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/Glossary.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

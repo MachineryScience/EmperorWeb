@@ -1,0 +1,196 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:46 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/bldc_hall3.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>BLDC_HALL3</title>
+
+</head>
+<body>
+
+<h1 align="center">BLDC_HALL3</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">bldc_hall3
+&minus; 3-wire BLDC motor driver using Hall sensors and
+trapezoidal commutation.</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The
+functionality of this component is now included in the
+generic &quot;bldc&quot; component. This component is likely
+to be removed in a future release</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">This component
+produces a 3-wire bipolar output. This suits upstream
+drivers that interpret a negative input as a low-side drive
+and positive as a high-side drive. This includes the
+Hostmot2 3pwmgen function, which is likely to be the most
+common application of this component.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>bldc-hall3.</b><i>N</i>
+(requires a floating-point thread)</p>
+
+<p style="margin-left:22%;">Interpret Hall sensor patterns
+and set 3-phase amplitudes</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>bldc-hall3.</b><i>N</i><b>.hall1</b>
+bit in</p>
+
+<p style="margin-left:22%;">Hall sensor signal 1</p>
+
+
+<p style="margin-left:11%;"><b>bldc-hall3.</b><i>N</i><b>.hall2</b>
+bit in</p>
+
+<p style="margin-left:22%;">Hall sensor signal 2</p>
+
+
+<p style="margin-left:11%;"><b>bldc-hall3.</b><i>N</i><b>.hall3</b>
+bit in</p>
+
+<p style="margin-left:22%;">Hall sensor signal 3</p>
+
+
+<p style="margin-left:11%;"><b>bldc-hall3.</b><i>N</i><b>.value</b>
+float in</p>
+
+<p style="margin-left:22%;">PWM master amplitude input</p>
+
+
+<p style="margin-left:11%;"><b>bldc-hall3.</b><i>N</i><b>.dir</b>
+bit in</p>
+
+<p style="margin-left:22%;">Forwards / reverse selection.
+Negative PWM amplitudes will also reverse the motor and
+there will generally be a pattern that runs the motor in
+each direction too.</p>
+
+
+<p style="margin-left:11%;"><b>bldc-hall3.</b><i>N</i><b>.A-value</b>
+float out</p>
+
+<p style="margin-left:22%;">Output amplitude for phase
+A</p>
+
+
+<p style="margin-left:11%;"><b>bldc-hall3.</b><i>N</i><b>.B-value</b>
+float out</p>
+
+<p style="margin-left:22%;">Output amplitude for phase
+B</p>
+
+
+<p style="margin-left:11%;"><b>bldc-hall3.</b><i>N</i><b>.C-value</b>
+float out</p>
+
+<p style="margin-left:22%;">Output amplitude for phase
+C</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>bldc-hall3.</b><i>N</i><b>.pattern</b>
+u32 rw (default: <i>25</i>)</p>
+
+<p style="margin-left:22%;">Commutation pattern to use,
+from 0 to 47. Default is type 25. Every plausible
+combination is included. The table shows the excitation
+pattern along the top, and the pattern code on the left hand
+side. The table entries are the hall patterns in H1, H2, H3
+order. Common patterns are: 0 (30 degree commutation) and
+26, its reverse. 17 (120 degree). 18 (alternate 60 degree).
+21 (300 degree, Bodine). 22 (240 degree). 25 (60 degree
+commutation).</p>
+
+<p style="margin-left:22%; margin-top: 1em">Note that a
+number of incorrect commutations will have non-zero net
+torque which might look as if they work, but don&rsquo;t
+really.</p>
+
+<p style="margin-left:22%; margin-top: 1em">If your motor
+lacks documentation it might be worth trying every
+pattern.</p>
+
+
+<p style="margin-left:22%; margin-top: 1em"><STYLE> #pattern TD { text-align: center; padding-left: .5ex; padding-right: .5ex } #pattern TH { text-align: center; padding-left: .5ex; padding-right: .5ex } #pattern TD.W { text-align: right; } </STYLE> <TABLE ID="pattern" STYLE="border: 1px solid black; border-collapse: collapse"> <COL SPAN=7 STYLE="margin: .2ex"><COL SPAN=1 STYLE="border-left: 1px solid black"> <TR><TD>&nbsp;<TH COLSPAN=6 CLASS=W>Phases, Source - Sink <TR><TH CLASS=W>pat<TH CLASS=W>B-A<TH CLASS=W>C-A<TH CLASS=W>C-B<TH CLASS=W>A-B<TH CLASS=W>A-C<TH CLASS=W>B-C <TR><TH>0<TD>000<TD>001<TD>011<TD>111<TD>110<TD>100 <TR><TH>1<TD>001<TD>000<TD>010<TD>110<TD>111<TD>101 <TR><TH>2<TD>000<TD>010<TD>011<TD>111<TD>101<TD>100 <TR><TH>3<TD>001<TD>011<TD>010<TD>110<TD>100<TD>101 <TR><TH>4<TD>010<TD>011<TD>001<TD>101<TD>100<TD>110 <TR><TH>5<TD>011<TD>010<TD>000<TD>100<TD>101<TD>111 <TR><TH>6<TD>010<TD>000<TD>001<TD>101<TD>111<TD>110 <TR><TH>7<TD>011<TD>001<TD>000<TD>100<TD>110<TD>111 <TR><TH>8<TD>000<TD>001<TD>101<TD>111<TD>110<TD>010 <TR><TH>9<TD>001<TD>000<TD>100<TD>110<TD>111<TD>011 <TR><TH>10<TD>000<TD>010<TD>110<TD>111<TD>101<TD>001 <TR><TH>11<TD>001<TD>011<TD>111<TD>110<TD>100<TD>000 <TR><TH>12<TD>010<TD>011<TD>111<TD>101<TD>100<TD>000 <TR><TH>13<TD>011<TD>010<TD>110<TD>100<TD>101<TD>001 <TR><TH>14<TD>010<TD>000<TD>100<TD>101<TD>111<TD>011 <TR><TH>15<TD>011<TD>001<TD>101<TD>100<TD>110<TD>010 <TR><TH>16<TD>000<TD>100<TD>101<TD>111<TD>011<TD>010 <TR><TH>17<TD>001<TD>101<TD>100<TD>110<TD>010<TD>011 <TR><TH>18<TD>000<TD>100<TD>110<TD>111<TD>011<TD>001 <TR><TH>19<TD>001<TD>101<TD>111<TD>110<TD>010<TD>000 <TR><TH>20<TD>010<TD>110<TD>111<TD>101<TD>001<TD>000 <TR><TH>21<TD>011<TD>111<TD>110<TD>100<TD>000<TD>001 <TR><TH>22<TD>010<TD>110<TD>100<TD>101<TD>001<TD>011 <TR><TH>23<TD>011<TD>111<TD>101<TD>100<TD>000<TD>010 <TR><TH>24<TD>100<TD>101<TD>111<TD>011<TD>010<TD>000 <TR><TH>25<TD>101<TD>100<TD>110<TD>010<TD>011<TD>001 <TR><TH>26<TD>100<TD>110<TD>111<TD>011<TD>001<TD>000 <TR><TH>27<TD>101<TD>111<TD>110<TD>010<TD>000<TD>001 <TR><TH>28<TD>110<TD>111<TD>101<TD>001<TD>000<TD>010 <TR><TH>29<TD>111<TD>110<TD>100<TD>000<TD>001<TD>011 <TR><TH>30<TD>110<TD>100<TD>101<TD>001<TD>011<TD>010 <TR><TH>31<TD>111<TD>101<TD>100<TD>000<TD>010<TD>011 <TR><TH>32<TD>100<TD>101<TD>001<TD>011<TD>010<TD>110 <TR><TH>33<TD>101<TD>100<TD>000<TD>010<TD>011<TD>111 <TR><TH>34<TD>100<TD>110<TD>010<TD>011<TD>001<TD>101 <TR><TH>35<TD>101<TD>111<TD>011<TD>010<TD>000<TD>100 <TR><TH>36<TD>110<TD>111<TD>011<TD>001<TD>000<TD>100 <TR><TH>37<TD>111<TD>110<TD>010<TD>000<TD>001<TD>101 <TR><TH>38<TD>110<TD>100<TD>000<TD>001<TD>011<TD>111 <TR><TH>39<TD>111<TD>101<TD>001<TD>000<TD>010<TD>110 <TR><TH>40<TD>100<TD>000<TD>001<TD>011<TD>111<TD>110 <TR><TH>41<TD>101<TD>001<TD>000<TD>010<TD>110<TD>111 <TR><TH>42<TD>100<TD>000<TD>010<TD>011<TD>111<TD>101 <TR><TH>43<TD>101<TD>001<TD>011<TD>010<TD>110<TD>100 <TR><TH>44<TD>110<TD>010<TD>011<TD>001<TD>101<TD>100 <TR><TH>45<TD>111<TD>011<TD>010<TD>000<TD>100<TD>101 <TR><TH>46<TD>110<TD>010<TD>000<TD>001<TD>101<TD>111 <TR><TH>47<TD>111<TD>011<TD>001<TD>000<TD>100<TD>110 </TABLE></p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">bldc_hall6
+6-wire unipolar driver for BLDC motors.</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Andy Pugh</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/bldc_hall3.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

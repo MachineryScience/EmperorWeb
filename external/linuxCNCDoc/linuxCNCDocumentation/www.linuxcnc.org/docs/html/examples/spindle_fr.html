@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/examples/spindle_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Contrôle de la broche</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Contrôle de la broche</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:Controle-broche"></a> </p></div>
+</div>
+</div>
+<h2 id="_vitesse_broche_en_0_10v">1. Vitesse broche en 0-10V </h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Si la vitesse de la broche est contrôlée par un variateur de
+fréquence avec une consigne vitesse en 0 à 10V et qu&#8217;une carte de conversion
+(DAC) comme la m5i20 est utilisée pour sortir le signal.</p></div>
+<div class="paragraph"><p>Premièrement il faut calculer le facteur d'échelle entre la vitesse
+broche et la tension de commande. Dans cet exemple, la vitesse maximale
+de la broche sera de 5000 tr/mn pour une tension de commande de 10V.
+10 Volts/5000 tr/mn = 0.002 Volts par tr/mn notre facteur d'échelle sera donc
+de 0.002.</p></div>
+<div class="paragraph"><p>Si la carte DAC ne dispose pas d&#8217;une fonction échelle, il est nécessaire
+d&#8217;ajouter un composant <em>scale</em> (echelle) au fichier hal pour calibrer
+<em>motion.spindle-speed-out</em> entre 0 et 10 comme demandé par le variateur
+de fréquence.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt scale count=1
+addf scale.0 servo-thread
+setp scale.0.gain 0.002
+net spindle-speed-scale motion.spindle-speed-out =&gt; scale.0.in
+net spindle-speed-DAC scale.0.out =&gt; «le nom de la sortie de votre DAC»</tt></pre>
+</div></div>
+</div>
+<h2 id="_vitesse_de_broche_en_pwm">2. Vitesse de broche en PWM </h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Si la vitesse de la broche peut être contrôlée par un signal de
+PWM, utiliser le composant <em>pwmgen</em> pour créer le signal:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt pwmgen output_type=0
+addf pwmgen.update servo-thread
+addf pwmgen.make-pulses base-thread
+net spindle-speed-cmd motion.spindle-speed-out =&gt; pwmgen.0.value
+net spindle-on motion.spindle-on =&gt; pwmgen.0.enable
+net spindle-pwm pwmgen.0.pwm =&gt; parport.0.pin-09-out
+# Adapter selon la vitesse maximale de la broche en tr/mn
+setp pwmgen.0.scale 1800</tt></pre>
+</div></div>
+<div class="paragraph"><p>La réponse du contrôleur de PWM est simple: 0% donne 0tr/mn, 10%
+donnent 180 tr/mn&#8230; 100% donnent 1800 tr/mn. Si un minimum est
+nécessaire pour faire tourner la broche, suivre l&#8217;exemple <em>nist-lathe</em>
+fourni dans les exemples de configuration pour ajouter un composant
+d'échelle.</p></div>
+</div>
+<h2 id="_marche_broche">3. Marche broche </h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Si un signal de marche broche reliant <em>motion.spindle-on</em> à une broche de
+sortie physique est envisagé. Pour relier ces pins à une broche du
+port parallèle, ajouter une ligne comme la suivante dans le fichier .hal,
+il faut bien sûr qu&#8217;elle soit câblée à l&#8217;interface de contrôle.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net spindle-enable motion.spindle-on =&gt; parport.0.pin-14-out</tt></pre>
+</div></div>
+</div>
+<h2 id="_sens_de_rotation_de_la_broche">4. Sens de rotation de la broche </h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Pour contrôler le sens de rotation de la broche, les pins de HAL
+<em>motion.spindle-forward</em> et <em>motion.spindle-reverse</em> étant contrôlées par M3 et
+M4, peuvent être mise à une valeur positive différente de zéro pour que
+M3/4 inverse le sens de la broche.</p></div>
+<div class="paragraph"><p>Pour relier ces pins à des broches du port parallèle utiliser, par
+exemple, les lignes suivantes dans le fichier .hal, bien sûr ces
+broches doivent être câblées à l&#8217;interface de contrôle.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net spindle-fwd motion.spindle-forward -&gt; parport.0.pin-16-out
+net spindle-rev motion.spindle-reverse =&gt; parport.0.pin-17-out</tt></pre>
+</div></div>
+</div>
+<h2 id="_d_marrage_en_rampe">5. Démarrage en rampe</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Si la broche doit démarrer en rampe et que le contrôleur n&#8217;a pas cette
+possibilité, HAL pourra le faire. Il faut premièrement détourner la sortie de
+<em>motion.spindle-speed-out</em> et la faire transiter par un composant <em>limit2</em>
+dont l'échelle est ajustée de sorte que la consigne suive une rampe entre
+<em>motion.spindle-speed-out</em> et le périphérique recevant la consigne de vitesse.
+Ensuite, il faut faire connaitre à LinuxCNC le moment ou la broche a atteint sa
+vitesse pour que les mouvements puissent commencer.</p></div>
+<div class="paragraph"><p>Reprenant dans l&#8217;exemple en 0-10 V, la ligne:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net spindle-speed-scale motion.spindle-speed-out =&gt; scale.0.in</tt></pre>
+</div></div>
+<div class="paragraph"><p>sera modifiée, comme indiqué dans l&#8217;exemple ci-dessous:</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="sidebar-title">Introduction aux composants de HAL <em>limit2</em> et <em>near</em>:</div>
+<div class="paragraph"><p>Au cas ou vous ne les auriez jamais rencontré auparavant, voici une rapide
+introduction à ces deux composants de HAL utilisés dans l&#8217;exemple suivant.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Le composant de HAL <em>limit2</em> est un composant qui reçoit
+   une valeur sur une entrée et fourni une valeur en sortie, limitée entre les
+   seuils min et max et <em>également</em>, limitée pour ne pas dépasser
+   l&#8217;amortissement spécifié. En d&#8217;autres termes, les fluctuations de la valeur
+   de sortie seront toujours lentes et cette lenteur est ajustable.
+</p>
+</li>
+<li>
+<p>
+Le composant de HAL <em>near</em> est un composant à deux entrées et une sortie
+   binaire qui indique quand les deux entrées sont approximativement égales.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Voir le manuel de HAL ou les man pages, taper juste <em>man limit2</em> ou <em>man near</em>.</p></div>
+</div></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt># charge un composant temps réel limit2 et un near avec des noms aisés à suivre
+loadrt limit2 names=spindle-ramp
+loadrt near names=spindle-at-speed
+
+# ajoute les fonctions au thread
+addf spindle-ramp servo-thread
+addf spindle-at-speed servo-thread
+
+# fixe le paramètre max pour l'amortissement
+# (accélération/décélération de la broche en unités par seconde)
+setp spindle-ramp.maxv 60
+
+# détourne la sortie vitesse broche et l'envoie à l'entrée de la rampe
+net spindle-cmd &lt;= motion.spindle-speed-out =&gt; spindle-ramp.in
+
+# la sortie de la rampe est envoyée à l'entrée de l'échelle
+net spindle-ramped &lt;= spindle-ramp.out =&gt; scale.0.in
+
+# pour connaitre quand commencer le mouvement on envoie la vitesse de broche
+# commandée à une entrée du composant spindle-at-speed (qui est un composant near).
+# on envoie également le signal de fin de rampe (vitesse actuelle)
+# sur l'autre entrée de spindle-at-speed
+net spindle-cmd =&gt; spindle-at-speed.in1
+net spindle-ramped =&gt; spindle-at-speed.in2
+
+# la sortie de spindle-at-speed est envoyée à motion.spindle-at-speed
+# et quand elle devient TRUE, les mouvements peuvent commencer
+net spindle-ready &lt;= spindle-at-speed.out =&gt; motion.spindle-at-speed</tt></pre>
+</div></div>
+</div>
+<h2 id="_vitesse_de_broche_avec_signal_de_retour">6. Vitesse de broche avec signal de retour</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Une information de retour est nécessaire pour que LinuxCNC puisse réaliser
+des mouvements synchronisés avec la broche comme le filetage ou la
+vitesse de coupe constante. L&#8217;assistant de configuration StepConf peut
+réaliser les connections lui même si les signaux <em>Canal A codeur broche</em> et
+<em>Index codeur broche</em> sont choisis parmi les entrées.</p></div>
+<div class="paragraph"><p>Matériel supposé présent:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Un codeur est monté sur la broche et délivre 100 impulsions par tour
+   sur son canal A.
+</p>
+</li>
+<li>
+<p>
+Ce canal A est raccordé à la broche 10 du port parallèle.
+</p>
+</li>
+<li>
+<p>
+L&#8217;index de ce codeur est connecté à la broche 11 du port parallèle.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Configuration de base pour ajouter ces composants:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt encoder num_chan=1
+addf encoder.update-counters base-thread
+addf encoder.capture-position servo-thread
+setp encoder.0.position-scale 100
+setp encoder.0.counter-mode 1
+net spindle-position encoder.0.position =&gt; motion.spindle-revs
+net spindle-velocity encoder.0.velocity =&gt; motion.spindle-speed-in
+net spindle-index-enable encoder.0.index-enable &lt;=&gt; motion.spindle-index-enable
+net spindle-phase-a encoder.0.phase-A
+net spindle-phase-b encoder.0.phase-B
+net spindle-index encoder.0.phase-Z
+net spindle-phase-a &lt;= parport.0.pin-10-in
+net spindle-index &lt;= parport.0.pin-11-in</tt></pre>
+</div></div>
+</div>
+<h2 id="sec:Vitesse-Broche-Atteinte">7. Vitesse broche atteinte</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Si le moteur de broche possède un retour d&#8217;information de vitesse provenant d&#8217;un
+codeur, il est alors possible d&#8217;utiliser la variable <em>motion.spindle-at-speed</em>
+pour permettre à LinuxCNC d&#8217;attendre que la broche ait atteint sa vitesse de consigne
+avant d&#8217;effectuer tout mouvement. Cette variable passe à TRUE quand la vitesse
+commandée est atteinte. Comme le retour vitesse est la vitesse de consigne
+ne sont jamais <em>exactement</em> identiques, il faut utiliser le composant <em>near</em>
+qui indique quand les deux composantes sont suffisamment proches l&#8217;une de l&#8217;autre.</p></div>
+<div class="paragraph"><p>Il est nécessaire de connecter la commande de vitesse broche sur near.n.in1 et
+le signal de retour vitesse du codeur sur near.n.in2. La sortie near.n.out est
+connectée à motion.spindle-at-speed. Le paramètre near.n.scale doit être ajusté
+pour indiquer dans quelle mesure les deux valeurs sont suffisamment proches
+pour passer activer la sortie. Selon le matériel utilisé, il pourra être utile
+d&#8217;ajuster l'échelle.</p></div>
+<div class="paragraph"><p>Les éléments suivants sont à ajouter au fichier HAL pour activer <em>Spindle At Speed</em>.
+Si near est déjà présent dans le fichier HAL, augmenter le numéro de composant et
+adapter le code suivant en conséquence. S&#8217;assurer que le nom du signal est bien
+le même dans le fichier HAL.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt># charger un composant near et l'attacher à un thread
+loadrt near
+addf near.0 servo-thread
+
+# connecter une entrée à la vitesse de broche commandée
+net spindle-cmd =&gt; near.0.in1
+
+# connecter une entrée à la mesure de vitesse broche du codeur
+net spindle-velocity =&gt; near.0.in2
+
+# connecter la sortie sur l'entrée spindle-at-speed
+net spindle-at-speed motion.spindle-at-speed &lt;= near.0.out
+
+# Ajuster les entrées de vitesse de broche pour être dans une fourchette de 1%
+setp near.0.scale 1.01</tt></pre>
+</div></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-31 07:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/examples/spindle_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+</html>

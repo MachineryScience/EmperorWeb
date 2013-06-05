@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/halmodule_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:23 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Créer des composants de l&#8217;espace utilisateur</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Créer des composants de l&#8217;espace utilisateur</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<h2 id="_utilisation_de_base_en_python">1. Utilisation de base en Python</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Un composant de l&#8217;espace utilisateur commence par créer ses pins et
+ses paramètres, puis il entre dans une boucle dans laquelle il va
+positionner périodiquement toutes ses sorties en fonction de ses
+entrées. Le composant suivant, un passe-tout, copie la valeur vue sur
+ses pins d&#8217;entrée (<em>passe_tout.in</em>) vers ses pins de sortie
+(<em>passe_tout.out</em>) approximativement une fois par seconde.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>#!/usr/bin/python
+import hal, time
+h = hal.component("passe_tout")
+h.newpin("in", hal.HAL_FLOAT, hal.HAL_IN)
+h.newpin("out", hal.HAL_FLOAT, hal.HAL_OUT)
+h.ready()
+try:
+    while 1:
+        time.sleep(1)
+        h['out'] = h['in']
+except KeyboardInterrupt:
+    raise SystemExit</tt></pre>
+</div></div>
+<div class="paragraph"><p>Copier le listing précédent dans un fichier nommé <em>passe_tout</em>, le
+rendre exécutable par un <em>chmod +x</em> et le placer dans son <em>$PATH</em>.
+On peut alors l&#8217;essayer en faisant:</p></div>
+<div class="paragraph"><p><tt><strong>halrun</strong></tt></p></div>
+<div class="paragraph"><p><tt>halcmd: <strong>loadusr passe_tout</strong></tt></p></div>
+<div class="paragraph"><p><tt>halcmd: <strong>show pin</strong></tt></p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Component Pins:
+Owner Type  Dir     Value  Name
+ 03   float IN          0  passe_tout.in
+ 03   float OUT         0  passe_tout.out</tt></pre>
+</div></div>
+<div class="paragraph"><p><tt>halcmd: <strong>setp passe_tout.in 3.14</strong></tt></p></div>
+<div class="paragraph"><p><tt>halcmd: <strong>show pin</strong></tt></p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Component Pins:
+Owner Type  Dir     Value  Name
+ 03   float IN       3.14  passe_tout.in
+ 03   float OUT      3.14  passe_tout.out</tt></pre>
+</div></div>
+</div>
+<h2 id="_composants_de_l_8217_espace_utilisateur_et_d_lais">2. Composants de l&#8217;espace utilisateur et délais</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Si vous tapez rapidement <em>show pin</em>, vous pourrez voir que
+<em>passe_tout.out</em> conserve un moment son ancienne valeur de 0. Ceci
+est dû à l&#8217;appel de la fonction <em>time.sleep(1)</em>, qui fait que les pins
+de sortie changent d'état, au plus, une fois par seconde.
+Parce-que ce composant appartient à l&#8217;espace utilisateur,
+ce délai peut apparaître plus long, par exemple si la mémoire utilisée
+par le composant pass_tout est échangée avec le disque dur,
+le délai peut être allongé jusqu&#8217;au rafraîchissement de la mémoire.</p></div>
+<div class="paragraph"><p>Ces composants de l&#8217;espace utilisateur conviennent parfaitement pour
+des éléments tels que des panneaux de contrôle pour lesquels des délais
+de l&#8217;ordre de quelques millisecondes sont imperceptibles. Ils ne
+conviennent pas, en revanche, pour envoyer des impulsions de pas vers
+une carte de pilotage de périphériques pour lesquelles les délais
+doivent rester de l&#8217;ordre de quelques microsecondes, dans tous les
+cas.</p></div>
+</div>
+<h2 id="_cr_er_les_pins_et_les_param_tres">3. Créer les pins et les paramètres</h2>
+<div class="sectionbody">
+<div class="paragraph"><p><tt>h = hal.component("passe_tout")</tt></p></div>
+<div class="paragraph"><p>Le composant lui-même est créé par l&#8217;appel du constructeur
+<em>hal.component</em>. Les arguments sont le nom du composant HAL et
+optionnellement, le préfixe utilisé pour les noms de pin et de paramètre.
+Si le préfixe n&#8217;est pas spécifié, le nom du composant est utilisé.</p></div>
+<div class="paragraph"><p><tt>h.newpin("in", hal.HAL_FLOAT, hal.HAL_IN)</tt></p></div>
+<div class="paragraph"><p>Puis les pins sont créées par appels des méthodes sur l&#8217;objet
+composant. Les arguments sont: pin nom suffixe, type de pin et
+direction de la pin. Pour les paramètres, les arguments sont: paramètre
+nom suffixe, type de paramètre et direction du paramètre.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="95%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Tableau 1. Noms des options de HAL</caption>
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<thead>
+<tr>
+<th align="left" valign="top"><strong>Types de Pin et Paramètre:</strong> </th>
+<th align="left" valign="top"> HAL_BIT </th>
+<th align="left" valign="top"> HAL_FLOAT </th>
+<th align="left" valign="top"> HAL_S32 </th>
+<th align="left" valign="top"> HAL_U32</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>Directions des pins:</strong></p></td>
+<td align="left" valign="top"><p class="table">HAL_IN</p></td>
+<td align="left" valign="top"><p class="table">HAL_OUT</p></td>
+<td align="left" valign="top"><p class="table">HAL_IO</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>Directions des paramètres:</strong></p></td>
+<td align="left" valign="top"><p class="table">HAL_RO</p></td>
+<td align="left" valign="top"><p class="table">HAL_RW</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Le nom complet d&#8217;une pin ou d&#8217;un paramètre est formé en joignant le
+préfixe avec le suffixe par un <strong>.</strong>, comme dans l&#8217;exemple où la pin
+créée est appelée <em>passe_tout.in</em>.</p></div>
+<div class="paragraph"><p><tt>h.ready()</tt></p></div>
+<div class="paragraph"><p>Une fois toutes les pins et les paramètres créés, la méthode <em>.ready()</em>
+est appelée.</p></div>
+<h3 id="_changer_le_pr_fixe">3.1. Changer le préfixe</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le préfixe peut être changé en appelant la méthode <em>.setprefix()</em>. Le
+préfixe courant peut être retrouvé en appelant la méthode
+<em>.getprefix()</em>.</p></div>
+</div>
+<h2 id="_lire_et_crire_les_pins_et_les_param_tres">4. Lire et écrire les pins et les paramètres</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Pour les pins et les paramètres qui sont aussi des identifiants
+Python, la valeur est accessible ou ajustable en utilisant la syntaxe
+des attributs suivante:</p></div>
+<div class="paragraph"><p><tt>h.out = h.in</tt></p></div>
+<div class="paragraph"><p>Pour les pins et les paramètres qui sont aussi des identifiants
+Python, la valeur est accessible ou ajustable en utilisant la syntaxe
+de sous-script suivante:</p></div>
+<div class="paragraph"><p><tt>h[<em>out</em>] = h[<em>in</em>]</tt></p></div>
+<h3 id="_pilotage_des_pins_de_sortie_hal_out">4.1. Pilotage des pins de sortie (HAL_OUT)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Périodiquement, habituellement dans le temps de réponse de l&#8217;horloge,
+toutes les pins HAL_OUT doivent être <em>pilotées</em> en leur assignant une
+nouvelle valeur. Ceci doit être fait que la valeur soit différente ou
+non de la valeur précédemment assignée. Quand la pin est connectée au
+signal, l&#8217;ancienne valeur de sortie n&#8217;est pas copiée vers le signal, la
+valeur correcte n&#8217;apparaîtra donc sur le signal qu&#8217;une fois que le
+composant lui aura assigné une nouvelle valeur.</p></div>
+<h3 id="_pilotage_des_pins_bidirectionnelles_hal_io">4.2. Pilotage des pins bidirectionnelles (HAL_IO)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La règle mentionnée ci-dessus ne s&#8217;applique pas aux pins
+bidirectionnelles. Au lieux de cela, une pin bidirectionnelle doit
+seulement être pilotée par le composant et quand le composant souhaite
+changer sa valeur. Par exemple, dans l&#8217;interface codeur, le composant
+codeur positionne seulement la pin <em>index-enable</em> à <em>FALSE</em> quand une
+impulsion d&#8217;index est vue et que l&#8217;ancienne valeur est <em>TRUE</em>, mais ne
+la positionne jamais à <em>TRUE</em>. Positionner de manière répétitive la
+pin à <em>FALSE</em> pourrait faire qu&#8217;un autre composant connecté agisse
+comme si une nouvelle impulsion d&#8217;index avait été vue.</p></div>
+</div>
+<h2 id="_quitter">5. Quitter</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Une requête <em>halcmd unload</em> pour le composant est délivrée comme une
+exception <em>KeyboardInterrupt</em> . Quand une requête de déchargement
+arrive, le processus doit quitter
+ dans un court laps de temps ou appeler la méthode <em>.exit()</em> sur le
+composant si un travail substantiel, comme la lecture ou
+l'écriture de fichiers, doit être fourni pour terminer le processus
+d&#8217;arrêt.</p></div>
+</div>
+<h2 id="_id_es_de_projets">6. Idées de projets</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+Créer un panneau de contrôle extérieur avec boutons poussoirs,
+   interrupteurs et voyants. Connecter le tout à un microcontrôleur et
+   raccorder le microcontrôleur à un PC en utilisant une liaison série.
+   Python est vraiment capable d&#8217;interfacer une liaison série grâce à son
+   module <a href="http://pyserial.sourceforge.net/">pyserial</a> (Paquet
+   <em>python-serial</em>, dans les dépôts universe d&#8217;Ubuntu)
+</p>
+</li>
+<li>
+<p>
+Relier un module d&#8217;affichage à LCD
+   <a href="http://lcdproc.omnipotent.net/">LCDProc</a> et l&#8217;utiliser pour afficher les
+   informations de votre choix (Paquet <em>lcdproc</em>, dans les dépôts universe
+   d&#8217;Ubuntu)
+</p>
+</li>
+<li>
+<p>
+Créer un panneau de contrôle virtuel utilisant n&#8217;importe quelle
+   librairie d&#8217;interface graphique supportée par Python (gtk, qt,
+   wxwindows, etc)
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-28 15:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/halmodule_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:23 GMT -->
+</html>

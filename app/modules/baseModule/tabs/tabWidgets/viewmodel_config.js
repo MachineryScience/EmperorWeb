@@ -164,9 +164,15 @@ define(function(require) {
             }
         });
 
+        this.launchServerConfig = function()
+        {
+            window.open( "http://" + self.linuxCNCServer.server_address() + ":" + self.linuxCNCServer.server_port(), "Linux CNC Server Configuration Website", "height=700,width=1024,scrollbars=yes,resizable=1");
+        }
 
-
-
+        this.launchServerHelp = function()
+        {
+            window.open( "/external/linuxCNCDoc//linuxCNCDocumentation/index.html", "Linux CNC Server Documentation", "height=700,width=1024,scrollbars=yes,resizable=1");
+        }
 
 	};
 

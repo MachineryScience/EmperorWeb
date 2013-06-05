@@ -1,0 +1,299 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/halshow_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:18 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Les fonctionnalités de Halshow</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Les fonctionnalités de Halshow</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:halshow"></a> </p></div>
+</div>
+</div>
+<h2 id="_le_script_halshow">1. Le script Halshow</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Le script halshow peut vous aider à retrouver votre chemin dans un HAL
+en fonctionnement. Il s&#8217;agit d&#8217;un système très spécialisé qui doit se
+connecter à un HAL en marche. Il ne peut pas fonctionner seul car il
+repose sur la capacité de HAL de rapporter ce qu&#8217;il connaît de lui même
+par la librairie d&#8217;interface de halcmd. Chaque fois que halshow
+fonctionne avec une configuration de LinuxCNC différente, il sera différent.</p></div>
+<div class="paragraph"><p>Comme nous le verrons bientôt, cette capacité de HAL de se documenter
+lui même est un des facteurs clés pour arriver à un système CNC
+optimum.</p></div>
+<div class="paragraph"><p>On peut accéder à Halshow depuis Axis, pour cela, aller dans le menu
+<em>Machine</em> puis choisir <em>Afficher la configuration de HAL</em>.</p></div>
+<h3 id="_zone_de_l_8217_arborescence_de_hal">1.1. Zone de l&#8217;arborescence de Hal</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La gauche de l'écran que montre la figure ci-dessous est
+une arborescence, un peu comme vous pouvez le voir avec certains
+navigateurs de fichiers. Sur la droite, une zone avec deux onglets:
+MONTRER et WATCH.</p></div>
+<div class="imageblock" id="cap:Fenetre-Halshow">
+<div class="content">
+<img src="images/halshow-1_fr.png" alt="images/halshow-1_fr.png" />
+</div>
+<div class="title">Figure 1. La fenêtre de Halshow</div>
+</div>
+<div class="paragraph"><p>L&#8217;arborescence montre toutes les parties principales de HAL. En face
+de chacune d&#8217;entre elles, se trouve un petit signe + ou - dans une
+case. Cliquer sur le signe plus pour déployer cette partie de
+l&#8217;arborescence et affichera son contenu. Si cette case affiche un signe
+moins, cliquer dessus repliera cette section de l&#8217;arborescence.</p></div>
+<div class="paragraph"><p>Il est également possible de déployer et de replier l&#8217;arborescence
+complète depuis le menu <em>Arborescence</em>.</p></div>
+<div class="imageblock" id="cap:onglet-Montrer">
+<div class="content">
+<img src="images/halshow-3.png" alt="images/halshow-3.png" />
+</div>
+<div class="title">Figure 2. L&#8217;onglet Montrer</div>
+</div>
+<h3 id="_zone_de_l_8217_onglet_montrer">1.2. Zone de l&#8217;onglet MONTRER</h3><div style="clear:left"></div>
+<div class="paragraph"><p>En cliquant sur un nom dans l&#8217;arborescence plutôt que sur son signe
+plus ou moins, par exemple le mot <em>Components</em>, HAL affichera tout ce
+qu&#8217;il connait du contenu de celui-ci. La figure 
+<a href="#cap:Fenetre-Halshow">halshow</a> montre une liste comme celle que vous verrez si
+vous cliquez sur <em>Components</em> avec une carte servo standard m5i20 en
+fonctionnement. L&#8217;affichage des informations est exactement le même que
+celui des traditionnels outils d&#8217;analyse de HAL en mode texte.
+L&#8217;avantage ici, c&#8217;est que nous y avons accès d&#8217;un clic de souris. Accès
+qui peut être aussi large ou aussi focalisé que vous le voulez.</p></div>
+<div class="paragraph"><p>Si nous examinons de plus près l&#8217;affichage de l&#8217;arborescence, nous
+pouvons voir que les six éléments principaux peuvent tous être déployés
+d&#8217;au moins un niveau. Quand ces niveaux sont à leur tour déployés vous
+obtenez une information de plus en plus focalisée en cliquant sur le
+nom des éléments dans l&#8217;arborescence. Vous trouverez que certaines hal
+pins et certains paramètres affichent plusieurs réponses. C&#8217;est dû à la
+nature des routines de recherche dans halcmd lui même. Si vous cherchez
+une pin, vous pouvez en trouver deux comme cela:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Component Pins:
+Owner  Type  Dir  Value  Name
+06     bit    -W   TRUE  parport.0.pin-10-in
+06     bit    -W  FALSE  parport.0.pin-10-in-not</tt></pre>
+</div></div>
+<div class="paragraph"><p>Le deuxième nom de pin contient le nom complémenté du premier.</p></div>
+<div class="paragraph"><p>Dans le bas de l&#8217;onglet Montrer, un champ de saisie permet de jouer
+sur le fonctionnement de HAL. Les commandes que vous entrez ici et leur
+effet sur HAL, ne sont pas enregistrés. Elles persisteront tant que LinuxCNC
+tournera, mais disparaîtront dès son arrêt.</p></div>
+<div class="paragraph"><p>Le champ de saisie marqué <em>Tester une commande HAL:</em> acceptera
+n&#8217;importe quelle commande valide pour halcmd. Elles incluent:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Loadrt, unloadrt (chargement / déchargement en temps réel du module)
+</p>
+</li>
+<li>
+<p>
+Loadusr, unloadusr (chargement / déchargement de l&#8217;espace utilisateur des composants)
+</p>
+</li>
+<li>
+<p>
+addf, delf (ajout / suppression d&#8217;une fonction de / vers un fil en temps réel)
+</p>
+</li>
+<li>
+<p>
+net (créer une connexion entre deux ou plusieurs articles)
+</p>
+</li>
+<li>
+<p>
+setp (jeu de paramètres (ou broches) à une valeur)
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Ce petit éditeur entrera une commande à chaque fois que vous presserez
+<em>Entrée</em> ou que vous cliquerez sur le bouton <em>Exécuter</em>. Si une
+commande y est mal formée, un dialogue d&#8217;erreur s&#8217;affichera. Si vous
+n'êtes pas sûr de savoir comment formuler une commande, vous trouverez
+la réponse dans la documentation de halcmd et des modules spécifiques
+avec lesquels vous travaillez.</p></div>
+<div class="paragraph"><p>Nous allons utiliser cet éditeur pour ajouter un module différentiel à
+HAL et le connecter à la position d&#8217;un axe pour voir le ratio de
+changement de position, par exemple, l&#8217;accélération. Il faut d&#8217;abord
+charger un module de HAL nommé blocks, l&#8217;ajouter au thread servo et le
+connecter à la pin position d&#8217;un axe. Une fois cela fait, nous pourrons
+retrouver la sortie du différenciateur dans halscope. Alors allons-y.
+(oui j&#8217;ai vérifié).</p></div>
+<div class="paragraph"><p>Ndt: le message qui s&#8217;affiche au chargement de blocks ne l&#8217;empêche pas
+de fonctionner.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt blocks ddt=1</tt></pre>
+</div></div>
+<div class="paragraph"><p>Maintenant, regardez dans components, vous devriez y voir blocks.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>    Loaded HAL Components:
+    ID Type        Name
+    10 User halcmd29800
+    09 User halcmd29374
+    08   RT      blocks
+    06   RT hal_parport
+    05   RT    scope_rt
+    04   RT     stepgen
+    03   RT      motmod
+    02 User   iocontrol</tt></pre>
+</div></div>
+<div class="paragraph"><p>Effectivement, il est là. Dans notre cas l&#8217;id est 08. Ensuite nous
+devons savoir quelles fonctions sont disponibles avec lui, nous
+regardons dans Functions.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>    Exported Functions:
+    Owner  CodeAddr      Arg  FP Users Name
+      08   E0B97630 E0DC7674 YES     0 ddt.0
+      03   E0DEF83C 00000000 YES     1 motion-command-handler
+      03   E0DF0BF3 00000000 YES     1 motion-controller
+      06   E0B541FE E0DC75B8  NO     1 parport.0.read
+      06   E0B54270 E0DC75B8  NO     1 parport.0.write
+      06   E0B54309 E0DC75B8  NO     0 parport.read-all
+      06   E0B5433A E0DC75B8  NO     0 parport.write-all
+      05   E0AD712D 00000000  NO     0 scope.sample
+      04   E0B618C1 E0DC7448 YES     1 stepgen.capture-position
+      04   E0B612F5 E0DC7448  NO     1 stepgen.make-pulses
+      04   E0B614AD E0DC7448 YES     1 stepgen.update-freq</tt></pre>
+</div></div>
+<div class="paragraph"><p>Ici, nous cherchons owner #08 et voyons que blocks a exporté une
+fonction nommée ddt.0. Nous devrions être en mesure d&#8217;ajouter ddt.0 au
+thread servo et il fera ses calculs chaque fois que le thread sera mis
+à jour. Encore une fois recherchons la commande addf et on voit qu&#8217;elle
+utilise trois arguments comme cela:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>addf &lt;functname&gt; &lt;threadname&gt; [&lt;position&gt;]</tt></pre>
+</div></div>
+<div class="paragraph"><p>Nous connaissons déjà functname=ddt.0, pour trouver le nom du thread,
+déployons l&#8217;arborescence des Threads. Nous y trouvons deux threads,
+servo-thread et base-thread. La position de ddt.0 dans le thread n&#8217;est
+pas critique. Passons la commande:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>addf ddt.0 servo-thread</tt></pre>
+</div></div>
+<div class="paragraph"><p>Comme c&#8217;est juste pour visualiser, nous laissons la position en blanc
+pour obtenir la dernière position dans le thread. La figure 
+<a href="#cap:Commande-addf">sur la commande addf</a> affiche l'état de halshow après
+que cette commande a été exécutée.</p></div>
+<div class="imageblock" id="cap:Commande-addf">
+<div class="content">
+<img src="images/halshow-2_fr.png" alt="images/halshow-2_fr.png" />
+</div>
+<div class="title">Figure 3. Commande Addf</div>
+</div>
+<div class="paragraph"><p>Ensuite, nous devons connecter ce bloc à quelque chose. Mais comment
+savoir quelles pins sont disponibles? La réponse se trouve dans
+l&#8217;arbre, en regardant sous Pins. On y trouve ddt et on voit:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>    Component Pins:
+    Owner Type  Dir Value       Name
+    08    float R-  0.00000e+00 ddt.0.in
+    08    float -W  0.00000e+00 ddt.0.out</tt></pre>
+</div></div>
+<div class="paragraph"><p>Cela semble assez facile à comprendre, mais à quel signal ou pin
+voulons-nous nous connecter, ça pourrait être une pin d&#8217;axe, une pin de
+stepgen, ou un signal. On vois cela en regardant dans axis.0.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>    Component Pins:
+    Owner Type  Dir Value       Name
+    03    float -W  0.00000e+00 axis.0.motor-pos-cmd ==&gt; Xpos-cmd</tt></pre>
+</div></div>
+<div class="paragraph"><p>Donc, il semble que Xpos-cmd devrait être un bon signal à utiliser.
+Retour à l'éditeur et entrons la commande suivante:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>linksp Xpos-cmd ddt.0.in</tt></pre>
+</div></div>
+<div class="paragraph"><p>Maintenant si on regarde le signal Xpos-cmd dans l&#8217;arbre, on voit ce
+qu&#8217;on a fait.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>    Signals:
+    Type Value Name
+    float 0.00000e+00 Xpos-cmd
+    &lt;== axis.0.motor-pos-cmd
+    ==&gt; ddt.0.in
+    ==&gt; stepgen.0.position-cmd</tt></pre>
+</div></div>
+<div class="paragraph"><p>Nous voyons que ce signal provient de axis.0.motor-pos-cmd et va, à la
+fois, sur ddt.0.in et sur stepgen.0.position-cmd. En connectant notre
+bloc au signal nous avons évité les complications avec le flux normal
+de cette commande de mouvement.</p></div>
+<div class="paragraph"><p>La zone de l&#8217;onglet <em>Montrer</em> utilise halcmd pour découvrir ce qui se
+passe à l&#8217;intérieur de HAL pendant son fonctionnement. Il vous donne
+une information complète de ce qu&#8217;il découvre. Il met aussi à jour dès
+qu&#8217;une commande est envoyée depuis le petit éditeur pour modifier ce
+HAL. Il arrive un temps ou vous voulez autre chose d&#8217;affiché, sans la
+totalité des informations disponibles dans cette zone. C&#8217;est la grande
+valeur de l&#8217;onglet <em>WATCH</em> d&#8217;offrir cela graphiquement.</p></div>
+<h3 id="_zone_de_l_8217_onglet_watch">1.3. Zone de l&#8217;onglet WATCH</h3><div style="clear:left"></div>
+<div class="paragraph"><p>En cliquant sur l&#8217;onglet Watch, une zone vide s&#8217;affichera.
+<span class="footnote"><br />[Le taux de rafraîchissement de la zone Watch est plus
+lent que celui de Halmeter ou de Halscope. Si vous avez besoin d&#8217;une bonne résolution
+dans le timming des signaux, ces outils sont plus efficaces.]<br /></span>
+Vous pouvez ajouter des pins ou des signaux quand l&#8217;onglet Watch est
+ouvert, en cliquant sur leurs noms. La figure <a href="#cap:onglet-Montrer">4</a>
+montre cette zone avec plusieurs signaux de type <em>bit</em>. Parmis ces
+signaux, les enable-out pour les trois premiers axes et deux de la
+branche iocontrol, les signaux <em>estop</em>. Notez que les axes ne sont pas
+activés même si les signaux estop disent que LinuxCNC n&#8217;est pas en estop. Un
+bref regard sur TkLinuxCNC en arrière plan, montre que l'état de LinuxCNC est
+ESTOP RESET. L&#8217;activation des amplis ne deviendra pas vraie tant que la
+machine ne sera pas mise en marche.</p></div>
+<div class="paragraph" id="Onglet-watch"><div class="title">L&#8217;onglet WATCH</div><p></p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/halshow-4.png" alt="images/halshow-4.png" />
+</div>
+</div>
+<div class="paragraph"><p>Les cercles de deux couleurs, simili Leds, sont toujours bruns foncé
+quand un signal est faux. Elle sont jaunes quand le signal est vrai.
+Quand une pin ou un signal est sélectionné mais n&#8217;est pas de type bit,
+sa valeur numérique s&#8217;affiche.</p></div>
+<div class="paragraph"><p>Watch permet de visualiser rapidement le résultat de tests sur des
+contacts ou de voir l&#8217;effet d&#8217;un changement que vous faites dans LinuxCNC en
+utilisant l&#8217;interface graphique. Le taux de rafraîchissement de Watch
+est un peu trop lent pour visualiser les impulsions de pas d&#8217;un moteur
+mais vous pouvez l&#8217;utiliser si vous déplacez un axe très lentement ou
+par très petits incréments de distance. Si vous avez déjà utilisé
+IO_Show dans LinuxCNC, la page de Watch de halshow peut être réglée pour
+afficher ce que fait le port parallèle.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-02-03 18:36:08 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/halshow_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:23 GMT -->
+</html>

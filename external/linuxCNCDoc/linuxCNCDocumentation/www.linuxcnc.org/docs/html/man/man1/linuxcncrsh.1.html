@@ -1,0 +1,929 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Sat Mar 17 00:36:10 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/linuxcncrsh.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>linuxcncrsh</title>
+
+</head>
+<body>
+
+<h1 align="center">linuxcncrsh</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#Starting linuxcncrsh">Starting linuxcncrsh</a><br>
+<a href="#Connecting">Connecting</a><br>
+<a href="#Network protocol">Network protocol</a><br>
+<a href="#LinuxCNC Subcommands">LinuxCNC Subcommands</a><br>
+<a href="#Example Session">Example Session</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">linuxcncrsh
+&minus; text-mode interface for commanding LinuxCNC over the
+network</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>linuxcncrsh
+[OPTIONS] [-- LINUXCNC_OPTIONS]</b></p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>linuxcncrsh</b>
+is a user interface for LinuxCNC. Instead of popping up a
+GUI window like axis(1) and touchy(1) do, it processes
+text-mode commands that it receives via the network. A human
+(or a program) can interface with <b>linuxcncrsh</b> using
+telnet(1) or nc(1) or similar programs.</p>
+
+<p style="margin-left:11%; margin-top: 1em">All features of
+LinuxCNC are available via the <b>linuxcncrsh</b>
+interface.</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>-p,--port
+PORT_NUMBER</b></p>
+
+<p style="margin-left:22%;">Specify the port for
+linuxcncrsh to listen on. Defaults to 5007 if omitted.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>-n,--name
+SERVER_NAME</b></p>
+
+<p style="margin-left:22%;">Sets the server name that
+linuxcncrsh will use to identify itself during handshaking
+with a new client. Defaults to EMCNETSVR if omitted.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>-w,--connectpw
+PASSWORD</b></p>
+
+<p style="margin-left:22%;">Specify the connection password
+to use during handshaking with a new client. Note that the
+password is sent in the clear, so it can be read by anyone
+who can read packets on the network between the server and
+the client. Defaults to EMC if omitted.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>-e,--enablepw
+PASSWORD</b></p>
+
+<p style="margin-left:22%;">Specify the password required
+to enable LinuxCNC via linuxcncrsh. Note that the password
+is sent in the clear, so it can be read by anyone who can
+read packets on the network between the server and the
+client. Defaults to EMCTOO if omitted.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>-s,--sessions
+MAX_SESSIONS</b></p>
+
+<p style="margin-left:22%;">Specify the maximum number of
+simultaneous connections. Defaults to -1 (no limit) if not
+specified.</p>
+
+<p style="margin-left:11%; margin-top: 1em">In addition to
+the options listed above, linuxcncrsh accepts an optional
+special LINUXCNC_OPTION at the end:</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>-ini
+LINUXCNC_INI_FILE</b></p>
+
+<p style="margin-left:22%;">LinuxCNC .ini file to use. The
+-ini option <b>must</b> be preceeded by two dashes:
+&quot;--&quot;. Defaults to emc.ini if omitted.</p>
+
+<h2>Starting linuxcncrsh
+<a name="Starting linuxcncrsh"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">To use
+linuxcncrsh instead of a normal LinuxCNC GUI like axis or
+touch, specify it in your .ini file like this:</p>
+
+
+<p style="margin-left:22%; margin-top: 1em"><b>[DISPLAY]</b></p>
+
+
+<p style="margin-left:22%; margin-top: 1em"><b>DISPLAY=linuxcncrsh</b></p>
+
+<p style="margin-left:11%; margin-top: 1em">To use
+linuxcncrsh in addition to a normal GUI, you can either
+start it at the end of your .hal file, or run it by hand in
+a terminal window.</p>
+
+<p style="margin-left:11%; margin-top: 1em">To start it
+from hal, add a line like this to the end of your .hal
+file:</p>
+
+<p style="margin-left:22%; margin-top: 1em"><b>loadusr
+linuxcncrsh [OPTIONS] [-- LINUXCNC_OPTIONS]</b></p>
+
+<p style="margin-left:11%; margin-top: 1em">To start it
+from the terminal, run linuxcncrsh manually like this:</p>
+
+<p style="margin-left:22%; margin-top: 1em"><b>linuxcncrsh
+[OPTIONS] [-- LINUXCNC_OPTIONS]</b></p>
+
+<h2>Connecting
+<a name="Connecting"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Once LinuxCNC
+is up and linuxcncrsh is running, you can connect to it
+using <b>telnet</b> or <b>nc</b> or similar:</p>
+
+<p style="margin-left:22%; margin-top: 1em"><b>telnet HOST
+PORT</b></p>
+
+<p style="margin-left:32%;">HOST is the hostname or IP
+address of the computer running linuxcncrsh, and PORT is the
+port it&rsquo;s listening on (5007 if you did not give
+linuxcncrsh the --port option).</p>
+
+<h2>Network protocol
+<a name="Network protocol"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">linuxcncrsh
+accepts TCP connections on the port specified by the --port
+option, or 5007 if not specified.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The client
+sends requests, and the linuxcncrsh server returns replies.
+Requests consist of a command word followed by optional
+command-specific parameters. Requests and most request
+parameters are case insensitive. The exceptions are
+passwords, file paths and text strings.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Requests to
+linuxcncrsh are terminated with line endings, any
+combination of one or more &rsquo;\r&rsquo; and
+&rsquo;\n&rsquo; characters. Replies from linuxcncrsh are
+terminated with the sequence &acute;\r\n&acute;.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The supported
+commands are as follows:</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>hello
+&lt;password&gt; &lt;client&gt; &lt;version&gt;</b></p>
+
+<p style="margin-left:22%;">&lt;password&gt; must match
+linuxcncrsh&rsquo;s connect password, or &quot;EMC&quot; if
+no --connectpw was supplied. The three arguments may not
+contain whitespace. If a valid password was entered the
+server will respond with:</p>
+
+<p style="margin-left:32%;"><i>HELLO ACK &lt;ServerName&gt;
+&lt;ServerVersion&gt;</i></p>
+
+<p style="margin-left:22%; margin-top: 1em">If an invalid
+password or any other syntax error occurs then the server
+responds with:</p>
+
+<p style="margin-left:32%;"><i>HELLO NAK</i></p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>get
+&lt;subcommand&gt; [&lt;parameters&gt;]</b></p>
+
+<p style="margin-left:22%;">The get command takes one of
+the LinuxCNC sub-commands (described in the section
+<b>LinuxCNC Subcommands</b>, below) and zero or more
+additional subcommand-specific parameters.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>set
+&lt;subcommand&gt; &lt;parameters&gt;</b></p>
+
+<p style="margin-left:22%;">The set command takes one of
+the LinuxCNC sub-commands (described in the section
+<b>LinuxCNC Subcommands</b>, below) and one or more
+additional parameters.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>quit</b></p>
+
+<p style="margin-left:22%;">The quit command disconnects
+the associated socket connection.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>shutdown</b></p>
+
+<p style="margin-left:22%;">The shutdown command tells
+LinuxCNC to shutdown and disconnect the session. This
+command may only be issued if the Hello has been
+successfully negotiated and the connection has control of
+the CNC (see <b>enable</b> subcommand in the <b>LinuxCNC
+Subcommands</b> section, below).</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>help</b></p>
+
+<p style="margin-left:22%;">The help command will return
+help information in text format over the connection. If no
+parameters are specified, it will itemize the available
+commands. If a command is specified, it will provide usage
+information for the specified command. Help will respond
+regardless of whether a &quot;Hello&quot; has been
+successsfully negotiated.</p>
+
+<h2>LinuxCNC Subcommands
+<a name="LinuxCNC Subcommands"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Subcommands for
+<b>get</b> and <b>set</b> are:</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>echo
+{on|off}</b></p>
+
+<p style="margin-left:22%;">With get, any on/off parameter
+is ignored and the current echo state is returned. With set,
+sets the echo state as specified. Echo defaults to on when
+the connection is first established. When echo is on, all
+commands will be echoed upon receipt. This state is local to
+each connection.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>verbose
+{on|off}</b></p>
+
+<p style="margin-left:22%;">With get, any on/off parameter
+is ignored and the current verbose state is returned. With
+set, sets the verbose state as specified. When verbose mode
+is on, all set commands return positive acknowledgement in
+the form SET &lt;COMMAND&gt; ACK, and text error messages
+will be issued (FIXME: I don&rsquo;t know what this means).
+The verbose state is local to each connection, and starts
+out OFF on new connections.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>enable
+{&lt;passwd&gt;|off}</b></p>
+
+<p style="margin-left:22%;">The session&rsquo;s enable
+state indicates whether the current connection is enabled to
+perform control functions. With get, any parameter is
+ignored, and the current enable state is returned. With set
+and a valid password matching linuxcncrsh&rsquo;s --enablepw
+(EMCTOO if not specified), the current connection is enabled
+for control functions. &quot;OFF&quot; may not be used as a
+password and disables control functions for this
+connection.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>config
+[TBD]</b></p>
+
+<p style="margin-left:22%;">Unused, ignore for now.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>comm_mode
+{ascii|binary}</b></p>
+
+<p style="margin-left:22%;">With get, any parameter is
+ignored and the current communications mode is returned.
+With set, will set the communications mode to the specified
+mode. The ascii mode is the text request/reply mode, the
+binary protocol is not currently designed or
+implemented.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>comm_prot
+&lt;version&gt;</b></p>
+
+<p style="margin-left:22%;">With get, any parameter is
+ignored and the current protocol version used by the server
+is returned. With set, sets the server to use the specified
+protocol version, provided it is lower than or equal to the
+highest version number supported by the server
+implementation.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>inifile</b></p>
+
+<p style="margin-left:22%;">Not currently implemented! With
+get, returns the string &quot;emc.ini&quot;. Should return
+the full path and file name of the current configuration
+inifile. Setting this does nothing.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>plat</b></p>
+
+<p style="margin-left:22%;">With get, returns the string
+&quot;Linux&quot;.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>ini
+&lt;var&gt; &lt;section&gt;</b></p>
+
+<p style="margin-left:22%;">Not currently implemented, do
+not use! Should return the string value of &lt;var&gt; in
+section &lt;section&gt; of the ini file.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>debug
+&lt;value&gt;</b></p>
+
+<p style="margin-left:22%;">With get, any parameter is
+ignored and the current integer value of EMC_DEBUG is
+returned. Note that the value of EMC_DEBUG returned is the
+from the UI&rsquo;s ini file, which may be different than
+emc&rsquo;s ini file. With set, sends a command to the EMC
+to set the new debug level, and sets the EMC_DEBUG global
+here to the same value. This will make the two values the
+same, since they really ought to be the same.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>set_wait
+{none|received|done}</b></p>
+
+<p style="margin-left:22%;">The set_wait setting controls
+the wait after receiving a command. It can be
+&quot;none&quot; (return right away), &quot;received&quot;
+(after the command was sent and received), or
+&quot;done&quot; (after the command was done). With get, any
+parameter is ignored and the current set_wait setting is
+returned. With set, set the set_wait setting to the
+specified value.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>wait
+{received|done}</b></p>
+
+<p style="margin-left:22%;">With set, force a wait for the
+previous command to be received, or done. This lets you wait
+in the event that &quot;set_wait none&quot; is in
+effect.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>set_timeout
+&lt;timeout&gt;</b></p>
+
+<p style="margin-left:22%;">With set, set the timeout for
+commands to return to &lt;timeout&gt; seconds. Timeout is a
+real number. If it&rsquo;s &lt;= 0.0, it means wait forever.
+Default is 0.0, wait forever.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>update
+{none|auto}</b></p>
+
+<p style="margin-left:22%;">The update mode controls
+whether to return fresh or stale values for &quot;get&quot;
+requests. When the update mode is &quot;none&quot; it
+returns stale values, when it&rsquo;s &quot;auto&quot; it
+returns fresh values. Defaults to &quot;auto&quot; for new
+connections. Set this to &quot;none&quot; if you like to be
+confused.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>error</b></p>
+
+<p style="margin-left:22%;">With get, returns the current
+error string, or &quot;ok&quot; if no error.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>operator_display</b></p>
+
+<p style="margin-left:22%;">With get, returns the current
+operator display string, or &quot;ok&quot; if none.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>operator_text</b></p>
+
+<p style="margin-left:22%;">With get, returns the current
+operator text string, or &quot;ok&quot; if none.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>time</b></p>
+
+<p style="margin-left:22%;">With get, returns the time, in
+seconds, from the start of the epoch. This starting time
+depends on the platform.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>estop
+{on|off}</b></p>
+
+<p style="margin-left:22%;">With get, ignores any
+parameters and returns the current estop setting as
+&quot;on&quot; or &quot;off&quot;. With set, sets the estop
+as specified. Estop &quot;on&quot; means the machine is in
+the estop state and won&rsquo;t run.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>machine
+{on|off}</b></p>
+
+<p style="margin-left:22%;">With get, ignores any
+parameters and returns the current machine power setting as
+&quot;on&quot; or &quot;off&quot;. With set, sets the
+machine on or off as specified.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>mode
+{manual|auto|mdi}</b></p>
+
+<p style="margin-left:22%;">With get, ignores any
+parameters and returns the current machine mode. With set,
+sets the machine mode as specified.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>mist
+{on|off}</b></p>
+
+<p style="margin-left:22%;">With get, ignores any
+parameters and returns the current mist coolant setting.
+With set, sets the mist setting as specified.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>flood
+{on|off}</b></p>
+
+<p style="margin-left:22%;">With get, ignores any
+parameters and returns the current flood coolant setting.
+With set, sets the flood setting as specified.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>lube
+{on|off}</b></p>
+
+<p style="margin-left:22%;">With get, ignores any
+parameters and returns the current lube pump setting. With
+set, sets the lube pump setting as specified.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>lube_level</b></p>
+
+<p style="margin-left:22%;">With get, returns the lubricant
+level sensor reading as &quot;ok&quot; or &quot;low&quot;.
+With set, mocks you for wishful thinking.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>spindle
+{forward|reverse|increase|decrease|constant|off}</b></p>
+
+<p style="margin-left:22%;">With get, any parameter is
+ignored and the current spindle state is returned as
+&quot;forward&quot;, &quot;reverse&quot;,
+&quot;increase&quot;, &quot;decrease&quot;, or
+&quot;off&quot;. With set, sets the spindle as specified.
+Note that &quot;increase&quot; and &quot;decrease&quot; will
+cause a speed change in the corresponding direction until a
+&quot;constant&quot; command is sent.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>brake
+{on|off}</b></p>
+
+<p style="margin-left:22%;">With get, any parameter is
+ignored and the current brake setting is returned. With set,
+the brake is set as specified.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>tool</b></p>
+
+<p style="margin-left:22%;">With get, returns the id of the
+currently loaded tool.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>tool_offset</b></p>
+
+<p style="margin-left:22%;">With get, returns the currently
+applied tool length offset.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>load_tool_table
+&lt;file&gt;</b></p>
+
+<p style="margin-left:22%;">With set, loads the tool table
+specified by &lt;file&gt;.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>home
+{0|1|2|...}</b></p>
+
+<p style="margin-left:22%;">With set, homes the indicated
+axis.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>jog_stop
+{0|1|2|...}</b></p>
+
+<p style="margin-left:22%;">With set, stop any in-progress
+jog on the specified axis.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>jog
+{0|1|2|...} &lt;speed&gt;</b></p>
+
+<p style="margin-left:22%;">With set, jog the specified
+axis at &lt;speed&gt;; sign of speed is direction.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>jog_incr
+{0|1|2|...} &lt;speed&gt; &lt;incr&gt;</b></p>
+
+<p style="margin-left:22%;">With set, jog the indicated
+axis by increment &lt;incr&gt; at the &lt;speed&gt;; sign of
+speed is direction.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>feed_override
+&lt;percent&gt;</b></p>
+
+<p style="margin-left:22%;">With get, any parameter is
+ignored and the current feed override is returns (as a
+percentage of commanded feed). With set, sets the feed
+override as specified.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>spindle_override
+&lt;percent&gt;</b></p>
+
+<p style="margin-left:22%;">With get, any parameter is
+ignored and the current spindle override is returnd (as a
+percentage of commanded speed). With set, sets the spindle
+override as specified.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>abs_cmd_pos
+[{0|1|...}]</b></p>
+
+<p style="margin-left:22%;">With get, returns the specified
+axis&rsquo; commanded position in absolute coordinates. If
+no axis is specified, returns all axes&rsquo; commanded
+absolute position.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>abs_act_pos
+[{0|1|...}]</b></p>
+
+<p style="margin-left:22%;">With get, returns the specified
+axis&rsquo; actual position in absolute coordinates. If no
+axis is specified, returns all axes&rsquo; actual absolute
+position.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>rel_cmd_pos
+[{0|1|...}]</b></p>
+
+<p style="margin-left:22%;">With get, returns the specified
+axis&rsquo; commanded position in relative coordinates,
+including tool length offset. If no axis is specified,
+returns all axes&rsquo; commanded relative position.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>rel_act_pos
+[{0|1|...}]</b></p>
+
+<p style="margin-left:22%;">With get, returns the specified
+axis&rsquo; actual position in relative coordinates,
+including tool length offset. If no axis is specified,
+returns all axes&rsquo; actual relative position.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>joint_pos
+[{0|1|...}]</b></p>
+
+<p style="margin-left:22%;">With get, returns the specified
+joint&rsquo;s actual position in absolute coordinates,
+excluding tool length offset. If no joint is specified,
+returns all joints&rsquo; actual absolute position.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>pos_offset
+[{X|Y|Z|R|P|W}]</b></p>
+
+<p style="margin-left:22%;">With get, returns the position
+offset associated with the world coordinate provided.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>joint_limit
+[{0|1|...}]</b></p>
+
+<p style="margin-left:22%;">With get, returns limit status
+of the specified joint as &quot;ok&quot;,
+&quot;minsoft&quot;, &quot;minhard&quot;,
+&quot;maxsoft&quot;, or &quot;maxhard&quot;. If no joint
+number is specified, returns the limit status of all
+joints.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>joint_fault
+[{0|1|...}]</b></p>
+
+<p style="margin-left:22%;">With get, returns the fault
+status of the specified joint as &quot;ok&quot; or
+&quot;fault&quot;. If no joint number is specified, returns
+the fault status of all joints.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>joint_homed
+[{0|1|...}]</b></p>
+
+<p style="margin-left:22%;">With get, returns the homed
+status of the specified joint as &quot;homed&quot; or
+&quot;not&quot;. If no joint number is specified, returns
+the homed status of all joints.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>mdi
+&lt;string&gt;</b></p>
+
+<p style="margin-left:22%;">With set, sends &lt;string&gt;
+as an MDI command.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>task_plan_init</b></p>
+
+<p style="margin-left:22%;">With set, initializes the
+program interpreter.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>open
+&lt;filename&gt;</b></p>
+
+<p style="margin-left:22%;">With set, opens the named
+file.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>run
+[&lt;StartLine&gt;]</b></p>
+
+<p style="margin-left:22%;">With set, runs the opened
+program. If no StartLine is specified, runs from the
+beginning. If a StartLine is specified, start line, runs
+from that line. A start line of -1 runs in verify mode.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>pause</b></p>
+
+<p style="margin-left:22%;">With set, pause program
+execution.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>resume</b></p>
+
+<p style="margin-left:22%;">With set, resume program
+execution.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>abort</b></p>
+
+<p style="margin-left:22%;">With set, abort program or MDI
+execution.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>step</b></p>
+
+<p style="margin-left:22%;">With set, step the program one
+line.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>program</b></p>
+
+<p style="margin-left:22%;">With get, returns the name of
+the currently opened program, or &quot;none&quot;.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>program_line</b></p>
+
+<p style="margin-left:22%;">With get, returns the currently
+executing line of the program.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>program_status</b></p>
+
+<p style="margin-left:22%;">With get, returns
+&quot;idle&quot;, &quot;running&quot;, or
+&quot;paused&quot;.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>program_codes</b></p>
+
+<p style="margin-left:22%;">With get, returns the string
+for the currently active program codes.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>joint_type
+[&lt;joint&gt;]</b></p>
+
+<p style="margin-left:22%;">With get, returns
+&quot;linear&quot;, &quot;angular&quot;, or
+&quot;custom&quot; for the type of the specified joint (or
+for all joints if none is specified).</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>joint_units
+[&lt;joint&gt;]</b></p>
+
+<p style="margin-left:22%;">With get, returns
+&quot;inch&quot;, &quot;mm&quot;, &quot;cm&quot;, or
+&quot;deg&quot;, &quot;rad&quot;, &quot;grad&quot;, or
+&quot;custom&quot;, for the corresponding native units of
+the specified joint (or for all joints if none is
+specified). The type of the axis (linear or angular) is used
+to resolve which type of units are returned. The units are
+obtained heuristically, based on the EMC_AXIS_STAT::units
+numerical value of user units per mm or deg. For linear
+joints, something close to 0.03937 is deemed
+&quot;inch&quot;, 1.000 is &quot;mm&quot;, 0.1 is
+&quot;cm&quot;, otherwise it&rsquo;s &quot;custom&quot;. For
+angular joints, something close to 1.000 is deemed
+&quot;deg&quot;, PI/180 is &quot;rad&quot;, 100/90 is
+&quot;grad&quot;, otherwise it&rsquo;s
+&quot;custom&quot;.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>program_units</b></p>
+
+<p style="margin-left:22%;">Synonym for
+program_linear_units.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>program_linear_units</b></p>
+
+<p style="margin-left:22%;">With get, returns
+&quot;inch&quot;, &quot;mm&quot;, &quot;cm&quot;, or
+&quot;none&quot;, for the corresponding linear units that
+are active in the program interpreter.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>program_angular_units</b></p>
+
+<p style="margin-left:22%;">With get, returns
+&quot;deg&quot;, &quot;rad&quot;, &quot;grad&quot;, or
+&quot;none&quot; for the corresponding angular units that
+are active in the program interpreter.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>user_linear_units</b></p>
+
+<p style="margin-left:22%;">With get, returns
+&quot;inch&quot;, &quot;mm&quot;, &quot;cm&quot;, or
+&quot;custom&quot;, for the corresponding native user linear
+units of the LinuxCNC trajectory level. This is obtained
+heuristically, based on the EMC_TRAJ_STAT::linearUnits
+numerical value of user units per mm. Something close to
+0.03937 is deemed &quot;inch&quot;, 1.000 is &quot;mm&quot;,
+0.1 is &quot;cm&quot;, otherwise it&rsquo;s
+&quot;custom&quot;.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>user_angular_units</b></p>
+
+<p style="margin-left:22%;">Returns &quot;deg&quot;,
+&quot;rad&quot;, &quot;grad&quot;, or &quot;custom&quot; for
+the corresponding native user angular units of the LinuxCNC
+trajectory level. Like with linear units, this is obtained
+heuristically.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>display_linear_units</b></p>
+
+<p style="margin-left:22%;">With get, returns
+&quot;inch&quot;, &quot;mm&quot;, &quot;cm&quot;, or
+&quot;custom&quot;, for the linear units that are active in
+the display. This is effectively the value of
+linearUnitConversion.</p>
+
+
+<p style="margin-left:11%;"><b>display_angular_units</b></p>
+
+<p style="margin-left:22%;">With get, returns
+&quot;deg&quot;, &quot;rad&quot;, &quot;grad&quot;, or
+&quot;custom&quot;, for the angular units that are active in
+the display. This is effectively the value of
+angularUnitConversion.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>linear_unit_conversion
+{inch|mm|cm|auto}</b></p>
+
+<p style="margin-left:22%;">With get, any parameter is
+ignored and the active unit conversion is returned. With
+set, sets the unit to be displayed. If it&rsquo;s
+&quot;auto&quot;, the units to be displayed match the
+program units.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>angular_unit_conversion
+{deg|rad|grad|auto}</b></p>
+
+<p style="margin-left:22%;">With get, any parameter is
+ignored and the active unit conversion is returned. With
+set, sets the units to be displayed. If it&rsquo;s
+&quot;auto&quot;, the units to be displayed match the
+program units.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>probe_clear</b></p>
+
+<p style="margin-left:22%;">With set, clear the probe
+tripped flag.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>probe_tripped</b></p>
+
+<p style="margin-left:22%;">With get, return the probe
+state - has the probe tripped since the last clear?</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>probe_value</b></p>
+
+<p style="margin-left:22%;">With get, return the current
+value of the probe signal.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>probe</b></p>
+
+<p style="margin-left:22%;">With set, move toward a certain
+location. If the probe is tripped on the way stop motion,
+record the position and raise the probe tripped flag.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>teleop_enable
+[on|off]</b></p>
+
+<p style="margin-left:22%;">With get, any parameter is
+ignored and the current teleop mode is returned. With set,
+sets the teleop mode as specified.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>kinematics_type</b></p>
+
+<p style="margin-left:22%;">With get, returns the type of
+kinematics functions used (identity=1, serial=2, parallel=3,
+custom=4).</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>override_limits
+{on|off}</b></p>
+
+<p style="margin-left:22%;">With get, any parameter is
+ignored and the override_limits setting is returned. With
+set, the override_limits parameter is set as specified. If
+override_limits is on, disables end of travel hardware
+limits to allow jogging off of a limit. If parameters is
+off, then hardware limits are enabled.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>optional_stop
+{0|1}</b></p>
+
+<p style="margin-left:22%;">With get, any parameter is
+ignored and the current &quot;optional stop on M1&quot;
+setting is returned. With set, the setting is set as
+specified.</p>
+
+<h2>Example Session
+<a name="Example Session"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">This section
+shows an example session. Bold items are typed by you,
+non-bold is machine output.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The user
+connects to linuxcncrsh, handshakes with the server (hello),
+enables machine commanding from this session (set enable),
+brings the machine out of estop (set estop off) and turns it
+on (set machine on), homes all the axes, switches the
+machine to mdi mode, sends an MDI g-code command, then
+disconnects and shuts down LinuxCNC.</p>
+
+<p style="margin-left:11%; margin-top: 1em">&gt; <b>telnet
+localhost 5007</b> <br>
+Trying 127.0.0.1... <br>
+Connected to 127.0.0.1 <br>
+Escape character is &rsquo;^]&rsquo;. <b><br>
+hello EMC user-typing-at-telnet 1.0</b> <br>
+HELLO ACK EMCNETSVR 1.1 <b><br>
+set enable EMCTOO</b> <br>
+set enable EMCTOO <b><br>
+set mode manual</b> <br>
+set mode manual <b><br>
+set estop off</b> <br>
+set estop off <b><br>
+set machine on</b> <br>
+set machine on <b><br>
+set home 0</b> <br>
+set home 0 <b><br>
+set home 1</b> <br>
+set home 1 <b><br>
+set home 2</b> <br>
+set home 2 <b><br>
+set mode mdi</b> <br>
+set mode mdi <b><br>
+set mdi g0x1</b> <br>
+set mdi g0x1 <b><br>
+shutdown</b> <br>
+shutdown <br>
+Connection closed by foreign host.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/linuxcncrsh.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

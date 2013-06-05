@@ -1,0 +1,1155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/pyvcp_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:26 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>PyVCP</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>PyVCP</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:Panneau-Virtuel-Control"></a> </p></div>
+</div>
+</div>
+<h2 id="_introduction">1. Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Panneau virtuel de contrôle en python (<strong>Py</strong>thon <strong>V</strong>irtual <strong>C</strong>ontrol
+<strong>P</strong>anel)</p></div>
+<div class="paragraph"><p>Le panneau de contrôle virtuel pyVCP a été créé pour donner à
+l&#8217;intégrateur la possibilité de personnaliser l&#8217;interface graphique d&#8217;AXIS avec
+des boutons et des indicateurs destinés aux tâches spéciales.</p></div>
+<div class="paragraph"><p>Le coût d&#8217;un panneau de contrôle physique est très élevé et il peut
+utiliser un grand nombre de broches d&#8217;entrées/sorties. C&#8217;est là que le
+panneau virtuel prends l&#8217;avantage car il ne coûte rien d&#8217;utiliser pyVCP.</p></div>
+<div class="paragraph"><p>Les panneaux de contrôle virtuels peuvent être utilisés pour tester ou
+monitorer le matériel, les entrées/sorties, remplacer temporairement
+d&#8217;autres matériels d&#8217;entrées/sorties pendant le déboguage d&#8217;une logique
+ladder ou pour simuler un panneau physique, avant de le construire et
+de le câbler vers les cartes électroniques.</p></div>
+<div class="paragraph"><p>L&#8217;image suivante montre quelques widgets pyVCP.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_group.png" alt="images/pyvcp_group.png" />
+</div>
+</div>
+</div>
+<h2 id="_construction_d_8217_un_panneau_pyvcp">2. Construction d&#8217;un panneau pyVCP</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>La disposition d&#8217;un panneau pyVCP est spécifiée dans un fichier XML
+qui contient les balises des widgets entre &lt;pyvcp&gt; et &lt;/pyvcp&gt;. Par
+exemple:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;pyvcp&gt;
+   &lt;label text="Ceci est un indicateur à LED"/&gt;
+   &lt;led/&gt;
+&lt;/pyvcp&gt;</tt></pre>
+</div></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_mypanel_fr.png" alt="images/pyvcp_mypanel_fr.png" />
+</div>
+</div>
+<div class="paragraph"><p>Si vous placez ce texte dans un fichier nommé tiny.xml et que vous le
+lancez avec:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>pyvcp -c panneau tiny.xml</tt></pre>
+</div></div>
+<div class="paragraph"><p>pyVCP va créer le panneau pour vous, il y inclut deux widgets, un
+Label avec le texte <em>Ceci est un indicateur à LED</em> et une LED rouge,
+utilisée pour afficher l'état d&#8217;un signal HAL de type BIT. Il va aussi
+créer un composant HAL nommé <em>panneau</em> (tous les widgets dans ce
+panneau sont connectés aux pins qui démarrent avec <em>panneau</em>). Comme
+aucune balise &lt;halpin&gt; n'était présente à l&#8217;intérieur de la balise
+&lt;led&gt;, pyVCP nomme automatiquement la pin HAL pour le widget LED
+panneau.led.0</p></div>
+<div class="paragraph"><p>Pour obtenir la liste des widgets, leurs balises et options, consultez
+<a href="pyvcp_fr.html#sec:Documentation-des-widgets">la documentation des widgets</a>.</p></div>
+<div class="paragraph"><p>Un fois que vous avez créé votre panneau, connectez lui les signaux HAL, vers
+et à partir des pins pyVCP et avec la commande habituelle:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net &lt;signal-name&gt; &lt;pin-name&gt; &lt;opt-direction&gt; &lt;opt-pin-name&gt;signal-name</tt></pre>
+</div></div>
+<div class="paragraph"><p>Si vous débutez avec HAL, <a href="tutorial_fr.html#cha:Tutoriel-HAL">le tutoriel de HAL</a> est
+vivement recommandé.</p></div>
+</div>
+<h2 id="_s_curit_avec_pyvcp">3. Sécurité avec pyVCP</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Certaines parties de pyVCP sont évaluées comme du code Python, elles
+peuvent donc exécuter n&#8217;importe quelle action disponible dans les
+programmes Python. N&#8217;utilisez que des fichiers pyVCP en .xml à partir
+d&#8217;une source de confiance.tag</p></div>
+</div>
+<h2 id="sec:pyvcp-avec-axis">4. Utiliser pyVCP avec AXIS</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Puisque AXIS utilise le même environnement graphique et les même
+outils (Tkinter) que pyVCP, il est possible d&#8217;inclure un panneau pyVCP
+sur le côté droit de l&#8217;interface utilisateur normale d&#8217;AXIS. Un exemple
+typique est présenté ci-dessous.</p></div>
+<div class="paragraph"><p>Placer le fichier pyVCP XML décrivant le panneau dans le même
+répertoire que le fichier .ini. Nous voulons afficher la vitesse
+courante de la broche sur un widget barre de progression. Copier le
+code XML suivant dans un fichier appelé broche.xml:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;pyvcp&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;label&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Vitesse broche:"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/label&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;bar&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"spindle-speed"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;max_&gt;</span></span>5000<span style="font-weight: bold"><span style="color: #0000FF">&lt;/max_&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/bar&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/pyvcp&gt;</span></span></tt></pre></div></div>
+<div class="paragraph"><p>Ici nous avons fait un panneau avec un label <em>Vitesse broche:</em> et un
+widget barre de progression. Nous avons spécifié que la pin HAL
+connectée à la barre de progression devait s&#8217;appeler <em>spindle-speed</em> et
+régler la valeur maximum de la barre à 5000 (se reporter à la
+<a href="pyvcp_fr.html#sec:Documentation-des-widgets">documentation des widgets</a>, pour toutes
+les options disponibles). Pour faire connaître ce fichier à AXIS et qu&#8217;il
+l&#8217;appelle au démarrage, nous devons préciser ce qui suit dans la section
+[DISPLAY] du fichier .ini:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>PYVCP = broche.xml</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour que notre widget affiche réellement la vitesse de la broche
+<em>spindle-speed</em>, il doit être raccordé au signal approprié de HAL. Le
+fichier .hal qui sera exécuté quand AXIS et pyVCP démarreront doit être
+spécifié, de la manière suivante, dans la section [HAL] du fichier .ini:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>POSTGUI_HALFILE = broche_vers_pyvcp.hal</tt></pre>
+</div></div>
+<div class="paragraph"><p>Ce changement lancera la commande HAL spécifiée dans
+<em>broche_vers_pyvcp.hal</em>. Dans notre exemple, ce fichier contiendra
+juste la commande suivante:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net spindle-rpm-filtered  =&gt; pyvcp.spindle-speed</tt></pre>
+</div></div>
+<div class="paragraph"><p>ce qui suppose que le signal appelé <em>spindle-rpm-filtered</em> existe
+aussi. Noter que lors de l&#8217;exécution avec AXIS, toutes les pins des
+widgets de pyVCP ont des noms commençant par <em>pyvcp.</em>.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_AXIS_fr.png" alt="images/pyvcp_AXIS_fr.png" />
+</div>
+</div>
+<div class="paragraph"><p>Voila à quoi ressemble le panneau pyVCP que nous venons de créer,
+incorporé à AXIS. La configuration <em>sim/lathe</em> fournie en exemple, est
+configurée de cette manière.</p></div>
+</div>
+<h2 id="_panneaux_pyvcp_autonomes">5. Panneaux PyVCP autonomes</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Cette section va décrire comment les panneaux PyVCP peuvent être
+affichés par eux même, par l&#8217;intermédiaire ou non des contrôleurs
+machine de LinuxCNC.</p></div>
+<div class="paragraph"><p>Pour charger un panneau PyVCP autonome avec LinuxCNC utiliser cette
+commande:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadusr -Wn monpanneau pyvcp -g WxH+X+Y -c monpanneau &lt;path/&gt;fichier_panneau.xml</tt></pre>
+</div></div>
+<div class="paragraph"><p>Vous l&#8217;utiliserez pour avoir un panneau flottant ou un panneau avec
+une interface graphique autre que Axis.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>-Wn monpanneau</em> -
+     Fait attendre à HAL que le composant <em>monpanneau</em> soit chargé
+    (devienne <em>ready</em> en langage HAL), avant d&#8217;exécuter d&#8217;autres commandes HAL.
+    C&#8217;est important parce-que les panneaux PyVCP exportent des pins de HAL
+    ainsi que d&#8217;autres composants de HAL qui doivent être présents pour pouvoir
+    se connecter à eux. Noter la lettre <strong>W</strong> en majuscule et la lettre <strong>n</strong> en
+    minuscule. Si vous utilisez l&#8217;option -Wn vous devez également utiliser
+    l&#8217;option -c pour nommer le panneau.
+</p>
+</li>
+<li>
+<p>
+<em>pyvcp &lt; -g&gt; &lt; -c&gt; panneau.xml</em> -
+     Construit le panneau avec la géométrie optionnelle et/ou le nom de panneau
+    depuis le fichier panneau.xml. Le fichier panneau.xml peut avoir n&#8217;importe
+    quel nom avec l&#8217;extension .xml. Le fichier .xml décrit comment construire
+    le panneau. Il est nécessaire d&#8217;ajouter le nom du chemin si le panneau
+    n&#8217;est pas dans le répertoire dans lequel se trouve le script HAL.
+</p>
+</li>
+<li>
+<p>
+<em>-g &lt;WxH&gt;&lt;+X+Y&gt;</em> -
+     Spécifie la géométrie à utiliser quand le panneau est construit. La
+    syntaxe est <em>Largeur x Hauteur + Ancrage X + Ancrage Y</em>. La taille ou la
+    position, ou les deux peuvent être fixés. Le point d&#8217;ancrage est le coin
+    supérieur gauche du panneau. Par exemple; -g 250x500+800+0 fixe le
+    panneau à 250 pixels de large, 500 pixels de haut avec le point d&#8217;ancrage
+    placé en X800 Y0.
+</p>
+</li>
+<li>
+<p>
+<em>-c nompanneau</em> -
+     Indique à PyVCP quel composant appeler et le titre de la fenêtre.
+    Le nom du fichier <em>nompanneau</em> peut être n&#8217;importe quel nom sans espace.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Pour charger un panneau PyVCP autonome, sans LinuxCNC utiliser cette commande:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadusr -Wn monpanneau pyvcp -g 250x500+800+0 -c monpanneau monpanneau.xml</tt></pre>
+</div></div>
+<div class="paragraph"><p>La commande minimale pour charger un panneau pyvcp est la suivante:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadusr pyvcp monpanneau.xml</tt></pre>
+</div></div>
+<div class="paragraph"><p>Vous pourrez utiliser cette commande si vous voulez un panneau sans passer
+par un des contrôleurs machine de LinuxCNC, par exemple pour des tests ou
+une visu autonome.</p></div>
+<div class="paragraph"><p>La commande loadusr est utilisée quand vous chargez aussi un composant qui
+stoppera HAL depuis la fermeture jusqu'à ce qu&#8217;il soit prêt. Si vous avez
+chargé un panneau puis chargé Classic Ladder en utilisant la commande
+<em>loadusr -w classicladder</em>, CL maintiendra HAL et le panneau ouverts jusqu'à
+ce que vous fermiez Classic Ladder. Le <em>-Wn</em> signifie d&#8217;attendre que le
+composant <em>-Wn "nom"</em> devienne prêt. (<em>nom</em> peut être n&#8217;importe quel nom.
+Noter la lettre <strong>W</strong> en majuscule et le <strong>n</strong> en minuscule.)
+Le -c indique à PyVCP de construire un panneau avec le nom <em>monpanneau</em> en
+utilisant les infos contenues dans le fichier <em>monpanneau.xml</em>.
+Le nom du fichier <em>monpanneau.xml</em> est sans importante mais doit porter
+l&#8217;extension .xml. C&#8217;est le fichier qui décrit comment construire le panneau.
+Il est nécessaire d&#8217;ajouter le nom du chemin si le panneau n&#8217;est pas dans
+le répertoire dans lequel se trouve le script HAL.</p></div>
+<div class="paragraph"><p>Une commande optionnelle à utiliser si vous voulez que le panneau stoppe HAL
+depuis les commandes <em>Continuer</em> / <em>Quitter</em>. Après avoir chargé n&#8217;importe
+quelles autres composants la dernière commande HAL sera:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>waituser nompanneau</tt></pre>
+</div></div>
+<div class="paragraph"><p>Cette commande indique à HAL d&#8217;attendre que le composant <em>nompanneau</em> soit
+fermé avant de continuer avec d&#8217;autres commandes. C&#8217;est généralement défini
+comme étant la dernière commande, de sorte que HAL s&#8217;arrêtera si le panneau
+est fermé.</p></div>
+</div>
+<h2 id="sec:Documentation-des-widgets">6. Documentation des widgets de pyVCP</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Les signaux de HAL existent en deux variantes, BIT et FLOAT. pyVCP
+peut afficher la valeur d&#8217;un signal avec un widget indicateur, ou
+modifier la valeur d&#8217;un signal avec un widget de contrôle. Ainsi, il y
+a quatre classes de widgets pyVCP connectables aux signaux de HAL. Une
+cinquième classe de widgets d&#8217;aide permet d&#8217;organiser et d&#8217;appliquer
+des labels aux panneaux.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Widgets de signalisation, signaux de type bit: led, rectled
+</p>
+</li>
+<li>
+<p>
+Widgets de contrôle, signaux de type bit: button, checkbutton, radiobutton
+</p>
+</li>
+<li>
+<p>
+Widgets de signalisation de type nombre: number, s32, u32, bar, meter
+</p>
+</li>
+<li>
+<p>
+Widgets de contrôle de type nombre: spinbox, scale, jogwheel
+</p>
+</li>
+<li>
+<p>
+Widgets d&#8217;aide: hbox, vbox, table, label, labelframe
+</p>
+</li>
+</ul></div>
+<h3 id="_syntaxe">6.1. Syntaxe</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Chaque widget sera décrit brièvement, suivi par la forme d'écriture
+utilisée et d&#8217;une capture d'écran. Toutes les balises contenues dans la
+balise du widget principal, sont optionnelles.</p></div>
+<h3 id="_notes_g_n_rales">6.2. Notes générales</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Á l&#8217;heure actuelle, les deux syntaxes, basée sur les balises et basée
+sur les attributs, sont supportées. Par exemple, les deux fragments de
+code XML suivants sont traités de manière identique:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;led halpin="ma-led"/&gt;</tt></pre>
+</div></div>
+<div class="paragraph"><p>et</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;led&gt;&lt;halpin&gt;"ma-led"&lt;/halpin&gt;&lt;/led&gt;</tt></pre>
+</div></div>
+<div class="paragraph"><p>Quand la syntaxe basée sur les attributs est utilisée, les règles
+suivantes sont utilisées pour convertir les valeurs des attributs en
+valeurs Python:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Si le premier caractère de l&#8217;attribut est un des suivants: <em>{(["'</em> ,
+   il est évalué comme une expression Python.
+</p>
+</li>
+<li>
+<p>
+Si la chaine est acceptée par int(), la valeur est traitée comme un
+   entier.
+</p>
+</li>
+<li>
+<p>
+Si la chaine est acceptée par float(), la valeur est traitée comme un
+   flottant.
+</p>
+</li>
+<li>
+<p>
+Autrement, la chaine est acceptée comme une chaine.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Quand la syntaxe basée sur les balises est utilisée, le texte entre
+les balises est toujours évalué comme un expression Python.</p></div>
+<div class="paragraph"><p>Les exemples ci-dessous montrent un mélange des deux formats.</p></div>
+<h3 id="_commentaires">6.3. Commentaires</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Pour ajouter un commentaire utiliser la syntaxe de xml.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;!-- Mon commentaire --&gt;</tt></pre>
+</div></div>
+<h3 id="_editer_un_fichier_xml">6.4. Editer un fichier XML</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Editer le fichier XML avec un éditeur de texte. La plupart du temps un
+double click sur le nom de fichier permet de choisir
+<em>ouvrir avec l&#8217;editeur de texte</em> ou similaire.</p></div>
+<h3 id="_couleurs">6.5. Couleurs</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les couleurs peuvent être spécifiées en utilisant les couleurs RGB de
+X11 soit par le nom, par exemple: <em>gray75</em> ou soit en hexa décimal, par
+exemple: <em>#0000ff</em>. Une liste complète est consultable ici:
+<a href="http://sedition.com/perl/rgb.html">http://sedition.com/perl/rgb.html</a>.</p></div>
+<div class="paragraph"><p>Couleurs les plus courantes (les numéros suivant la couleur indiquent
+la nuance de la couleur)</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+white  (blanc)
+</p>
+</li>
+<li>
+<p>
+black  (noir)
+</p>
+</li>
+<li>
+<p>
+blue et blue1 - blue4  (bleu)
+</p>
+</li>
+<li>
+<p>
+cyan et cyan1 - cyan4  (cyan)
+</p>
+</li>
+<li>
+<p>
+green et green1 - green4  (vert)
+</p>
+</li>
+<li>
+<p>
+yellow et yellow1 - yellow4  (jaune)
+</p>
+</li>
+<li>
+<p>
+red et red1 - red4  (rouge)
+</p>
+</li>
+<li>
+<p>
+purple et purple1 - purple4  (violet/pourpre)
+</p>
+</li>
+<li>
+<p>
+gray et gray0 - gray100  (gris)
+</p>
+</li>
+</ul></div>
+<h3 id="_pins_de_hal">6.6. Pins de HAL</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les pins de HAL fournisse le moyen de connecter les widgets aux autres éléments.
+Quand une pin de HAL est créée pour un widget, il est possible de la <em>connecter</em>
+à une autre pin de HAL avec une commande <em>net</em> dans un fichier .hal. Pour plus
+de détails, voir la commande <em>net</em> dans le manuel de HAL.</p></div>
+<h3 id="_label">6.7. Label</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Un label est un texte qui s&#8217;affiche sur le panneau.</p></div>
+<div class="paragraph"><p>Le label a une pin optionnelle de désactivation en ajoutant:
+<em>&lt;disable_pin&gt;True&lt;/disable_pin&gt;</em>.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;label&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Ceci est un label:"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",20)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/label&gt;</span></span></tt></pre></div></div>
+<div class="paragraph"><p>Ce code produira:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_label_fr.png" alt="images/pyvcp_label_fr.png" />
+</div>
+</div>
+<h3 id="_les_leds">6.8. Les leds</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Une led est utilisée pour indiquer l'état d&#8217;une pin de HAL de type bit. La
+couleur de la led sera on_color quand le signal est vrai et off_color
+autrement.
+* <em>&lt;halpin&gt;</em> définit le nom de la pin, par défaut: <em>led.n</em>, où n est un entier.
+* <em>&lt;size&gt;</em> définit la taille de la led, par défaut: 20.
+* <em>&lt;on_color&gt;</em> définit la couleur de la led led quand la pin est vraie,
+par défaut: <em>green</em>
+* <em>&lt;off_color&gt;</em> définit la couleur de la led quand la pin est fausse,
+par défaut: <em>ref</em></p></div>
+<h3 id="_la_led_ronde">6.9. La led ronde</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;led&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"ma-led"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;size&gt;</span></span>50<span style="font-weight: bold"><span style="color: #0000FF">&lt;/size&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;on_color&gt;</span></span>"verte"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/on_color&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;off_color&gt;</span></span>"rouge"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/off_color&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/led&gt;</span></span></tt></pre></div></div>
+<div class="paragraph"><p>Le résultat du code ci-dessus.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_led.png" alt="images/pyvcp_led.png" />
+</div>
+</div>
+<h3 id="_la_led_rectangulaire">6.10. La led rectangulaire</h3><div style="clear:left"></div>
+<div class="paragraph"><p>C&#8217;est une variante du widget <em>led</em>.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;vbox&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;relief&gt;</span></span>RIDGE<span style="font-weight: bold"><span style="color: #0000FF">&lt;/relief&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;bd&gt;</span></span>6<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bd&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;rectled&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"ma-led-rect"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;height&gt;</span></span>"50"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/height&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;width&gt;</span></span>"100"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/width&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;on_color&gt;</span></span>"green"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/on_color&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;off_color&gt;</span></span>"red"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/off_color&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/rectled&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/vbox&gt;</span></span></tt></pre></div></div>
+<div class="paragraph"><p>Le code ci-dessus produit cette led, entourée d&#8217;un relief.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_rectled.png" alt="images/pyvcp_rectled.png" />
+</div>
+</div>
+<h3 id="_le_bouton_button">6.11. Le bouton (button)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Un bouton permet de contrôler une pin de type bit. La pin sera mise vraie
+quand le bouton sera pressé et maintenu enfoncé, elle sera mise fausse
+quand le bouton sera relâché.</p></div>
+<div class="paragraph"><p>Les boutons peuvent suivre les options de formatage suivantes:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+&lt;padx&gt;n&lt;/padx&gt; où <em>n</em> est le nombre d&#8217;espaces horizontaux supplémentaires
+</p>
+</li>
+<li>
+<p>
+&lt;pady&gt;n&lt;/pady&gt; où <em>n</em> est le nombre d&#8217;espaces verticaux supplémentaires
+</p>
+</li>
+<li>
+<p>
+&lt;activebackground&gt;"color"&lt;/activebackground&gt; Couleur au survol du curseur
+</p>
+</li>
+<li>
+<p>
+&lt;bg&gt;"color"&lt;/bg&gt; Couleur du bouton
+</p>
+</li>
+</ul></div>
+<h4 id="_bouton_avec_texte_text_button">6.11.1. Bouton avec texte (Text Button)</h4>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;button&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"Bouton-OK"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"OK"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/button&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;button&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"Bouton-Abandon"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Abort"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/button</span></span></tt></pre></div></div>
+<div class="paragraph"><p>Le code ci-dessus produit:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_button.png" alt="images/pyvcp_button.png" />
+</div>
+</div>
+<h4 id="_case_cocher_checkbutton">6.11.2. Case à cocher (checkbutton)</h4>
+<div class="paragraph"><p>Une case à cocher contrôle une pin de type bit. La pin sera mise vraie quand
+la case est cochée et fausse si la case est décochée.</p></div>
+<div class="paragraph"><p>Une case non cochée:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_checkbutton1.png" alt="images/pyvcp_checkbutton1.png" />
+</div>
+</div>
+<div class="paragraph"><p>et une case cochée:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_checkbutton2.png" alt="images/pyvcp_checkbutton2.png" />
+</div>
+</div>
+<div class="paragraph"><p>Exemple de code:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;checkbutton&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"coolant-chkbtn"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Coolant"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/checkbutton&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;checkbutton&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"chip-chkbtn"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Chips    "<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/checkbutton&gt;</span></span></tt></pre></div></div>
+<div class="paragraph"><p>Le code ci-dessus produit:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_checkbutton.png" alt="images/pyvcp_checkbutton.png" />
+</div>
+</div>
+<h4 id="_bouton_radio_radiobutton">6.11.3. Bouton radio (radiobutton)</h4>
+<div class="paragraph"><p>Un bouton radio placera une seule des pins vraie. Les autres
+seront mises fausses.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;radiobutton&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;choices&gt;</span></span>["un","deux","trois"]<span style="font-weight: bold"><span style="color: #0000FF">&lt;/choices&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"mon-radiobtn"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/radiobutton&gt;</span></span></tt></pre></div></div>
+<div class="paragraph"><p>Le code ci-dessus donne ce résultat:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_radiobutton_fr.png" alt="images/pyvcp_radiobutton_fr.png" />
+</div>
+</div>
+<div class="paragraph"><p>Noter que dans l&#8217;exemple ci-dessus, les pins de HAL seront nommées
+mon-radiobtn.un, mon-radiobtn.deux et mon-radiobtn.trois. Dans l&#8217;image
+précédente, <em>trois</em> est la valeur sélectionnée courante.</p></div>
+<h3 id="_affichage_d_8217_un_nombre_number">6.12. Affichage d&#8217;un nombre (number)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>L&#8217;affichage d&#8217;un nombre peux recevoir les options de formatage suivantes:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+&lt;font&gt;("Font Name",n)&lt;/font&gt; où <em>n</em> est la taille de la police
+</p>
+</li>
+<li>
+<p>
+&lt;width&gt;n&lt;/width&gt; où <em>n</em> est la largeur totale utilisée
+</p>
+</li>
+<li>
+<p>
+&lt;justify&gt;pos&lt;/justify&gt; où "pos" peut être LEFT, CENTER ou RIGHT
+   (devrait marcher)
+</p>
+</li>
+<li>
+<p>
+&lt;padx&gt;n&lt;/padx&gt; où "n" est le nombre d&#8217;espaces horizontaux supplémentaires
+</p>
+</li>
+<li>
+<p>
+&lt;pady&gt;n&lt;/pady&gt; où "n" est le nombre d&#8217;espaces verticaux supplémentaires
+</p>
+</li>
+</ul></div>
+<h4 id="_number">6.12.1. Number</h4>
+<div class="paragraph"><p>Le widget <em>number</em> affiche la valeur d&#8217;un signal de type flottant.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;number&gt;
+    &lt;halpin&gt;"number"&lt;/halpin&gt;
+    &lt;font&gt;("Helvetica",24)&lt;/font&gt;
+    &lt;format&gt;"+4.4f"&lt;/format&gt;
+&lt;/number&gt;</tt></pre>
+</div></div>
+<div class="paragraph"><p>Le code ci-dessus donne ce résultat:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_number.png" alt="images/pyvcp_number.png" />
+</div>
+</div>
+<h4 id="_flottant">6.12.2. Flottant</h4>
+<div class="paragraph"><p>Le widget number affiche la valeur d&#8217;un signal de type flottant.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;number&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"my-number"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",24)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;format&gt;</span></span>"+4.4f"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/format&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/number&gt;</span></span></tt></pre></div></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_number.png" alt="images/pyvcp_number.png" />
+</div>
+</div>
+<div class="paragraph"><p>&lt;font&gt; est une police de caractères de type Tkinter avec la
+spécification de sa taille. Une police qui peut être agrandie jusqu'à la
+taille 200 est la police <em>courier 10 pitch</em>, que vous pouvez spécifier de la
+manière suivante, pour afficher des chiffres réellement grands:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;font&gt;('courier 10 pitch',100)&lt;/font&gt;</tt></pre>
+</div></div>
+<div class="paragraph"><p>&lt;format&gt; est un format <em>style C</em>, spécifié pour définir le format
+d&#8217;affichage du nombre.</p></div>
+<h4 id="_nombre_s32">6.12.3. Nombre s32</h4>
+<div class="paragraph"><p>Le widget s32 affiche la valeur d&#8217;un nombre s32. La syntaxe est la
+même que celle de <em>number</em> excepté le nom qui est &lt;s32&gt;. Il faut
+prévoir une largeur suffisante pour afficher le nombre dans sa
+totalité.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;s32&gt;
+    &lt;halpin&gt;"simple-number"&lt;/halpin&gt;
+    &lt;font&gt;("Helvetica",24)&lt;/font&gt;
+    &lt;format&gt;"6d"&lt;/format&gt;
+    &lt;width&gt;6&lt;/width&gt;
+&lt;/s32&gt;</tt></pre>
+</div></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_s32.png" alt="images/pyvcp_s32.png" />
+</div>
+</div>
+<h4 id="_nombre_u32">6.12.4. Nombre u32</h4>
+<div class="paragraph"><p>Le widget u32 affiche la valeur d&#8217;un nombre u32. La syntaxe est la
+même que celle de <em>number</em> excepté le nom qui est &lt;u32&gt;.</p></div>
+<h3 id="_affichage_d_8217_images">6.13. Affichage d&#8217;images</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Seul l&#8217;affichage d&#8217;images au format gif est possible. Toutes les
+images doivent avoir la même taille. Les images doivent être toutes
+dans le même répertoire que le fichier ini (ou dans le répertoire
+courant pour un fonctionnement en ligne de commande avec
+halrun/halcmd).</p></div>
+<h4 id="_image_bit">6.13.1. Image Bit</h4>
+<div class="paragraph"><p>La bascule <em>image_bit</em> bascule entre deux images selon la position
+vraie ou fausse de halpin.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;pyvcp&gt;
+    &lt;image name='fwd' file='fwd.gif'/&gt;
+    &lt;image name='rev' file='rev.gif'/&gt;
+    &lt;vbox&gt;
+        &lt;image_bit halpin='selectimage' images='fwd rev'/&gt;
+    &lt;/vbox&gt;
+&lt;/pyvcp&gt;</tt></pre>
+</div></div>
+<div class="paragraph"><p>En utilisant les deux images fwd.gif et rev.gif.
+FWD est affiché quand <em>selectimage</em> est fausse
+et REV est affiché quand <em>selectimage</em> est vraie.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_image01.png" alt="images/pyvcp_image01.png" />
+</div>
+<div class="title">Figure 1. selectimage fausse</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_image02.png" alt="images/pyvcp_image02.png" />
+</div>
+<div class="title">Figure 2. selectimage vraie</div>
+</div>
+<h4 id="_image_u32">6.13.2. Image u32</h4>
+<div class="paragraph"><p>La bascule <em>image_u32</em> est la même que <em>image_bit</em> excepté que le
+nombre d&#8217;images n&#8217;est pratiquement plus limité, il suffit de
+<em>selectionner</em> l&#8217;image en ajustant halpin à une valeur entière
+commençant à 0 pour la première image de la liste, à 1 pour la seconde
+image etc.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;pyvcp&gt;
+    &lt;image name='stb' file='stb.gif'/&gt;
+    &lt;image name='fwd' file='fwd.gif'/&gt;
+    &lt;image name='rev' file='rev.gif'/&gt;
+    &lt;vbox&gt;
+        &lt;image_u32 halpin='selectimage' images='stb fwd rev'/&gt;
+    &lt;/vbox&gt;
+&lt;/pyvcp&gt;</tt></pre>
+</div></div>
+<div class="paragraph"><p>Même résultat mais en ajoutant l&#8217;image stb.gif.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_image_u32_01.png" alt="images/pyvcp_image_u32_01.png" />
+</div>
+<div class="title">Figure 3. Halpin = 0</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_image01.png" alt="images/pyvcp_image01.png" />
+</div>
+<div class="title">Figure 4. Halpin = 1</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_image02.png" alt="images/pyvcp_image02.png" />
+</div>
+<div class="title">Figure 5. Halpin = 2</div>
+</div>
+<h3 id="_barre_de_progression_bar">6.14. Barre de progression (bar)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le widget barre de progression affiche la valeur d&#8217;un signal FLOAT,
+graphiquement dans une barre de progression et simultanément, en
+numérique.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;bar&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"bar"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;min_&gt;</span></span>0<span style="font-weight: bold"><span style="color: #0000FF">&lt;/min_&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;max_&gt;</span></span>123<span style="font-weight: bold"><span style="color: #0000FF">&lt;/max_&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;bgcolor&gt;</span></span>"grey"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bgcolor&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;fillcolor&gt;</span></span>"red"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/fillcolor&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bar&gt;</span></span></tt></pre></div></div>
+<div class="paragraph"><p>Le code ci-dessus donne ce résultat:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_bar.png" alt="images/pyvcp_bar.png" />
+</div>
+</div>
+<h3 id="_galvanom_tre_meter">6.15. Galvanomètre (meter)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le galvanomètre affiche la valeur d&#8217;un signal FLOAT dans un affichage
+à aiguille <em>à l&#8217;ancienne</em>.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;meter&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"mymeter"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Battery"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;subtext&gt;</span></span>"Volts"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/subtext&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;size&gt;</span></span>250<span style="font-weight: bold"><span style="color: #0000FF">&lt;/size&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;min_&gt;</span></span>0<span style="font-weight: bold"><span style="color: #0000FF">&lt;/min_&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;max_&gt;</span></span>15.5<span style="font-weight: bold"><span style="color: #0000FF">&lt;/max_&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;majorscale&gt;</span></span>1<span style="font-weight: bold"><span style="color: #0000FF">&lt;/majorscale&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;minorscale&gt;</span></span>0.2<span style="font-weight: bold"><span style="color: #0000FF">&lt;/minorscale&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;region1&gt;</span></span>(14.5,15.5,"yellow")<span style="font-weight: bold"><span style="color: #0000FF">&lt;/region1&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;region2&gt;</span></span>(12,14.5,"green")<span style="font-weight: bold"><span style="color: #0000FF">&lt;/region2&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;region3&gt;</span></span>(0,12,"red")<span style="font-weight: bold"><span style="color: #0000FF">&lt;/region3&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/meter&gt;</span></span></tt></pre></div></div>
+<div class="paragraph"><p>Le code ci-dessus donne ce résultat:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_meter.png" alt="images/pyvcp_meter.png" />
+</div>
+</div>
+<h3 id="_bo_te_d_8217_incr_ment_spinbox">6.16. Boîte d&#8217;incrément (spinbox)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La boîte d&#8217;incrément contrôle une pin FLOAT. La valeur de la pin est
+augmentée ou diminuée de la valeur de <em>resolution</em>, à chaque pression
+sur une flèche, ou en positionnant la souris sur le nombre puis en
+tournant la molette de la souris.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;spinbox&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"my-spinbox"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;min_&gt;</span></span>-12<span style="font-weight: bold"><span style="color: #0000FF">&lt;/min_&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;max_&gt;</span></span>33<span style="font-weight: bold"><span style="color: #0000FF">&lt;/max_&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;inival&gt;</span></span>0<span style="font-weight: bold"><span style="color: #0000FF">&lt;/inival&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;resolution&gt;</span></span>0.1<span style="font-weight: bold"><span style="color: #0000FF">&lt;/resolution&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;format&gt;</span></span>"2.3f"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/format&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Arial",30)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/spinbox&gt;</span></span></tt></pre></div></div>
+<div class="paragraph"><p>Le code ci-dessus donne ce résultat:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_spinbox.png" alt="images/pyvcp_spinbox.png" />
+</div>
+</div>
+<h3 id="_curseur_scale">6.17. Curseur (scale)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le curseur contrôle une pin FLOAT. La valeur de la pin est augmentée
+ou diminuée en déplaçant le curseur, ou en positionnant la souris sur
+le curseur puis en tournant la molette de la souris.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;scale&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",16)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;width&gt;</span></span>"25"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/width&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"my-hscale"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;resolution&gt;</span></span>0.1<span style="font-weight: bold"><span style="color: #0000FF">&lt;/resolution&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;orient&gt;</span></span>HORIZONTAL<span style="font-weight: bold"><span style="color: #0000FF">&lt;/orient&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;initval&gt;</span></span>-15<span style="font-weight: bold"><span style="color: #0000FF">&lt;/initval&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;min_&gt;</span></span>-33<span style="font-weight: bold"><span style="color: #0000FF">&lt;/min_&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;max_&gt;</span></span>26<span style="font-weight: bold"><span style="color: #0000FF">&lt;/max_&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/scale&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;scale&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",16)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;width&gt;</span></span>"50"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/width&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"my-vscale"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;resolution&gt;</span></span>1<span style="font-weight: bold"><span style="color: #0000FF">&lt;/resolution&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;orient&gt;</span></span>VERTICAL<span style="font-weight: bold"><span style="color: #0000FF">&lt;/orient&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;min_&gt;</span></span>100<span style="font-weight: bold"><span style="color: #0000FF">&lt;/min_&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;max_&gt;</span></span>0<span style="font-weight: bold"><span style="color: #0000FF">&lt;/max_&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/scale&gt;</span></span></tt></pre></div></div>
+<div class="paragraph"><p>Le code ci-dessus donne ce résultat:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_scale.png" alt="images/pyvcp_scale.png" />
+</div>
+</div>
+<div class="paragraph"><p>Noter que par défaut c&#8217;est min qui est affiché même si il est
+supérieur à max, à moins que min ne soit négatif.</p></div>
+<h3 id="_bouton_tournant_dial">6.18. Bouton tournant (dial)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le bouton tournant imite le fonctionnement d&#8217;un vrai bouton tournant,
+en sortant sur un FLOAT HAL la valeur sur laquelle est positionné le
+curseur, que ce soit en le faisant tourner avec un mouvement
+circulaire, ou en tournant la molette de la souris. Un double click
+gauche augmente la résolution et un double click droit la diminue d&#8217;un
+digit. La sortie est limitée par les valeurs min et max. La variable
+cpr fixe le nombre de graduations sur le pourtour du cadran (prudence
+avec les grands nombres).</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;dial&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;size&gt;</span></span>200<span style="font-weight: bold"><span style="color: #0000FF">&lt;/size&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;cpr&gt;</span></span>100<span style="font-weight: bold"><span style="color: #0000FF">&lt;/cpr&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;min_&gt;</span></span>-15<span style="font-weight: bold"><span style="color: #0000FF">&lt;/min_&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;max_&gt;</span></span>15<span style="font-weight: bold"><span style="color: #0000FF">&lt;/max_&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Dial"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;initval&gt;</span></span>0<span style="font-weight: bold"><span style="color: #0000FF">&lt;/initval&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;resolution&gt;</span></span>0.001<span style="font-weight: bold"><span style="color: #0000FF">&lt;/resolution&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"anaout"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;dialcolor&gt;</span></span>"yellow"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/dialcolor&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;edgecolor&gt;</span></span>"green"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/edgecolor&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;dotcolor&gt;</span></span>"black"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/dotcolor&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/dial&gt;</span></span></tt></pre></div></div>
+<div class="paragraph"><p>Le code ci-dessus donne ce résultat:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_dial.png" alt="images/pyvcp_dial.png" />
+</div>
+</div>
+<h3 id="_manivelle_jogwheel">6.19. Manivelle (jogwheel)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La manivelle imite le fonctionnement d&#8217;une vraie manivelle,
+en sortant sur une pin FLOAT la valeur sur laquelle est positionné le
+curseur, que ce soit en le faisant tourner avec un mouvement
+circulaire, ou en tournant la molette de la souris.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;jogwheel&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"my-wheel"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;cpr&gt;</span></span>45<span style="font-weight: bold"><span style="color: #0000FF">&lt;/cpr&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;size&gt;</span></span>250<span style="font-weight: bold"><span style="color: #0000FF">&lt;/size&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/jogwheel&gt;</span></span></tt></pre></div></div>
+<div class="paragraph"><p>Le code ci-dessus donne ce résultat:</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_jogwheel.png" alt="images/pyvcp_jogwheel.png" />
+</div>
+</div>
+</div>
+<h2 id="_documentation_des_containers_de_pyvcp">7. Documentation des containers de pyVCP</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Les containers sont des widgets qui contiennent d&#8217;autres widgets.</p></div>
+<h3 id="_bordures">7.1. Bordures</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le container bordure est spécifié avec deux balises utilisées ensembles.
+La balise &lt;relief&gt; spécifie le type de bordure et la balise &lt;bd&gt; spécifie la
+largeur de la bordure.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+&lt;relief&gt;type&lt;/relief&gt;
+</dt>
+<dd>
+<p>
+    La valeur de <em>type</em> peut être: FLAT, SUNKEN, RAISED, GROOVE, ou RIDGE
+</p>
+</dd>
+<dt class="hdlist1">
+&lt;bd&gt;n&lt;/bd&gt;
+</dt>
+<dd>
+<p>
+    La valeur de <strong>n</strong> fixe la largeur de la bordure.
+</p>
+</dd>
+</dl></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;hbox&gt;
+    &lt;button&gt;
+        &lt;relief&gt;FLAT&lt;/relief&gt;
+        &lt;text&gt;"FLAT"&lt;/text&gt;
+        &lt;bd&gt;3&lt;/bd&gt;
+    &lt;/button&gt;
+
+    &lt;button&gt;
+        &lt;relief&gt;SUNKEN&lt;/relief&gt;
+        &lt;text&gt;"SUNKEN"&lt;/text&gt;
+        &lt;bd&gt;3&lt;/bd&gt;
+    &lt;/button&gt;
+
+    &lt;button&gt;
+        &lt;relief&gt;RAISED&lt;/relief&gt;
+        &lt;text&gt;"RAISED"&lt;/text&gt;
+        &lt;bd&gt;3&lt;/bd&gt;
+    &lt;/button&gt;
+
+    &lt;button&gt;
+        &lt;relief&gt;GROOVE&lt;/relief&gt;
+        &lt;text&gt;"GROOVE"&lt;/text&gt;
+        &lt;bd&gt;3&lt;/bd&gt;
+    &lt;/button&gt;
+
+    &lt;button&gt;
+        &lt;relief&gt;RIDGE&lt;/relief&gt;
+        &lt;text&gt;"RIDGE"&lt;/text&gt;
+        &lt;bd&gt;3&lt;/bd&gt;
+    &lt;/button&gt;
+&lt;/hbox&gt;</tt></pre>
+</div></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_borders.png" alt="images/pyvcp_borders.png" />
+</div>
+</div>
+<h3 id="_hbox">7.2. Hbox</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Utilisez une Hbox lorsque vous voulez aligner les widgets,
+horizontalement, les uns à côtés des autres.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;hbox&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;relief&gt;</span></span>RIDGE<span style="font-weight: bold"><span style="color: #0000FF">&lt;/relief&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;bd&gt;</span></span>6<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bd&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;label&gt;&lt;text&gt;</span></span>"a hbox:"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;&lt;/label&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;led&gt;&lt;/led&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;number&gt;&lt;/number&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;bar&gt;&lt;/bar&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/hbox&gt;</span></span></tt></pre></div></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_hbox.png" alt="images/pyvcp_hbox.png" />
+</div>
+</div>
+<div class="paragraph"><p>Á l&#8217;intérieur d&#8217;une Hbox, il est possible d&#8217;utiliser les balises
+<em>&lt;boxfill fill=/&gt;</em>, <em>&lt;boxanchor anchor=/&gt;</em> et <em>&lt;boxexpand expand=/&gt;</em> pour
+choisir le comportement des éléments contenus dans la boîte,
+lors d&#8217;un redimensionnement de la fenêtre. Pour des détails sur le
+comportement de fill, anchor, et expand, référez vous au manuel du pack
+ Tk, <em>pack(3tk)</em>. Valeurs par défaut, <em>fill='y'</em>, <em>anchor='center'</em>,
+<em>expand='yes'</em>.</p></div>
+<h3 id="_vbox">7.3. Vbox</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Utilisez une Vbox lorsque vous voulez aligner les widgets
+verticalement, les uns au dessus des autres.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;vbox&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;relief&gt;</span></span>RIDGE<span style="font-weight: bold"><span style="color: #0000FF">&lt;/relief&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;bd&gt;</span></span>6<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bd&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;label&gt;&lt;text&gt;</span></span>"a vbox:"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;&lt;/label&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;led&gt;&lt;/led&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;number&gt;&lt;/number&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;bar&gt;&lt;/bar&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/vbox&gt;</span></span></tt></pre></div></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_vbox.png" alt="images/pyvcp_vbox.png" />
+</div>
+</div>
+<div class="paragraph"><p>Á l&#8217;intérieur d&#8217;une Vbox, vous pouvez utiliser les balises
+<em>&lt;boxfill fill=/&gt;</em>, <em>&lt;boxanchor anchor=/&gt;</em> et <em>&lt;boxexpand expand=/&gt;</em> pour
+choisir le comportement des éléments contenus dans la boîte,
+lors d&#8217;un redimensionnement de la fenêtre. Pour des détails sur le
+comportement de fill, anchor, et expand, référez vous au manuel du pack
+ Tk, <em>pack(3tk)</em>. Valeurs par défaut, <em>fill='y'</em>, <em>anchor='center'</em>,
+<em>expand='yes'</em>.</p></div>
+<h3 id="_labelframe">7.4. Labelframe</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Un labelframe est un cadre entouré d&#8217;un sillon et un label en haut à
+gauche.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;labelframe text="Label: Leds groupées"&gt;</tt></pre>
+</div></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;labelframe</span></span> <span style="color: #009900">text</span><span style="color: #990000">=</span><span style="color: #FF0000">"Label: Leds groupées"</span><span style="font-weight: bold"><span style="color: #0000FF">&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;font&gt;</span></span>("Helvetica",16)<span style="font-weight: bold"><span style="color: #0000FF">&lt;/font&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;hbox&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;led/&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;led/&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;led/&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/hbox&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/labelframe&gt;</span></span></tt></pre></div></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_labelframe_fr1.png" alt="images/pyvcp_labelframe_fr1.png" />
+</div>
+</div>
+<h3 id="_table">7.5. Table</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Une table est un container qui permet d'écrire dans une grille de
+lignes et de colonnes. Chaque ligne débute avec la balise <em>&lt;tablerow/&gt;</em>
+. Un widget contenu peut être en lignes ou en colonnes par
+ l&#8217;utilisation de la balise <em>&lt;tablespan rows= cols=/&gt;</em>. Les bordures
+des cellules contenant les widgets <em>sticky</em> peuvent
+ être réglées grâce à l&#8217;utilisation de la balise <em>&lt;tablesticky sticky=/&gt;</em>.
+Une table flexible peut s'étirer sur ses lignes et ses colonnes (sticky).</p></div>
+<div class="paragraph"><p>Exemple:</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;table</span></span> <span style="color: #009900">flexible_rows</span><span style="color: #990000">=</span><span style="color: #FF0000">"[2]"</span> <span style="color: #009900">flexible_columns</span><span style="color: #990000">=</span><span style="color: #FF0000">"[1,4]"</span><span style="font-weight: bold"><span style="color: #0000FF">&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;tablesticky</span></span> <span style="color: #009900">sticky</span><span style="color: #990000">=</span><span style="color: #FF0000">"new"</span><span style="font-weight: bold"><span style="color: #0000FF">/&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;tablerow/&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;label&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>" A (cell 1,1) "<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;relief&gt;</span></span>RIDGE<span style="font-weight: bold"><span style="color: #0000FF">&lt;/relief&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;bd&gt;</span></span>3<span style="font-weight: bold"><span style="color: #0000FF">&lt;/bd&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/label&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;label</span></span> <span style="color: #009900">text</span><span style="color: #990000">=</span><span style="color: #FF0000">"B (cell 1,2)"</span><span style="font-weight: bold"><span style="color: #0000FF">/&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;tablespan</span></span> <span style="color: #009900">columns</span><span style="color: #990000">=</span><span style="color: #FF0000">"2"</span><span style="font-weight: bold"><span style="color: #0000FF">/&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;label</span></span> <span style="color: #009900">text</span><span style="color: #990000">=</span><span style="color: #FF0000">"C, D (cells 1,3 and 1,4)"</span><span style="font-weight: bold"><span style="color: #0000FF">/&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;tablerow/&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;label</span></span> <span style="color: #009900">text</span><span style="color: #990000">=</span><span style="color: #FF0000">"E (cell 2,1)"</span><span style="font-weight: bold"><span style="color: #0000FF">/&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;tablesticky</span></span> <span style="color: #009900">sticky</span><span style="color: #990000">=</span><span style="color: #FF0000">"nsew"</span><span style="font-weight: bold"><span style="color: #0000FF">/&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;tablespan</span></span> <span style="color: #009900">rows</span><span style="color: #990000">=</span><span style="color: #FF0000">"2"</span><span style="font-weight: bold"><span style="color: #0000FF">/&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;label</span></span> <span style="color: #009900">text</span><span style="color: #990000">=</span><span style="color: #FF0000">"'spans\n2 rows'"</span><span style="font-weight: bold"><span style="color: #0000FF">/&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;tablesticky</span></span> <span style="color: #009900">sticky</span><span style="color: #990000">=</span><span style="color: #FF0000">"new"</span><span style="font-weight: bold"><span style="color: #0000FF">/&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;label</span></span> <span style="color: #009900">text</span><span style="color: #990000">=</span><span style="color: #FF0000">"G (cell 2,3)"</span><span style="font-weight: bold"><span style="color: #0000FF">/&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;label</span></span> <span style="color: #009900">text</span><span style="color: #990000">=</span><span style="color: #FF0000">"H (cell 2,4)"</span><span style="font-weight: bold"><span style="color: #0000FF">/&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;tablerow/&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;label</span></span> <span style="color: #009900">text</span><span style="color: #990000">=</span><span style="color: #FF0000">"J (cell 3,1)"</span><span style="font-weight: bold"><span style="color: #0000FF">/&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;label</span></span> <span style="color: #009900">text</span><span style="color: #990000">=</span><span style="color: #FF0000">"K (cell 3,2)"</span><span style="font-weight: bold"><span style="color: #0000FF">/&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;u32</span></span> <span style="color: #009900">halpin</span><span style="color: #990000">=</span><span style="color: #FF0000">"test"</span><span style="font-weight: bold"><span style="color: #0000FF">/&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/table&gt;</span></span></tt></pre></div></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_table.png" alt="images/pyvcp_table.png" />
+</div>
+</div>
+<h3 id="_onglets_tabs">7.6. Onglets (Tabs)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Une interface à onglets peut économiser énormément d&#8217;espace.</p></div>
+<div class="listingblock">
+<div class="content"><!-- Generator: GNU source-highlight 3.1.3
+by Lorenzo Bettini
+http://www.lorenzobettini.it
+http://www.gnu.org/software/src-highlite -->
+<pre><tt><span style="font-weight: bold"><span style="color: #0000FF">&lt;tabs&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;names&gt;</span></span> ["spindle","green eggs"]<span style="font-weight: bold"><span style="color: #0000FF">&lt;/names&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/tabs&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;tabs&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;names&gt;</span></span>["Spindle", "Green Eggs", "Ham"]<span style="font-weight: bold"><span style="color: #0000FF">&lt;/names&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;vbox&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;label&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"Spindle speed:"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;/label&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;bar&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;halpin&gt;</span></span>"spindle-speed"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/halpin&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;max_&gt;</span></span>5000<span style="font-weight: bold"><span style="color: #0000FF">&lt;/max_&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;/bar&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/vbox&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;vbox&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;label&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"(this is the green eggs tab)"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;/label&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/vbox&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;vbox&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;label&gt;</span></span>
+            <span style="font-weight: bold"><span style="color: #0000FF">&lt;text&gt;</span></span>"(this tab has nothing on it)"<span style="font-weight: bold"><span style="color: #0000FF">&lt;/text&gt;</span></span>
+        <span style="font-weight: bold"><span style="color: #0000FF">&lt;/label&gt;</span></span>
+    <span style="font-weight: bold"><span style="color: #0000FF">&lt;/vbox&gt;</span></span>
+<span style="font-weight: bold"><span style="color: #0000FF">&lt;/tabs&gt;</span></span></tt></pre></div></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pyvcp_tabs1.png" alt="] image::images/pyvcp_tabs2.png[] image::images/pyvcp_tabs3.png[" />
+</div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-05-11 15:36:12 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/pyvcp_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:28 GMT -->
+</html>

@@ -1,0 +1,207 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Sat Mar 17 00:36:10 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/halstreamer.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>HALSTREAMER</title>
+
+</head>
+<body>
+
+<h1 align="center">HALSTREAMER</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#USAGE">USAGE</a><br>
+<a href="#EXIT STATUS">EXIT STATUS</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#HISTORY">HISTORY</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br>
+<a href="#COPYRIGHT">COPYRIGHT</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">halstreamer
+&minus; stream file data into HAL in real time</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>halstreamer</b>
+[<i>options</i>]</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>streamer</b>(9)
+and <b>halstreamer</b> are used together to stream data from
+a file into the HAL in real time. <b>streamer</b> is a
+realtime HAL component that exports HAL pins and creates a
+FIFO in shared memory. <b>hal_streamer</b> is a user space
+program that copies data from stdin into the FIFO, so that
+<b>streamer</b> can write it to the HAL pins.</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>-c</b>
+<i>CHAN</i></p>
+
+<p style="margin-left:22%;">instructs <b>halstreamer</b> to
+write to FIFO <i>CHAN</i>. FIFOs are numbered from zero, and
+the default value is zero, so this option is not needed
+unless multiple FIFOs have been created.</p>
+
+<p style="margin-left:11%;"><b>FILENAME</b></p>
+
+<p style="margin-left:22%;">instructs <b>halsampler</b> to
+read from <b>FILENAME</b> instead of from stdin.</p>
+
+<h2>USAGE
+<a name="USAGE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">A FIFO must
+first be created by loading <b>streamer</b>(9) with
+<b>halcmd loadrt</b> or a <b>loadrt</b> command in a .hal
+file. Then <b>halstreamer</b> can be invoked to begin
+writing data into the FIFO.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Data is read
+from stdin, and is almost always either redirected from a
+file or piped from some other program, since keyboard input
+would be unable to keep up with even slow streaming
+rates.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Each line of
+input must match the pins that are attached to the FIFO, for
+example, if the <b>streamer</b> config string was
+&quot;ffbs&quot; then each line of input must consist of two
+floats, a bit, and a signed integer, in that order and
+separated by whitespace. Floats must be formatted as
+required by <b>strtod</b>(3), signed and unsigned integers
+must be formated as required by <b>strtol</b>(3) and
+<b>strtoul</b>(3), and bits must be either &rsquo;0&rsquo;
+or &rsquo;1&rsquo;.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>halstreamer</b>
+transfers data to the FIFO as fast as possible until the
+FIFO is full, then it retries at regular intervals, until it
+is either killed or reads <b>EOF</b> from stdin. Data can be
+redirected from a file or piped from some other program.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The FIFO size
+should be chosen to ride through any momentary disruptions
+in the flow of data, such as disk seeks. If the FIFO is big
+enough, <b>halstreamer</b> can be restarted with the same or
+a new file before the FIFO empties, resulting in a
+continuous stream of data.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The data format
+for <b>halstreamer</b> input is the same as for
+<b>halsampler</b>(1) output, so &rsquo;waveforms&rsquo;
+captured with <b>halsampler</b> can be replayed using
+<b>halstreamer.</b></p>
+
+<h2>EXIT STATUS
+<a name="EXIT STATUS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">If a problem is
+encountered during initialization, <b>halstreamer</b> prints
+a message to stderr and returns failure.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If a badly
+formatted line is encountered while writing to the FIFO, it
+prints a message to stderr, skips the line, and continues
+(this behavior may be revised in the future).</p>
+
+<p style="margin-left:11%; margin-top: 1em">Upon reading
+<b>EOF</b> from the input, it returns success. If it is
+terminated before the input ends, it returns failure.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>streamer</b>(9)
+<b>sampler</b>(9) <b>halsampler</b>(1)</p>
+
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+
+
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Original
+version by John Kasunich, as part of the LinuxCNC project.
+Improvements by several other members of the LinuxCNC
+development team.</p>
+
+<h2>REPORTING BUGS
+<a name="REPORTING BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Report bugs to
+jmkasunich AT users DOT sourceforge DOT net</p>
+
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Copyright
+&copy; 2006 John Kasunich. <br>
+This is free software; see the source for copying
+conditions. There is NO warranty; not even for
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/halstreamer.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

@@ -1,0 +1,147 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:46 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/multiswitch.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>MULTISWITCH</title>
+
+</head>
+<body>
+
+<h1 align="center">MULTISWITCH</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">multiswitch
+&minus; This component toggles between a specified number of
+output bits</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="61%">
+
+
+<p style="margin-top: 1em"><b>loadrt multiswitch
+personality=</b><i>P</i> <b>[cfg=</b><i>N</i><b>]</b></p></td>
+<td width="28%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="61%">
+
+
+<p><b>cfg</b></p></td>
+<td width="28%">
+</td></tr>
+</table>
+
+<p style="margin-left:28%; margin-top: 1em">cfg should be a
+comma-separated list of sizes for example cfg=2,4,6 would
+create 3 instances of 2, 4 and 6 bits respectively. <br>
+Ignore the &quot;personality&quot; parameter, that is
+auto-generated</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>multiswitch.</b><i>N</i>
+(requires a floating-point thread)</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>multiswitch.</b><i>N</i><b>.up</b>
+bit in (default: <i>false</i>)</p>
+
+<p style="margin-left:22%;">Receives signal to toggle
+up</p>
+
+
+<p style="margin-left:11%;"><b>multiswitch.</b><i>N</i><b>.down</b>
+bit in (default: <i>false</i>)</p>
+
+<p style="margin-left:22%;">Receives signal to toggle
+down</p>
+
+
+<p style="margin-left:11%;"><b>multiswitch.</b><i>N</i><b>.bit-</b><i>MM</i>
+bit out (MM=00..personality) (default: <i>false</i>)</p>
+
+<p style="margin-left:22%;">Output bits</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>multiswitch.</b><i>N</i><b>.top-position</b>
+u32 rw</p>
+
+<p style="margin-left:22%;">Number of positions</p>
+
+
+<p style="margin-left:11%;"><b>multiswitch.</b><i>N</i><b>.position</b>
+s32 rw</p>
+
+<p style="margin-left:22%;">Current state (may be set in
+the HAL)</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">ArcEye
+schooner30@tiscali.co.uk / Andy Pugh andy@bodgesoc.org</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/multiswitch.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

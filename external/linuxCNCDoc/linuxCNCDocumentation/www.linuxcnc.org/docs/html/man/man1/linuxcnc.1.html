@@ -1,0 +1,214 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu May 30 15:36:44 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/linuxcnc.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>LinuxCNC</title>
+
+</head>
+<body>
+
+<h1 align="center">LinuxCNC</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#EXAMPLES">EXAMPLES</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#HISTORY">HISTORY</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br>
+<a href="#COPYRIGHT">COPYRIGHT</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">linuxcnc
+&minus; LinuxCNC (The Enhanced Machine Controller)</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>linuxcnc</b>
+[<i>-v</i>] [<i>-d</i>] [<i>INIFILE</i>]</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>linuxcnc</b>
+is used to start LinuxCNC (The Enhanced Machine Controller).
+It starts the realtime system and then initializes a number
+of LinuxCNC components (IO, Motion, GUI, HAL, etc). The most
+important parameter is <i>INIFILE</i>, which specifies the
+configuration name you would like to run. If <i>INIFILE</i>
+is not specified, the <b>linuxcnc</b> script presents a
+graphical wizard to let you choose one.</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p style="margin-top: 1em"><b>&minus;v</b></p></td>
+<td width="8%"></td>
+<td width="78%">
+
+
+<p style="margin-top: 1em">Be a little bit verbose. This
+causes the script to print information as it works.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p><b>&minus;d</b></p></td>
+<td width="8%"></td>
+<td width="78%">
+
+
+<p>Print lots of debug information. All executed commands
+are echoed to the screen. This mode is useful when something
+is not working as it should.</p></td></tr>
+</table>
+
+<p style="margin-left:11%;"><b>INIFILE</b></p>
+
+<p style="margin-left:22%;">The ini file is the main piece
+of an LinuxCNC configuration. It is not the entire
+configuration; there are various other files that go with it
+(NML files, HAL files, TBL files, VAR files). It is,
+however, the most important one, because it is the file that
+holds the configuration together. It can adjust a lot of
+parameters itself, but it also tells <b>linuxcnc</b> which
+other files to load and use.</p>
+
+<p style="margin-left:22%; margin-top: 1em">There are
+several ways to specify which config to use:</p>
+
+<p style="margin-left:22%; margin-top: 1em">Specify the
+absolute path to an ini, e.g. <b><br>
+linuxcnc</b>
+<i>/usr/local/linuxcnc/configs/sim/sim.ini</i></p>
+
+<p style="margin-left:22%; margin-top: 1em">Specify a
+relative path from the current directory, e.g. <b><br>
+linuxcnc</b> <i>configs/sim/sim.ini</i></p>
+
+<p style="margin-left:22%; margin-top: 1em">Otherwise, in
+the case where the <b>INIFILE</b> is not specified, the
+behavior will depend on whether you configured linuxcnc with
+<b>--enable-run-in-place</b>. If so, the linuxcnc config
+chooser will search only the configs directory in your
+source tree. If not (or if you are using a packaged version
+of linuxcnc), it may search several directories. The config
+chooser is currently set to search the path:</p>
+
+
+<p style="margin-left:22%; margin-top: 1em"><b>~/linuxcnc/configs:/usr/src/emc2.5-docbuild/configs</b></p>
+
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>linuxcnc</b></p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>linuxcnc</b>
+<i>configs/sim/sim.ini</i></p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>linuxcnc</b>
+<i>/etc/linuxcnc/sample-configs/stepper/stepper_mm.ini</i></p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><i><b>halcmd(1)</b></i></p>
+
+<p style="margin-left:11%; margin-top: 1em">Much more
+information about LinuxCNC and HAL is available in the
+LinuxCNC and HAL User Manuals, found at
+/usr/share/doc/linuxcnc/.</p>
+
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+
+
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">None known at
+this time.</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">This man page
+written by Alex Joni, as part of the LinuxCNC Enhanced
+Machine Controller project.</p>
+
+<h2>REPORTING BUGS
+<a name="REPORTING BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Report bugs to
+alex_joni AT users DOT sourceforge DOT net</p>
+
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Copyright
+&copy; 2006 Alex Joni. <br>
+This is free software; see the source for copying
+conditions. There is NO warranty; not even for
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/linuxcnc.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

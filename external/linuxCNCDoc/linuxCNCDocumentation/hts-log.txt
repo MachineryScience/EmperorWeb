@@ -1,0 +1,26 @@
+HTTrack3.47-18+htsswf+htsjava launched on Wed, 05 Jun 2013 15:08:02 at http://www.linuxcnc.org/docs/html/ +*.png +*.gif +*.jpg +*.css +*.js -ad.doubleclick.net/* -mime:application/foobar
+(winhttrack -qwC2%Ps2u1%s%uN0%I0p3DaK0H0%kf2A25000%f#f -F "Mozilla/4.5 (compatible; HTTrack 3.0x; Windows 98)" -%F "<!-- Mirrored from %s%s by HTTrack Website Copier/3.x [XR&CO'2013], %s -->" -%l "en, en, *" http://www.linuxcnc.org/docs/html/ -O1 "C:\My Web Sites\linuxCNCDocumentation" +*.png +*.gif +*.jpg +*.css +*.js -ad.doubleclick.net/* -mime:application/foobar )
+
+Information, Warnings and Errors reported for this mirror:
+note:	the hts-log.txt file, and hts-cache folder, may contain sensitive information,
+	such as username/password authentication for websites mirrored in this project
+	do not share these files/folders if you want these information to remain private
+
+15:17:44	Warning: 	Unexpected 412/416 error (Requested Range Not Satisfiable) for www.linuxcnc.org/docs/html/config/images/stepconf-axis.png, 'C:/My Web Sites/linuxCNCDocumentation/www.linuxcnc.org/docs/html/config/images/stepconf-axis.png' could not be found on disk
+15:17:44	Warning: 	Unexpected 412/416 error (Requested Range Not Satisfiable) for www.linuxcnc.org/docs/html/gui/images/tool_axis_z.gif, 'C:/My Web Sites/linuxCNCDocumentation/www.linuxcnc.org/docs/html/gui/images/tool_axis_z.gif' could not be found on disk
+15:17:44	Warning: 	Unexpected 412/416 error (Requested Range Not Satisfiable) for www.linuxcnc.org/docs/html/gui/images/touchy.png, 'C:/My Web Sites/linuxCNCDocumentation/www.linuxcnc.org/docs/html/gui/images/touchy.png' could not be found on disk
+15:17:45	Warning: 	Unexpected 412/416 error (Requested Range Not Satisfiable) for www.linuxcnc.org/docs/html/gui/images/whoareyou.png, 'C:/My Web Sites/linuxCNCDocumentation/www.linuxcnc.org/docs/html/gui/images/whoareyou.png' could not be found on disk
+15:17:45	Warning: 	Unexpected 412/416 error (Requested Range Not Satisfiable) for www.linuxcnc.org/docs/html/hal/images/halscope-10.png, 'C:/My Web Sites/linuxCNCDocumentation/www.linuxcnc.org/docs/html/hal/images/halscope-10.png' could not be found on disk
+15:17:46	Warning: 	Unexpected 412/416 error (Requested Range Not Satisfiable) for www.linuxcnc.org/docs/html/config/images/pncconf-axis-drive_fr.png, 'C:/My Web Sites/linuxCNCDocumentation/www.linuxcnc.org/docs/html/config/images/pncconf-axis-drive_fr.png' could not be found on disk
+15:17:46	Warning: 	Unexpected 412/416 error (Requested Range Not Satisfiable) for www.linuxcnc.org/docs/html/common/images/ngcgui_fr.png, 'C:/My Web Sites/linuxCNCDocumentation/www.linuxcnc.org/docs/html/common/images/ngcgui_fr.png' could not be found on disk
+15:17:46	Warning: 	Unexpected 412/416 error (Requested Range Not Satisfiable) for www.linuxcnc.org/docs/html/gui/images/axis-currentandselected_fr.png, 'C:/My Web Sites/linuxCNCDocumentation/www.linuxcnc.org/docs/html/gui/images/axis-currentandselected_fr.png' could not be found on disk
+15:17:47	Warning: 	Unexpected 412/416 error (Requested Range Not Satisfiable) for www.linuxcnc.org/docs/html/hal/images/softstart-scope_fr.png, 'C:/My Web Sites/linuxCNCDocumentation/www.linuxcnc.org/docs/html/hal/images/softstart-scope_fr.png' could not be found on disk
+15:17:47	Warning: 	Unexpected 412/416 error (Requested Range Not Satisfiable) for www.linuxcnc.org/docs/html/ladder/images/ladder_action_load.png, 'C:/My Web Sites/linuxCNCDocumentation/www.linuxcnc.org/docs/html/ladder/images/ladder_action_load.png' could not be found on disk
+15:17:48	Warning: 	Unexpected 412/416 error (Requested Range Not Satisfiable) for www.linuxcnc.org/docs/html/motion/images/kinematics-math-03.png, 'C:/My Web Sites/linuxCNCDocumentation/www.linuxcnc.org/docs/html/motion/images/kinematics-math-03.png' could not be found on disk
+15:17:48	Warning: 	Unexpected 412/416 error (Requested Range Not Satisfiable) for www.linuxcnc.org/docs/html/gcode/ccdab2c08599d7eabf15cb7d98c2c349.png, 'C:/My Web Sites/linuxCNCDocumentation/www.linuxcnc.org/docs/html/gcode/ccdab2c08599d7eabf15cb7d98c2c349.png' could not be found on disk
+15:17:48	Error: 	"No data (connection closed)" (-4) after 2 retries at link www.linuxcnc.org/docs/html/gui/images/miniauto_fr.png (from www.linuxcnc.org/docs/html/gui/mini_fr.html)
+15:17:49	Warning: 	Unexpected 412/416 error (Requested Range Not Satisfiable) for www.linuxcnc.org/docs/html/examples/images/gridprobe-ngc.png, 'C:/My Web Sites/linuxCNCDocumentation/www.linuxcnc.org/docs/html/examples/images/gridprobe-ngc.png' could not be found on disk
+15:17:49	Warning: 	Unexpected 412/416 error (Requested Range Not Satisfiable) for www.linuxcnc.org/docs/html/hal/images/pyvcp_AXIS_fr.png, 'C:/My Web Sites/linuxCNCDocumentation/www.linuxcnc.org/docs/html/hal/images/pyvcp_AXIS_fr.png' could not be found on disk
+
+HTTrack Website Copier/3.47-18 mirror complete in 9 minutes 47 seconds : 816 links scanned, 794 files written (16778592 bytes overall) [13023851 bytes received at 22187 bytes/sec], 5542989 bytes transfered using HTTP compression in 416 files, ratio 27%, 1.1 requests per connection
+(1 errors, 14 warnings, 0 messages)

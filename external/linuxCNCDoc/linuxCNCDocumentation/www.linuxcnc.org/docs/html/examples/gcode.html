@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/examples/gcode.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:12:47 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>G Code Examples</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>G Code Examples</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>After you install LinuxCNC several sample files are placed in the
+/nc_files folder. Make sure the sample file is appropriate for your
+machine before running.</p></div>
+</div>
+</div>
+<h2 id="_mill_examples">1. Mill Examples</h2>
+<div class="sectionbody">
+<h3 id="_helical_hole_milling">1.1. Helical Hole Milling</h3><div style="clear:left"></div>
+<div class="paragraph"><p>File Name: useful-subroutines.ngc</p></div>
+<div class="paragraph"><p>Description: Subroutine for milling a hole using parameters.</p></div>
+<h3 id="_slotting">1.2. Slotting</h3><div style="clear:left"></div>
+<div class="paragraph"><p>File Name: useful-subroutines.ngc</p></div>
+<div class="paragraph"><p>Description: Subroutine for milling a slot using parameters.</p></div>
+<h3 id="_grid_probe">1.3. Grid Probe</h3><div style="clear:left"></div>
+<div class="paragraph"><p>File Name: gridprobe.ngc</p></div>
+<div class="paragraph"><p>Description: Rectangular Probing</p></div>
+<div class="paragraph"><p>This program repeatedly probes in a regular XY grid and writes the
+probed location to the file <em>probe-results.txt</em> in the same directory
+as the .ini file.</p></div>
+<h3 id="_smart_probe">1.4. Smart Probe</h3><div style="clear:left"></div>
+<div class="paragraph"><p>File Name: smartprobe.ngc</p></div>
+<div class="paragraph"><p>Description: Rectangular Probing</p></div>
+<div class="paragraph"><p>This program repeatedly probes in a regular XY grid and writes the
+probed location to the file <em>probe-results.txt</em> in the same directory
+as the .ini file. This is improved from the grid probe file.</p></div>
+<h3 id="_tool_length_probe">1.5. Tool Length Probe</h3><div style="clear:left"></div>
+<div class="paragraph"><p>File Name: tool-length-probe.ngc</p></div>
+<div class="paragraph"><p>Description: Tool Length Probing</p></div>
+<div class="paragraph"><p>This program shows an example of how to measure tool lengths
+automatically using a switch hooked to the probe input. This is useful
+for machines without tool holders, where the length of a tool is
+different every time it is inserted.</p></div>
+<h3 id="_hole_probe">1.6. Hole Probe</h3><div style="clear:left"></div>
+<div class="paragraph"><p>File Name: probe-hole.ngc</p></div>
+<div class="paragraph"><p>Description: Finding the Center and Diameter of a hole.</p></div>
+<div class="paragraph"><p>The program demonstrates how to find the center of a hole, measure the
+hole diameter and record the results.</p></div>
+<h3 id="_cutter_compensation">1.7. Cutter Compensation</h3><div style="clear:left"></div>
+<div class="paragraph"><p>To be added</p></div>
+</div>
+<h2 id="_lathe_examples">2. Lathe Examples</h2>
+<div class="sectionbody">
+<h3 id="_threading">2.1. Threading</h3><div style="clear:left"></div>
+<div class="paragraph"><p>File Name lathe-g76.ngc</p></div>
+<div class="paragraph"><p>Description: Facing, threading and parting off.</p></div>
+<div class="paragraph"><p>This file shows an example of threading on a lathe using parameters.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-18 13:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/examples/gcode.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:12:47 GMT -->
+</html>

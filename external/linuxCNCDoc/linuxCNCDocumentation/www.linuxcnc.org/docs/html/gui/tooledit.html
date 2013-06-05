@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/tooledit.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:12:34 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Tool Edit GUI</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Tool Edit GUI</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:tooledit-gui"></a> </p></div>
+</div>
+</div>
+<h2 id="_tool_edit_version_requirements">1. Tool Edit Version Requirements</h2>
+<div class="sectionbody">
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">The following configurable features for <em>tooledit</em> are available in versions
+2.5.1 and later. In 2.5.0 the <em>tooledit</em> gui is without the configurable
+features.</td>
+</tr></table>
+</div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/tooledit.png" alt="images/tooledit.png" width="640" />
+</div>
+</div>
+<div class="paragraph"><p>The <em>tooledit</em> program can update the tool table file with
+edited changes by using the SaveFile button.  The SaveFile button
+updates the system file but a separate action is required to
+update the tool table data used by a running LinuxCNC instance.
+With the axis GUI, both the file and the current tool table data
+used by LinuxCNC can be updated with the ReloadTable button.
+This button is enabled only when the machine is ON and IDLE.</p></div>
+</div>
+<h2 id="_column_sorting">2. Column Sorting</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The tool table display can be sorted on any column in ascending
+order by clicking on the column header.  A second click sorts
+in descending order.  Column sorting requires that the machine
+is configured with the default tcl version &gt;= 8.5.</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/tooledit-sort.png" alt="images/tooledit-sort.png" />
+</div>
+</div>
+<div class="paragraph"><p>On Ubuntu Lucid 10.04 tcl/tk8.4 is the default.  You can add tcl/tk8.5 with
+the commands:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>sudo apt-get install tcl8.5 tk8.5</tt></pre>
+</div></div>
+<div class="paragraph"><p>Depending upon other applications installed on the system, it may be
+necessary to enable tcl/tk8.5 with the commands:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>sudo update-alternatives --config tclsh  ;# select the option for tclsh8.5
+sudo update-alternatives --config wish   ;# select the option for wish8.5</tt></pre>
+</div></div>
+</div>
+<h2 id="_column_selection">3. Column Selection</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>By default, the <em>tooledit</em> program will display all possible
+tool table parameter columns.  Since few machines use all
+parameters, the columns displayed can be limited with the
+following ini file setting:</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/tooledit-columns.png" alt="images/tooledit-columns.png" />
+</div>
+</div>
+<div class="listingblock">
+<div class="title">INI File Syntax</div>
+<div class="content">
+<pre><tt>[DISPLAY]
+TOOL_EDITOR = tooledit column_name column_name ...</tt></pre>
+</div></div>
+<div class="listingblock">
+<div class="title">Example for Z and DIAM columns</div>
+<div class="content">
+<pre><tt>[DISPLAY]
+TOOL_EDITOR = tooledit Z DIAM</tt></pre>
+</div></div>
+</div>
+<h2 id="_stand_alone_use">4. Stand Alone Use</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The <em>tooledit</em> program can also be invoked as a standalone
+program. For example, if the program is in the user PATH, typing
+<em>tooledit</em> will show the usage syntax:</p></div>
+<div class="listingblock">
+<div class="title">Stand Alone</div>
+<div class="content">
+<pre><tt>tooledit
+Usage:
+tooledit filename
+tooledit [column_1 ... column_n] filename</tt></pre>
+</div></div>
+<div class="paragraph"><p>To synchronize a standalone <em>tooledit</em> with a running LinuxCNC
+application, the filename must resolve to the same [EMCIO]TOOL_TABLE
+filename specified in the LinuxCNC ini file.</p></div>
+<div class="paragraph"><p>When using the program <em>tooledit</em> while LinuxCNC is running,
+gcode command execution or other programs may alter tool table
+data and the tool table file.  File changes are detected by
+<em>tooledit</em> and a message is displayed:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Warning: File changed by another process</tt></pre>
+</div></div>
+<div class="paragraph"><p>The <em>tooledit</em> tool table display can be updated to read the
+modified file with the ReRead button.</p></div>
+<div class="paragraph"><p>he tool table is specified in the ini file with an entry:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>[EMCIO]TOOL_TABLE = tool_table_filename</tt></pre>
+</div></div>
+<div class="paragraph"><p>The tool table file can be edited with any simple text editor (not
+a word processor).</p></div>
+<div class="paragraph"><p>The axis GUI can optionally use an ini file setting to specify the tool
+editor program:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>[DISPLAY]TOOL_EDITOR = path_to_editor_program</tt></pre>
+</div></div>
+<div class="paragraph"><p>By default, the program named <em>tooledit</em> is used. This editor
+supports all tool table parameters, allows addition and deletion
+of tool entries, and performs a number of validity checks on
+parameter values.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-07-12 10:36:07 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/tooledit.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:12:35 GMT -->
+</html>

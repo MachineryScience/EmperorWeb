@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/touchy.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:12:15 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Touchy GUI</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Touchy GUI</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:touchy-gui"></a> </p></div>
+<div class="paragraph"><p>Touchy is a user interface for LinuxCNC meant for use on machine control panels,
+and therefore does not require keyboard or mouse.</p></div>
+<div class="paragraph"><p>It is meant to be used with a touch screen, and works in combination
+with a wheel/MPG and a few buttons and switches.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/touchy.png" alt="images/touchy.png" />
+</div>
+<div class="title">Figure 1. Touchy</div>
+</div>
+</div>
+</div>
+<h2 id="_panel_configuration">1. Panel Configuration</h2>
+<div class="sectionbody">
+<h3 id="_hal_connections">1.1. HAL connections</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Touchy requires that you create a file named <em>touchy.hal</em> in your
+configuration directory (the directory your ini file is in) to
+connect its controls. Touchy executes the HAL commands in this file
+after it has made its own pins available for connection.</p></div>
+<div class="paragraph"><p>Touchy has several output pins that are meant to be connected to the
+motion controller to control wheel jogging:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>touchy.jog.wheel.increment</em>,
+        which is to be connected to the <em>axis.N.jog-scale</em> pin of each axis N.
+</p>
+</li>
+<li>
+<p>
+<em>touchy.jog.wheel.N</em>, which is to be connected to <em>axis.N.jog-enable</em>
+        for each axis N.
+</p>
+</li>
+<li>
+<p>
+In addition to being connected to <em>touchy.wheel-counts</em>, the wheel counts
+        should also be connected to <em>axis.N.jog-counts</em> for
+        each axis N.  If you use HAL component <em>ilowpass</em> to smooth wheel jogging, be
+        sure to smooth only <em>axis.N.jog-counts</em> and not <em>touchy.wheel-counts</em>.
+</p>
+</li>
+</ul></div>
+<h4 id="_required_controls">1.1.1. Required controls</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+Abort button (momentary contact) connected to the HAL pin <em>touchy.abort</em>
+</p>
+</li>
+<li>
+<p>
+Cycle start button (momentary contact) connected to <em>touchy.cycle-start</em>
+</p>
+</li>
+<li>
+<p>
+Wheel/MPG, connected to <em>touchy.wheel-counts</em> and motion pins as described above
+</p>
+</li>
+<li>
+<p>
+Single block (toggle switch) connected to <em>touchy.single-block</em>
+</p>
+</li>
+</ul></div>
+<h4 id="_optional_controls">1.1.2. Optional controls</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+For continuous jog, one center-off bidirectional momentary toggle
+   (or two momentary buttons) for each axis, hooked to <em>touchy.jog.continuous.x.negative</em>,
+   <em>touchy.jog.continuous.x.positive</em>, etc.
+</p>
+</li>
+<li>
+<p>
+If a quill up button is wanted (to jog Z to the top of travel at top
+   speed), a momentary button connected to <em>touchy.quill-up</em>.
+</p>
+</li>
+</ul></div>
+<h4 id="_optional_panel_lamps">1.1.3. Optional panel lamps</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>touchy.jog.active</em> shows when the panel jogging controls are live
+</p>
+</li>
+<li>
+<p>
+<em>touchy.status-indicator</em> is on when the machine is executing G-code,
+    and flashes when the machine is executing but is in pause/feedhold.
+</p>
+</li>
+</ul></div>
+<h3 id="_recommended_for_any_setup">1.2. Recommended for any setup</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Estop button hardwired in the estop chain
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_setup">2. Setup</h2>
+<div class="sectionbody">
+<h3 id="_enabling_touchy">2.1. Enabling Touchy</h3><div style="clear:left"></div>
+<div class="paragraph"><p>To use Touchy, in the <em>[DISPLAY]</em> section of your ini file change the
+display selector line to <em>DISPLAY = touchy</em></p></div>
+<h3 id="_preferences">2.2. Preferences</h3><div style="clear:left"></div>
+<div class="paragraph"><p>When you start Touchy the first time, check the Preferences tab.
+If using a touchscreen, choose the option to hide the pointer for
+best results.</p></div>
+<div class="paragraph"><p>The Status Window is a fixed height, set by the size of a fixed font.
+This can be affected by the Gnome DPI, configured in System /
+Preferences / Appearance / Fonts / Details. If the bottom of the screen is
+cut off, reduce the DPI setting.</p></div>
+<div class="paragraph"><p>All other font sizes can be changed on the Preferences tab.</p></div>
+<h3 id="_macros">2.3. Macros</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Touchy can invoke O-word macros using the MDI interface.  To configure
+this, in the <em>[TOUCHY]</em> section of the ini file, add one or more <em>MACRO</em>
+lines.  Each should be of the format</p></div>
+<div class="paragraph"><p><em>MACRO=increment xinc yinc</em></p></div>
+<div class="paragraph"><p>In this example, increment is the name of the macro, and it accepts two
+parameters, named xinc and yinc.</p></div>
+<div class="paragraph"><p>Now, place the macro in a file named <em>increment.ngc</em>, in the
+<em>PROGRAM_PREFIX</em> directory or any directory in the <em>SUBROUTINE_PATH</em>.</p></div>
+<div class="paragraph"><p>It should look like:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>O&lt;increment&gt; sub
+G91 G0 X#1 Y#2
+G90
+O&lt;increment&gt; endsub</tt></pre>
+</div></div>
+<div class="paragraph"><p>Notice the name of the sub matches the file name and macro name exactly,
+including case.</p></div>
+<div class="paragraph"><p>When you invoke the macro by pressing the Macro button on the MDI
+tab in Touchy, you can enter values for xinc and yinc.  These are
+passed to the macro as <em>#1</em> and <em>#2</em> respectively.  Parameters you
+leave empty are passed as value 0.</p></div>
+<div class="paragraph"><p>If there are several different macros, press the Macro button
+repeatedly to cycle through them.</p></div>
+<div class="paragraph"><p>In this simple example, if you enter -1 for xinc and press cycle
+start, a rapid <em>G0</em> move will be invoked, moving one unit to
+the left.</p></div>
+<div class="paragraph"><p>This macro capability is useful for edge/hole probing and other setup
+tasks, as well as perhaps hole milling or other simple operations
+that can be done from the panel without requiring specially-written
+gcode programs.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-08-25 06:36:08 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/touchy.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:12:15 GMT -->
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/tools.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:05 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>HAL Tools</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>HAL Tools</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:hal-tools"></a> </p></div>
+</div>
+</div>
+<h2 id="_halcmd_a_id_sec_halcmd_a">1. Halcmd<a id="sec:Halcmd"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Halcmd is a command line tool for manipulating the HAL. There is a
+rather complete man page for halcmd, which will be installed if you
+have installed LinuxCNC from either source or a package. If you have
+compiled LinuxCNC for “run-in-place”, the man page is not installed, but it
+is accessible. From the main LinuxCNC directory, do:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>man -M docs/man halcmd</tt></pre>
+</div></div>
+<div class="paragraph"><p>The <a href="tutorial.html#cha:HAL-tutorial">HAL Tutorial</a> has a number of examples of halcmd
+usage, and is a good tutorial for halcmd.</p></div>
+</div>
+<h2 id="_halmeter_a_id_sec_halmeter_a">2. Halmeter<a id="sec:Halmeter"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Halmeter is a <em>voltmeter</em> for the HAL. It lets you look at a pin,
+signal, or parameter, and displays the current value of that item. It
+is pretty simple to use. Start it by typing <strong>halmeter</strong> in an X
+windows shell. Halmeter is a GUI application. It will pop up
+a small window, with two buttons labeled <em>Select</em> and <em>Exit</em>. Exit is
+easy - it shuts down the program. Select pops up a larger window, with
+three tabs. One tab lists all the pins currently defined in the HAL.
+The next lists all the signals, and the last tab lists all the
+parameters. Click on a tab, then click on a pin/signal/parameter. Then
+click on <em>OK</em>. The lists will disappear, and the small window will
+display the name and value of the selected item. The display is updated
+approximately 10 times per second. If you click <em>Accept</em> instead of
+<em>OK</em>, the small window will display the name and value of the selected
+item, but the large window will remain on the screen. This is
+convenient if you want to look at a number of different items quickly.</p></div>
+<div class="paragraph"><p>You can have many halmeters running at the same time, if you want to
+monitor several items. If you want to launch a halmeter without tying
+up a shell window, type <em>halmeter &amp;</em> to run it in the background.
+You can also make halmeter start
+displaying a specific item immediately, by adding <em>pin|sig|par[am]
+&lt;name&gt;</em> to the command line. It will display the pin, signal, or
+parameter
+&lt;name&gt; as soon as it starts. (If there is no such item, it will simply
+start normally.) And finally, if you specify an item to display, you
+can add <em>-s</em> before the pin|sig|param to tell halmeter to use a small
+window. The item name will be displayed in the title bar instead of
+under the value, and there will be no buttons. Useful when you want a
+lot of meters in a small amount of screen space.</p></div>
+<div class="paragraph"><p>Refer to <a href="tutorial.html#sec:Tutorial-Halmeter">Halmeter Tutorial</a> section for more
+information.</p></div>
+<div class="paragraph"><p>Halmeter can be loaded from a terminal or from Axis. Halmeter is
+faster than Halshow at displaying values. Halmeter has two windows, one
+to pick the pin, signal, or parameter to monitor and one that displays
+the value. Multiple Halmeters can be open at the same time. If you use
+a script to open multiple Halmeters you can set the position of each
+one with -g X Y relative to the upper left corner of your screen.
+For example:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadusr halmeter pin hm2.0.stepgen.00.velocity-fb -g 0 500</tt></pre>
+</div></div>
+<div class="paragraph"><p>See the man page for more options. See section <a href="tools.html#sec:Halmeter">Halmeter</a>.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/hal-meter01.png" alt="images/hal-meter01.png" />
+</div>
+<div class="title">Figure 1. Halmeter</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/hal-meter02.png" alt="images/hal-meter02.png" />
+</div>
+</div>
+</div>
+<h2 id="_halscope_a_id_sec_halscope_a">3. Halscope<a id="sec:Halscope"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Halscope is an <em>oscilloscope</em> for the HAL. It lets you capture the
+value of pins, signals, and parameters as a function of time. Complete
+operating instructions should be located here eventually. For now,
+refer to section  <a href="tutorial.html#sec:Tutorial-Halscope">[sec:Tutorial-Halscope]</a> in the tutorial chapter,
+which explains the basics.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-18 15:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/tools.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:08 GMT -->
+</html>

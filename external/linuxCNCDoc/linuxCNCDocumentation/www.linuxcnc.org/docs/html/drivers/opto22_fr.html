@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/drivers/opto22_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Opto22 PCI</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Opto22 PCI</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>PCI AC5 ADAPTER CARD / HAL DRIVER This page is considered current as
+of November 2008.</p></div>
+</div>
+</div>
+<h2 id="_the_adapter_card">1. The Adapter Card</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This is a card made by Opto22 for adapting the PCI port to solid state
+relay racks such as their standard or G4 series. It has 2 ports that
+can control up to 24 points each and has 4 on board LEDs. The ports use
+50 pin connectors the same as Mesa boards. Any relay racks/breakout
+boards thats work with Mesa Cards should work with this card with the
+understanding any encoder counters, PWM, etc., would have to be done in
+software. The AC5 does not have any <em>smart</em> logic on board, it is just
+an adapter.</p></div>
+<div class="paragraph"><p>See the manufacturer&#8217;s website for more info:</p></div>
+<div class="paragraph"><p><a href="http://www.opto22.com/site/pr_details.aspx?item=PCI-AC5&amp;qs=100110021011,,,1,3">http://www.opto22.com/site/pr_details.aspx?item=PCI-AC5&amp;qs=100110021011,,,1,3</a></p></div>
+<div class="paragraph"><p>I would like to thank Opto22 for releasing info in their manual,
+easing the writing of this driver!</p></div>
+</div>
+<h2 id="_the_driver">2. The Driver</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This driver is for the PCI AC5 card and will not work with the ISA AC5
+card. The HAL driver is a realtime module. It will support 4 cards as
+is (more cards are possible with a change in the source code). Load the
+basic driver like so:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>loadrt opto_ac5</tt></pre>
+</div></div>
+<div class="paragraph"><p>This will load the driver which will search for max 4 boards. It will
+set I/O of each board&#8217;s 2 ports to a default setting. The default
+configuration is for 12 inputs then 12 outputs. The pin name numbers
+correspond to the position on the relay rack. For example the pin names
+for the default I/O setting of port 0 would be:</p></div>
+<div class="paragraph"><p>opto_ac5.0.port0.in-00 They would be numbered from 00 to 11</p></div>
+<div class="paragraph"><p>opto_ac5.0.port0.out-12 They would be numbered 12 to 23 port 1 would
+be the same.</p></div>
+</div>
+<h2 id="_pins">3. PINS</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>opto_ac5.[BOARDNUMBER].port[PORTNUMBER].in-[PINNUMBER] OUT bit</p></div>
+<div class="paragraph"><p>opto_ac5.[BOARDNUMBER].port[PORTNUMBER].in-[PINNUMBER]-not OUT bit</p></div>
+<div class="paragraph"><p>Connect a HAL bit signal to this pin to read an I/O point from the
+card. The PINNUMBER represents the position in the relay rack. Eg.
+PINNUMBER 0 is position 0 in a Opto22 relay rack and would be pin 47 on
+the 50 pin header connector. The -not pin is inverted so that LOW gives
+TRUE and HIGH gives FALSE.</p></div>
+<div class="paragraph"><p>opto_ac5.[BOARDNUMBER].port[PORTNUMBER].out-[PINNUMBER] IN bit</p></div>
+<div class="paragraph"><p>Connect a HAL bit signal to this pin to write to an I/O point of the
+card. The PINNUMBER represents the position in the relay rack.Eg.
+PINNUMBER 23 is position 23 in a Opto22 relay rack and would be pin 1
+on the 50 pin header connector.</p></div>
+<div class="paragraph"><p>opto_ac5.[BOARDNUMBER].led[NUMBER] OUT bit</p></div>
+<div class="paragraph"><p>Turns one of the 4 onboard LEDs on/off. LEDs are numbered 0 to 3.</p></div>
+<div class="paragraph"><p>BOARDNUMBER can be 0-3 PORTNUMBER can be 0 or 1. Port 0 is closest to
+the card bracket.</p></div>
+</div>
+<h2 id="_parameters">4. PARAMETERS</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>opto_ac5.[BOARDNUMBER].port[PORTNUMBER].out-[PINNUMBER]-invert W bit</p></div>
+<div class="paragraph"><p>When TRUE, invert the meaning of the corresponding -out pin so that
+TRUE gives LOW and FALSE gives HIGH.</p></div>
+</div>
+<h2 id="_functions">5. FUNCTIONS</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>opto_ac5.0.digital-read Add this to a thread to read all the input
+points.</p></div>
+<div class="paragraph"><p>opto_ac5.0.digital-write Add this to a thread to write all the output
+points and LEDs.</p></div>
+<div class="paragraph"><p>For example the pin names for the default I/O setting of port 0 would
+be:</p></div>
+<div class="paragraph"><p>opto_ac5.0.port0.in-00</p></div>
+<div class="paragraph"><p>They would be numbered from 00 to 11</p></div>
+<div class="paragraph"><p>opto_ac5.0.port0.out-12</p></div>
+<div class="paragraph"><p>They would be numbered 12 to 23 port 1 would be the same.</p></div>
+</div>
+<h2 id="_configuring_i_o_ports">6. Configuring I/O Ports</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>To change the default setting load the driver something like so:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>loadrt opto_ac5 portconfig0=0xffff portconfig1=0xff0000</tt></pre>
+</div></div>
+<div class="paragraph"><p>Of course changing the numbers to match the I/O you would like. Each
+port can be set up different.</p></div>
+<div class="paragraph"><p>Here&#8217;s how to figure out the number: The configuration number
+represents a 32 bit long code to tell the card which I/O points are
+output vrs input. The lower 24 bits are the I/O points of one port. The
+2 highest bits are for 2 of the on board LEDs. A one in any bit
+position makes the I/O point an output. The two highest bits must be
+output for the LEDs to work. The driver will automatically set the two
+highest bits for you, we won&#8217;t talk about them.</p></div>
+<div class="paragraph"><p>The easiest way to do this is to fire up the calculator under
+APPLICATIONS/ACCESSORIES. Set it to scientific (click view). Set it
+BINARY (radio button Bin). Press 1 for every output you want and/or
+zero for every input. Remember that HAL pin 00 corresponds to the
+rightmost bit. 24 numbers represent the 24 I/O points of one port. So
+for the default setting (12 inputs then 12 outputs) you would push 1
+twelve times (thats the outputs) then 0 twelve times (thats the
+inputs). Notice the first I/O point is the lowest (rightmost) bit.
+(that bit corresponds to HAL pin 00 .looks backwards) You should have
+24 digits on the screen. Now push the Hex radio button. The displayed
+number (fff000) is the configport number ( put a <em>0x</em> in front of it
+designating it as a HEX number).</p></div>
+<div class="paragraph"><p>Another example: To set the port for 8 outputs and 16 inputs (the
+same as a Mesa card). Here is the 24 bits represented in a BINARY
+number. Bit 1 is the rightmost number.</p></div>
+<div class="paragraph"><p>000000000000000011111111</p></div>
+<div class="paragraph"><p>16 zeros for the 16 inputs and 8 ones for the 8 outputs</p></div>
+<div class="paragraph"><p>Which converts to FF on the calculator so 0xff is the number to use
+for portconfig0 and/or portconfig1 when loading the driver.</p></div>
+</div>
+<h2 id="_pin_numbering">7. Pin Numbering</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>HAL pin 00 corresponds to bit 1 (the rightmost) which represents
+position 0 on an Opto22 relay rack. HAL pin 01 corresponds to bit 2
+(one spot to the left of the rightmost) which represents position 1 on
+an Opto22 relay rack. HAL pin 23 corresponds to bit 24 (the
+leftmost) which represents position 23 on an Opto22 relay rack.</p></div>
+<div class="paragraph"><p>HAL pin 00 connects to pin 47 on the 50 pin connector of each port.
+HAL pin 01 connects to pin 45 on the 50 pin connector of each port.
+HAL pin 23 connects to pin 1 on the 50 pin connector of each port.</p></div>
+<div class="paragraph"><p>Note that Opto22 and Mesa use opposite numbering systems: Opto22
+position 23 = connector pin 1, and the position goes down as the
+connector pin number goes up. Mesa Hostmot2 position 1 = connector pin
+1, and the position number goes up as the connector pin number goes up.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2011-07-11 01:36:09 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/drivers/opto22_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+</html>

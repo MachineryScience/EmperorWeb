@@ -1,0 +1,617 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/basic_hal_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:01 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Commandes et composants de base</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Commandes et composants de base</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="sec:Commandes-de-HAL"></a> </p></div>
+</div>
+</div>
+<h2 id="_commandes_de_hal">1. Commandes de Hal</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Des informations plus détaillées peuvent être trouvées dans la man
+page en tapant <em>man halcmd</em> dans une console. Pour voir la
+configuration de HAL ainsi que le statut de ses pins et paramètres
+utiliser la fenêtre HAL Configuration dans le menu <em>Machine</em> d&#8217;AXIS.
+Pour visualiser le statut des pins, ouvrir l&#8217;onglet <em>Watch</em> puis
+cliquer dans l&#8217;arborescence sur les pins qui doivent être visualisées
+dans la fenêtre watch.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/HAL_Configuration.png" alt="images/HAL_Configuration.png" />
+</div>
+<div class="title">Figure 1. Fenêtre de configuration de HAL</div>
+</div>
+<h3 id="_loadrt">1.1. loadrt</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La commande <em>loadrt</em> charge un composant temps réel de HAL. Les
+composants temps réel doivent être ajoutés au thread temps réel pour
+être fonctionnels. Il n&#8217;est pas possible de charger un composant de
+l&#8217;espace utilisateur dans l&#8217;espace temps réel.</p></div>
+<div class="paragraph"><p>Syntaxe et exemple:</p></div>
+<div class="paragraph"><p><tt>loadrt &lt;component&gt; &lt;options&gt;</tt></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt mux4 count=1</tt></pre>
+</div></div>
+<h3 id="_addf">1.2. addf</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La commande <em>addf</em> ajoute une fonction à un thread temps réel. Si
+l&#8217;assistant StepConf a été utilisé pour créer la configuration, deux
+threads ont été créés.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+base-thread (le thread haute vitesse) ce thread prends en main les
+   items nécessitant une réponse très rapide comme la génération
+   d&#8217;impulsions, la lecture et l'écriture sur le port parallèle.
+</p>
+</li>
+<li>
+<p>
+servo-thread (le thread basse vitesse) ce thread prends en main les
+   items n'étant pas influencés par la vitesse comme le contrôleur de
+   mouvement, l&#8217;API Classic Ladder et les commandes manuelles.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Syntaxe et exemple:</p></div>
+<div class="paragraph"><p><tt>addf &lt;component&gt; &lt;thread&gt;</tt></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>addf mux4 servo-thread</tt></pre>
+</div></div>
+<h3 id="_loadusr_a_id_sec_loadusr_a">1.3. loadusr<a id="sec:loadusr"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p>La commande <em>loadusr</em> charge un composant de HAL de l&#8217;espace
+utilisateur. Les programmes de l&#8217;espace utilisateur ont leur propre
+process séparé qui optionellement communique avec les autres composants
+de HAL via leurs pins et paramètres. Il n&#8217;est pas possible de charger
+un composant temps réel dans l&#8217;espace utilisateur.</p></div>
+<div class="paragraph"><p>Les drapeaux peuvent être un ou plusieurs parmis les suivants:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+-W 
+</dt>
+<dd>
+<p>
+     pour attendre que le composant soit prêt. Le composant est supposé
+    avoir le même nom que le premier argument de la commande.
+</p>
+</dd>
+<dt class="hdlist1">
+-Wn &lt;nom&gt; 
+</dt>
+<dd>
+<p>
+    pour attendre un composant, qui porte le nom donné sous la forme &lt;nom&gt;.
+</p>
+</dd>
+<dt class="hdlist1">
+-w 
+</dt>
+<dd>
+<p>
+    pour attendre la fin du programme
+</p>
+</dd>
+<dt class="hdlist1">
+-i 
+</dt>
+<dd>
+<p>
+    pour ignorer la valeur retournée par le programme (avec -w)
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>Syntaxe et exemple:</p></div>
+<div class="paragraph"><p><tt>loadusr &lt;component&gt; &lt;options&gt;</tt></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadusr halui
+loadusr -Wn spindle gs2_vfd -n spindle</tt></pre>
+</div></div>
+<div class="paragraph"><p>En anglais ça donne <em>loadusr wait for name spindle component gs2_vfd name spindle</em>.
+Le -n spindle est une partie du composant gs2_vfd et non de la commande loadusr.</p></div>
+<h3 id="_net">1.4. net</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La commande <em>net</em> crée une <em>connexion</em> entre un signal et une ou plusieurs pins.
+Si le signal n&#8217;existe pas, net le crée. Les indicateurs de direction <em>&lt;=</em> et <em>=&gt;</em>
+sont seulement là pour aider à la lecture de la logique, ils n&#8217;ont pas d&#8217;autre
+usage.</p></div>
+<div class="paragraph"><p>Syntaxe et exemple:</p></div>
+<div class="paragraph"><p><tt>net signal-name &lt;pin-name&gt; &lt;direction optionnelle&gt; (&lt;pin-name&gt;|&lt;direction&gt;)</tt></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net home-x axis.0.home-sw-in &lt;= parport.0.pin-11-in</tt></pre>
+</div></div>
+<div class="paragraph"><p>Dans l&#8217;exemple ci-dessus, <em>home-x</em> est le nom du signal, <em>axis.0.home-sw-in</em> est
+une pin de Direction IN, <em>&lt;=</em> est un indicateur de direction optionnel et
+<em>parport.0.pin-11-in</em> est une pin de Direction OUT. Cela peut paraître déroutant
+mais les labels in et out pour les broches d&#8217;un port parallèle indiquent la voie
+physique dans laquelle travaille la broche mais non comment elle est traitée dans
+HAL.</p></div>
+<div class="paragraph"><p>Une pin peut être connectée à un signal si elle obéit aux règles suivantes:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Une pin IN peut toujours être connectée à un signal.
+</p>
+</li>
+<li>
+<p>
+Une pin IO peut être connectée à moins qu&#8217;une pin OUT soit présente sur le signal.
+</p>
+</li>
+<li>
+<p>
+Une pin OUT peut être connectée seulement si il n&#8217;y a pas d&#8217;autre pin OUT ou IO
+  sur le signal.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Le même &lt;signal-name&gt; peut être utilisé dans de multiples commandes net pour
+connecter des pins additionnelles, tant que les règles précédentes sont observées.</p></div>
+<div class="imageblock" style="text-align:left;">
+<div class="content">
+<img src="images/signal-direction.png" alt="images/signal-direction.png" />
+</div>
+<div class="title">Figure 2. Direction du signal<a id="cap:Signal-Direction"></a></div>
+</div>
+<div class="paragraph"><p>Voici un exemple qui montre le signal xStep avec la source qui est stepgen.0.out
+et avec deux lecteurs, parport.0.pin-02-out etparport.0.pin-08-out. Simplement
+la valeur de stepgen.0.out est envoyée au signal xStep et cette valeur est alors
+envoyée sur parport.0.pin-02-out.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>#   signal    source            destination
+net xStep stepgen.0out =&gt; parport.0.pin-02-out</tt></pre>
+</div></div>
+<div class="paragraph"><p>Puisque le signal xStep contient la valeur de stepgen.0.out (la source) il est
+possible de ré-utiliser le même signal pour envoyer la valeur à d&#8217;autres lecteurs,
+utiliser simplement le signal avec les autres lecteurs sur de nouvelles lignes:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>#   signal       destination2
+net xStep =&gt; parport.0.pin-08-out</tt></pre>
+</div></div>
+<div class="paragraph"><p>Ce qui peut également s'écrire en une seule ligne:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>#   signal    source            destination1          destination2
+net xStep stepgen.0.out =&gt; parport.0.pin-02-out parport.0.pin-08-out</tt></pre>
+</div></div>
+<div class="paragraph"><div class="title">Pins I/O</div><p>Les pins appelées I/O pins comme <em>index-enable</em>, ne suivent pas cette règle.</p></div>
+<h3 id="_setp_a_id_sub_setp_a">1.5. setp<a id="sub:setp"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>La commande <em>setp</em> ajuste la valeur d&#8217;une pin ou d&#8217;un paramètre. Les
+valeurs valides dépendront du type de la pin ou du paramètre.</p></div>
+<div class="paragraph"><p>C&#8217;est une erreur si les types de donnée ne correspondent pas.</p></div>
+<div class="paragraph"><p>Certains composants ont des paramètres qui doivent être positionnés avant
+utilisation. Il n&#8217;est pas possible d&#8217;utiliser <em>setp</em> sur une pin connectée à
+un signal.</p></div>
+<div class="paragraph"><p>Syntaxe et exemple:</p></div>
+<div class="paragraph"><p><tt>setp &lt;pin/parameter-name&gt; &lt;value&gt;</tt></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>setp parport.0.pin-08-out TRUE</tt></pre>
+</div></div>
+<h3 id="_unlinkp">1.6. unlinkp</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La commande <em>unlinkp</em> déconnecte la pin du signal auquel elle est connectée.
+Si aucun signal n&#8217;a été connecté à la pin avant de lancer cette commande,
+rien ne se passe.</p></div>
+<div class="paragraph"><p>Syntaxe et exemple:</p></div>
+<div class="paragraph"><p><tt>unlinkp &lt;pin-name&gt;</tt></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>unlinkp parport.0.pin-02-out</tt></pre>
+</div></div>
+</div>
+<h2 id="_commandes_obsol_tes">2. Commandes obsolètes</h2>
+<div class="sectionbody">
+<h3 id="_linksp">2.1. linksp</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La commande <em>linksp</em> a été incluse dans la commande <em>net</em>.</p></div>
+<div class="paragraph"><p>La commande <em>linksp</em> crée une <em>connexion</em> entre un signal et une pin.</p></div>
+<div class="paragraph"><p>Syntaxe et exemple:</p></div>
+<div class="paragraph"><p><tt>linksp &lt;signal-name&gt; &lt;pin-name&gt;</tt>
+<tt>linksp X-step parport.0.pin-02-out</tt></p></div>
+<h3 id="_linkps">2.2. linkps</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La commande <em>linkps</em> a été incluse dans la commande <em>net</em>.</p></div>
+<div class="paragraph"><p>La commande <em>linksp</em> crée une <em>connexion</em> entre une pin et un signal. C&#8217;est la
+même chose que linksp mais les arguments sont inversés.</p></div>
+<div class="paragraph"><p>Syntaxe et exemple:</p></div>
+<div class="paragraph"><p><tt>linkps &lt;pin-name&gt; &lt;signal-name&gt;</tt></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>linkps parport.0.pin-02-out X-Step</tt></pre>
+</div></div>
+<h3 id="_newsig">2.3. newsig</h3><div style="clear:left"></div>
+<div class="paragraph"><p>the command <em>newsig</em> creates a new HAL signal by the name &lt;signame&gt;
+and the data type of &lt;type&gt;. Type must be <em>bit</em>, <em>s32</em>, <em>u32</em> or
+<em>float</em>. Error if &lt;signame&gt; already exists.</p></div>
+<div class="paragraph"><p>Syntaxe et exemple:</p></div>
+<div class="paragraph"><p><tt>newsig &lt;signame&gt; &lt;type&gt;</tt></p></div>
+<div class="paragraph"><p><tt>newsig Xstep bit</tt></p></div>
+<div class="paragraph"><p>D&#8217;autres informations peuvent être trouvées dans le manuel de HAL ou
+la man page de <em>halrun</em>.</p></div>
+</div>
+<h2 id="_hal_data_a_id_sec_hal_data_a">3. HAL Data<a id="sec:HAL-Data"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p><span class="footnote"><br />[NDT la description des données de HAL reste en Anglais, elle sont
+suffisamment simples pour être comprises.]<br /></span></p></div>
+<h3 id="_bit">3.1. Bit </h3><div style="clear:left"></div>
+<div class="paragraph"><p>A bit value is an on or off.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+bit values = true or 1 and false or 0 (True, TRUE, true are all valid)
+</p>
+</li>
+</ul></div>
+<h3 id="_float">3.2. Float </h3><div style="clear:left"></div>
+<div class="paragraph"><p>A <em>float</em> is a floating point number. In other words the decimal point
+can move as needed.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+float values = a 32 bit floating point value, with approximately 24
+   bits of resolution and over 200 bits of dynamic range.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>For more information on floating point numbers see:</p></div>
+<div class="paragraph"><p><a href="http://fr.wikipedia.org/wiki/Nombre_flottant">http://fr.wikipedia.org/wiki/Nombre_flottant</a></p></div>
+<h3 id="_s32">3.3. s32 </h3><div style="clear:left"></div>
+<div class="paragraph"><p>An <em>s32</em> number is a whole number that can have a negative or positive
+value.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+s32 values = integer numbers -2147483648 to 2147483647
+</p>
+</li>
+</ul></div>
+<h3 id="_u32">3.4. u32 </h3><div style="clear:left"></div>
+<div class="paragraph"><p>A <em>u32</em> number is a whole number that is positive only.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+u32 values = integer numbers 0 to 4294967295
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_fichiers_hal">4. Fichiers Hal</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Si l&#8217;assistant StepConf a été utilisé pour générer la configuration
+trois fichiers HAL ont dû être créés dans le répertoire de la
+configuration.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+ma-fraiseuse.hal (si ne nom de la config est "ma-fraiseuse") Ce
+   fichier est chargé en premier, il ne doit pas être modifié sous peine
+   de ne plus pouvoir l&#8217;utiliser avec l&#8217;assistant StepConf.
+</p>
+</li>
+<li>
+<p>
+custom.hal Ce fichier est le deuxième à être chargé et il l&#8217;est avant
+   l&#8217;interface utilisateur graphique (GUI). C&#8217;est dans ce fichier que ce
+   trouvent les commandes personnalisées de l&#8217;utilisateur devant être
+   chargées avant la GUI.
+</p>
+</li>
+<li>
+<p>
+custom_postgui.hal Ce fichier est chargé après la GUI. C&#8217;est dans ce
+   fichier que se trouvent les commandes personnalisées de l&#8217;utilisateur
+   devant être chargées après la GUI. Toutes les commandes relatives aux
+   widgets de pyVCP doivent être placées ici.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_composants_de_hal">5. Composants de HAL</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Deux paramètres sont automatiquement ajoutés à chaque composants HAL quand il
+est créé. Ces paramètres permettent d&#8217;encadrer le temps d&#8217;exécution d&#8217;un composant.</p></div>
+<div class="paragraph"><p><tt>.time</tt></p></div>
+<div class="paragraph"><p><tt>.tmax</tt></p></div>
+<div class="paragraph"><p><em>.time</em> est le nombre de cycles du CPU qu&#8217;il a fallu pour exécuter la fonction.</p></div>
+<div class="paragraph"><p><em>.tmax</em> est le nombre maximum de cycles du CPU qu&#8217;il a fallu pour exécuter la fonction.
+<em>.tmax</em> est un paramètre en lecture/écriture, de sorte que l&#8217;utilisateur peut le
+mettre à 0 pour se débarrasser du premier temps d&#8217;initialisation de la fonction.</p></div>
+</div>
+<h2 id="_composants_de_logiques_combinatoire">6. Composants de logiques combinatoire</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Hal contient plusieurs composants logiques temps réel. Les composants
+logiques suivent une tables de vérité montrant les états logiques des
+sorties en fonction de l'état des entrées. Typiquement, la manipulation
+des bits d&#8217;entrée détermine l'état électrique des sorties selon la
+table de vérité des portes.</p></div>
+<h3 id="_and2">6.1. and2</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le composant <em>and2</em> est une porte <em>and</em> à deux entrées. Sa table de
+vérité montre la sortie pour chaque combinaison des entrées.</p></div>
+<div class="paragraph"><p>Syntaxe</p></div>
+<div class="paragraph"><p><tt>and2 [count=N] or [names=name1[,name2&#8230;]]</tt></p></div>
+<div class="paragraph"><p>Fonctions</p></div>
+<div class="paragraph"><p><tt>and2.n</tt></p></div>
+<div class="paragraph"><p>Pins</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>and2.N.in0 (bit, in)
+and2.N.in1 (bit, in)
+and2.N.out (bit, out)</tt></pre>
+</div></div>
+<div class="paragraph"><p>Table de vérité</p></div>
+<div class="tableblock">
+<table rules="all"
+width="90%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+<thead>
+<tr>
+<th align="left" valign="top">in0   </th>
+<th align="left" valign="top"> in1   </th>
+<th align="left" valign="top"> out</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">False</p></td>
+<td align="left" valign="top"><p class="table">False</p></td>
+<td align="left" valign="top"><p class="table">False</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">True</p></td>
+<td align="left" valign="top"><p class="table">False</p></td>
+<td align="left" valign="top"><p class="table">False</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">False</p></td>
+<td align="left" valign="top"><p class="table">True</p></td>
+<td align="left" valign="top"><p class="table">False</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">True</p></td>
+<td align="left" valign="top"><p class="table">True</p></td>
+<td align="left" valign="top"><p class="table">True</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="_not">6.2. not</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le composant <em>not</em> est un simple inverseur d'état.</p></div>
+<div class="paragraph"><p>Syntaxe</p></div>
+<div class="paragraph"><p><tt>not [count=n] or [names=name1[,name2&#8230;]]</tt></p></div>
+<div class="paragraph"><p>Fonctions</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>not.all
+not.n</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pins</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>not.n.in (bit, in)
+not.n.out (bit, out)</tt></pre>
+</div></div>
+<div class="paragraph"><p>Table de vérité</p></div>
+<div class="tableblock">
+<table rules="all"
+width="90%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="50%" />
+<col width="50%" />
+<thead>
+<tr>
+<th align="left" valign="top">in    </th>
+<th align="left" valign="top"> out</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">True</p></td>
+<td align="left" valign="top"><p class="table">False</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">False</p></td>
+<td align="left" valign="top"><p class="table">True</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="_or2">6.3. or2</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le composant <em>or2</em> est une porte OR à deux entrées.</p></div>
+<div class="paragraph"><p>Syntaxe</p></div>
+<div class="paragraph"><p><tt>or2[count=n] or [names=name1[,name2&#8230;]]</tt></p></div>
+<div class="paragraph"><p>Functions</p></div>
+<div class="paragraph"><p><tt>or2.n</tt></p></div>
+<div class="paragraph"><p>Pins</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>or2.n.in0 (bit, in)
+or2.n.in1 (bit, in)
+or2.n.out (bit, out)</tt></pre>
+</div></div>
+<div class="paragraph"><p>Table de vérité</p></div>
+<div class="tableblock">
+<table rules="all"
+width="90%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+<thead>
+<tr>
+<th align="left" valign="top">in0   </th>
+<th align="left" valign="top"> in1   </th>
+<th align="left" valign="top"> out</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">True</p></td>
+<td align="left" valign="top"><p class="table">False</p></td>
+<td align="left" valign="top"><p class="table">True</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">True</p></td>
+<td align="left" valign="top"><p class="table">True</p></td>
+<td align="left" valign="top"><p class="table">True</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">False</p></td>
+<td align="left" valign="top"><p class="table">True</p></td>
+<td align="left" valign="top"><p class="table">True</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">False</p></td>
+<td align="left" valign="top"><p class="table">False</p></td>
+<td align="left" valign="top"><p class="table">False</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="_xor2">6.4. xor2</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le composant <em>xor2</em> est une porte XOR à deux entrées (OU exclusif).</p></div>
+<div class="paragraph"><p>Syntaxe</p></div>
+<div class="paragraph"><p><tt>xor2[count=n] or [names=name1[,name2&#8230;]]</tt></p></div>
+<div class="paragraph"><p>Fonctions</p></div>
+<div class="paragraph"><p><tt>xor2.n</tt></p></div>
+<div class="paragraph"><p>Pins</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>xor2.n.in0 (bit, in)
+xor2.n.in1 (bit, in)
+xor2.n.out (bit, out)</tt></pre>
+</div></div>
+<div class="paragraph"><p>Table de vérité</p></div>
+<div class="tableblock">
+<table rules="all"
+width="90%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+<thead>
+<tr>
+<th align="left" valign="top">in0   </th>
+<th align="left" valign="top"> in1   </th>
+<th align="left" valign="top"> out</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">True</p></td>
+<td align="left" valign="top"><p class="table">False</p></td>
+<td align="left" valign="top"><p class="table">True</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">True</p></td>
+<td align="left" valign="top"><p class="table">True</p></td>
+<td align="left" valign="top"><p class="table">False</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">False</p></td>
+<td align="left" valign="top"><p class="table">True</p></td>
+<td align="left" valign="top"><p class="table">True</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">False</p></td>
+<td align="left" valign="top"><p class="table">False</p></td>
+<td align="left" valign="top"><p class="table">False</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="_exemples_en_logique_combinatoire">6.5. Exemples en logique combinatoire</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Un exemple de connexion avec un "and2", deux entrées vers une sortie.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt and2 count=1
+addf and2.0 servo-thread
+net my-sigin1 and2.0.in0 &lt;= parport.0.pin-11-in
+net my-sigin2 and2.0.in1 &lt;= parport.0.pin-12-in
+net both-on parport.0.pin-14-out &lt;= and2.0.out</tt></pre>
+</div></div>
+<div class="paragraph"><p>Dans cet exemple un and2 est chargé dans l&#8217;espace temps réel, puis
+ajouté à servo thread. Ensuite la broche d&#8217;entrée 11 du port parallèle
+est connectée à l&#8217;entrée in0 de la porte. Puis la broche d&#8217;entrée 12 du
+port est connectée à l&#8217;entrée in1 de la porte. Enfin la sortie
+and2.0.out de la porte est connectée à la broche de sortie 14 du port
+parallèle. Ainsi en suivant la table de vérité du and2, si les broches
+11 et 12 du port sont à 1, alors sa sortie 14 est à 1 aussi.</p></div>
+</div>
+<h2 id="_composants_de_conversion">7. Composants de conversion</h2>
+<div class="sectionbody">
+<h3 id="_somme_pond_r_e_weighted_sum">7.1. Somme pondérée  (weighted_sum)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La somme pondérée converti un groupe de bits en un entier. La conversion est la
+somme des <em>poids</em> des bits présents plus n&#8217;importe quel offset. C&#8217;est similaire
+au <em>binaire codé décimal</em> mais avec plus d&#8217;options. Le bit <em>hold</em> interrompt le
+traitement des entrées, de sorte que la valeur <em>sum</em> ne change plus.</p></div>
+<div class="paragraph"><p>La syntaxe suivante est utilisée pour charger le composant weighted_sum.</p></div>
+<div class="paragraph"><p><tt>loadrt weighted_sum wsum_sizes=size[,size,&#8230;]</tt></p></div>
+<div class="paragraph"><p>Crée des groupes de weighted_sum, chacun avec le nombre donné de bits d&#8217;entrée (size).</p></div>
+<div class="paragraph"><p>Pour mettre à jour la weighted_sum, le process_wsums doit être attaché à un thread.</p></div>
+<div class="paragraph"><p><tt>addf process_wsums servo-thread</tt></p></div>
+<div class="paragraph"><p>Ce qui met à jour le composant weighted_sum.</p></div>
+<div class="paragraph"><p>Dans l&#8217;exemple suivant, une copie de la fenêtre de configuration de HAL d&#8217;Axis,
+les bits <em>0</em> et <em>2</em> sont TRUE, ils n&#8217;ont pas d&#8217;offset. Le poids (<em>weight</em>) du bit 0
+est 1, celui du bit 2 est 4, la somme est donc 5.</p></div>
+<div class="listingblock">
+<div class="title">weighted_sum (somme pondérée)</div>
+<div class="content">
+<pre><tt>Component Pins:
+Owner   Type  Dir         Value  Name
+    10  bit   In           TRUE  wsum.0.bit.0.in
+    10  s32   I/O             1  wsum.0.bit.0.weight
+    10  bit   In          FALSE  wsum.0.bit.1.in
+    10  s32   I/O             2  wsum.0.bit.1.weight
+    10  bit   In           TRUE  wsum.0.bit.2.in
+    10  s32   I/O             4  wsum.0.bit.2.weight
+    10  bit   In          FALSE  wsum.0.bit.3.in
+    10  s32   I/O             8  wsum.0.bit.3.weight
+    10  bit   In          FALSE  wsum.0.hold
+    10  s32   I/O             0  wsum.0.offset
+    10  s32   Out             5  wsum.0.sum</tt></pre>
+</div></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-01-25 16:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/basic_hal_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:01 GMT -->
+</html>

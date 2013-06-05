@@ -1,0 +1,181 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Sat Mar 17 00:36:11 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/gantrykins.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>GANTRYKINS</title>
+
+</head>
+<body>
+
+<h1 align="center">GANTRYKINS</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#KINEMATICS">KINEMATICS</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#NOTES">NOTES</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">gantrykins
+&minus; A kinematics module that maps one axis to multiple
+joints</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="63%">
+
+
+<p style="margin-top: 1em"><b>loadrt gantrykins
+coordinates=</b><i>axisletters</i></p> </td>
+<td width="26%">
+</td></tr>
+</table>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Specifying
+gantry joint mapping via loadrt</b> <br>
+The <b>coordinates=</b> parameter specifies the initial
+gantry joint mapping. Each axis letter is mapped to a joint,
+starting from 0. So <b>coordinates=XYYZ</b> maps the X axis
+to joint 0, the Y axis to joint 1 and 2, and the Z axis to
+joint 3. If not specified, the default mapping is
+<b>coordinates=XYZABC</b>. Coordinate letters may be
+specified in uppercase or lowercase.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>A note about
+joints and axes</b> <br>
+LinuxCNC makes a distinction between joints and axes: a
+joint is something controlled by a motor, and an axis is a
+coordinate you can move via G-code. You can also jog joints
+or jog axes.</p>
+
+<p style="margin-left:11%; margin-top: 1em">A gantry has
+two joints controlling one axis, and this requires a bit of
+special care.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Homing always
+happens in joint mode (aka Free mode). The two joints of a
+gantry&rsquo;s axis must be homed together, so they must
+have the same [AXIS_n]HOME_SEQUENCE in the .ini file.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Jogging of a
+gantry must happen in world mode (aka Teleop mode). If you
+jog a gantry in joint mode (Free mode), you will move just
+one of the joints, and the gantry will rack. In contrast, if
+you jog a gantry in world mode (Teleop mode), it&rsquo;s the
+axis that jogs: linuxcnc will coordinate the motion of the
+two joints that make up the axis, both joints will move
+together, and the gantry will stay square.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The Axis GUI
+has provisions for jogging in joint mode (Free) and in world
+mode (Teleop). Use the &quot;$&quot; hotkey, or the View
+menu to switch between them.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Joint-mode (aka
+Free mode) supports continuous and incremental jogging.
+World-mode (aka Teleop mode) only supports continuous
+jogging.</p>
+
+<h2>KINEMATICS
+<a name="KINEMATICS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">In the inverse
+kinematics, each joint gets the value of its corresponding
+axis. In the forward kinematics, each axis gets the value of
+the highest numbered corresponding joint. For example, with
+<b>coordinates=XYYZ</b> the Y axis position comes from joint
+2, not joint 1.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">None.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">None.</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>gantrykins.joint-</b><i>N</i>
+(s32)</p>
+
+<p style="margin-left:22%;">Specifies the axis mapped to
+joint <i>N</i>. The values 0 through 8 correspond to the
+axes XYZABCUVW. It is preferable to use the
+&quot;coordinates=&quot; parameter at loadrt-time rather
+than setting the joint-N parameters later, because the
+gantrykins module prints the joint-to-axis mapping at
+loadrt-time, and having that output correct is nice.</p>
+
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>gantrykins</b>
+must be loaded before <b>motion</b>.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><i>Kinematics</i>
+section in the LinuxCNC documentation</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/gantrykins.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

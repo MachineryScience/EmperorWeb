@@ -1,0 +1,174 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:22 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/rtapi_get_time.3rtapi.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>rtapi_get_time</title>
+
+</head>
+<body>
+
+<h1 align="center">rtapi_get_time</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNTAX">SYNTAX</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#RETURN VALUE">RETURN VALUE</a><br>
+<a href="#NOTES">NOTES</a><br>
+<a href="#REALTIME CONSIDERATIONS">REALTIME CONSIDERATIONS</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">rtapi_get_time
+&minus; get the current time</p>
+
+<h2>SYNTAX
+<a name="SYNTAX"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="43%">
+
+
+<p style="margin-top: 1em">long long rtapi_get_time()</p></td>
+<td width="46%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="43%">
+
+
+<p style="margin-top: 1em">long long rtapi_get_clocks()</p></td>
+<td width="46%">
+</td></tr>
+</table>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_get_time</b>
+returns the current time in nanoseconds. Depending on the
+RTOS, this may be time since boot, or time since the clock
+period was set, or some other time. Its absolute value means
+nothing, but it is monotonically increasing and can be used
+to schedule future events, or to time the duration of some
+activity. Returns a 64 bit value. The resolution of the
+returned value may be as good as one nano-second, or as poor
+as several microseconds. May be called from init/cleanup
+code, and from within realtime tasks.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_get_clocks</b>
+returns the current time in CPU clocks. It is fast, since it
+just reads the TSC in the CPU instead of calling a kernel or
+RTOS function. Of course, times measured in CPU clocks are
+not as convenient, but for relative measurements this works
+fine. Its absolute value means nothing, but it is
+monotonically increasing and can be used to schedule future
+events, or to time the duration of some activity. (on SMP
+machines, the two TSC&rsquo;s may get out of sync, so if a
+task reads the TSC, gets swapped to the other CPU, and reads
+again, the value may decrease. RTAPI tries to force all RT
+tasks to run on one CPU.) Returns a 64 bit value. The
+resolution of the returned value is one CPU clock, which is
+usually a few nanoseconds to a fraction of a nanosecond.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Note that
+<i>long long</i> math may be poorly supported on some
+platforms, especially in kernel space. Also note that
+rtapi_print() will NOT print <i>long long</i>s. Most time
+measurements are relative, and should be done like this:</p>
+
+<p style="margin-left:22%;">deltat = (long int)(end_time -
+start_time);</p>
+
+<p style="margin-left:11%;">where end_time and start_time
+are longlong values returned from rtapi_get_time, and deltat
+is an ordinary long int (32 bits). This will work for times
+up to a second or so, depending on the CPU clock frequency.
+It is best used for millisecond and microsecond scale
+measurements though.</p>
+
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Returns the
+current time in nanoseconds or CPU clocks.</p>
+
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Certain
+versions of the Linux kernel provide a global variable
+<b>cpu_khz</b>. Computing</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="8%"></td>
+<td width="92%">
+
+
+<p>deltat = (end_clocks - start_clocks) / cpu_khz:</p></td></tr>
+</table>
+
+<p style="margin-left:11%;">gives the duration measured in
+milliseconds. Computing</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="8%"></td>
+<td width="92%">
+
+
+<p>deltat = (end_clocks - start_clocks) * 1000000 /
+cpu_khz:</p> </td></tr>
+</table>
+
+<p style="margin-left:11%;">gives the duration measured in
+nanoseconds for deltas less than about 9 trillion clocks
+(e.g., 3000 seconds at 3GHz).</p>
+
+<h2>REALTIME CONSIDERATIONS
+<a name="REALTIME CONSIDERATIONS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">May be called
+from init/cleanup code and from within realtime tasks. Not
+available in userspace components.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/rtapi_get_time.3rtapi.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+</html>

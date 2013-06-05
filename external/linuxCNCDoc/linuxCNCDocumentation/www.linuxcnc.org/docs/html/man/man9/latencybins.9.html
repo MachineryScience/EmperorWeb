@@ -1,0 +1,114 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:45 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/latencybins.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>LATENCYBINS</title>
+
+</head>
+<body>
+
+<h1 align="center">LATENCYBINS</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">latencybins
+&minus; comp utility for scripts/latencyhistogram</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Usage: <br>
+Read availablebins pin for the number of bins available.
+<br>
+Set the maxbinnumber pin for the number of +/- bins. <br>
+Ensure maxbinnumber &lt;= availablebins <br>
+For maxbinnumber = N, the bins are numbered: <br>
+-N ... 0 ... + N bins <br>
+(the -0 bin is not populated) <br>
+(total effective bins = 2*maxbinnumber +1) <br>
+Set nsbinsize pin for the binsize (ns) <br>
+Iterate: <br>
+Set index pin to a bin number: 0 &lt;= index &lt;=
+maxbinnumber. <br>
+Read check pin and verify that check pin == index pin. <br>
+Read pbinvalue,nbinvalue,pextra,nextra pins. <br>
+(pbinvalue is count for bin = +index) <br>
+(nbinvalue is count for bin = -index) <br>
+(pextra is count for all bins &gt; maxbinnumber) <br>
+(nextra is count for all bins &lt; maxbinnumber)</p>
+
+<p style="margin-left:11%; margin-top: 1em">If index is out
+of range ( index &lt; 0 or index &gt; maxbinnumber) <br>
+then pbinvalue = nbinvalue = -1. <br>
+The reset pin may be used to restart. <br>
+The latency pin outputs the instantaneous latency.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Maintainers
+note: hardcoded for MAXBINNUMBER==1000</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>latencybins.</b><i>N</i></p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><i><b>latencybins.</b>N</i><b>.maxbinnumber</b>
+s32 in (default: <i>1000</i>) <b><br>
+latencybins.</b><i>N</i><b>.index</b> s32 in <b><br>
+latencybins.</b><i>N</i><b>.reset</b> bit in <b><br>
+latencybins.</b><i>N</i><b>.nsbinsize</b> s32 in <b><br>
+latencybins.</b><i>N</i><b>.check</b> s32 out <b><br>
+latencybins.</b><i>N</i><b>.latency</b> s32 out <b><br>
+latencybins.</b><i>N</i><b>.pbinvalue</b> s32 out <b><br>
+latencybins.</b><i>N</i><b>.nbinvalue</b> s32 out <b><br>
+latencybins.</b><i>N</i><b>.pextra</b> s32 out <b><br>
+latencybins.</b><i>N</i><b>.nextra</b> s32 out <b><br>
+latencybins.</b><i>N</i><b>.availablebins</b> s32 out
+(default: <i>1000</i>)</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/latencybins.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

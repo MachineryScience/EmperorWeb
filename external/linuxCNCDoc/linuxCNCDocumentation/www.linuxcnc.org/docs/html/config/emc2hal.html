@@ -1,0 +1,794 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/emc2hal.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:15:19 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Core Components</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Core Components</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:core-components"></a> </p></div>
+<div class="paragraph"><p>See also the man pages <em>motion(9)</em>.</p></div>
+</div>
+</div>
+<h2 id="sec:motion">1. Motion</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>These pins and parameters are created by the realtime <em>motmod</em> module.
+This module provides a HAL interface for LinuxCNC’s motion planner.
+Basically motmod takes in a list of waypoints and generates a nice
+blended and constraint-limited stream of joint positions to be fed
+to the motor drives.</p></div>
+<div class="paragraph"><p>Optionally the number of Digital I/O is set with num_dio.
+The number of Analog I/O is set with num_aio. The default is 4 each.</p></div>
+<div class="paragraph"><p>Pin names starting with <em>axis</em> are actually joint values, but the pins
+and parameters are still called <em>axis.N</em>.
+They are read and updated by the motion-controller function.</p></div>
+<div class="paragraph"><p>Motion is loaded with the motmod command. A kins should be loaded
+before motion.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt motmod [base_period_nsec=period] [servo_period_nsec=period]
+[traj_period_nsec=period] [num_joints=[0-9] ([num_dio=1-64] num_aio=1-16])]</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>base_period_nsec = 50000</em> - the <em>Base</em> task period in nanoseconds.
+  This is the fastest thread in the machine.
+</p>
+</li>
+</ul></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">On servo-based systems, there is generally no reason for
+<em>base_period_nsec</em> to be smaller than <em>servo_period_nsec</em>.
+On machines with software step generation, the <em>base_period_nsec</em>
+determines the maximum number of steps per second. In the absence of
+long step length and step space requirements, the absolute maximum step
+rate is one step per <em>base_period_nsec</em>. Thus, the <em>base_period_nsec</em> shown
+above gives an absolute maximum step rate of 20,000 steps per
+second. 50,000 ns (50 us) is a fairly conservative value. The
+smallest usable value is related to the Latency Test result, the
+necessary step length, and the processor speed.
+Choosing a <em>base_period_nsec</em> that is too low can lead to the "Unexpected
+real time delay" message, lockups, or spontaneous reboots.</td>
+</tr></table>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>servo_period_nsec = 1000000</em> - This is the <em>Servo</em> task period in
+  nanoseconds. This value will be rounded to an integer multiple of
+  <em>base_period_nsec</em>. This period is used even on systems based on
+  stepper motors.
+</p>
+<div class="paragraph"><p>This is the rate at which new motor positions are computed, following
+error is checked, PID output values are updated, and so on.
+Most systems will not need to change this value. It is the update rate
+of the low level motion planner.</p></div>
+</li>
+<li>
+<p>
+<em>traj_period_nsec = 100000</em> - This is the <em>Trajectory Planner</em>
+  task period in nanoseconds. This value will be rounded to an integer
+  multiple of <em>servo_period_nsec</em>. Except for machines with unusual
+  kinematics (e.g., hexapods) there is no reason to make this value larger
+  than <em>servo_period_nsec</em>.
+</p>
+</li>
+</ul></div>
+<h3 id="_options">1.1. Options</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If the number of digital I/O needed is more than the default of 4 you
+can add up to 64 digital I/O by using the num_dio option when loading
+motmod.</p></div>
+<div class="paragraph"><p>If the number of analog I/O needed is more than the default of 4 you
+can add up to 16 analog I/O by using the num_aio option when loading
+motmod.</p></div>
+<h3 id="_pins">1.2. Pins </h3><div style="clear:left"></div>
+<div class="paragraph"><p>These pins, parameters, and functions are created by the realtime
+<em>motmod</em> module.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>motion.adaptive-feed</em> -
+     (float, in) When adaptive feed is enabled with <em>M52 P1</em> , the
+    commanded velocity is multiplied by this value. This effect is
+     multiplicative with the NML-level feed override value and
+    <em>motion.feed-hold</em>.
+</p>
+</li>
+<li>
+<p>
+<em>motion.analog-in-00</em> -
+     (float, in) These pins (00, 01, 02, 03 or more if configured) are
+    controlled by M66.
+</p>
+</li>
+<li>
+<p>
+<em>motion.analog-out-00</em> -
+     (float, out) These pins (00, 01, 02, 03 or more if configured) are
+    controlled by M67 or M68.
+</p>
+</li>
+<li>
+<p>
+<em>motion.coord-error</em> -
+     (bit, out) TRUE when motion has encountered an error, such as
+    exceeding a soft limit
+</p>
+</li>
+<li>
+<p>
+<em>motion.coord-mode</em> -
+     (bit, out) TRUE when motion is in <em>coordinated mode</em>, as opposed to
+    <em>teleop mode</em>
+</p>
+</li>
+<li>
+<p>
+<em>motion.current-vel</em> -
+    (float, out) The current tool velocity in user units per second.
+</p>
+</li>
+<li>
+<p>
+<em>motion.digital-in-00</em> -
+     (bit, in) These pins (00, 01, 02, 03 or more if configured) are
+    controlled by M62-65.
+</p>
+</li>
+<li>
+<p>
+<em>motion.digital-out-00</em> -
+     (bit, out) These pins (00, 01, 02, 03 or more if configured) are
+    controlled by the <em>M62-65</em>.
+</p>
+</li>
+<li>
+<p>
+<em>motion.distance-to-go</em> -
+    (float,out) The distance remaining in the current move.
+</p>
+</li>
+<li>
+<p>
+<em>motion.enable</em> -
+     (bit, in) If this bit is driven FALSE, motion stops, the machine is
+    placed in the <em>machine off</em> state, and a message is displayed for the
+    operator. For normal motion, drive this bit TRUE.
+</p>
+</li>
+<li>
+<p>
+<em>motion.feed-hold</em> -
+     (bit, in) When Feed Stop Control is enabled with <em>M53 P1</em>, and this
+    bit is TRUE, the feed rate is set to 0.
+</p>
+</li>
+<li>
+<p>
+<em>motion.in-position</em> -
+    (bit, out) TRUE if the machine is in position.
+</p>
+</li>
+<li>
+<p>
+<em>motion.motion-enabled</em> -
+    (bit, out) TRUE when in <em>machine on</em> state.
+</p>
+</li>
+<li>
+<p>
+<em>motion.on-soft-limit</em> -
+    (bit, out) TRUE when the machine is on a soft limit.
+</p>
+</li>
+<li>
+<p>
+<em>motion.probe-input</em> -
+     (bit, in) <em>G38.x</em>  uses the value on this pin to determine when the
+    probe has made contact.
+    TRUE for probe contact closed (touching),
+    FALSE for probe contact open.
+</p>
+</li>
+<li>
+<p>
+<em>motion.program-line</em> -
+     (s32, out) The current program line while executing. Zero if not
+    running or between lines while single stepping.
+</p>
+</li>
+<li>
+<p>
+<em>motion.requested-vel</em> -
+     (float, out) The current requested velocity in user units per second
+    from the F=n setting in the G Code file. No feed overrides or any other
+    adjustments are applied to this pin.
+</p>
+</li>
+<li>
+<p>
+<em>motion.spindle-at-speed</em> -
+     (bit, in) Motion will pause until this pin is TRUE, under the
+    following conditions: before the first feed move after each spindle
+    start or speed change; before the start of every chain of
+    spindle-synchronized moves; and if in CSS mode, at every rapid to feed
+    transition. This input can be used to ensure that the spindle is up to
+    speed before starting a cut, or that a lathe spindle in CSS mode has
+    slowed down after a large to small facing pass before starting the next
+    pass at the large diameter. Many VFDs have an <em>at speed</em> output.
+    Otherwise, it is easy to generate this signal with the <em>HAL near</em>
+    component, by comparing requested and actual spindle speeds.
+</p>
+</li>
+<li>
+<p>
+<em>motion.spindle-brake</em> -
+    (bit, out) TRUE when the spindle brake should be applied.
+</p>
+</li>
+<li>
+<p>
+<em>motion.spindle-forward</em> -
+    (bit, out) TRUE when the spindle should rotate forward.
+</p>
+</li>
+<li>
+<p>
+<em>motion.spindle-index-enable</em> -
+     (bit, I/O) For correct operation of spindle synchronized moves, this
+    pin must be hooked to the index-enable pin of the spindle encoder.
+</p>
+</li>
+<li>
+<p>
+<em>motion.spindle-on</em> -
+    (bit, out) TRUE when spindle should rotate.
+</p>
+</li>
+<li>
+<p>
+<em>motion.spindle-reverse</em> -
+    (bit, out) TRUE when the spindle should rotate backward
+</p>
+</li>
+<li>
+<p>
+<em>motion.spindle-revs</em> -
+     (float, in) For correct operation of spindle synchronized moves, this
+    signal must be hooked to the position pin of the spindle encoder. The
+    spindle encoder position should be scaled such that spindle-revs
+    increases by 1.0 for each rotation of the spindle in the clockwise
+    (<em>M3</em>) direction.
+</p>
+</li>
+<li>
+<p>
+<em>motion.spindle-speed-in</em> -
+     (float, in) Feedback of actual spindle speed in rotations per second.
+    This is used by feed-per-revolution motion (<em>G95</em>). If your spindle
+    encoder driver does not have a velocity output, you
+     can generate a suitable one by sending the spindle position through a
+    <em>ddt</em> component.  If you do not have a spindle encoder, you can loop
+    back <em>motion.spindle-speed-out-rps</em>.
+</p>
+</li>
+<li>
+<p>
+<em>motion.spindle-speed-out</em> -
+     (float, out) Commanded spindle speed in rotations per minute. Positive
+    for spindle forward (<em>M3</em>), negative for spindle reverse (<em>M4</em>).
+</p>
+</li>
+<li>
+<p>
+<em>motion.spindle-speed-out-rps</em> -
+     (float, out) Commanded spindle speed in rotations per second. Positive
+    for spindle forward (<em>M3</em>), negative for spindle reverse (<em>M4</em>).
+</p>
+</li>
+<li>
+<p>
+<em>motion.teleop-mode</em> -
+     (bit, out) TRUE when motion is in <em>teleop mode</em>, as opposed to
+    <em>coordinated mode</em>
+</p>
+</li>
+<li>
+<p>
+<em>motion.tooloffset.x &#8230; motion.tooloffset.w</em> -
+     (float, out, one per axis) shows the tool offset in effect;
+     it could come from the tool table (<em>G43</em> active), or it could
+     come from the gcode (<em>G43.1</em> active)
+</p>
+</li>
+</ul></div>
+<h3 id="_parameters">1.3. Parameters</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Many of these parameters serve as debugging aids, and are subject to
+change or removal at any time.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>motion-command-handler.time</em> -
+    (s32, RO)
+</p>
+</li>
+<li>
+<p>
+<em>motion-command-handler.tmax</em> -
+    (s32, RW)
+</p>
+</li>
+<li>
+<p>
+<em>motion-controller.time</em> -
+    (s32, RO)
+</p>
+</li>
+<li>
+<p>
+<em>motion-controller.tmax</em> -
+    (s32, RW)
+</p>
+</li>
+<li>
+<p>
+<em>motion.debug-bit-0</em> -
+    (bit, RO) This is used for debugging purposes.
+</p>
+</li>
+<li>
+<p>
+<em>motion.debug-bit-1</em> -
+    (bit, RO) This is used for debugging purposes.
+</p>
+</li>
+<li>
+<p>
+<em>motion.debug-float-0</em> -
+    (float, RO) This is used for debugging purposes.
+</p>
+</li>
+<li>
+<p>
+<em>motion.debug-float-1</em> -
+    (float, RO) This is used for debugging purposes.
+</p>
+</li>
+<li>
+<p>
+<em>motion.debug-float-2</em> -
+    (float, RO) This is used for debugging purposes.
+</p>
+</li>
+<li>
+<p>
+<em>motion.debug-float-3</em> -
+    (float, RO) This is used for debugging purposes.
+</p>
+</li>
+<li>
+<p>
+<em>motion.debug-s32-0</em> -
+    (s32, RO) This is used for debugging purposes.
+</p>
+</li>
+<li>
+<p>
+<em>motion.debug-s32-1</em> -
+    (s32, RO) This is used for debugging purposes.
+</p>
+</li>
+<li>
+<p>
+<em>motion.servo.last-period</em> -
+     (u32, RO) The number of CPU cycles between invocations of the servo
+    thread. Typically, this number divided by the CPU speed gives the time
+    in seconds, and can be used to determine whether the realtime motion
+    controller is meeting its timing constraints
+</p>
+</li>
+<li>
+<p>
+<em>motion.servo.last-period-ns</em> -
+    (float, RO)
+</p>
+</li>
+<li>
+<p>
+<em>motion.servo.overruns</em> -
+     (u32, RW) By noting large differences between successive values of
+    <em>motion.servo.last-period</em> , the motion controller can determine that
+    there has probably been a
+    failure to meet its timing constraints. Each time such a failure is
+    detected, this value is incremented.
+</p>
+</li>
+</ul></div>
+<h3 id="_functions">1.4. Functions</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Generally, these functions are both added to the servo-thread in the
+order shown.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>motion-command-handler</em> -
+    Processes motion commands coming from user space
+</p>
+</li>
+<li>
+<p>
+<em>motion-controller</em> -
+    Runs the LinuxCNC motion controller
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_axis_joints">2. Axis (Joints)</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>These pins and parameters are created by the realtime <em>motmod</em>
+module. These are actually joint values, but the pins and parameters
+are still called <em>axis.N</em>.<span class="footnote"><br />[In <em>trivial kinematics</em> machines,
+there is a one-to-one correspondence between joints and axes.]<br /></span>
+They are read and updated by the <em>motion-controller</em> function.</p></div>
+<h3 id="_pins_2">2.1. Pins </h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>axis.N.active</em> -
+    (bit, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.amp-enable-out</em> -
+    (bit, out) TRUE if the amplifier for this joint should be enabled
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.amp-fault-in</em> -
+     (bit, in) Should be driven TRUE if an external fault is detected with
+    the amplifier for this joint
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.backlash-corr</em> -
+    (float, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.backlash-filt</em> -
+    (float, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.backlash-vel</em> -
+    (float, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.coarse-pos-cmd</em> -
+    (float, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.error</em> -
+    (bit, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.f-error</em> -
+    (float, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.f-error-lim</em> -
+    (float, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.f-errored</em> -
+    (bit, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.faulted</em> -
+    (bit, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.free-pos-cmd</em> -
+    (float, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.free-tp-enable</em> -
+    (bit, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.free-vel-lim</em> -
+    (float, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.home-sw-in</em> -
+     (bit, in) Should be driven TRUE if the home switch for this joint is
+    closed.
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.homed</em> -
+    (bit, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.homing</em> -
+    (bit, out) TRUE if the joint is currently homing
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.in-position</em> -
+    (bit, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.index-enable</em> -
+    (bit, I/O)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.jog-counts</em> -
+     (s32, in) Connect to the <em>counts</em> pin of an external encoder to use a
+    physical jog wheel.
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.jog-enable</em> -
+     (bit, in) When TRUE (and in manual mode), any change in <em>jog-counts</em>
+    will result in motion. When false, <em>jog-counts</em> is ignored.
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.jog-scale</em> -
+     (float, in) Sets the distance moved for each count on <em>jog-counts</em>, in
+    machine units.
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.jog-vel-mode</em> -
+     (bit, in) When FALSE (the default), the jogwheel operates in position
+    mode. The axis will move exactly jog-scale units for each count,
+    regardless of how long that might take. When TRUE, the wheel operates
+    in velocity mode - motion stops when the wheel stops, even if that
+    means the commanded motion is not completed.
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.joint-pos-cmd</em> -
+     (float, out) The joint (as opposed to motor) commanded position. There
+    may be an offset between the joint and motor positions&#8212;for example,
+    the homing process sets this offset.
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.joint-pos-fb</em> -
+    (float, out) The joint (as opposed to motor) feedback position.
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.joint-vel-cmd</em> -
+    (float, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.kb-jog-active</em> -
+    (bit, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.motor-pos-cmd</em> -
+    (float, out) The commanded position for this joint.
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.motor-pos-fb</em> -
+    (float, in) The actual position for this joint.
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.neg-hard-limit</em> -
+    (bit, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.pos-lim-sw-in</em> -
+     (bit, in) Should be driven TRUE if the positive limit switch for this
+    joint is closed.
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.pos-hard-limit</em> -
+    (bit, out)
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.neg-lim-sw-in</em> -
+     (bit, in) Should be driven TRUE if the negative limit switch for this
+    joint is closed.
+</p>
+</li>
+<li>
+<p>
+<em>axis.N.wheel-jog-active</em> -
+    (bit, out)
+</p>
+</li>
+</ul></div>
+<h3 id="_parameters_2">2.2. Parameters</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>axis.N.home-state</em> -
+    Reflects the step of homing currently taking place.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_iocontrol">3. iocontrol</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>iocontrol − accepts NML I/O commands, interacts with HAL in userspace.</p></div>
+<div class="paragraph"><p>The signals are turned on and off in userspace - if you have strict
+timing requirements or simply need more i/o, consider using the realtime
+synchronized i/o provided by <a href="emc2hal.html#sec:motion">motion</a> instead.</p></div>
+<h3 id="_pins_3">3.1. Pins </h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>iocontrol.0.coolant-flood</em> -
+    (bit, out) TRUE when flood coolant is requested.
+</p>
+</li>
+<li>
+<p>
+<em>iocontrol.0.coolant-mist</em> -
+    (bit, out) TRUE when mist coolant is requested.
+</p>
+</li>
+<li>
+<p>
+<em>iocontrol.0.emc-enable-in</em> -
+     (bit, in) Should be driven FALSE when an external E-Stop condition
+    exists.
+</p>
+</li>
+<li>
+<p>
+<em>iocontrol.0.lube</em> -
+    (bit, out) TRUE when lube is commanded.
+</p>
+</li>
+<li>
+<p>
+<em>iocontrol.0.lube_level</em> -
+    (bit, in) Should be driven TRUE when lube level is high enough.
+</p>
+</li>
+<li>
+<p>
+<em>iocontrol.0.tool-change</em> -
+    (bit, out) TRUE when a tool change is requested.
+</p>
+</li>
+<li>
+<p>
+<em>iocontrol.0.tool-changed</em> -
+    (bit, in) Should be driven TRUE when a tool change is completed.
+</p>
+</li>
+<li>
+<p>
+<em>iocontrol.0.tool-number</em> -
+    (s32, out) The current tool number.
+</p>
+</li>
+<li>
+<p>
+<em>iocontrol.0.tool-prep-number</em> -
+    (s32, out) The number of the next tool, from the RS274NGC T-word.
+</p>
+</li>
+<li>
+<p>
+<em>iocontrol.0.tool-prepare</em> -
+    (bit, out) TRUE when a tool prepare is requested.
+</p>
+</li>
+<li>
+<p>
+<em>iocontrol.0.tool-prepared</em> -
+    (bit, in) Should be driven TRUE when a tool prepare is completed.
+</p>
+</li>
+<li>
+<p>
+<em>iocontrol.0.user-enable-out</em> -
+    (bit, out) FALSE when an internal E-Stop condition exists.
+</p>
+</li>
+<li>
+<p>
+<em>iocontrol.0.user-request-enable</em> -
+    (bit, out) TRUE when the user has requested that E-Stop be cleared.
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-01-24 16:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/emc2hal.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:15:19 GMT -->
+</html>

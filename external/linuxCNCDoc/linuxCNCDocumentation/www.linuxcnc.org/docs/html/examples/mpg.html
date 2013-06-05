@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/examples/mpg.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:15:16 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>MPG Pendant</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>MPG Pendant</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>This example is to explain how to hook up the common MPG pendants
+found on the market today. This example uses an MPG3 pendant and a
+C22 pendant interface card from CNC4PC connected to a second parallel
+port plugged into the PCI slot. This example gives you 3 axes with 3
+step increments of 0.1, 0.01, 0.001</p></div>
+<div class="paragraph"><p>In your custom.hal file or jog.hal file add the following, making
+sure you don&#8217;t have mux4 or an encoder already in use. If you do just
+increase the counts and change the reference numbers. More information
+about mux4 and encoder can be found in the HAL manual or the man page.</p></div>
+<div class="paragraph"><p>See the <a href="../config/ini_config.html#sub:[HAL]-section">HAL Ini Section</a> of the manual for more
+information on adding a hal file.</p></div>
+<div class="listingblock">
+<div class="title">jog.hal</div>
+<div class="content">
+<pre><tt># Jog Pendant
+loadrt encoder num_chan=1
+loadrt mux4 count=1
+addf encoder.capture-position servo-thread
+addf encoder.update-counters base-thread
+addf mux4.0 servo-thread
+
+# If your MPG outputs a quadrature signal per click set x4 to 1
+# If your MPG puts out 1 pulse per click set x4 to 0
+setp encoder.0.x4-mode 0
+
+# For velocity mode, set to 1
+# In velocity mode the axis stops when the dial is stopped
+# even if that means the commanded motion is not completed,
+# For position mode (the default), set to 0
+# In position mode the axis will move exactly jog-scale
+# units for each count, regardless of how long that might take,
+setp axis.0.jog-vel-mode 0
+setp axis.1.jog-vel-mode 0
+setp axis.2.jog-vel-mode 0
+
+# this sets the scale that will be used based on the input to the mux4
+setp mux4.0.in0 0.1
+setp mux4.0.in1 0.01
+setp mux4.0.in2 0.001
+
+# the inputs to the mux4 component
+net scale1 mux4.0.sel0 &lt;= parport.1.pin-09-in
+net scale2 mux4.0.sel1 &lt;= parport.1.pin-10-in
+
+# the output from the mux4 is sent to each axis jog scale
+net mpg-scale &lt;= mux4.0.out
+net mpg-scale =&gt; axis.0.jog-scale
+net mpg-scale =&gt; axis.1.jog-scale
+net mpg-scale =&gt; axis.2.jog-scale
+
+# the MPG inputs
+net mpg-a encoder.0.phase-A &lt;= parport.1.pin-02-in
+net mpg-b encoder.0.phase-B &lt;= parport.1.pin-03-in
+
+# the Axis select inputs
+net mpg-x axis.0.jog-enable &lt;= parport.1.pin-04-in
+net mpg-y axis.1.jog-enable &lt;= parport.1.pin-05-in
+net mpg-z axis.2.jog-enable &lt;= parport.1.pin-06-in
+
+# the encoder output counts to the axis. Only the selected axis will move.
+net encoder-counts  &lt;= encoder.0.counts
+net encoder-counts =&gt; axis.0.jog-counts
+net encoder-counts =&gt; axis.1.jog-counts
+net encoder-counts =&gt; axis.2.jog-counts</tt></pre>
+</div></div>
+<div class="paragraph"><p>If the machine is capable of high acceleration to smooth out the moves
+for each click of the MPG use the <a href="../hal/components.html#ilowpass">ilowpass</a> component to
+limit the acceleration.</p></div>
+<div class="listingblock">
+<div class="title">jog.hal with ilowpass</div>
+<div class="content">
+<pre><tt>loadrt encoder num_chan=1
+loadrt mux4 count=1
+addf encoder.capture-position servo-thread
+addf encoder.update-counters base-thread
+addf mux4.0 servo-thread
+
+loadrt ilowpass
+addf ilowpass.0 servo-thread
+
+setp ilowpass.0.scale 1000
+setp ilowpass.0.gain 0.01
+
+
+# If your MPG outputs a quadrature signal per click set x4 to 1
+# If your MPG puts out 1 pulse per click set x4 to 0
+setp encoder.0.x4-mode 0
+
+# For velocity mode, set to 1
+# In velocity mode the axis stops when the dial is stopped
+# even if that means the commanded motion is not completed,
+# For position mode (the default), set to 0
+# In position mode the axis will move exactly jog-scale
+# units for each count, regardless of how long that might take,
+setp axis.0.jog-vel-mode 0
+setp axis.1.jog-vel-mode 0
+setp axis.2.jog-vel-mode 0
+
+# the inputs to the mux4 component
+net scale1 mux4.0.sel0 &lt;= parport.1.pin-09-in
+net scale2 mux4.0.sel1 &lt;= parport.1.pin-10-in
+
+# this sets the scale that will be used based on the input to the mux4
+# the scale used here has to be multiplied by the ilowpass scale
+setp mux4.0.in0 0.0001
+setp mux4.0.in1 0.00001
+setp mux4.0.in2 0.000001
+
+# send encoder counts to ilowpass
+net mpg-out ilowpass.0.in &lt;= encoder.0.counts
+
+# the output from the ilowpass is sent to each axis jog scale
+net mpg-scale &lt;= ilowpass0.out
+net mpg-scale =&gt; axis.0.jog-scale
+net mpg-scale =&gt; axis.1.jog-scale
+net mpg-scale =&gt; axis.2.jog-scale
+
+# the encoder output counts to the axis. Only the selected axis will move.
+net encoder-counts  &lt;= encoder.0.counts
+net encoder-counts =&gt; axis.0.jog-counts
+net encoder-counts =&gt; axis.1.jog-counts
+net encoder-counts =&gt; axis.2.jog-counts</tt></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-09-25 08:36:08 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/examples/mpg.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:15:16 GMT -->
+</html>

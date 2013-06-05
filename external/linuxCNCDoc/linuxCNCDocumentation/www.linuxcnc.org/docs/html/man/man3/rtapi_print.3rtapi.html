@@ -1,0 +1,189 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:22 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/rtapi_print.3rtapi.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>rtapi_print</title>
+
+</head>
+<body>
+
+<h1 align="center">rtapi_print</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNTAX">SYNTAX</a><br>
+<a href="#ARGUMENTS">ARGUMENTS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#REALTIME CONSIDERATIONS">REALTIME CONSIDERATIONS</a><br>
+<a href="#RETURN VALUE">RETURN VALUE</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">rtapi_print,
+rtapi_print_msg &minus; print diagnostic messages</p>
+
+<h2>SYNTAX
+<a name="SYNTAX"></a>
+</h2>
+
+
+<p style="margin-left:22%; margin-top: 1em">void
+rtapi_print(const char *<i>fmt</i>, <i>...</i>)</p></table>
+
+<p style="margin-left:22%; margin-top: 1em">void
+rtapi_print_msg(int level, const char *<i>fmt</i>,
+<i>...</i>)</p> </table>
+
+<p style="margin-left:22%; margin-top: 1em">typedef
+void(*<b>rtapi_msg_handler_t</b>)(msg_level_t <i>level</i>,
+const char *<i>msg</i>);</p></table>
+
+<p style="margin-left:22%; margin-top: 1em">void
+<b>rtapi_set_msg_handler</b>(rtapi_msg_handler_t
+<i>handler</i>);</p> </table>
+
+
+<p style="margin-left:22%; margin-top: 1em">rtapi_msg_handler_t
+<b>rtapi_set_msg_handler</b>(void);</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+
+
+<h2>ARGUMENTS
+<a name="ARGUMENTS"></a>
+</h2>
+<td width="11%"></td>
+<td width="7%"></td>
+<td width="4%"></td>
+<td width="78%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="7%">
+
+
+<p><i>level</i></p></td>
+<td width="4%"></td>
+<td width="78%">
+
+
+<p>A message level: One of <b>RTAPI_MSG_ERR</b>,
+<b>RTAPI_MSG_WARN</b>, <b>RTAPI_MSG_INFO</b>, or
+<b>RTAPI_MSG_DBG</b>.</p> </td></tr>
+</table>
+
+<p style="margin-left:11%;"><i>handler</i></p>
+
+<p style="margin-left:22%;">A function to call from
+<b>rtapi_print</b> or <b>rtapi_print_msg</b> to actually
+output the message.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><i>fmt</i></p></td>
+<td width="7%"></td>
+<td width="56%">
+</td>
+<td width="22%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><i>...</i></p></td>
+<td width="7%"></td>
+<td width="56%">
+
+
+<p>Other arguments are as for <i>printf(3)</i>.</p></td>
+<td width="22%">
+</td></tr>
+</table>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_print</b>
+and <b>rtapi_print_msg</b> work like the standard C printf
+functions, except that a reduced set of formatting
+operations are supported.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Depending on
+the RTOS, the default may be to print the message to stdout,
+stderr, a kernel log, etc. In RTAPI code, the action may be
+changed by a call to <b>rtapi_set_msg_handler</b>. A
+<b>NULL</b> argument to <b>rtapi_set_msg_handler</b>
+restores the default handler. <b>rtapi_msg_get_handler</b>
+returns the current handler. When the message came from
+<b>rtapi_print</b>, <i>level</i> is RTAPI_MSG_ALL.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_print_msg</b>
+works like rtapi_print but only prints if <i>level</i> is
+less than or equal to the current message level.</p>
+
+<h2>REALTIME CONSIDERATIONS
+<a name="REALTIME CONSIDERATIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_print</b>
+and <b>rtapi_print_msg</b> May be called from user,
+init/cleanup, and realtime code.
+<b>rtapi_get_msg_handler</b> and
+<b>ftapi_set_msg_handler</b> may be called from realtime
+init/cleanup code. A message handler passed to
+<b>rtapi_set_msg_handler</b> may only call functions that
+can be called from realtime code.</p>
+
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">None.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_set_msg_level(3rtapi)</b>,
+<b>rtapi_get_msg_level(3rtapi)</b>, <b>printf(3)</b></p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/rtapi_print.3rtapi.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+</html>

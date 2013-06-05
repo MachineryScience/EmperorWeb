@@ -1,0 +1,342 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/Updating_EMC.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:10:15 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Updating LinuxCNC</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Updating LinuxCNC</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<h2 id="_updating_from_2_4_x_to_2_5_x">1. Updating from 2.4.x to 2.5.x</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>As of version 2.5.0, the name of the project has changed from EMC2
+to LinuxCNC. All programs with "emc" in the name have been changed to
+"linuxcnc" instead. All documentation has been updated.</p></div>
+<div class="paragraph"><p>Additionally, the name of the debian package containing the software
+has changed. Unfortunately this breaks automatic upgrades. To upgrade
+from emc2 2.4.X to linuxcnc 2.5.X, do the following:</p></div>
+<h3 id="_on_ubuntu_lucid_10_04">1.1. On Ubuntu Lucid 10.04</h3><div style="clear:left"></div>
+<div class="paragraph"><p>First you need to tell your computer where to find the new LinuxCNC
+software:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Click on the System menu in the top panel and select
+  Administration-&gt;Software Sources.
+</p>
+</li>
+<li>
+<p>
+Select the Other Software tab.
+</p>
+</li>
+<li>
+<p>
+Select the entry that says
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>http://linuxcnc.org/lucid lucid base emc2.4</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>or</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>http://linuxcnc.org/lucid lucid base emc2.4-sim</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>and click the Edit button.</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+In the Components field, change <tt>emc2.4</tt> to <tt>linuxcnc2.5</tt>, or change
+  <tt>emc2.4-sim</tt> to <tt>linuxcnc2.5-sim</tt>.
+</p>
+</li>
+<li>
+<p>
+Click the OK button.
+</p>
+</li>
+<li>
+<p>
+Back in the Software Sources window, Other Software tab, click the
+  Close button.
+</p>
+</li>
+<li>
+<p>
+It will pop up a window informing you that the information about
+  available software is out-of-date. Click the Reload button.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Now your computer knows about the new software, next we need to tell
+it to install it:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Click on the System menu in the top panel and select
+  Administration-&gt;Synaptic Package Manager
+</p>
+</li>
+<li>
+<p>
+In the Quick Search bar at the top, type <tt>linuxcnc</tt>.
+</p>
+</li>
+<li>
+<p>
+Click the check box to mark the new linuxcnc package for installation.
+</p>
+</li>
+<li>
+<p>
+Click the Apply button, and let your computer install the new
+  package. The old emc 2.4 package will be automatically removed to make
+  room for the new LinuxCNC 2.5 package.
+</p>
+</li>
+</ul></div>
+<h3 id="_on_ubuntu_hardy_8_04">1.2. On Ubuntu Hardy 8.04</h3><div style="clear:left"></div>
+<div class="paragraph"><p>First you need to tell your computer where to find the new LinuxCNC software:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Click on the System menu in the top panel and select Administration-&gt;Synaptic Package Manager
+</p>
+</li>
+<li>
+<p>
+Go to Settings-&gt;Repositories.
+</p>
+</li>
+<li>
+<p>
+Select the "Third-Party Software" tab.
+</p>
+</li>
+<li>
+<p>
+Select the entry that says
+</p>
+<div class="literalblock">
+<div class="content">
+<pre><tt>http://linuxcnc.org/hardy hard emc2.4</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>or</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>http://linuxcnc.org/hardy hardy emc2.4-sim</tt></pre>
+</div></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>and click the Edit button.</tt></pre>
+</div></div>
+</li>
+<li>
+<p>
+In the Components field, change <tt>emc2.4</tt> to <tt>linuxcnc2.5</tt> or <tt>emc2.4-sim</tt> to <tt>linuxcnc2.5-sim</tt>.
+</p>
+</li>
+<li>
+<p>
+Click the OK button.
+</p>
+</li>
+<li>
+<p>
+Back in the Software Sources window, click the Close button.
+</p>
+</li>
+<li>
+<p>
+Back in the Synaptic Package Manager window, click the Reload button.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Now your computer knows about the new software, next we need to tell it to install it:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+In the Synaptic Package Manager, click the Search button.
+</p>
+</li>
+<li>
+<p>
+In the Find dialog window that pops up, type <tt>linuxcnc</tt> and click the
+  Search button.
+</p>
+</li>
+<li>
+<p>
+Click the check-box to mark the linuxcnc package for installation.
+</p>
+</li>
+<li>
+<p>
+Click the Apply button, and let your computer install the new
+  package. The old emc 2.4 package will be automatically removed to make
+  room for the new LinuxCNC 2.5 package.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_config_changes">2. Config changes</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The user configs moved from $HOME/emc2 to $HOME/linuxcnc, so you will
+need to rename your directory, or move your files to the new place.</p></div>
+<div class="paragraph"><p>The hostmot2 watchdog in LinuxCNC 2.5 does not start running until the
+HAL threads start running. This means it now tolerates a timeout on the
+order of the servo thread period, instead of requiring a timeout that&#8217;s
+on the order of the time between loading the driver and starting the HAL
+threads. This typically means a few milliseconds (a few times the servo
+thread period) instead of many hundreds of milliseconds. The default
+has been lowered from 1 second to 5 milliseconds. You generally don&#8217;t
+need to set the hm2 watchdog timeout any more, unless you&#8217;ve changed
+your servo thread period.</p></div>
+<div class="paragraph"><p>The old driver for the Mesa 5i20, hal_m5i20, has been removed after being
+deprecated in favor of hostmot2 since early 2009 (version 2.3.) If you
+are still using this driver, you will need to build a new configuration
+using the hostmot2 driver. Pncconf may help you do this, and we have
+some sample configs (hm2-servo and hm2-stepper) that act as examples.</p></div>
+</div>
+<h2 id="_upgrading_from_2_3_x_to_2_4_x">3. Upgrading from 2.3.x to 2.4.x</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The following instructions only apply to Ubuntu 8.04 "Hardy Heron".
+LinuxCNC 2.4 is not available for older releases of Ubuntu.</p></div>
+<div class="paragraph"><p>Because there are several minor incompatibilities between 2.3.5
+and 2.4.x, your existing install will not automatically be
+updated to 2.4.x. If you want to run 2.4.x, change to the LinuxCNC-2.4
+repository by following these instructions:</p></div>
+<div class="paragraph"><p>run System/Administration/Synaptic Package Manager</p></div>
+<div class="paragraph"><p>go to Settings/Repositories</p></div>
+<div class="paragraph"><p>In the list of Third-Party software there should be at least two
+lines for linuxcnc.org.</p></div>
+<div class="paragraph"><p>For each of them:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Select the line and click Edit
+</p>
+</li>
+<li>
+<p>
+On the Components line, change emc2.3 to emc2.4
+</p>
+</li>
+<li>
+<p>
+Click OK
+</p>
+</li>
+<li>
+<p>
+Close the <em>Software Preferences</em> window
+</p>
+</li>
+<li>
+<p>
+Click <em>Reload</em> as instructed
+</p>
+</li>
+<li>
+<p>
+Click <em>Mark All Upgrades</em>
+</p>
+</li>
+</ul></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="sidebar-title">Mesa card and hostmot2 users:</div>
+<div class="paragraph"><p>If you use a mesa card, find the proper hostmot2-firmware package
+for your card and mark it for installation. Hint: do a search for
+<em>hostmot2-firmware</em> in the synaptic package manager.</p></div>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Click <em>Apply</em>
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_changes_between_2_3_x_and_2_4_x">4. Changes between 2.3.x and 2.4.x</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Once you have done the upgrade, update any custom configurations
+by following these instructions:</p></div>
+<h3 id="_emc_nml_changes_2_3_x_to_2_4_x">4.1. emc.nml changes (2.3.x to 2.4.x)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>For configurations that have not customized emc.nml,
+remove or comment out the inifile line NML_FILE = emc.nml.
+This will cause the most up to date version of emc.nml to be used.</p></div>
+<div class="paragraph"><p>For configurations that have customized emc.nml,
+a change similar to this one is required.</p></div>
+<div class="paragraph"><p>Failure to do this can cause an error like this one:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>libnml/buffer/physmem.cc 143: PHYSMEM_HANDLE:
+Can't write 10748 bytes at offset 60 from buffer of size 10208.</tt></pre>
+</div></div>
+<h3 id="_tool_table_changes_2_3_x_to_2_4_x">4.2. tool table changes (2.3.x to 2.4.x)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The format of the tool table has been changed incompatibly.
+The documentation shows the new format.
+The tool table will automatically be converted to the new format.</p></div>
+<h3 id="_hostmot2_firmware_images_2_3_x_to_2_4_x">4.3. hostmot2 firmware images (2.3.x to 2.4.x)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The hostmot2 firmware images are now a separate package. You can:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Continue using an already-installed <em>emc2-firmware-mesa-*</em> 2.3.x package
+</p>
+</li>
+<li>
+<p>
+Install the new packages from the synaptic package manager.
+   The new packages are named <em>hostmot2-firmware-*</em>
+</p>
+</li>
+<li>
+<p>
+Download the firmware images as tar files from
+   <a href="http://emergent.unpy.net/01267622561">http://emergent.unpy.net/01267622561</a> and install them manually
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-03-31 13:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/Updating_EMC.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:10:15 GMT -->
+</html>

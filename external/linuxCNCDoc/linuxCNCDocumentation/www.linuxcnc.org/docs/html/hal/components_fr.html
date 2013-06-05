@@ -1,0 +1,922 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/components_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:23 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Les composants de HAL</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Les composants de HAL</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:Composants-de-HAL"></a> </p></div>
+</div>
+</div>
+<h2 id="_composants_de_commandes_et_composants_de_l_8217_espace_utilisateur">1. Composants de commandes et composants de l&#8217;espace utilisateur</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Certaines de ces descriptions sont plus approfondies dans leurs pages man.
+Certaines y auront une description exhaustive, d&#8217;autres, juste une description
+limitée. Chaque composant a sa man page. La liste ci-dessous, montre les
+composants existants, avec le nom et le N° de section de leur page man.
+Par exemple dans une console, tapez <em>man axis</em> pour accéder aux informations de
+la man page d&#8217;Axis. Ou peut être <em>man 1 axis</em>, si le système exige le N° de
+section des man pages.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>axis</em> - L&#8217;interface graphique AXIS pour LinuxCNC (The Enhanced Machine Controller).
+</p>
+</li>
+<li>
+<p>
+<em>axis-remote</em> - Interface de télécommande d&#8217;AXIS.
+</p>
+</li>
+<li>
+<p>
+<em>comp</em> - Crée, compile et installe des composants de HAL.
+</p>
+</li>
+<li>
+<p>
+<em>linuxcnc</em> - LINUXCNC (The Enhanced Machine Controller).
+</p>
+</li>
+<li>
+<p>
+<em>gladevcp</em> - Panneau de contrôle virtuel pour LinuxCNC, repose sur Glade, Gtk et
+les widgets HAL.
+</p>
+</li>
+<li>
+<p>
+<em>gs2</em> - composant de l&#8217;espace utilisateur de HAL, pour le variateur de
+fréquence GS2 de la société <em>Automation Direct</em>.
+</p>
+</li>
+<li>
+<p>
+<em>halcmd</em> - Manipulation de HAL, depuis la ligne de commandes.
+</p>
+</li>
+<li>
+<p>
+<em>hal_input</em> - Contrôler des pins d&#8217;entrée de HAL avec n&#8217;importe quelle
+matériel supporté par Linux, y compris les matériels USB HID.
+</p>
+</li>
+<li>
+<p>
+<em>halmeter</em> - Observer les pins de HAL, ses signaux et ses paramètres.
+</p>
+</li>
+<li>
+<p>
+<em>halrun</em> - Manipulation de  HAL, depuis la ligne de commandes.
+</p>
+</li>
+<li>
+<p>
+<em>halsampler</em> - Échantillonner des données temps réel depuis HAL.
+</p>
+</li>
+<li>
+<p>
+<em>halstreamer</em> - Créer un flux de données temps réel dans HAL depuis un fichier.
+</p>
+</li>
+<li>
+<p>
+<em>halui</em> - Observer des pins de HAL et commander LinuxCNC au travers d&#8217;NML.
+</p>
+</li>
+<li>
+<p>
+<em>io</em> - Accepte les commandes NML I/O, interagi avec HAL dans l&#8217;espace
+utilisateur.
+</p>
+</li>
+<li>
+<p>
+<em>iocontrol</em> - Accepte les commandes NML I/O, interagi avec HAL dans l&#8217;espace
+utilisateur.
+</p>
+</li>
+<li>
+<p>
+<em>pyvcp</em> - Panneau de Contrôle Virtuel pour LinuxCNC (Python Virtual Control Panel).
+</p>
+</li>
+<li>
+<p>
+<em>shuttlexpress</em> - Contrôle des pins de HAL avec la manette ShuttleXpress, de
+la société <em>Contour Design</em>.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_composants_temps_r_el_et_modules_du_noyau">2. Composants temps réel et modules du noyau</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Certaines de ces descriptions sont plus approfondies dans leur man page.
+Certaines auront juste une description limitée. Chaque composant
+a sa man page. A partir de cette liste vous connaîtrez quels composants
+existent avec le nom et le N° de leur man page permettant d&#8217;avoir plus
+de détails.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">Si le composant requière un thread avec flottant, c&#8217;est normalement le plus
+lent, soit  <em>servo-thread</em>.</td>
+</tr></table>
+</div>
+<h3 id="_composants_du_coeur_de_linuxcnc_a_id_sec_realtime_components_coeur_a">2.1. Composants du coeur de LinuxCNC<a id="sec:Realtime-Components-coeur"></a></h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>motion</em> - Accepte les commandes de mouvement NML, interagi en temps
+réel avec HAL.
+</p>
+</li>
+<li>
+<p>
+<em>axis</em> - Commandes de mouvement NML acceptées, intéragi en temps réel
+avec HAL
+</p>
+</li>
+<li>
+<p>
+<em>classicladder</em> - Automate temps réel programmable en
+logique Ladder.
+</p>
+</li>
+<li>
+<p>
+<em>gladevcp</em> - Affiche un panneaux de contrôle virtuel construit
+avec GladeVCP.
+</p>
+</li>
+<li>
+<p>
+<em>threads</em> - Crée des threads de HAL temps réel.
+</p>
+</li>
+</ul></div>
+<h3 id="_composants_binaires_et_logiques_a_id_sec_realtime_components_logic_a">2.2. Composants binaires et logiques<a id="sec:Realtime-Components-logic"></a></h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>and2</em> - 
+Porte AND (ET) à deux entrées.
+</p>
+</li>
+<li>
+<p>
+<em>not</em> - Inverseur.
+</p>
+</li>
+<li>
+<p>
+<em>or2</em> - Porte OR (OU) à deux entrées.
+</p>
+</li>
+<li>
+<p>
+<em>xor2</em> - Porte XOR (OU exclusif) à deux entrées.
+</p>
+</li>
+<li>
+<p>
+<em>debounce</em> - Filtre une entrée digitale bruitée (typiquement
+antirebond).
+</p>
+</li>
+<li>
+<p>
+<em>edge</em> _ Détecteur de front.
+</p>
+</li>
+<li>
+<p>
+<em>flipflop</em> - Bascule D.
+</p>
+</li>
+<li>
+<p>
+<em>oneshot</em> - Générateur d&#8217;impulsion monostable. Crée sur sa sortie
+une impulsion de longueur variable quand son entrée change d'état.
+</p>
+</li>
+<li>
+<p>
+<em>logic</em> - Composant expérimental de logique générale.
+</p>
+</li>
+<li>
+<p>
+<em>lut5</em> - Fonction logique arbitraire à cinq entrées, basée sur une
+table de correspondance.
+</p>
+</li>
+<li>
+<p>
+<em>match8</em> - Détecteur de coïncidence binaire sur 8 bits.
+</p>
+</li>
+<li>
+<p>
+<em>select8</em> - Détecteur de coïncidence binaire sur 8 bits.
+</p>
+</li>
+</ul></div>
+<h3 id="_composants_arithm_tiques_et_flottants_a_id_sec_realtime_components_flottant_a">2.3. Composants arithmétiques et flottants<a id="sec:Realtime-Components-flottant"></a></h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>abs</em> - <a id="sub:abs"></a> Calcule la valeur absolue et le signe d&#8217;un signal
+d&#8217;entrée.
+</p>
+</li>
+<li>
+<p>
+<em>blend</em> - Provoque une interpolation linéaire entre deux valeurs
+</p>
+</li>
+<li>
+<p>
+<em>comp</em> - Comparateur à deux entrées avec hystérésis.
+</p>
+</li>
+<li>
+<p>
+<em>constant</em> - Utilise un paramètre pour positionner une pin.
+</p>
+</li>
+<li>
+<p>
+<em>sum2</em> - Somme de deux entrées (chacune avec son gain) et d&#8217;un offset.
+</p>
+</li>
+<li>
+<p>
+<em>counter</em> - Comptage d&#8217;impulsions d&#8217;entrée (obsolète).
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Utiliser le composant <em>encoder</em> avec <em>&#8230; counter-mode = TRUE</em>.
+Voir la section <a href="rtcomps_fr.html#sec:Codeur">codeur</a>.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>updown</em> - Compteur/décompteur avec limites optionnelles et bouclage
+en cas de dépassement.
+</p>
+</li>
+<li>
+<p>
+<em>ddt</em> - Calcule la dérivée de la fonction d&#8217;entrée.
+</p>
+</li>
+<li>
+<p>
+<em>deadzone</em> - Retourne le centre si il est dans le seuil.
+</p>
+</li>
+<li>
+<p>
+<em>hypot</em> - Calculateur d&#8217;hypoténuse à trois entrées (distance
+Euclidienne).
+</p>
+</li>
+<li>
+<p>
+<em>mult2</em> - Le produit de deux entrées.
+</p>
+</li>
+<li>
+<p>
+<em>mux16</em> - Sélection d&#8217;une valeur d&#8217;entrée sur seize.
+</p>
+</li>
+<li>
+<p>
+<em>mux2</em> - Sélection d&#8217;une valeur d&#8217;entrée sur deux.
+</p>
+</li>
+<li>
+<p>
+<em>mux4</em> - Sélection d&#8217;une valeur d&#8217;entrée sur quatre.
+</p>
+</li>
+<li>
+<p>
+<em>mux8</em> - Sélection d&#8217;une valeur d&#8217;entrée sur huit.
+</p>
+</li>
+<li>
+<p>
+<em>near</em> - Détermine si deux valeurs sont à peu près égales.
+</p>
+</li>
+<li>
+<p>
+<em>offset</em> - Ajoute un décalage à une entrée et la soustrait à la
+valeur de retour.
+</p>
+</li>
+<li>
+<p>
+<em>integ</em> - Intégrateur.
+</p>
+</li>
+<li>
+<p>
+<em>invert</em> - Calcule l&#8217;inverse du signal d&#8217;entrée.
+</p>
+</li>
+<li>
+<p>
+<em>wcomp</em> - Comparateur à fenêtre.
+</p>
+</li>
+<li>
+<p>
+<em>weighted_sum</em> - Converti un groupe de bits en un entier.
+</p>
+</li>
+<li>
+<p>
+<em>biquad</em> - Filtre biquad IIR
+</p>
+</li>
+<li>
+<p>
+<em>lowpass</em> - Filtre passe-bas.
+</p>
+</li>
+<li>
+<p>
+<em>limit1</em> - Limite le signal de sortie pour qu&#8217;il soit entre min et max.
+<span class="footnote"><br />[Lorsque l&#8217;entrée est une position, cela signifie que la <em>position</em> est
+limitée.]<br /></span>
+</p>
+</li>
+<li>
+<p>
+<em>limit2</em> - Limite le signal de sortie pour qu&#8217;il soit entre min et max.
+Limite sa vitesse de montée à moins de MaxV par seconde. <span class="footnote"><br />[Lorsque
+l&#8217;entrée est une position, cela signifie que la <em>position</em> et la
+<em>vitesse</em> sont limitées.]<br /></span>
+</p>
+</li>
+<li>
+<p>
+<em>limit3</em> - Limite le signal de sortie pour qu&#8217;il soit entre min et max.
+Limite sa vitesse de montée à moins de MaxV par seconde.
+Limite sa dérivée seconde à moins de MaxA par seconde carré. <span class="footnote"><br />[Lorsque
+l&#8217;entrée est une position, cela signifie que la <em>position</em>, la <em>vitesse</em> et
+l'<em>accélération</em> sont limitées.]<br /></span>
+</p>
+</li>
+<li>
+<p>
+<em>maj3</em> - Calcule l&#8217;entrée majoritaire parmi 3.
+</p>
+</li>
+<li>
+<p>
+<em>scale</em> - Applique une échelle et un décalage à son entrée.
+</p>
+</li>
+</ul></div>
+<h3 id="_conversions_de_type_a_id_sec_realtime_components_conversiontype_a">2.4. Conversions de type<a id="sec:Realtime-Components-conversiontype"></a></h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>conv_bit_s32</em> - Converti une valeur de bit vers s32 (entier
+32 bits signé).
+</p>
+</li>
+<li>
+<p>
+<em>conv_bit_u32</em> - Converti une valeur de bit vers u32  (entier
+32 bit non signé).
+</p>
+</li>
+<li>
+<p>
+<em>conv_float_s32</em> - Converti la valeur d&#8217;un flottant vers s32.
+</p>
+</li>
+<li>
+<p>
+<em>conv_float_u32</em> - Converti la valeur d&#8217;un flottant vers u32.
+</p>
+</li>
+<li>
+<p>
+<em>conv_s32_bit</em> - Converti une valeur de s32 en bit.
+</p>
+</li>
+<li>
+<p>
+<em>conv_s32_float</em> - Converti une valeur de s32 en flottant.
+</p>
+</li>
+<li>
+<p>
+<em>conv_s32_u32</em> - Converti une valeur de s32 en u32.
+</p>
+</li>
+<li>
+<p>
+<em>conv_u32_bit</em> - Converti une valeur de u32 en bit.
+</p>
+</li>
+<li>
+<p>
+<em>conv_u32_float</em> - Converti une valeur de u32 en flottant.
+</p>
+</li>
+<li>
+<p>
+<em>conv_u32_s32</em> - Converti une valeur de u32 en s32.
+</p>
+</li>
+</ul></div>
+<h3 id="_pilotes_de_mat_riel_a_id_sec_realtime_components_pilotes_a">2.5. Pilotes de matériel<a id="sec:Realtime-Components-pilotes"></a></h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>hm2_7i43</em> - Pilote HAL pour les cartes <em>Mesa Electronics</em>
+7i43 EPP, toutes les cartes avec HostMot2.
+</p>
+</li>
+<li>
+<p>
+<em>hm2_pci</em> - Pilote HAL pour les cartes <em>Mesa Electronics</em>
+5i20, 5i22, 5i23, 4i65 et 4i68, toutes les cartes avec micro logiciel HostMot2.
+</p>
+</li>
+<li>
+<p>
+<em>hostmot2</em> - Pilote HAL pour micro logiciel <em>Mesa Electronics</em>
+HostMot2.
+</p>
+</li>
+<li>
+<p>
+<em>mesa_7i65</em> - Support pour la carte huit axes Mesa 7i65 pour servomoteurs.
+</p>
+</li>
+<li>
+<p>
+<em>pluto_servo</em> - Pilote matériel et micro programme pour la
+carte <em>Pluto-P parallel-port FPGA</em>, utilisation avec servomoteurs.
+</p>
+</li>
+<li>
+<p>
+<em>pluto_step</em> - Pilote matériel et micro programme pour la
+carte <em>Pluto-P parallel-port FPGA</em>, utilisation avec moteurs pas à pas.
+</p>
+</li>
+<li>
+<p>
+<em>thc</em> - Contrôle de la hauteur de torche, en utilisant une carte Mesa THC.
+</p>
+</li>
+<li>
+<p>
+<em>serport</em> - Pilote matériel pour les entrées/sorties
+numériques de port série avec circuits 8250 et 16550.
+</p>
+</li>
+</ul></div>
+<h3 id="_composants_cin_matiques_a_id_sec_realtime_components_cinematiques_a">2.6. Composants cinématiques<a id="sec:Realtime-Components-cinematiques"></a></h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>kins</em> - Définition des cinématiques pour linuxcnc.
+</p>
+</li>
+<li>
+<p>
+<em>gantrykins</em> - Module de cinématique pour un seul axe à
+articulations multiples.
+</p>
+</li>
+<li>
+<p>
+<em>genhexkins</em> - Donne six degrés de liberté en position et en
+orientation (XYZABC). L&#8217;emplacement des moteurs est défini au moment de la
+compilation.
+</p>
+</li>
+<li>
+<p>
+<em>genserkins</em> - Cinématique capable de modéliser une bras
+manipulateur avec un maximum de 6 articulations angulaires.
+</p>
+</li>
+<li>
+<p>
+<em>maxkins</em> - 
+Cinématique d&#8217;une fraiseuse 5 axes nommée <em>max</em>, avec tête inclinable (axe B)
+​et un axe rotatif horizontal monté sur la table (axe C).
+Fourni les mouvements UVW dans le système de coordonnées système basculé.
+Le fichier source, maxkins.c, peut être un point de départ utile
+pour d&#8217;autres systèmes 5 axes.
+</p>
+</li>
+<li>
+<p>
+<em>tripodkins</em> - Les articulations représentent la distance du point
+contrôlé à partir de trois emplacements prédéfinis (les moteurs), ce qui donne
+trois degrés de liberté en position (XYZ).
+</p>
+</li>
+<li>
+<p>
+<em>trivkins</em> - Il y a une correspondance 1:1 entre les
+articulations et les axes. La plupart des fraiseuses standard et des tours
+utilisent ce module de cinématique triviale.
+</p>
+</li>
+<li>
+<p>
+<em>pumakins</em> - Cinématique pour robot style PUMA.
+</p>
+</li>
+<li>
+<p>
+<em>rotatekins</em> - Les axes X et Y sont pivotés de 45 degrés par
+rapport aux articulations 0 et 1.
+</p>
+</li>
+<li>
+<p>
+<em>scarakins</em> - Cinématique des robots de type SCARA.
+</p>
+</li>
+</ul></div>
+<h3 id="_composants_de_contr_le_moteur_a_id_sec_realtime_components_moteur_a">2.7. Composants de contrôle moteur<a id="sec:Realtime-Components-moteur"></a></h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>at_pid</em> - Contrôleur Proportionnelle/Intégrale/dérivée avec réglage
+automatique.
+</p>
+</li>
+<li>
+<p>
+<em>pid</em> - Contrôleur Proportionnelle/Intégrale/dérivée.
+</p>
+</li>
+<li>
+<p>
+<em>pwmgen</em> - Générateur logiciel de PWM/PDM, voir la section
+<a href="rtcomps_fr.html#sec:PWMgen">PWMgen</a>
+</p>
+</li>
+<li>
+<p>
+<em>encoder</em> - Comptage logiciel de signaux de codeur en quadrature,
+voir la section <a href="rtcomps_fr.html#sec:Codeur">codeur</a>
+</p>
+</li>
+<li>
+<p>
+<em>stepgen</em> - Générateur d&#8217;impulsions de pas logiciel,
+voir la section <a href="rtcomps_fr.html#sec:Stepgen">stepgen</a>
+</p>
+</li>
+<li>
+<p>
+<em>freqgen</em> - Générateur logiciel d&#8217;impulsions de pas.
+</p>
+</li>
+</ul></div>
+<h3 id="_bldc_and_3_phase_motor_control_a_id_sec_realtime_components_bldc_a">2.8. BLDC and 3-phase motor control<a id="sec:Realtime-Components-bldc"></a></h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>bldc_hall3</em> - Commutateur bipolaire trapézoïdal à 3 directions
+pour moteur sans balais (BLDC) avec capteurs de Hall.
+</p>
+</li>
+<li>
+<p>
+<em>clarke2</em> - Transformation de Clarke, version à deux entrées.
+</p>
+</li>
+<li>
+<p>
+<em>clarke3</em> - Transformation de Clarke, à 3 entrées vers cartésien.
+</p>
+</li>
+<li>
+<p>
+<em>clarkeinv</em> - Transformation de Clarke inverse.
+</p>
+</li>
+</ul></div>
+<h3 id="_autres_composants_a_id_sec_realtime_components_autres_a">2.9. Autres composants<a id="sec:Realtime-Components-autres"></a></h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>charge_pump</em> - Crée un signal carré destiné à l&#8217;entrée
+<em>pompe de charge</em> de certaines cartes de contrôle. Le composant <em>charg_pump</em> doit
+être ajouté à <em>base</em> <em>thread</em>. Quand il est activé, sa sortie est haute pour une
+période puis basse pour une autre période. Pour calculer la fréquence de sortie
+faire 1/(durée de la période en secondes * 2) = fréquence en Hz. Par exemple, si
+vous avez une période de base de 100000ns soit 0.0001 seconde, la formule devient:
+1/(0.0001 * 2) = 5000 Hz ou 5kHz.
+</p>
+</li>
+<li>
+<p>
+<em>encoder_ratio</em> - Un engrenage électronique pour synchroniser
+deux axes.
+</p>
+</li>
+<li>
+<p>
+<em>estop_latch</em> - Verrou d&#8217;Arrêt d&#8217;Urgence.
+</p>
+</li>
+<li>
+<p>
+<em>feedcomp</em> - Multiplie l&#8217;entrée par le ratio vitesse courante /
+vitesse d&#8217;avance travail.
+</p>
+</li>
+<li>
+<p>
+<em>gearchange</em> - Sélectionne une grandeur de vitesse parmi deux.
+</p>
+</li>
+<li>
+<p>
+<em>ilowpass</em> - Filtre passe-bas avec entrées et sorties au format
+entier.
+</p>
+<div class="paragraph"><p>Sur une machine ayant une grande accélération, un petit jog peut s&#8217;apparenter à
+une avance par pas. En intercalant un filtre <em>ilowpass</em> entre la sortie de
+comptage du codeur de la manivelle et l&#8217;entrée <em>jog-counts</em> de l&#8217;axe, le
+mouvement se trouve lissé.</p></div>
+<div class="paragraph"><p>Choisir prudemment l'échelle, de sorte que durant une simple session, elle ne
+dépasse pas environ 2e9/scale impulsions visibles sur le MPG. Choisir le gain
+selon le niveau de douceur désiré. Diviser les valeurs de axis.N.jog-scale par
+l'échelle.</p></div>
+</li>
+<li>
+<p>
+<em>joyhandle</em> - Définit les mouvements d&#8217;un joypad non linéaire,
+zones mortes et échelles.
+</p>
+</li>
+<li>
+<p>
+<em>knob2float</em> - Convertisseur de comptage (probablement d&#8217;un
+codeur) vers une valeur en virgule flottante.
+</p>
+</li>
+<li>
+<p>
+<em>minmax</em> - Suiveur de valeurs minimum et maximum de l&#8217;entrée vers les
+sorties.
+</p>
+</li>
+<li>
+<p>
+<em>sample_hold</em> - Échantillonneur bloqueur.
+</p>
+</li>
+<li>
+<p>
+<em>sampler</em> - Échantillonneur de données de HAL en temps réel.
+</p>
+</li>
+<li>
+<p>
+<em>siggen</em> - Générateur de signal, voir la section <a href="rtcomps_fr.html#sec:Siggen">siggen</a>
+</p>
+</li>
+<li>
+<p>
+<em>sim_encoder</em> - Codeur en quadrature simulé,
+voir la section <a href="rtcomps_fr.html#sec:Codeur-simul">codeur simulé</a>
+</p>
+</li>
+<li>
+<p>
+<em>sphereprobe</em> - Sonde hémisphérique.
+</p>
+</li>
+<li>
+<p>
+<em>steptest</em> - Utilisé par Stepconf pour permettre de tester les
+valeurs d&#8217;accélération et de vitesse d&#8217;un axe.
+</p>
+</li>
+<li>
+<p>
+<em>streamer</em> - Flux temps réel depuis un fichier vers HAL.
+</p>
+</li>
+<li>
+<p>
+<em>supply</em> - Set output pins with values from parameters (obsolète).
+</p>
+</li>
+<li>
+<p>
+<em>threadtest</em> - Composant de HAL pour tester le comportement
+des threads.
+</p>
+</li>
+<li>
+<p>
+<em>time</em> - Compteur de temps écoulé HH:MM:SS avec entrée <em>actif</em>.
+</p>
+</li>
+<li>
+<p>
+<em>timedelay</em> - L'équivalent d&#8217;un relais temporisé.
+</p>
+</li>
+<li>
+<p>
+<em>timedelta</em> - Composant pour mesurer le comportement temporel
+des threads.
+</p>
+</li>
+<li>
+<p>
+<em>toggle2nist</em> - Bouton à bascule pour logique NIST.
+</p>
+</li>
+<li>
+<p>
+<em>toggle</em> - Bouton à bascule NO/NF à partir d&#8217;un bouton poussoir
+momentané.
+</p>
+</li>
+<li>
+<p>
+<em>tristate_bit</em> - Place un signal sur une pin d&#8217;I/O seulement
+quand elle est validée, similaire à un tampon trois états en électronique.
+</p>
+</li>
+<li>
+<p>
+<em>tristate_float</em> - Place un signal sur une pin d&#8217;I/O seulement
+quand elle est validée, similaire à un tampon trois états en électronique.
+</p>
+</li>
+<li>
+<p>
+<em>watchdog</em> - Moniteur de fréquence (chien de garde) sur 1 à 32
+entrées.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_appels_l_8217_api_de_hal_liste_de_la_section_3_des_man_pages">3. Appels à l&#8217;API de HAL (liste de la section 3 des man pages)</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre><tt>hal_add_funct_to_thread.3hal
+hal_bit_t.3hal
+hal_create_thread.3hal
+hal_del_funct_from_thread.3hal
+hal_exit.3hal
+hal_export_funct.3hal
+hal_float_t.3hal
+hal_get_lock.3hal
+hal_init.3hal
+hal_link.3hal
+hal_malloc.3hal
+hal_param_bit_new.3hal
+hal_param_bit_newf.3hal
+hal_param_float_new.3hal
+hal_param_float_newf.3hal
+hal_param_new.3hal
+hal_param_s32_new.3hal
+hal_param_s32_newf.3hal
+hal_param_u32_new.3hal
+hal_param_u32_newf.3hal
+hal_parport.3hal
+hal_pin_bit_new.3hal
+hal_pin_bit_newf.3hal
+hal_pin_float_new.3hal
+hal_pin_float_newf.3hal
+hal_pin_new.3hal
+hal_pin_s32_new.3hal
+hal_pin_s32_newf.3hal
+hal_pin_u32_new.3hal
+hal_pin_u32_newf.3hal
+hal_ready.3hal
+hal_s32_t.3hal
+hal_set_constructor.3hal
+hal_set_lock.3hal
+hal_signal_delete.3hal
+hal_signal_new.3hal
+hal_start_threads.3hal
+hal_type_t.3hal
+hal_u32_t.3hal
+hal_unlink.3hal
+intro.3hal
+undocumented.3hal</tt></pre>
+</div></div>
+</div>
+<h2 id="_appels_rtapi">4. Appels à RTAPI</h2>
+<div class="sectionbody">
+<div class="literalblock">
+<div class="content">
+<pre><tt>EXPORT_FUNCTION.3rtapi
+MODULE_AUTHOR.3rtapi
+MODULE_DESCRIPTION.3rtapi
+MODULE_LICENSE.3rtapi
+RTAPI_MP_ARRAY_INT.3rtapi
+RTAPI_MP_ARRAY_LONG.3rtapi
+RTAPI_MP_ARRAY_STRING.3rtapi
+RTAPI_MP_INT.3rtapi
+RTAPI_MP_LONG.3rtapi
+RTAPI_MP_STRING.3rtapi
+intro.3rtapi
+rtapi_app_exit.3rtapi
+rtapi_app_main.3rtapi
+rtapi_clock_set_period.3rtapi
+rtapi_delay.3rtapi
+rtapi_delay_max.3rtapi
+rtapi_exit.3rtapi
+rtapi_get_clocks.3rtapi
+rtapi_get_msg_level.3rtapi
+rtapi_get_time.3rtapi
+rtapi_inb.3rtapi
+rtapi_init.3rtapi
+rtapi_module_param.3rtapi
+RTAPI_MP_ARRAY_INT.3rtapi
+RTAPI_MP_ARRAY_LONG.3rtapi
+RTAPI_MP_ARRAY_STRING.3rtapi
+RTAPI_MP_INT.3rtapi
+RTAPI_MP_LONG.3rtapi
+RTAPI_MP_STRING.3rtapi
+rtapi_mutex.3rtapi
+rtapi_outb.3rtapi
+rtapi_print.3rtap
+rtapi_prio.3rtapi
+rtapi_prio_highest.3rtapi
+rtapi_prio_lowest.3rtapi
+rtapi_prio_next_higher.3rtapi
+rtapi_prio_next_lower.3rtapi
+rtapi_region.3rtapi
+rtapi_release_region.3rtapi
+rtapi_request_region.3rtapi
+rtapi_set_msg_level.3rtapi
+rtapi_shmem.3rtapi
+rtapi_shmem_delete.3rtapi
+rtapi_shmem_getptr.3rtapi
+rtapi_shmem_new.3rtapi
+rtapi_snprintf.3rtapi
+rtapi_task_delete.3rtpi
+rtapi_task_new.3rtapi
+rtapi_task_pause.3rtapi
+rtapi_task_resume.3rtapi
+rtapi_task_start.3rtapi
+rtapi_task_wait.3rtapi</tt></pre>
+</div></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-12-07 14:36:09 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/components_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:23 GMT -->
+</html>

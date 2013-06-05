@@ -1,0 +1,120 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gcode/other-code_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:59 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Les autres codes</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Les autres codes</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:Les-autres-codes"></a> </p></div>
+</div>
+</div>
+<h2 id="sec:F-Vitesse">1. F: Réglage de la vitesse d&#8217;avance travail</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Pour régler la vitesse d&#8217;avance, programmer <em>F-</em>.
+L&#8217;application de la vitesse est telle que décrite dans l&#8217;aperçu global d&#8217;une
+machine numérique, section <a href="machining_center_fr.html#sub:Vitesse-d-avance">vitesse d&#8217;avance</a>, à moins
+que le mode vitesse inverse du temps ne soit activé, dans ce cas, la vitesse est
+telle que décrite dans la section sur le choix des modes de
+<a href="#sec:G93-G94-G95-Set">vitesse</a>.</p></div>
+</div>
+<h2 id="sec:S-Broche">2. S: Réglage de la vitesse de rotation de la broche</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Pour régler la vitesse en tours par minute (tr/mn) de la broche, programmer <em>S-</em>.
+La broche va tourner à cette vitesse quand elle sera programmée pour tourner.
+Il est permis de programmer un mot <em>S</em> que la broche tourne ou non.
+Si le potentiomètre de correction de vitesse broche est
+autorisé et n&#8217;est pas positionné sur 100%,
+la vitesse de broche sera différente de celle programmée.
+Il est permis de programmer <em>S0</em>, la broche ne tournera pas.</p></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+La valeur de S est négative.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Comme décrit dans la section <a href="gcode_fr.html#sec:G84-Taraudage-a-droite">sur le cycle de taraudage à droite</a>, si un cycle de perçage <em>G84</em> (taraudage) est actif et que
+les potentiomètres de vitesse et d&#8217;avance sont autorisés, celui qui a le
+réglage le plus bas sera utilisé. La vitesse de rotation et d&#8217;avance resterons
+synchronisées. Dans ce cas, la vitesse peut différer de celle programmée, même
+si le potentiomètre de correction de vitesse travail est sur 100%.</p></div>
+</div>
+<h2 id="sec:T-Choix-Outil">3. T: Choix de l&#8217;outil</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Pour sélectionner un outil, programmer <em>T-</em>, où la valeur de <em>T</em>
+correspond au numéro de la poche d&#8217;outil dans le carrousel. L&#8217;outil ne sera
+appelé et changé que quand un <em>M6</em> sera programmé voir la section
+<a href="m-code_fr.html#sec:M6-Appel-Outil">sur l&#8217;appel d&#8217;outil</a>. Le mot <em>T</em> peut apparaitre sur la
+même ligne que le <em>M6</em> ou sur une ligne précédente. Il est permis, mais
+normalement inutile, qu&#8217;un mot T apparaisse à plus de deux lignes avant,
+sans changement d&#8217;outil. Le carrousel peut bouger, seulement le plus récent mot
+T ne prendra effet qu&#8217;au prochain changement d&#8217;outil. Il est permis de
+programmer <em>T0</em>, aucun outil ne sera sélectionné. C&#8217;est utile pour
+avoir la broche vide.</p></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Un valeur négative de T est utilisée.
+</p>
+</li>
+<li>
+<p>
+Une valeur de T supérieure au nombre de poches d&#8217;outils dans le
+   carrousel est utilisée.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Sur certaines machines, le carrousel se déplace lorsque le mot T est
+programmé, avec l&#8217;usinage en cours. Sur ces machines, programmer <em>Tn</em>,
+plusieurs lignes de texte avant le changement d&#8217;outil permet de gagner
+du temps. Une pratique de programmation courante pour ces types de
+machines, consiste à placer le mot T pour le prochain outil sur la
+ligne suivant le changement d&#8217;outil. Cela laisse au carrousel tout le
+temps pour se positionner.</p></div>
+<div class="paragraph"><p>Les mouvements rapides qui suivent un T&lt;n&gt; n&#8217;apparaissent pas sur l'écran de
+parcours d&#8217;outil d&#8217;Axis, et ce jusqu&#8217;au prochain mouvement en vitesse travail
+Cela se remarque surtout sur les machines ayant de longues distances de
+déplacement lors du changement d&#8217;outil, comme les tours.
+Cela peut prêter à confusion au début.
+Pour contourner ce dysfonctionnement pour l&#8217;outil courant, ajouter un G1 sans
+mouvement juste après le T&lt;n&gt;.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-01-26 09:36:07 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gcode/other-code_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:59 GMT -->
+</html>

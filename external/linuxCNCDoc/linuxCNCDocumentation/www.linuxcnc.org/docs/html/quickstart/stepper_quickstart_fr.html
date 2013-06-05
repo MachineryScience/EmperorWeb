@@ -1,0 +1,436 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/quickstart/stepper_quickstart_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:16 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Configuration rapide pour moteurs pas à pas</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Configuration rapide pour moteurs pas à pas</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:stepper-quickstart"></a> </p></div>
+<div class="paragraph"><p>Cette section suppose qu&#8217;une installation du logiciel à partir du CD Live a été
+faite. Après cette installation et avant de continuer, il est
+recommandé de connecter le PC sur Internet pour y faire les dernières
+mises à jour. Pour les installations plus complexes se référer au
+Manuel de l&#8217;intégrateur.</p></div>
+</div>
+</div>
+<h2 id="_test_de_latence_latency_test">1. Test de latence (Latency Test)</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Le test de latence détermine la capacité du processeur à répondre aux
+requêtes qui lui sont faites. Certains matériels peuvent interrompre ce
+processus, causant des pertes de pas lorsque le PC pilote une machine
+CNC. Ce test est la toute première chose à faire pour valider un PC.
+Pour le lancer, suivre les instructions de la section <a href="../install/Latency_Test_fr.html#cha:test-de-latence">sur le test de latence</a>.</p></div>
+</div>
+<h2 id="sec:Sherline">2. Sherline</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Si vous avez une machine Sherline plusieurs configurations prédéfinies sont fournies.
+Au premier démarrage de LinuxCNC, le sélecteur de configuration s&#8217;ouvre, sélectionnez
+alors le modèle correspondant à votre machine <em>Sherline</em>, puis acceptez d&#8217;enregistrer une copie.</p></div>
+</div>
+<h2 id="sec:Xylotex">3. Xylotex</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Si vous avez une machine <em>Xylotex</em> vous pouvez utiliser l&#8217;assistant graphique de
+configuration fourni avec LinuxCNC et créer rapidement votre configuration
+personnalisée <a href="../config/stepconf_fr.html#cha:Assistant-graphique-StepConf">avec l&#8217;assistant Stepconf</a>.</p></div>
+</div>
+<h2 id="_informations_relatives_la_machine">4. Informations relatives à la machine</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>But, regrouper les informations à propos des axes de la machine.</p></div>
+<div class="paragraph"><p>Les timings des pilotes sont exprimés en nanosecondes. Si vous n'êtes
+pas sûr de vous à propos des timings de votre interface, les
+caractéristiques les plus populaires sont incluses dans l&#8217;assistant
+graphique de configuration. Notez que les pilotes Gecko ont des timings
+différents les uns des autres. Une liste des caractéristiques courantes
+est également maintenue sur le Wiki
+<a href="http://wiki.linuxcnc.org/cgi-bin/wiki.pl?Stepper_Drive_Timing">de linuxcnc.org</a>.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="90%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<thead>
+<tr>
+<th align="left" valign="top">Axes </th>
+<th align="left" valign="top"> Type de pilote </th>
+<th align="left" valign="top"> Step Time ns </th>
+<th align="left" valign="top"> Step Space ns </th>
+<th align="left" valign="top"> Direction Hold ns </th>
+<th align="left" valign="top"> Direction Setup ns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">X</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Y</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Z</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p><span class="footnote"><br />[ndt: les termes sont laissés dans la langue d&#8217;origine pour
+correspondre aux documentations des constructeurs.]<br /></span></p></div>
+</div>
+<h2 id="_informations_relatives_au_brochage">5. Informations relatives au brochage</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>But, regrouper les informations à propos des différentes broches du port
+parallèle utilisées.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="90%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<thead>
+<tr>
+<th align="left" valign="top">Pin de sortie </th>
+<th align="left" valign="top"> Fonction            </th>
+<th align="left" valign="top"> Si différent </th>
+<th align="left" valign="top"> Pin d&#8217;entrée </th>
+<th align="left" valign="top"> Fonction       </th>
+<th align="left" valign="top"> Si différent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">1</p></td>
+<td align="left" valign="top"><p class="table">Sortie A/U</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">10</p></td>
+<td align="left" valign="top"><p class="table">Limite et OM X</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">2</p></td>
+<td align="left" valign="top"><p class="table">X Step</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">11</p></td>
+<td align="left" valign="top"><p class="table">Limite et OM Y</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">3</p></td>
+<td align="left" valign="top"><p class="table">X Direction</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">12</p></td>
+<td align="left" valign="top"><p class="table">Limite et OM Z</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">4</p></td>
+<td align="left" valign="top"><p class="table">Y Step</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">13</p></td>
+<td align="left" valign="top"><p class="table">Limite et OM A</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">5</p></td>
+<td align="left" valign="top"><p class="table">Y Direction</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">15</p></td>
+<td align="left" valign="top"><p class="table">Entrée palpeur</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">6</p></td>
+<td align="left" valign="top"><p class="table">Z Step</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">7</p></td>
+<td align="left" valign="top"><p class="table">Z Direction</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">8</p></td>
+<td align="left" valign="top"><p class="table">A Step</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">9</p></td>
+<td align="left" valign="top"><p class="table">A Direction</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">14</p></td>
+<td align="left" valign="top"><p class="table">Broche sens horaire</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">16</p></td>
+<td align="left" valign="top"><p class="table">PWM broche</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">17</p></td>
+<td align="left" valign="top"><p class="table">Valide puissance</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Noter que toutes les broches inutilisées doivent être explicitement
+indiquées <em>Inutilisé</em> dans le choix déroulant de l&#8217;assistant. Elles
+pourront être modifiées par la suite en relançant Stepconf.</p></div>
+</div>
+<h2 id="_informations_relatives_la_m_canique">6. Informations relatives à la mécanique</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>But, regrouper les informations à propos des réducteurs.
+Utilisées pour définir la taille d&#8217;un pas dans l&#8217;unité utilisateur. La
+taille du pas est utilisée par SCALE dans le fichier .ini.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="90%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<col width="16%" />
+<thead>
+<tr>
+<th align="left" valign="top">Axes </th>
+<th align="left" valign="top"> Pas par tour </th>
+<th align="left" valign="top"> Micropas </th>
+<th align="left" valign="top"> Dents moteur </th>
+<th align="left" valign="top"> Dents vis </th>
+<th align="left" valign="top"> Pas de la vis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">X</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Y</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Z</p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table"></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p><em>Pas par tour</em> indique combien de pas moteur sont nécessaires pour que celui-ci
+fasse un tour. Valeur typique: 200.</p></div>
+<div class="paragraph"><p><em>Micropas</em> indique combien d&#8217;impulsions le pilote doit recevoir pour que le
+moteur tourne d&#8217;un angle équivalent à un pas.</p></div>
+<div class="paragraph"><p>Si les micropas ne sont pas utilisés, cette valeur devra être mise à 1.
+Si les micropas sont utilisés, les valeurs les plus courantes sont, 2 pour le
+demi-pas, 4 pour le quart de pas, 8 ou 10.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">Le meilleur choix sera un compromis entre les petites valeurs, qui peuvent rendre
+le système bruyant à cause des vibrations et les valeurs élevées, qui exigent
+beaucoup de pas, ce qui diminue la vitesse maximale.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p><em>Dents moteur</em> et <em>Dents vis</em> à indiquer si vous avez une réduction poulies/courroie
+entre le moteur et la vis. Sinon mettez 1 pour les deux.</p></div>
+<div class="paragraph"><p><em>Pas de la vis</em> indique la longueur de déplacement du mobile pour un tour de la
+vis d&#8217;entrainement de l&#8217;axe.</p></div>
+<div class="paragraph"><p>Un exemple en pouces:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Moteur            = 200 pas par tour
+Pilote            = 10 micropas par pas
+Dents côté moteur = 20
+Dents côté vis    = 40
+Pas de vis        = 0.2000 pouces par tour</tt></pre>
+</div></div>
+<div class="paragraph"><p>D&#8217;après les informations ci-dessus:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+le mobile se déplacera de 0.200 pouces par tour de vis.
+</p>
+</li>
+<li>
+<p>
+Le moteur fera 2000 micropas par tour de vis.
+</p>
+</li>
+<li>
+<p>
+Le pilote demandera 10 micropas pour faire un pas.
+</p>
+</li>
+<li>
+<p>
+Le pilote recevra 2000 impulsions de pas pour faire tourner le moteur d&#8217;un tour.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Encore un autre exemple, en millimètres cette fois:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>Pas par tour      = 200 pas par tour
+Micropas          =   8 micropas
+Dents côté moteur =  30
+Dents côté vis    =  90
+Pas de la vis     =   5.00 mm par tour</tt></pre>
+</div></div>
+<div class="paragraph"><p>D&#8217;après les informations ci-dessus:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+la vis déplacera le mobile de 5.00 mm par tour.
+</p>
+</li>
+<li>
+<p>
+Le moteur fera 3 tours pour 1 tour de vis. (90/30)
+</p>
+</li>
+<li>
+<p>
+Le pilote utilisera 8 micropas pour faire un pas.
+</p>
+</li>
+<li>
+<p>
+Le pilote aura besoin de 1600 impulsions pour un tour moteur
+   et donc de 4800 pour 1 tour de vis.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_assistants_de_configuration_graphique">7. Assistants de configuration graphique</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+Pour les moteurs pas à pas, voir la documentation de l&#8217;assistant graphique Stepconf
+au chapitre <a href="../config/stepconf_fr.html#cha:Assistant-graphique-StepConf">concernant cet assistant.</a>
+</p>
+</li>
+<li>
+<p>
+Pour les servomoteurs et les moteurs pas à pas, voir la documentation de
+l&#8217;assistant graphique PNCconf au chapitre <a href="../config/pncconf_fr.html#cha:Assistant-graphique-PNCConf">relatif à cet assistant</a>
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-01-25 16:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/quickstart/stepper_quickstart_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:16 GMT -->
+</html>

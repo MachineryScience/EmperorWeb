@@ -1,0 +1,200 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Sat Mar 17 00:36:12 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/scarakins.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>KINS</title>
+
+</head>
+<body>
+
+<h1 align="center">KINS</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">kins &minus;
+kinematics definitions for LinuxCNC</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+trivkins</b></p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+rotatekins</b></p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+tripodkins</b></p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+genhexkins</b></p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+maxkins</b></p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+genserkins</b></p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+pumakins</b></p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+scarakins</b></p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Rather than
+exporting HAL pins and functions, these components provide
+the forward and inverse kinematics definitions for
+LinuxCNC.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>trivkins
+&minus; Trivial Kinematics</b> <br>
+There is a 1:1 correspondence between joints and axes. Most
+standard milling machines and lathes use the trivial
+kinematics module.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>rotatekins
+&minus; Rotated Kinematics</b> <br>
+The X and Y axes are rotated 45 degrees compared to the
+joints 0 and 1.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>tripodkins
+&minus; Tripod Kinematics</b> <br>
+The joints represent the distance of the controlled point
+from three predefined locations (the motors), giving three
+degrees of freedom in position (XYZ) <b><br>
+tripodkins.Bx <br>
+tripodkins.Cx <br>
+tripodkins.Cy</b></p>
+
+<p style="margin-left:22%;">The location of the three
+motors is (0,0), (Bx,0), and (Cx,Cy)</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>genhexkins
+&minus; Hexapod Kinematics</b> <br>
+Gives six degrees of freedom in position and orientation
+(XYZABC). The location of the motors is defined at compile
+time.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>maxkins
+&minus; 5-axis kinematics example</b> <br>
+Kinematics for Chris Radek&rsquo;s tabletop 5 axis mill
+named &rsquo;max&rsquo; with tilting head (B axis) and
+horizintal rotary mounted to the table (C axis). Provides
+UVW motion in the rotated coordinate system. The source
+file, maxkins.c, may be a useful starting point for other
+5-axis systems.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>genserkins
+&minus; generalized serial kinematics</b> <br>
+Kinematics that can model a general serial-link manipulator
+with up to 6 angular joints.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The kinematics
+use Denavit-Hartenberg definition for the joint and links.
+The DH definitions are the ones used by John J Craig in
+&quot;Introduction to Robotics: Mechanics and Control&quot;
+The parameters for the manipulator are defined by hal pins.
+<b><br>
+genserkins.A-</b><i>N</i> <b><br>
+genserkins.ALPHA-</b><i>N</i> <b><br>
+genserkins.D-</b><i>N</i></p>
+
+<p style="margin-left:22%;">Parameters describing the
+<i>N</i>th joint&rsquo;s geometry.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>pumakins
+&minus; kinematics for puma typed robots</b> <br>
+Kinematics for a puma-style robot with 6 joints <b><br>
+pumakins.A2 <br>
+pumakins.A3 <br>
+pumakins.D3 <br>
+pumakins.D4</b></p>
+
+<p style="margin-left:22%;">Describe the geometry of the
+robot</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>scarakins
+&minus; kinematics for SCARA-type robots <br>
+scarakins.D1</b></p>
+
+<p style="margin-left:22%;">Vertical distance from the
+ground plane to the center of the inner arm.</p>
+
+<p style="margin-left:11%;"><b>scarakins.D2</b></p>
+
+<p style="margin-left:22%;">Horizontal distance between
+joint[0] axis and joint[1] axis, ie. the length of the inner
+arm.</p>
+
+<p style="margin-left:11%;"><b>scarakins.D3</b></p>
+
+<p style="margin-left:22%;">Vertical distance from the
+center of the inner arm to the center of the outer arm. May
+be positive or negative depending on the structure of the
+robot.</p>
+
+<p style="margin-left:11%;"><b>scarakins.D4</b></p>
+
+<p style="margin-left:22%;">Horizontal distance between
+joint[1] axis and joint[2] axis, ie. the length of the outer
+arm.</p>
+
+<p style="margin-left:11%;"><b>scarakins.D5</b></p>
+
+<p style="margin-left:22%;">Vertical distance from the end
+effector to the tooltip. Positive means the tooltip is lower
+than the end effector, and is the normal case.</p>
+
+<p style="margin-left:11%;"><b>scarakins.D6</b></p>
+
+<p style="margin-left:22%;">Horizontal distance from the
+centerline of the end effector (and the joints 2 and 3 axis)
+and the tooltip. Zero means the tooltip is on the
+centerline. Non-zero values should be positive, if negative
+they introduce a 180 degree offset on the value of
+joint[3].</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><i>Kinematics</i>
+section in the LinuxCNC documentation</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/scarakins.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

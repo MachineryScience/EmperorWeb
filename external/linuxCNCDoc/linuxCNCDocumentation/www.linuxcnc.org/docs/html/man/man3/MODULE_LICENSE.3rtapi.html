@@ -1,0 +1,254 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:19 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/MODULE_LICENSE.3rtapi.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>rtapi_module_param</title>
+
+</head>
+<body>
+
+<h1 align="center">rtapi_module_param</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNTAX">SYNTAX</a><br>
+<a href="#ARGUMENTS">ARGUMENTS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#NOTES">NOTES</a><br>
+<a href="#REALTIME CONSIDERATIONS">REALTIME CONSIDERATIONS</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em">rtapi_module_param
+&minus; Specifying module parameters</p>
+
+<h2>SYNTAX
+<a name="SYNTAX"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="67%">
+
+
+<p style="margin-top: 1em">RTAPI_MP_INT(<i>var</i>,
+<i>description</i>)</p> </td>
+<td width="22%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="67%">
+
+
+<p style="margin-top: 1em">RTAPI_MP_LONG(<i>var</i>,
+<i>description</i>)</p> </td>
+<td width="22%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="67%">
+
+
+<p style="margin-top: 1em">RTAPI_MP_STRING(<i>var</i>,
+<i>description</i>)</p> </td>
+<td width="22%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="67%">
+
+
+<p style="margin-top: 1em">RTAPI_MP_ARRAY_INT(<i>var</i>,
+<i>num</i>, <i>description</i>)</p></td>
+<td width="22%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="67%">
+
+
+<p style="margin-top: 1em">RTAPI_MP_ARRAY_LONG(<i>var</i>,
+<i>num</i>, <i>description</i>)</p></td>
+<td width="22%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="67%">
+
+
+
+<p style="margin-top: 1em">RTAPI_MP_ARRAY_STRING(<i>var</i>,
+<i>num</i>, <i>description</i>)</p></td>
+<td width="22%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="67%">
+
+
+
+<p style="margin-top: 1em">MODULE_LICENSE(<i>license</i>)</p> </td>
+<td width="22%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="67%">
+
+
+
+<p style="margin-top: 1em">MODULE_AUTHOR(<i>author</i>)</p> </td>
+<td width="22%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="67%">
+
+
+
+<p style="margin-top: 1em">MODULE_DESCRIPTION(<i>description</i>)</p> </td>
+<td width="22%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="67%">
+
+
+
+<p style="margin-top: 1em">EXPORT_FUNCTION(<i>function</i>)</p> </td>
+<td width="22%">
+</td></tr>
+</table>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+
+
+<h2>ARGUMENTS
+<a name="ARGUMENTS"></a>
+</h2>
+<td width="11%"></td>
+<td width="4%"></td>
+<td width="7%"></td>
+<td width="75%">
+</td>
+<td width="3%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><i>var</i></p></td>
+<td width="7%"></td>
+<td width="75%">
+
+
+<p>The variable where the parameter should be stored</p></td>
+<td width="3%">
+</td></tr>
+</table>
+
+<p style="margin-left:11%;"><i>description</i></p>
+
+<p style="margin-left:22%;">A short description of the
+parameter or module</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="4%">
+
+
+<p><i>num</i></p></td>
+<td width="7%"></td>
+<td width="78%">
+
+
+<p>The maximum number of values for an array parameter</p></td></tr>
+</table>
+
+<p style="margin-left:11%;"><i>license</i></p>
+
+<p style="margin-left:22%;">The license of the module, for
+instance &quot;GPL&quot;</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p><i>author</i></p></td>
+<td width="2%"></td>
+<td width="36%">
+
+
+<p>The author of the module</p></td>
+<td width="42%">
+</td></tr>
+</table>
+
+<p style="margin-left:11%;"><i>function</i></p>
+
+<p style="margin-left:22%;">The pointer to the function to
+be exported</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">These macros
+are portable ways to declare kernel module parameters. They
+must be used in the global scope, and are not followed by a
+terminating semicolon. They must be used after the
+associated variable or function has been defined.</p>
+
+<h2>NOTES
+<a name="NOTES"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em">EXPORT_FUNCTION
+makes a symbol available for use by a subsequently loaded
+component. It is unrelated to hal functions, which are
+described in hal_export_funct(3hal)</p>
+
+<h2>REALTIME CONSIDERATIONS
+<a name="REALTIME CONSIDERATIONS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Not available
+in userspace code.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/MODULE_LICENSE.3rtapi.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+</html>

@@ -1,0 +1,191 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:46 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/pcl720.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>PCL720</title>
+
+</head>
+<body>
+
+<h1 align="center">PCL720</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">pcl720 &minus;
+Driver for the Advantech PCL 720 card.</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="37%">
+
+
+<p style="margin-top: 1em"><b>loadrt pcl720
+[ioaddr=</b><i>N</i><b>]</b></p> </td>
+<td width="52%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="37%">
+
+
+<p><b>ioaddr</b></p></td>
+<td width="52%">
+</td></tr>
+</table>
+
+<p style="margin-left:28%; margin-top: 1em">Base address of
+card. Separate each card base address with a comma but no
+space to load more than one card. eg loadrt pcl720
+ioaddr=0x200,0x200. use 0xNNN to define addresses in Hex</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">This driver
+supports the Advantech PCL720 ISA card. It might work with
+the PCI version too, but this is untested. <br>
+It creates hal pins corresonding to the digital inputs and
+outputs, but does not support the the counters/timers.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>pcl720.</b><i>N</i><b>.read</b></p>
+
+<p style="margin-left:22%;">Reads each of the digital
+inputs and updates the HAL pins</p>
+
+
+<p style="margin-left:11%;"><b>pcl720.</b><i>N</i><b>.write</b></p>
+
+<p style="margin-left:22%;">Writes the values of the output
+HAL pins to the digital IO</p>
+
+
+<p style="margin-left:11%;"><b>pcl720.</b><i>N</i><b>.reset</b></p>
+
+<p style="margin-left:22%;">Waits for the length of time
+specified by the <b>reset-time</b> parameter and resets any
+pins for which the <b>reset</b> parameter has been set. This
+can be used to allow step generators to make a step every
+thread rather than every other thread. This function must be
+added to the thread after the &quot;write&quot; function.
+<br>
+Do not use this function if you do not wish to reset any
+pins. <br>
+the stepgen <b>step-space</b> parameter should be set to 0
+to make use of this function.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>pcl720.</b><i>N</i><b>.pin-</b><i>MM</i><b>-out</b>
+bit in (MM=00..31)</p>
+
+<p style="margin-left:22%;">Output pins</p>
+
+
+<p style="margin-left:11%;"><b>pcl720.</b><i>N</i><b>.pin-</b><i>MM</i><b>-in</b>
+bit out (MM=00..31)</p>
+
+<p style="margin-left:22%;">Input pins</p>
+
+
+<p style="margin-left:11%;"><b>pcl720.</b><i>N</i><b>.pin-</b><i>MM</i><b>-in-not</b>
+bit out (MM=00..31)</p>
+
+<p style="margin-left:22%;">Inverted version of each input
+pin</p>
+
+
+<p style="margin-left:11%;"><b>pcl720.</b><i>N</i><b>.wait-clocks</b>
+u32 out</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>pcl720.</b><i>N</i><b>.reset-time</b>
+u32 rw (default: <i>5000</i>)</p>
+
+<p style="margin-left:22%;">The time in nanoseconds after
+the write function has run to reset the pins for which the
+&quot;reset&quot; parameter is set.</p>
+
+
+<p style="margin-left:11%;"><b>pcl720.</b><i>N</i><b>.pin-</b><i>MM</i><b>-reset</b>
+bit rw (MM=00..31)</p>
+
+<p style="margin-left:22%;">specifies if the pin should be
+reset by the &quot;reset&quot; function</p>
+
+
+<p style="margin-left:11%;"><b>pcl720.</b><i>N</i><b>.pin-</b><i>MM</i><b>-out-invert</b>
+bit rw (MM=00..31)</p>
+
+<p style="margin-left:22%;">Set to true to invert the sense
+of the output pin</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Andy Pugh</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/pcl720.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

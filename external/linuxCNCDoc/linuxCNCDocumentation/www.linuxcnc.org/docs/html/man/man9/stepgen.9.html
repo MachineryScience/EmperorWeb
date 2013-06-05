@@ -1,0 +1,443 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:27 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/stepgen.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>STEPGEN</title>
+
+</head>
+<body>
+
+<h1 align="center">STEPGEN</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#TIMING">TIMING</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">stepgen &minus;
+software step pulse generation</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+stepgen step_type=</b><i>type0</i>[,<i>type1</i>...]
+[<b>ctrl_type=</b><i>type0</i>[,<i>type1</i>...]]
+[<b>user_step_type=#,#</b>...]</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>stepgen</b>
+is used to control stepper motors. The maximum step rate
+depends on the CPU and other factors, and is usually in the
+range of 5KHz to 25KHz. If higher rates are needed, a
+hardware step generator is a better choice.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>stepgen</b>
+has two control modes, which can be selected on a channel by
+channel basis using <b>ctrl_type</b>. Possible values are
+&quot;<b>p</b>&quot; for position control, and
+&quot;<b>v</b>&quot; for velocity control. The default is
+position control, which drives the motor to a commanded
+position, subject to acceleration and velocity limits.
+Velocity control drives the motor at a commanded speed,
+again subject to accel and velocity limits. Usually,
+position mode is used for machine axes. Velocity mode is
+reserved for unusual applications where continuous movement
+at some speed is desired, instead of movement to a specific
+position. (Note that velocity mode replaces the former
+component <b>freqgen</b>.)</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>stepgen</b>
+can control a maximum of eight motors. The number of
+motors/channels actually loaded depends on the number of
+<i>type</i> values given. The value of each <i>type</i>
+determines the outputs for that channel. Position or
+velocity mode can be individually selected for each channel.
+Both control modes support the same 16 possible step
+types.</p>
+
+<p style="margin-left:11%; margin-top: 1em">By far the most
+common step type is &rsquo;0&rsquo;, standard step and
+direction. Others include up/down, quadrature, and a wide
+variety of three, four, and five phase patterns that can be
+used to directly control some types of motor windings. (When
+used with appropriate buffers of course.)</p>
+
+<p style="margin-left:11%; margin-top: 1em">Some of the
+stepping types are described below, but for more details
+(including timing diagrams) see the <b>stepgen</b> section
+of the HAL reference manual. <br>
+type 0: step/dir</p>
+
+<p style="margin-left:22%;">Two pins, one for step and one
+for direction. <b>make-pulses</b> must run at least twice
+for each step (once to set the step pin true, once to clear
+it). This limits the maximum step rate to half (or less) of
+the rate that can be reached by types 2-14. The parameters
+<b>steplen</b> and <b>stepspace</b> can further lower the
+maximum step rate. Parameters <b>dirsetup</b> and
+<b>dirhold</b> also apply to this step type.</p>
+
+<p style="margin-left:11%;">type 1: up/down</p>
+
+<p style="margin-left:22%;">Two pins, one for &rsquo;step
+up&rsquo; and one for &rsquo;step down&rsquo;. Like type 0,
+<b>make-pulses</b> must run twice per step, which limits the
+maximum speed.</p>
+
+<p style="margin-left:11%;">type 2: quadrature</p>
+
+<p style="margin-left:22%;">Two pins, phase-A and phase-B.
+For forward motion, A leads B. Can advance by one step every
+time <b>make-pulses</b> runs.</p>
+
+<p style="margin-left:11%;">type 3: three phase, full
+step</p>
+
+<p style="margin-left:22%;">Three pins, phase-A, phase-B,
+and phase-C. Three steps per full cycle, then repeats. Only
+one phase is high at a time - for forward motion the pattern
+is A, then B, then C, then A again.</p>
+
+<p style="margin-left:11%;">type 4: three phase, half
+step</p>
+
+<p style="margin-left:22%;">Three pins, phases A through C.
+Six steps per full cycle. First A is high alone, then A and
+B together, then B alone, then B and C together, etc.</p>
+
+<p style="margin-left:11%;">types 5 through 8: four phase,
+full step</p>
+
+<p style="margin-left:22%;">Four pins, phases A through D.
+Four steps per full cycle. Types 5 and 6 are suitable for
+use with unipolar steppers, where power is applied to the
+center tap of each winding, and four open-collector
+transistors drive the ends. Types 7 and 8 are suitable for
+bipolar steppers, driven by two H-bridges.</p>
+
+<p style="margin-left:11%;">types 9 and 10: four phase,
+half step</p>
+
+<p style="margin-left:22%;">Four pins, phases A through D.
+Eight steps per full cycle. Type 9 is suitable for unipolar
+drive, and type 10 for bipolar drive.</p>
+
+<p style="margin-left:11%;">types 11 and 12: five phase,
+full step</p>
+
+<p style="margin-left:22%;">Five pins, phases A through E.
+Five steps per full cycle. See HAL reference manual for the
+patterns.</p>
+
+<p style="margin-left:11%;">types 13 and 14: five phase,
+half step</p>
+
+<p style="margin-left:22%;">Five pins, phases A through E.
+Ten steps per full cycle. See HAL reference manual for the
+patterns.</p>
+
+<p style="margin-left:11%;">type 15: user-specified</p>
+
+<p style="margin-left:22%;">This uses the waveform
+specified by the <b>user_step_type</b> module parameter,
+which may have up to 10 steps and 5 phases.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>stepgen.make-pulses</b>
+(no floating-point)</p>
+
+<p style="margin-left:22%;">Generates the step pulses,
+using information computed by <b>update-freq</b>. Must be
+called as frequently as possible, to maximize the attainable
+step rate and minimize jitter. Operates on all channels at
+once.</p>
+
+
+<p style="margin-left:11%;"><b>stepgen.capture-position</b>
+(uses floating point)</p>
+
+<p style="margin-left:22%;">Captures position feedback
+value from the high speed code and makes it available on a
+pin for use elsewhere in the system. Operates on all
+channels at once.</p>
+
+<p style="margin-left:11%;"><b>stepgen.update-freq</b>
+(uses floating point)</p>
+
+<p style="margin-left:22%;">Accepts a velocity or position
+command and converts it into a form usable by
+<b>make-pulses</b> for step generation. Operates on all
+channels at once.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>stepgen.</b><i>N</i><b>.counts</b>
+s32 out</p>
+
+<p style="margin-left:22%;">The current position, in
+counts, for channel <i>N</i>. Updated by
+<b>capture-position</b>.</p>
+
+
+<p style="margin-left:11%;"><b>stepgen.</b><i>N</i><b>.position-fb</b>
+float out</p>
+
+<p style="margin-left:22%;">The current position, in length
+units (see parameter <b>position-scale</b>). Updated by
+<b>capture-position</b>. The resolution of
+<b>position-fb</b> is much finer than a single step. If you
+need to see individual steps, use <b>counts</b>.</p>
+
+
+<p style="margin-left:11%;"><b>stepgen.</b><i>N</i><b>.enable</b>
+bit in</p>
+
+<p style="margin-left:22%;">Enables output steps - when
+false, no steps are generated.</p>
+
+
+<p style="margin-left:11%;"><b>stepgen.</b><i>N</i><b>.velocity-cmd</b>
+float in (velocity mode only)</p>
+
+<p style="margin-left:22%;">Commanded velocity, in length
+units per second (see parameter <b>position-scale</b>).</p>
+
+
+<p style="margin-left:11%;"><b>stepgen.</b><i>N</i><b>.position-cmd</b>
+float in (position mode only)</p>
+
+<p style="margin-left:22%;">Commanded position, in length
+units (see parameter <b>position-scale).</b></p>
+
+
+<p style="margin-left:11%;"><b>stepgen.</b><i>N</i><b>.step</b>
+bit out (step type 0 only)</p>
+
+<p style="margin-left:22%;">Step pulse output.</p>
+
+
+<p style="margin-left:11%;"><b>stepgen.</b><i>N</i><b>.dir</b>
+bit out (step type 0 only)</p>
+
+<p style="margin-left:22%;">Direction output: low for
+forward, high for reverse.</p>
+
+
+<p style="margin-left:11%;"><b>stepgen.</b><i>N</i><b>.up</b>
+bit out (step type 1 only)</p>
+
+<p style="margin-left:22%;">Count up output, pulses for
+forward steps.</p>
+
+
+<p style="margin-left:11%;"><b>stepgen.</b><i>N</i><b>.down</b>
+bit out (step type 1 only)</p>
+
+<p style="margin-left:22%;">Count down output, pulses for
+reverse steps.</p>
+
+
+<p style="margin-left:11%;"><b>stepgen.</b><i>N</i><b>.phase-A</b>
+thru <b>phase-E</b> bit out (step types 2-14 only)</p>
+
+<p style="margin-left:22%;">Output bits. <b>phase-A</b> and
+<b>phase-B</b> are present for step types 2-14,
+<b>phase-C</b> for types 3-14, <b>phase-D</b> for types
+5-14, and <b>phase-E</b> for types 11-14. Behavior depends
+on selected stepping type.</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>stepgen.</b><i>N</i><b>.frequency</b>
+float ro</p>
+
+<p style="margin-left:22%;">The current step rate, in steps
+per second, for channel <i>N</i>.</p>
+
+
+<p style="margin-left:11%;"><b>stepgen.</b><i>N</i><b>.maxaccel</b>
+float rw</p>
+
+<p style="margin-left:22%;">The acceleration/deceleration
+limit, in length units per second squared.</p>
+
+
+<p style="margin-left:11%;"><b>stepgen.</b><i>N</i><b>.maxvel</b>
+float rw</p>
+
+<p style="margin-left:22%;">The maximum allowable velocity,
+in length units per second. If the requested maximum
+velocity cannot be reached with the current combination of
+scaling and <b>make-pulses</b> thread period, it will be
+reset to the highest attainable value.</p>
+
+
+<p style="margin-left:11%;"><b>stepgen.</b><i>N</i><b>.position-scale</b>
+float rw</p>
+
+<p style="margin-left:22%;">The scaling for position
+feedback, position command, and velocity command, in steps
+per length unit.</p>
+
+
+<p style="margin-left:11%;"><b>stepgen.</b><i>N</i><b>.rawcounts</b>
+s32 ro</p>
+
+<p style="margin-left:22%;">The position in counts, as
+updated by <b>make-pulses</b>. (Note: this is updated more
+frequently than the <b>counts</b> pin.)</p>
+
+
+<p style="margin-left:11%;"><b>stepgen.</b><i>N</i><b>.steplen</b>
+u32 rw</p>
+
+<p style="margin-left:22%;">The length of the step pulses,
+in nanoseconds. Measured from rising edge to falling
+edge.</p>
+
+
+<p style="margin-left:11%;"><b>stepgen.</b><i>N</i><b>.stepspace</b>
+u32 rw (step types 0 and 1 only) The minimum</p>
+
+<p style="margin-left:22%;">space between step pulses, in
+nanoseconds. Measured from falling edge to rising edge. The
+actual time depends on the step rate and can be much longer.
+If <b>stepspace</b> is 0, then <b>step</b> can be asserted
+every period. This can be used in conjunction with
+<b>hal_parport</b>&rsquo;s auto-resetting pins to output one
+step pulse per period. In this mode, <b>steplen</b> must be
+set for one period or less.</p>
+
+
+<p style="margin-left:11%;"><b>stepgen.</b><i>N</i><b>.dirsetup</b>
+u32 rw (step type 0 only)</p>
+
+<p style="margin-left:22%;">The minimum setup time from
+direction to step, in nanoseconds periods. Measured from
+change of direction to rising edge of step.</p>
+
+
+<p style="margin-left:11%;"><b>stepgen.</b><i>N</i><b>.dirhold</b>
+u32 rw (step type 0 only)</p>
+
+<p style="margin-left:22%;">The minimum hold time of
+direction after step, in nanoseconds. Measured from falling
+edge of step to change of direction.</p>
+
+
+<p style="margin-left:11%;"><b>stepgen.</b><i>N</i><b>.dirdelay</b>
+u32 rw (step types 1 and higher only)</p>
+
+<p style="margin-left:22%;">The minimum time between a
+forward step and a reverse step, in nanoseconds.</p>
+
+<h2>TIMING
+<a name="TIMING"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">There are five
+timing parameters which control the output waveform. No step
+type uses all five, and only those which will be used are
+exported to HAL. The values of these parameters are in
+nano-seconds, so no recalculation is needed when changing
+thread periods. In the timing diagrams that follow, they are
+identfied by the following numbers:</p>
+
+<p style="margin-left:11%; margin-top: 1em">(1)
+<b>stepgen.n.steplen</b></p>
+
+<p style="margin-left:11%; margin-top: 1em">(2)
+<b>stepgen.n.stepspace</b></p>
+
+<p style="margin-left:11%; margin-top: 1em">(3)
+<b>stepgen.n.dirhold</b></p>
+
+<p style="margin-left:11%; margin-top: 1em">(4)
+<b>stepgen.n.dirsetup</b></p>
+
+<p style="margin-left:11%; margin-top: 1em">(5)
+<b>stepgen.n.dirdelay</b></p>
+
+<p style="margin-left:11%; margin-top: 1em">For step type
+0, timing parameters 1 thru 4 are used. The following timing
+diagram shows the output waveforms, and what each parameter
+adjusts.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><PRE> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; _____ &nbsp; &nbsp; &nbsp; &nbsp; _____ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; _____<BR> &nbsp; &nbsp;STEP &nbsp;____/ &nbsp; &nbsp; &#92;_______/ &nbsp; &nbsp; &#92;_____________/ &nbsp; &nbsp; &#92;______<BR> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | &nbsp; &nbsp; |<BR> &nbsp; &nbsp;Time &nbsp; &nbsp; &nbsp;|-(1)-|--(2)--|-(1)-|--(3)--|-(4)-|-(1)-|<BR> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|__________________<BR> &nbsp; &nbsp;DIR &nbsp; ________________________________/<BR></PRE></p>
+
+<p style="margin-left:11%; margin-top: 1em">For step type
+1, timing parameters 1, 2, and 5 are used. The following
+timing diagram shows the output waveforms, and what each
+parameter adjusts.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><PRE> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; _____ &nbsp; &nbsp; &nbsp; _____<BR> &nbsp; &nbsp;UP &nbsp; &nbsp;__/ &nbsp; &nbsp; &#92;_____/ &nbsp; &nbsp; &#92;________________________________<BR> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;| &nbsp; &nbsp; | &nbsp; &nbsp; | &nbsp; &nbsp; | &nbsp; &nbsp; &nbsp; &nbsp; |<BR> &nbsp; &nbsp;Time &nbsp; &nbsp;|-(1)-|-(2)-|-(1)-|---(5)---|-(1)-|-(2)-|-(1)-|<BR> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|_____| &nbsp; &nbsp; |_____|<BR> &nbsp; &nbsp;DOWN &nbsp;______________________________/ &nbsp; &nbsp; &#92;_____/ &nbsp; &nbsp; &#92;____<BR></PRE></p>
+
+<p style="margin-left:11%; margin-top: 1em">For step types
+2 and higher, the exact pattern of the outputs depends on
+the step type (see the HAL manual for a full listing). The
+outputs change from one state to another at a minimum
+interval of <b>steplen</b>. When a direction change occurs,
+the minimum time between the last step in one direction and
+the first in the other direction is the sum of
+<b>steplen</b> and <b>dirdelay</b>.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The HAL User
+Manual.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/stepgen.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

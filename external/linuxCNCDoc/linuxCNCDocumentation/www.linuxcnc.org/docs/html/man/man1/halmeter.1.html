@@ -1,0 +1,254 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Sat Mar 17 00:36:10 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/halmeter.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>HALMETER</title>
+
+</head>
+<body>
+
+<h1 align="center">HALMETER</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#OPTIONS">OPTIONS</a><br>
+<a href="#USAGE">USAGE</a><br>
+<a href="#EXAMPLES">EXAMPLES</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+<a href="#HISTORY">HISTORY</a><br>
+<a href="#BUGS">BUGS</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#REPORTING BUGS">REPORTING BUGS</a><br>
+<a href="#COPYRIGHT">COPYRIGHT</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">halmeter
+&minus; observe HAL pins, signals, and parameters</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>halmeter</b>
+[<b>-s</b>] [<b>pin</b>|<b>sig</b>|<b>param</b> <i>name</i>]
+[<b>-g</b> <i>X-positon Y-position [Width]</i>]</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>halmeter</b>
+is used to observe HAL (Hardware Abstraction Layer) pins,
+signals, or parameters. It serves the same purpose as a
+multimeter does when working on physical systems.</p>
+
+<h2>OPTIONS
+<a name="OPTIONS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>pin</b>
+<i>name</i></p>
+
+<p style="margin-left:22%;">display the HAL pin
+<i>name</i>.</p>
+
+<p style="margin-left:11%;"><b>sig</b> <i>name</i></p>
+
+<p style="margin-left:22%;">display the HAL signal
+<i>name</i>.</p>
+
+<p style="margin-left:11%;"><b>param</b> <i>name</i></p>
+
+<p style="margin-left:22%;">display the HAL parameter
+<i>name</i>.</p>
+
+<p style="margin-left:11%;">If neither <b>pin</b>,
+<b>sig</b>, or <b>param</b> are specified, the</p>
+
+<p style="margin-left:22%;">window starts out blank and the
+user must select an item to observe.</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p><b>&minus;s</b></p></td>
+<td width="8%"></td>
+<td width="78%">
+
+
+<p>small window. Non-interactive, must be used with
+<b>pin</b>, <b>sig</b>, or <b>param</b> to select the item
+to display. The item name is displayed in the title bar
+instead of the window, and there are no &quot;Select&quot;
+or &quot;Exit&quot; buttons. Handy when you want a lot of
+meters in a small space.</p></td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="3%">
+
+
+<p><b>&minus;g</b></p></td>
+<td width="8%"></td>
+<td width="78%">
+
+
+<p>geometry position. allows one to specify the intial
+starting position and optionally the width of the meter.
+Referenced from top left of screen in pixel units. Handy
+when you want to load a lot of meters in a script with out
+them displaying on top of each other.</p></td></tr>
+</table>
+
+<h2>USAGE
+<a name="USAGE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Unless
+<b>&minus;s</b> is specified, there are two buttons,
+&quot;Select&quot; and &quot;Exit&quot;. &quot;Select&quot;
+opens a dialog box to select the item (pin, signal, or
+parameter) to be observed. &quot;Exit&quot; does what you
+expect.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The selection
+dialog has &quot;OK&quot; &quot;Apply&quot;, and
+&quot;Cancel&quot; buttons. OK displays the selected item
+and closes the dialog. &quot;Apply&quot; displays the
+selected item but keeps the selection dialog open.
+&quot;Cancel&quot; closes the dialog without changing the
+displayed item.</p>
+
+<h2>EXAMPLES
+<a name="EXAMPLES"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>halmeter</b></p>
+
+<p style="margin-left:22%;">Opens a meter window, with
+nothing initially displayed. Use the &quot;Select&quot;
+button to choose an item to observe. Does not return until
+the window is closed.</p>
+
+<p style="margin-left:11%;"><b>halmeter &amp;</b></p>
+
+<p style="margin-left:22%;">Open a meter window, with
+nothing initially displayed. Use the &quot;Select&quot;
+button to choose an item. Runs in the background leaving the
+shell free for other commands.</p>
+
+<p style="margin-left:11%;"><b>halmeter pin</b>
+<i>parport.0.pin-03-out</i> <b>&amp;</b></p>
+
+<p style="margin-left:22%;">Open a meter window, initially
+displaying HAL pin <i>parport.0.pin-03-out</i>. The
+&quot;Select&quot; button can be used to display other
+items. Runs in background.</p>
+
+<p style="margin-left:11%;"><b>halmeter -s pin</b>
+<i>parport.0.pin-03-out</i> <b>&amp;</b></p>
+
+<p style="margin-left:22%;">Open a small meter window,
+displaying HAL pin <i>parport.0.pin-03-out</i>. The
+displayed item cannot be changed. Runs in background.</p>
+
+<p style="margin-left:11%;"><b>halmeter -s pin</b>
+<i>parport.0.pin-03-out</i> <b>-g</b> <i>100 500</i>
+<b>&amp;</b></p>
+
+<p style="margin-left:22%;">Open a small meter window,
+displaying HAL pin <i>parport.0.pin-03-out</i>. places it
+100 pixels to the left and 500 pixels down from top of
+screen. The displayed item cannot be changed. Runs in
+background.</p>
+
+<p style="margin-left:11%;"><b>halmeter -s pin</b>
+<i>parport.0.pin-03-out</i> <b>-g</b> <i>100 500 400</i>
+<b>&amp;</b></p>
+
+<p style="margin-left:22%;">Open a small meter window,
+displaying HAL pin <i>parport.0.pin-03-out</i>. places it
+100 pixels to the left and 500 pixels down from top of
+screen. The width will be 400 pixels (270 is default) The
+displayed item cannot be changed. Runs in background.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+<h2>HISTORY
+<a name="HISTORY"></a>
+</h2>
+
+
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Original
+version by John Kasunich, as part of the LinuxCNC project.
+Improvements by several other members of the LinuxCNC
+development team.</p>
+
+<h2>REPORTING BUGS
+<a name="REPORTING BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Report bugs to
+jmkasunich AT users DOT sourceforge DOT net</p>
+
+<h2>COPYRIGHT
+<a name="COPYRIGHT"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Copyright
+&copy; 2003 John Kasunich. <br>
+This is free software; see the source for copying
+conditions. There is NO warranty; not even for
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/halmeter.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

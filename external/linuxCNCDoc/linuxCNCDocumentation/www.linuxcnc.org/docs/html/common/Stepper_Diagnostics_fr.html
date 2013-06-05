@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/Stepper_Diagnostics_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Moteurs pas à pas</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Moteurs pas à pas</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:stepper-diagnostics"></a> </p></div>
+<div class="paragraph"><p>Si ce que vous obtenez ne correspond pas à ce que vous espériez, la
+plupart du temps c&#8217;est juste un petit manque d&#8217;expérience. Accroître
+son expérience permet souvent une meilleure compréhension globale.
+Porter un diagnostic sur plusieurs problèmes est toujours plus facile
+en les prenant séparément, de même qu&#8217;une équation dont on a réduit le
+nombre de variables est toujours plus rapide à résoudre. Dans le monde
+réel ce n&#8217;est pas toujours le cas mais c&#8217;est une bonne voie à suivre.</p></div>
+</div>
+</div>
+<h2 id="_probl_mes_communs">1. Problèmes communs</h2>
+<div class="sectionbody">
+<h3 id="_le_moteur_n_8217_avance_que_d_8217_un_pas">1.1. Le moteur n&#8217;avance que d&#8217;un pas</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La raison la plus fréquente dans une nouvelle installation pour que le
+moteur ne bouge pas est l&#8217;interversion entre le signal de pas et le
+signal de direction. Si, quand vous pressez le bouton de jog dans un
+sens puis dans l&#8217;autre, le moteur n&#8217;avance que d&#8217;un pas à chaque fois
+et toujours dans la même direction, vous êtes dans ce cas.</p></div>
+<h3 id="_le_moteur_ne_bouge_pas">1.2. Le moteur ne bouge pas</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Certaine interfaces de pilotage de moteurs ont une broche d&#8217;activation
+(enable) ou demandent un signal de pompe de charge pour activer leurs
+sorties.</p></div>
+<h3 id="_distance_incorrecte">1.3. Distance incorrecte</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si vous commandez une distance de déplacement précise sur un axe et
+que le déplacement réel ne correspond pas, alors l'échelle de l&#8217;axe
+n&#8217;est pas bonne.</p></div>
+</div>
+<h2 id="_messages_d_8217_erreur">2. Messages d&#8217;erreur</h2>
+<div class="sectionbody">
+<h3 id="_erreur_de_suivi">2.1. Erreur de suivi</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le concept d&#8217;erreur de suivi est étrange quand il s&#8217;agit de moteurs
+pas à pas. Etant un système en boucle ouverte, aucune contre réaction
+ne permet de savoir si le suivi est correct ou non. LinuxCNC calcule si il
+peut maintenir le suivi demandé par une commande, si ce n&#8217;est pas
+possible il stoppe le mouvement et affiche une erreur de suivi. Les
+erreurs de suivi sur les systèmes pas à pas sont habituellement les
+suivantes:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+FERROR to small - (FERROR trop petit)
+</p>
+</li>
+<li>
+<p>
+MIN_FERROR to small - (MIN_FERROR trop petit)
+</p>
+</li>
+<li>
+<p>
+MAX_VELOCITY to fast - (MAX_VELOCITY trop rapide)
+</p>
+</li>
+<li>
+<p>
+MAX_ACCELERATION to fast - (MAX_ACCELERATION trop rapide)
+</p>
+</li>
+<li>
+<p>
+BASE_PERIOD set to long - (BASE_PERIOD trop longue)
+</p>
+</li>
+<li>
+<p>
+Backlash ajouté à un axe (rattrapage de jeu)
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Toutes ces erreurs se produisent lorsque l&#8217;horloge temps réel n&#8217;est
+pas capable de fournir le nombre de pas nécessaire pour maintenir la
+vitesse requise par le réglage de la variable BASE_PERIOD. Ce qui peut
+se produire, par exemple après un test de latence trop bref pour
+obtenir un valeur fiable, dans ce cas, revenir à une valeur plus proche
+de ce qu&#8217;elle était et réessayez. C&#8217;est également le cas quand les
+valeurs de vitesse maximum et d&#8217;accélération maximum sont trop élevées.</p></div>
+<div class="paragraph"><p>Si un backlash a été ajouté, il est nécessaire d&#8217;augmenter
+STEPGEN_MAXACCEL aux environs du double de MAX_ACCELERATION dans la
+section [AXIS] du fichier INI et ce, pour chacun des axes sur lesquels
+un backlash a été ajouté. LinuxCNC utilise une <em>extra accélération</em> au
+moment de l&#8217;inversion de sens pour reprendre le jeu. Sans correction du
+backlash, l&#8217;accélération pour le générateur de pas peut être juste un
+peu plus basse que celle du planificateur de mouvements.</p></div>
+<h3 id="_erreur_de_rtapi">2.2. Erreur de RTAPI</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Quand vous rencontrez cette erreur:</p></div>
+<div class="literalblock">
+<div class="content">
+<pre><tt>RTAPI: ERROR: Unexpected realtime delay on task n</tt></pre>
+</div></div>
+<div class="paragraph"><p>C&#8217;est généralement que la variable BASE_PERIOD dans la section
+[EMCMOT] du fichier ini a une valeur trop petite. Vous devez lancer un
+<em>Latency Test</em> pendant une durée plus longue pour voir si vous n&#8217;avez
+pas un délai excessif quelque part, responsable de ce problème. Si
+c&#8217;est le cas réajuster alors BASE_PERIOD avec la nouvelle valeur
+obtenue.</p></div>
+<div class="paragraph"><p>LinuxCNC vérifie le nombre de cycles du CPU entre les invocations du
+thread temps réel. Si certains éléments de votre matériel provoquent un
+délai excessif ou que les threads sont ajustés à des valeurs trop
+rapides, vous rencontrerez cette erreur.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">Cette erreur n&#8217;est affichée qu&#8217;une seule fois par session. En
+effet, si votre BASE_PERIOD était trop basse vous pourriez avoir des
+centaines de milliers de messages d&#8217;erreur par seconde si plus d&#8217;un
+était affiché.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Plus d&#8217;informations <a href="../install/Latency_Test_fr.html#cha:test-de-latence">sur le test de latence.</a></p></div>
+</div>
+<h2 id="_tester">3. Tester</h2>
+<div class="sectionbody">
+<h3 id="_tester_le_timing_des_pas">3.1. Tester le timing des pas</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si un de vos axes vibre, grogne ou fait des petits mouvements dans
+toutes les directions, c&#8217;est révélateur d&#8217;un mauvais timing
+d&#8217;impulsions de pas de ce moteur. Les paramètres du pilote matériel
+sont a vérifier et a ajuster. Il peut aussi y avoir des pertes de pas
+aux changements de direction. Si le moteur cale complétement, il est
+aussi possible que les paramètres MAX_ACCELERATION ou MAX_VELOCITY
+aient des valeurs trop élevées.</p></div>
+<div class="paragraph"><p>Le programme suivant vérifie que la configuration de l&#8217;axe Z est
+correcte. Copiez le programme dans le répertoire de votre linuxcnc/nc_files
+nommez le <em>TestZ.ngc</em> ou similaire. Initialisez votre machine avec Z =
+0.000 sur le dessus de la table. Chargez et lancez le programme. Il va
+effectuer 200 mouvements d&#8217;aller et retour entre 10.00 et 30.00mm. Si
+vous avez un problème de configuration, la position de l&#8217;axe Z affichée
+à la fin du programme, soit 10.00mm, ne correspondra pas à la position
+mesurée. Pour tester un autre axe remplacez simplement le Z des G0 par
+le nouvel axe.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>( Faire Z=0 au dessus de la table avant de démarrer! )
+( Ce programme teste les pertes de position en Z )
+( msg, test 1 de la configuration de l'axe Z )
+G21 #1000=100 ( boucle 100 fois )
+( cette boucle comporte un délai après chaque mouvement )
+( test des réglages d'accélération et de vitesse )
+o100 while [#1000]
+   G0 Z30.000
+   G4 P0.250
+   G0 Z10.000
+   G4 P0.250
+   #1000 = [#1000 - 1]
+o100 endwhile
+( msg, test 2 de la configuration de l'axe Z, pressez S pour continuer)
+M1 (un arrêt ici)
+#1000=100 ( boucle 100 fois )
+( Les boucles suivantes n'ont plus de délai en fin de mouvements )
+( test des réglages des temps de maintien des pilotes)
+( et les réglages d'accélération max )
+o101 while [#1000]
+   G0 Z30.000 .
+   G0 Z10.000
+   #1000 = [#1000 - 1]
+o101 endwhile
+( msg, Fin Z doit être à 10mm au dessus de la table )
+M2</tt></pre>
+</div></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-02-03 18:36:08 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/Stepper_Diagnostics_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+</html>

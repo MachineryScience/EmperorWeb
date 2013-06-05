@@ -1,0 +1,309 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/stepper.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:13:39 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Stepper Configuration</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Stepper Configuration</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="stepper-config"></a> </p></div>
+</div>
+</div>
+<h2 id="_introduction_a_id_sec_introduction_a">1. Introduction<a id="sec:Introduction"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The preferred way to set up a standard stepper machine is with the
+Step Configuration Wizard. See the Getting Started Guide.</p></div>
+<div class="paragraph"><p>This chapter describes some of the more common settings for manually
+setting up a stepper based system. Because of the various possibilities
+of configuring LinuxCNC, it is very hard to document them all, and keep
+this document relatively short.</p></div>
+<div class="paragraph"><p>The most common LinuxCNC usage is for stepper based systems. These systems
+are using stepper motors with drives that accept step &amp; direction
+signals.</p></div>
+<div class="paragraph"><p>It is one of the simpler setups, because the motors run open-loop (no
+feedback comes back from the motors), yet the system needs to be
+configured properly so the motors don&#8217;t stall or lose steps.</p></div>
+<div class="paragraph"><p>Most of this chapter is based on the sample config released along with
+LinuxCNC. The config is called stepper, and usually it is
+found in <em>/etc/emc2/sample-configs/stepper</em>.</p></div>
+</div>
+<h2 id="_maximum_step_rate_a_id_sec_maximum_step_rate_a">2. Maximum step rate<a id="sec:Maximum-step-rate"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>With software step generation, the maximum step rate is one step per
+two BASE_PERIODs for step-and-direction output. The maximum requested
+step rate is the product of an axis' MAX_VELOCITY and its INPUT_SCALE.
+If the requested step rate is not attainable, following errors will
+occur, particularly during fast jogs and G0 moves.</p></div>
+<div class="paragraph"><p>If your stepper driver can accept quadrature input, use this mode.
+With a quadrature signal, one step is possible for each BASE_PERIOD,
+doubling the maximum step rate.</p></div>
+<div class="paragraph"><p>The other remedies are to decrease one or more of: the BASE_PERIOD
+(setting this too low will cause the machine to become unresponsive or
+even lock up), the INPUT_SCALE (if you can select different step sizes
+on your stepper driver, change pulley ratios, or leadscrew pitch), or
+the MAX_VELOCITY and STEPGEN_MAXVEL.</p></div>
+<div class="paragraph"><p>If no valid combination of BASE_PERIOD, INPUT_SCALE, and MAX_VELOCITY
+is acceptable, then consider using hardware step generation (such as
+with the LinuxCNC-supported Universal Stepper Controller, Mesa cards, and
+others.)</p></div>
+</div>
+<h2 id="_pinout_a_id_sec_pinout_a">3. Pinout<a id="sec:Pinout"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>One of the major flaws in LinuxCNC was that you couldn&#8217;t specify the pinout
+without recompiling the source code. LinuxCNC is far more flexible, and now
+(thanks to the Hardware Abstraction Layer) you can easily specify which
+signal goes where. See the HAL manual for more detailed information on
+HAL.</p></div>
+<div class="paragraph"><p>As it is described in the HAL Introduction and tutorial, we have
+signals, pins and parameters inside the HAL.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">We are presenting one axis to keep it short, all others are similar.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>The ones relevant for our pinout are:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>signals: Xstep, Xdir &amp; Xen
+pins: parport.0.pin-XX-out &amp; parport.0.pin-XX-in</tt></pre>
+</div></div>
+<div class="paragraph"><p>Depending on what you have chosen in your .ini file you are using
+either standard_pinout.hal or xylotex_pinout.hal. These are two files
+that instruct the HAL how to link the various signals &amp; pins. Further
+on we&#8217;ll investigate the standard_pinout.hal.</p></div>
+<h3 id="_standard_pinout_hal_a_id_sub_standard_pinout_hal_a">3.1. standard_pinout.hal<a id="sub:standard_pinout.hal"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p>This file contains several HAL commands, and usually looks like this:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt># standard pinout config file for 3-axis steppers
+# using a parport for I/O
+#
+# first load the parport driver
+loadrt hal_parport cfg="0x0378"
+#
+# next connect the parport functions to threads
+# read inputs first
+addf parport.0.read base-thread 1
+# write outputs last
+addf parport.0.write base-thread -1
+#
+# finally connect physical pins to the signals
+net Xstep =&gt; parport.0.pin-03-out
+net Xdir  =&gt; parport.0.pin-02-out
+net Ystep =&gt; parport.0.pin-05-out
+net Ydir  =&gt; parport.0.pin-04-out
+net Zstep =&gt; parport.0.pin-07-out
+net Zdir  =&gt; parport.0.pin-06-out
+
+# create a signal for the estop loopback
+net estop-loop iocontrol.0.user-enable-out iocontrol.0.emc-enable-in
+
+# create signals for tool loading loopback
+net tool-prep-loop iocontrol.0.tool-prepare iocontrol.0.tool-prepared
+net tool-change-loop iocontrol.0.tool-change iocontrol.0.tool-changed
+
+# connect "spindle on" motion controller pin to a physical pin
+net spindle-on motion.spindle-on =&gt; parport.0.pin-09-out
+
+###
+### You might use something like this to enable chopper drives when machine ON
+### the Xen signal is defined in core_stepper.hal
+###
+
+# net Xen =&gt; parport.0.pin-01-out
+
+###
+### If you want active low for this pin, invert it like this:
+###
+
+# setp parport.0.pin-01-out-invert 1
+
+###
+### A sample home switch on the X axis (axis 0).  make a signal,
+### link the incoming parport pin to the signal, then link the signal
+### to LinuxCNC's axis 0 home switch input pin
+###
+
+# net Xhome parport.0.pin-10-in =&gt; axis.0.home-sw-in
+
+###
+### Shared home switches all on one parallel port pin?
+### that's ok, hook the same signal to all the axes, but be sure to
+### set HOME_IS_SHARED and HOME_SEQUENCE in the ini file.  See the
+### user manual!
+###
+
+# net homeswitches &lt;= parport.0.pin-10-in
+# net homeswitches =&gt; axis.0.home-sw-in
+# net homeswitches =&gt; axis.1.home-sw-in
+# net homeswitches =&gt; axis.2.home-sw-in
+
+###
+### Sample separate limit switches on the X axis (axis 0)
+###
+
+# net X-neg-limit parport.0.pin-11-in =&gt; axis.0.neg-lim-sw-in
+# net X-pos-limit parport.0.pin-12-in =&gt; axis.0.pos-lim-sw-in
+
+###
+### Just like the shared home switches example, you can wire together
+### limit switches.  Beware if you hit one, LinuxCNC will stop but can't tell
+### you which switch/axis has faulted.  Use caution when recovering from this.
+###
+
+# net Xlimits parport.0.pin-13-in =&gt; axis.0.neg-lim-sw-in axis.0.pos-lim-sw-in</tt></pre>
+</div></div>
+<div class="paragraph"><p>The lines starting with <em>#</em> are comments, and their only purpose is to
+guide the reader through the file.</p></div>
+<h3 id="_overview_a_id_sub_overview_standard_pinout_hal_a">3.2. Overview<a id="sub:Overview-standard_pinout.hal"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p>There are a couple of operations that get executed when the
+standard_pinout.hal gets executed/interpreted:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+The Parport driver gets loaded (see the Parport section of
+   the HAL Manual for details)
+</p>
+</li>
+<li>
+<p>
+The read &amp; write functions of the parport driver get assigned to the
+   base thread <span class="footnote"><br />[the fastest thread in the LinuxCNC setup, usually the
+   code gets executed every few tens of microseconds]<br /></span>
+</p>
+</li>
+<li>
+<p>
+The step &amp; direction signals for axes X,Y,Z get linked to pins on the
+   parport
+</p>
+</li>
+<li>
+<p>
+Further I/O signals get connected (estop loopback, toolchanger loopback)
+</p>
+</li>
+<li>
+<p>
+A spindle-on signal gets defined and linked to a parport pin
+</p>
+</li>
+</ul></div>
+<h3 id="_changing_the_standard_pinout_hal_a_id_sub_changing_standard_pinout_hal_a">3.3. Changing the standard_pinout.hal<a id="sub:Changing-standard_pinout.hal"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p>If you want to change the standard_pinout.hal file, all you need is a
+text editor. Open the file and locate the parts you want to change.</p></div>
+<div class="paragraph"><p>If you want for example to change the pin for the X-axis Step &amp;
+Directions signals, all you need to do is to change the number in the
+<em>parport.0.pin-XX-out</em> name:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net Xstep parport.0.pin-03-out
+net Xdir  parport.0.pin-02-out</tt></pre>
+</div></div>
+<div class="paragraph"><p>can be changed to:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net Xstep parport.0.pin-02-out
+net Xdir  parport.0.pin-03-out</tt></pre>
+</div></div>
+<div class="paragraph"><p>or basically any other <em>out</em> pin you like.</p></div>
+<div class="paragraph"><p>Hint: make sure you don&#8217;t have more than one signal connected to the
+same pin.</p></div>
+<h3 id="_changing_polarity_of_a_signal_a_id_sub_changing_the_polarity_a">3.4. Changing polarity of a signal<a id="sub:Changing-the-polarity"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p>If external hardware expects an “active low” signal, set the
+corresponding <em>-invert</em> parameter. For instance, to invert the spindle
+control signal:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>setp parport.0.pin-09-invert TRUE</tt></pre>
+</div></div>
+<h3 id="_adding_pwm_spindle_speed_control_a_id_sub_pwm_spindle_speed_a">3.5. Adding PWM Spindle Speed Control<a id="sub:PWM-Spindle-Speed"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p>If your spindle can be controlled by a PWM signal, use the <em>pwmgen</em>
+component to create the signal:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt pwmgen output_type=0
+addf pwmgen.update servo-thread
+addf pwmgen.make-pulses base-thread
+net spindle-speed-cmd motion.spindle-speed-out =&gt; pwmgen.0.value
+net spindle-on motion.spindle-on =&gt; pwmgen.0.enable
+net spindle-pwm pwmgen.0.pwm =&gt; parport.0.pin-09-out
+setp pwmgen.0.scale 1800 # Change to your spindle’s top speed in RPM</tt></pre>
+</div></div>
+<div class="paragraph"><p>This assumes that the spindle controller&#8217;s response to PWM is simple:
+0% PWM gives 0 RPM, 10% PWM gives 180 RPM, etc. If there is a minimum
+PWM required to get the spindle to turn, follow the example in the
+<em>nist-lathe</em> sample configuration to use a <em>scale</em> component.</p></div>
+<h3 id="_adding_an_enable_signal_a_id_sub_adding_enable_signal_a">3.6. Adding an enable signal<a id="sub:Adding-enable-signal"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p>Some amplifiers (drives) require an enable signal before they accept
+and command movement of the motors. For this reason there are already
+defined signals called <em>Xen</em>, <em>Yen</em>, <em>Zen</em>.</p></div>
+<div class="paragraph"><p>To connect them use the following example:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net Xen parport.0.pin-08-out</tt></pre>
+</div></div>
+<div class="paragraph"><p>You can either have one single pin that enables all drives; or
+several, depending on the setup you have. Note, however, that usually
+when one axis faults, all the other drives will be disabled as well, so
+having only one enable signal / pin for all drives is a common
+practice.</p></div>
+<h3 id="_external_estop_button">3.7. External ESTOP button</h3><div style="clear:left"></div>
+<div class="paragraph"><p>As you can see in the <a href="stepper.html#sub:standard_pinout.hal">standard_pinout.hal</a> file
+by default the stepper configuration assumes no external ESTOP button.
+<span class="footnote"><br />[An extensive explanation of hooking up ESTOP circuitry is explained
+in the wiki.linuxcnc.org and elsewhere in the Integrator Manual]<br /></span></p></div>
+<div class="paragraph"><p>To add a simple external button you need to replace the line:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net estop-loop iocontrol.0.user-enable-out iocontrol.0.emc-enable-in</tt></pre>
+</div></div>
+<div class="paragraph"><p>with</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net estop-loop parport.0.pin-01-in iocontrol.0.emc-enable-in</tt></pre>
+</div></div>
+<div class="paragraph"><p>This assumes an ESTOP switch connected to pin 01 on the parport. As
+long as the switch will stay pushed<span class="footnote"><br />[make sure you use a
+maintained switch for ESTOP.]<br /></span>, LinuxCNC will be in the ESTOP state.
+When the external button gets
+released LinuxCNC will immediately switch to the ESTOP-RESET state, and all
+you need to do is switch to Machine On and you&#8217;ll be
+able to continue your work with LinuxCNC.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-18 15:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/stepper.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:13:39 GMT -->
+</html>

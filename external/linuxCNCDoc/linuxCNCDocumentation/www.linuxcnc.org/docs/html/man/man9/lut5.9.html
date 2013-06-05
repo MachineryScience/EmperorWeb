@@ -1,0 +1,165 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:46 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/lut5.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>LUT5</title>
+
+</head>
+<body>
+
+<h1 align="center">LUT5</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">lut5 &minus;
+Arbitrary 5-input logic function based on a look-up
+table</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="67%">
+
+
+<p style="margin-top: 1em"><b>loadrt lut5
+[count=</b><i>N</i><b>|names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p> </td>
+<td width="22%">
+</td></tr>
+</table>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>lut5</b>
+constructs a logic function with up to 5 inputs using a
+<b>l</b>ook-<b>u</b>p <b>t</b>able. The value for
+<b>function</b> can be determined by writing the truth
+table, and computing the sum of <b>all</b> the
+<b>weights</b> for which the output value would be TRUE. The
+weights are hexadecimal not decimal so hexadecimal math must
+be used to sum the weights. A wiki page has a calculator to
+assist in computing the proper value for function.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em">http://wiki.linuxcnc.org/cgi-bin/wiki.pl?Lut5</p>
+
+<p style="margin-left:11%; margin-top: 1em">Note that LUT5
+will generate any of the 4,294,967,296 logical functions of
+5 inputs so <b>AND</b>, <b>OR</b>, <b>NAND</b>, <b>NOR</b>,
+<b>XOR</b> and every other combinatorial function is
+possible.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>Example
+Functions</b> <br>
+A 5-input <i>and</i> function is TRUE only when all the
+inputs are true, so the correct value for <b>function</b> is
+<b>0x80000000</b>.</p>
+
+<p style="margin-left:11%; margin-top: 1em">A 2-input
+<i>or</i> function would be the sum of <b>0x2</b> +
+<b>0x4</b> + <b>0x8</b>, so the correct value for
+<b>function</b> is <b>0xe</b>.</p>
+
+<p style="margin-left:11%; margin-top: 1em">A 5-input
+<i>or</i> function is TRUE whenever any of the inputs are
+true, so the correct value for <b>function</b> is
+<b>0xfffffffe</b>. Because every weight except <b>0x1</b> is
+true the function is the sum of every line except the first
+one.</p>
+
+<p style="margin-left:11%; margin-top: 1em">A 2-input
+<i>xor</i> function is TRUE whenever exactly one of the
+inputs is true, so the correct value for <b>function</b> is
+<b>0x6</b>. Only <b>in-0</b> and <b>in-1</b> should be
+connected to signals, because if any other bit is
+<b>TRUE</b> then the output will be <b>FALSE</b>.</p>
+
+
+<p style="margin-left:11%; margin-top: 1em"><STYLE> #weight TD { text-align: center; padding-left: .5ex; padding-right: .5ex } #weight TH { text-align: center; padding-left: .5ex; padding-right: .5ex } #weight TD.W { text-align: right; } </STYLE> <TABLE ID="weight" STYLE="border: 1px solid black; border-collapse: collapse"> <COL SPAN=5 STYLE="margin: .2ex"><COL SPAN=1 STYLE="border-left: 1px solid black"> <TR STYLE="border-bottom: 1px solid black"> <TH COLSPAN=6>Weights for each line of truth table <TR STYLE="border-bottom: 1px solid black"> <TH>Bit 4<TH>Bit 3<TH>Bit 2<TH>Bit 1<TH>Bit 0<TH> Weight <TR><TD>0<TD>0<TD>0<TD>0<TD>0<TD CLASS="w">0x1 <TR><TD>0<TD>0<TD>0<TD>0<TD>1<TD CLASS="w">0x2 <TR><TD>0<TD>0<TD>0<TD>1<TD>0<TD CLASS="w">0x4 <TR><TD>0<TD>0<TD>0<TD>1<TD>1<TD CLASS="w">0x8 <TR><TD>0<TD>0<TD>1<TD>0<TD>0<TD CLASS="w">0x10 <TR><TD>0<TD>0<TD>1<TD>0<TD>1<TD CLASS="w">0x20 <TR><TD>0<TD>0<TD>1<TD>1<TD>0<TD CLASS="w">0x40 <TR><TD>0<TD>0<TD>1<TD>1<TD>1<TD CLASS="w">0x80 <TR><TD>0<TD>1<TD>0<TD>0<TD>0<TD CLASS="w">0x100 <TR><TD>0<TD>1<TD>0<TD>0<TD>1<TD CLASS="w">0x200 <TR><TD>0<TD>1<TD>0<TD>1<TD>0<TD CLASS="w">0x400 <TR><TD>0<TD>1<TD>0<TD>1<TD>1<TD CLASS="w">0x800 <TR><TD>0<TD>1<TD>1<TD>0<TD>0<TD CLASS="w">0x1000 <TR><TD>0<TD>1<TD>1<TD>0<TD>1<TD CLASS="w">0x2000 <TR><TD>0<TD>1<TD>1<TD>1<TD>0<TD CLASS="w">0x4000 <TR><TD>0<TD>1<TD>1<TD>1<TD>1<TD CLASS="w">0x8000 <TR><TD>1<TD>0<TD>0<TD>0<TD>0<TD CLASS="w">0x10000 <TR><TD>1<TD>0<TD>0<TD>0<TD>1<TD CLASS="w">0x20000 <TR><TD>1<TD>0<TD>0<TD>1<TD>0<TD CLASS="w">0x40000 <TR><TD>1<TD>0<TD>0<TD>1<TD>1<TD CLASS="w">0x80000 <TR><TD>1<TD>0<TD>1<TD>0<TD>0<TD CLASS="w">0x100000 <TR><TD>1<TD>0<TD>1<TD>0<TD>1<TD CLASS="w">0x200000 <TR><TD>1<TD>0<TD>1<TD>1<TD>0<TD CLASS="w">0x400000 <TR><TD>1<TD>0<TD>1<TD>1<TD>1<TD CLASS="w">0x800000 <TR><TD>1<TD>1<TD>0<TD>0<TD>0<TD CLASS="w">0x1000000 <TR><TD>1<TD>1<TD>0<TD>0<TD>1<TD CLASS="w">0x2000000 <TR><TD>1<TD>1<TD>0<TD>1<TD>0<TD CLASS="w">0x4000000 <TR><TD>1<TD>1<TD>0<TD>1<TD>1<TD CLASS="w">0x8000000 <TR><TD>1<TD>1<TD>1<TD>0<TD>0<TD CLASS="w">0x10000000 <TR><TD>1<TD>1<TD>1<TD>0<TD>1<TD CLASS="w">0x20000000 <TR><TD>1<TD>1<TD>1<TD>1<TD>0<TD CLASS="w">0x40000000 <TR><TD>1<TD>1<TD>1<TD>1<TD>1<TD CLASS="w">0x80000000 </TABLE></p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="9%">
+
+
+<p style="margin-top: 1em"><b>lut5.</b><i>N</i></p></td>
+<td width="80%">
+</td></tr>
+</table>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><i><b>lut5.</b>N</i><b>.in-0</b>
+bit in <b><br>
+lut5.</b><i>N</i><b>.in-1</b> bit in <b><br>
+lut5.</b><i>N</i><b>.in-2</b> bit in <b><br>
+lut5.</b><i>N</i><b>.in-3</b> bit in <b><br>
+lut5.</b><i>N</i><b>.in-4</b> bit in <b><br>
+lut5.</b><i>N</i><b>.out</b> bit out</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>lut5.</b><i>N</i><b>.function</b>
+u32 rw</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/lut5.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

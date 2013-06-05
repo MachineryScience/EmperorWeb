@@ -1,0 +1,157 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 26 09:51:48 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/counter.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>COUNTER</title>
+
+</head>
+<body>
+
+<h1 align="center">COUNTER</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">counter &minus;
+counts input pulses <b>(DEPRECATED)</b></p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+counter [num_chan=</b><i>N</i><b>]</b></p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>counter</b>
+is a deprecated HAL component and will be removed in a
+future release. Use the <b>encoder</b> component with
+encoder.X.counter-mode set to TRUE.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>counter</b>
+is a HAL component that provides software- based counting
+that is useful for spindle position sensing and maybe other
+things. Instead of using a real encoder that outputs
+quadrature, some lathes have a sensor that generates a
+simple pulse stream as the spindle turns and an index pulse
+once per revolution. This component simply counts up when a
+&quot;count&quot; pulse (phase-A) is received, and if reset
+is enabled, resets when the &quot;index&quot; (phase-Z)
+pulse is received.</p>
+
+<p style="margin-left:11%; margin-top: 1em">This is of
+course only useful for a unidirectional spindle, as it is
+not possible to sense the direction of rotation.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>counter</b>
+conforms to the &quot;canonical encoder&quot; interface
+described in the HAL manual.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>counter.capture-position</b>
+(uses floating-point)</p>
+
+<p style="margin-left:22%;">Updates the counts, position
+and velocity outputs based on internal counters.</p>
+
+
+<p style="margin-left:11%;"><b>counter.update-counters</b></p>
+
+<p style="margin-left:22%;">Samples the phase-A and phase-Z
+inputs and updates internal counters.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>counter.</b><i>N</i><b>.phase-A</b>
+bit in</p>
+
+<p style="margin-left:22%;">The primary input signal. The
+internal counter is incremented on each rising edge.</p>
+
+
+<p style="margin-left:11%;"><b>counter.</b><i>N</i><b>.phase-Z</b>
+bit in</p>
+
+<p style="margin-left:22%;">The index input signal. When
+the <b>index-enable</b> pin is TRUE and a rising edge on
+<b>phase-Z</b> is seen, <b>index-enable</b> is set to FALSE
+and the internal counter is reset to zero.</p>
+
+
+<p style="margin-left:11%;"><b>counter.</b><i>N</i><b>.index-enable</b>
+bit io <b><br>
+counter.</b><i>N</i><b>.reset</b> bit io <b><br>
+counter.</b><i>N</i><b>.counts</b> signed out <b><br>
+counter.</b><i>N</i><b>.position</b> float out <b><br>
+counter.</b><i>N</i><b>.velocity</b> float out</p>
+
+<p style="margin-left:22%;">These pins function according
+to the canonical digital encoder interface.</p>
+
+
+<p style="margin-left:11%;"><b>counter.</b><i>N</i><b>.position-scale</b>
+float rw</p>
+
+<p style="margin-left:22%;">This parameter functions
+according to the canonical digital encoder interface.</p>
+
+
+<p style="margin-left:11%;"><b>counter.</b><i>N</i><b>.rawcounts</b>
+signed ro</p>
+
+<p style="margin-left:22%;">The internal counts value,
+updated from <b>update-counters</b> and reflected in the
+output pins at the next call to <b>capture-position</b>.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>encoder(9)</b>.
+in the LinuxCNC documentation.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/counter.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

@@ -1,0 +1,188 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:47 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/time.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>TIME</title>
+
+</head>
+<body>
+
+<h1 align="center">TIME</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">time &minus;
+Time on in Hours, Minutes, Seconds</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="67%">
+
+
+<p style="margin-top: 1em"><b>loadrt time
+[count=</b><i>N</i><b>|names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p> </td>
+<td width="22%">
+</td></tr>
+</table>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Time</p>
+
+<p style="margin-left:11%; margin-top: 1em">When the
+time.N.start bit goes true the cycle timer resets and starts
+to time until time.N.start goes false. If you connect
+time.N.start to halui.is-running as a cycle timer it will
+reset during a pause. See the example connections below to
+keep the timer timing during a pause.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Time returns
+the hours, minutes, and seconds that time.N.start is
+true.</p>
+
+<p style="margin-left:11%; margin-top: 1em">Sample pyVCP
+code to display the hours:minutes:seconds.</p>
+
+<p style="margin-left:11%; margin-top: 1em">&lt;pyvcp&gt;
+<br>
+&lt;hbox&gt; <br>
+&lt;label&gt; <br>
+&lt;text&gt;&quot;Cycle Time&quot;&lt;/text&gt; <br>
+&lt;font&gt;(&quot;Helvetica&quot;,14)&lt;/font&gt; <br>
+&lt;/label&gt; <br>
+&lt;u32&gt; <br>
+&lt;halpin&gt;&quot;time-hours&quot;&lt;/halpin&gt; <br>
+&lt;font&gt;(&quot;Helvetica&quot;,14)&lt;/font&gt; <br>
+&lt;format&gt;&quot;2d&quot;&lt;/format&gt; <br>
+&lt;/u32&gt; <br>
+&lt;label&gt; <br>
+&lt;text&gt;&quot;:&quot;&lt;/text&gt; <br>
+&lt;font&gt;(&quot;Helvetica&quot;,14)&lt;/font&gt; <br>
+&lt;/label&gt; <br>
+&lt;u32&gt; <br>
+&lt;halpin&gt;&quot;time-minutes&quot;&lt;/halpin&gt; <br>
+&lt;font&gt;(&quot;Helvetica&quot;,14)&lt;/font&gt; <br>
+&lt;format&gt;&quot;2d&quot;&lt;/format&gt; <br>
+&lt;/u32&gt; <br>
+&lt;label&gt; <br>
+&lt;text&gt;&quot;:&quot;&lt;/text&gt; <br>
+&lt;font&gt;(&quot;Helvetica&quot;,14)&lt;/font&gt; <br>
+&lt;/label&gt; <br>
+&lt;u32&gt; <br>
+&lt;halpin&gt;&quot;time-seconds&quot;&lt;/halpin&gt; <br>
+&lt;font&gt;(&quot;Helvetica&quot;,14)&lt;/font&gt; <br>
+&lt;format&gt;&quot;2d&quot;&lt;/format&gt; <br>
+&lt;/u32&gt; <br>
+&lt;/hbox&gt; &lt;/pyvcp&gt;</p>
+
+<p style="margin-left:11%; margin-top: 1em">In your
+post-gui.hal file you might use the following to connect it
+up</p>
+
+<p style="margin-left:11%; margin-top: 1em">loadrt time
+<br>
+loadrt not <br>
+addf time.0 servo-thread <br>
+addf not.0 servo-thread <br>
+net prog-running not.0.in &lt;= halui.program.is-idle <br>
+net cycle-timer time.0.start &lt;= not.0.out <br>
+net cycle-seconds pyvcp.time-seconds &lt;= time.0.seconds
+<br>
+net cycle-minutes pyvcp.time-minutes &lt;= time.0.minutes
+<br>
+net cycle-hours pyvcp.time-hours &lt;= time.0.hours</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>time.</b><i>N</i>
+(requires a floating-point thread)</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>time.</b><i>N</i><b>.start</b>
+bit in</p>
+
+<p style="margin-left:22%;">Timer On</p>
+
+
+<p style="margin-left:11%;"><b>time.</b><i>N</i><b>.seconds</b>
+u32 out</p>
+
+<p style="margin-left:22%;">Seconds</p>
+
+
+<p style="margin-left:11%;"><b>time.</b><i>N</i><b>.minutes</b>
+u32 out</p>
+
+<p style="margin-left:22%;">Minutes</p>
+
+
+<p style="margin-left:11%;"><b>time.</b><i>N</i><b>.hours</b>
+u32 out</p>
+
+<p style="margin-left:22%;">Hours</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">John
+Thornton</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/time.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

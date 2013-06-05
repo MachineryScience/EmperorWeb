@@ -1,0 +1,637 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/drivers/pluto_p_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Pluto-P</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Pluto-P</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<h2 id="_general_info">1. General Info</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The Pluto-P is an inexpensive ($60) FPGA board featuring the
+ACEX1K chip from Altera.</p></div>
+<h3 id="_requirements">1.1. Requirements</h3><div style="clear:left"></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+A Pluto-P board
+</p>
+</li>
+<li>
+<p>
+An EPP-compatible parallel port, configured for EPP mode in the system BIOS
+</p>
+</li>
+</ol></div>
+<h3 id="_connectors">1.2. Connectors</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+The Pluto-P board is shipped with the left connector presoldered, with
+   the key in the indicated position. The other connectors are
+   unpopulated. There does not seem to be a standard 12-pin IDC connector,
+   but some of the pins of a 16P connector can hang off the board next to
+   QA3/QZ3.
+</p>
+</li>
+<li>
+<p>
+The bottom and right connectors are on the same .1" grid, but the left
+   connector is not. If OUT2…OUT9 are not required, a single IDC connector
+   can span the bottom connector and the bottom two rows of the right
+   connector.
+</p>
+</li>
+</ul></div>
+<h3 id="_physical_pins">1.3. Physical Pins</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Read the ACEX1K datasheet for information about input and output
+   voltage thresholds. The pins are all configured in "LVTTL/LVCMOS" mode
+   and are generally compatible with 5V TTL logic.
+</p>
+</li>
+<li>
+<p>
+Before configuration and after properly exiting LinuxCNC, all Pluto-P pins
+   are tristated with weak pull-ups (20k-ohms min, 50k-ohms max). If the
+   watchdog timer is enabled (the default),
+   these pins are also tristated after an interruption of communication
+   between LinuxCNC and the board. The watchdog timer takes approximately
+   6.5ms to activate. However, software bugs in the pluto_servo firmware
+   or LinuxCNC can leave the Pluto-P pins in an undefined state.
+</p>
+</li>
+<li>
+<p>
+In pwm+dir mode, by default dir is HIGH for negative values and LOW
+   for positive values. To select HIGH for positive values and LOW for
+   negative values, set the corresponding dout-NN-invert parameter TRUE to
+   invert the signal.
+</p>
+</li>
+<li>
+<p>
+The index input is triggered on the rising edge. Initial testing has
+   shown that the QZx inputs are particularly noise sensitive, due to
+   being polled every 25ns. Digital filtering has been added to filter
+   pulses shorter than 175ns (seven polling times). Additional external
+   filtering on all input pins, such as a Schmitt buffer or inverter, RC
+   filter, or differential receiver (if applicable) is recommended.
+</p>
+</li>
+<li>
+<p>
+The IN1…IN7 pins have 22-ohm series resistors to their associated FPGA
+   pins. No other pins have any sort of protection for out-of-spec
+   voltages or currents. It is up to the integrator to add appropriate
+   isolation and protection. Traditional parallel port optoisolator boards
+   do not work with pluto_servo due to the bidirectional nature of the EPP
+   protocol.
+</p>
+</li>
+</ul></div>
+<h3 id="_led">1.4. LED</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+When the device is unprogrammed, the LED glows faintly. When the
+   device is programmed, the LED glows according to the duty cycle of PWM0
+   (<strong>LED</strong> = <strong>UP0</strong> <em>xor</em> <strong>DOWN0</strong>) or STEPGEN0 (<strong>LED</strong> = <strong>STEP0</strong> <em>xor</em> <strong>DIR0</strong>).
+</p>
+</li>
+</ul></div>
+<h3 id="_power">1.5. Power</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+A small amount of current may be drawn from VCC. The available current
+   depends on the unregulated DC input to the board. Alternately,
+   regulated +3.3VDC may be supplied to the FPGA through these VCC pins.
+   The required current is not yet known, but is probably around 50mA plus
+   I/O current.
+</p>
+</li>
+<li>
+<p>
+The regulator on the Pluto-P board is a low-dropout type. Supplying 5V
+   at the power jack will allow the regulator to work properly.
+</p>
+</li>
+</ul></div>
+<h3 id="_pc_interface">1.6. PC interface</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Only a single pluto_servo or pluto_step board is supported.
+</p>
+</li>
+</ul></div>
+<h3 id="_rebuilding_the_fpga_firmware">1.7. Rebuilding the FPGA firmware</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The <tt>src/hal/drivers/pluto_servo_firmware/</tt> and
+<tt>src/hal/drivers/pluto_step_firmware/</tt>  subdirectories contain the
+Verilog source code plus additional files
+used by Quartus for the FPGA firmwares. Altera&#8217;s Quartus II software is
+required to rebuild the FPGA firmware. To rebuild the firmware from the
+ .hdl and other source files, open the <tt>.qpf</tt> file and press CTRL-L.
+Then, recompile LinuxCNC.</p></div>
+<div class="paragraph"><p>Like the HAL hardware driver, the FPGA firmware is licensed under the
+terms of the GNU General Public License.</p></div>
+<div class="paragraph"><p>The gratis version of Quartus II runs only on Microsoft Windows,
+although there is apparently a paid version that runs on Linux.</p></div>
+<h3 id="_for_more_information">1.8. For more information</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Some additional information about it is available from
+<a href="http://www.fpga4fun.com/board_pluto-P.html">http://www.fpga4fun.com/board_pluto-P.html</a>
+and from <a href="http://emergent.unpy.net/01165081407">the developer&#8217;s blog</a>.</p></div>
+</div>
+<h2 id="_pluto_servo_hardware_pwm_and_quadrature_counting_a_id_sec_pluto_servo_a">2. pluto-servo: Hardware PWM and quadrature counting<a id="sec:pluto-servo"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The pluto_servo system is suitable for control of a 4-axis CNC mill
+with servo motors, a 3-axis mill with PWM spindle control, a lathe with
+spindle encoder, etc. The large number of inputs allows a full set of
+limit switches.</p></div>
+<div class="paragraph"><p>This driver features:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+4 quadrature channels with 40MHz sample rate. The counters operate in
+   "4x" mode. The maximum useful quadrature rate is 8191 counts per LinuxCNC
+   servo cycle, or about 8MHz for LinuxCNC&#8217;s default 1ms servo rate.
+</p>
+</li>
+<li>
+<p>
+4 PWM channels, "up/down" or "pwm+dir" style. 4095 duty cycles from
+   -100% to +100%, including 0%. The PWM period is approximately 19.5kHz
+   (40MHz / 2047). A PDM-like mode is also available.
+</p>
+</li>
+<li>
+<p>
+18 digital outputs: 10 dedicated, 8 shared with PWM functions.
+   (Example: A lathe with unidirectional PWM spindle control may use 13
+   total digital outputs)
+</p>
+</li>
+<li>
+<p>
+20 digital inputs: 8 dedicated, 12 shared with Quadrature functions.
+   (Example: A lathe with index pulse only on the spindle may use 13 total
+   digital inputs)
+</p>
+</li>
+<li>
+<p>
+EPP communication with the PC. The EPP communication typically takes
+   around 100 us on machines tested so far, enabling servo rates above
+   1kHz.
+</p>
+</li>
+</ul></div>
+<h3 id="_pinout">2.1. Pinout</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+UPx
+</dt>
+<dd>
+<p>
+     The "up" (up/down mode) or “pwm” (pwm+direction mode) signal from PWM
+    generator X. May be used as a digital output if the corresponding PWM
+    channel is unused, or the output on the channel is always negative. The
+    corresponding digital output invert may be set to TRUE to make UPx
+    active low rather than active high.
+</p>
+</dd>
+<dt class="hdlist1">
+DNx
+</dt>
+<dd>
+<p>
+     The "down" (up/down mode) or “direction” (pwm+direction mode) signal
+    from PWM generator X. May be used as a digital output if the
+    corresponding PWM channel is unused, or the output on the channel is
+    never negative. The corresponding digital ouput invert may be set to
+    TRUE to make DNx active low rather than active high.
+</p>
+</dd>
+<dt class="hdlist1">
+QAx, QBx
+</dt>
+<dd>
+<p>
+     The A and B signals for Quadrature counter X. May be used as a digital
+    input if the corresponding quadrature channel is unused.
+</p>
+</dd>
+<dt class="hdlist1">
+QZx
+</dt>
+<dd>
+<p>
+     The Z (index) signal for quadrature counter X. May be used as a
+    digital input if the index feature of the corresponding quadrature
+    channel is unused.
+</p>
+</dd>
+<dt class="hdlist1">
+INx
+</dt>
+<dd>
+<p>
+    Dedicated digital input #x
+</p>
+</dd>
+<dt class="hdlist1">
+OUTx
+</dt>
+<dd>
+<p>
+    Dedicated digital output #x
+</p>
+</dd>
+<dt class="hdlist1">
+GND
+</dt>
+<dd>
+<p>
+    Ground
+</p>
+</dd>
+<dt class="hdlist1">
+VCC
+</dt>
+<dd>
+<p>
+    +3.3V regulated DC
+</p>
+</dd>
+</dl></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pluto-pinout.png" alt="images/pluto-pinout.png" />
+</div>
+<div class="title">Figure 1. Pluto-Servo Pinout<a id="fig:Pluto-Servo-Pinout"></a></div>
+</div>
+<div class="tableblock">
+<table rules="all"
+width="90%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Table 1. Pluto-Servo Alternate Pin Functions<a id="table:Pluto-Servo-Alternate-Pin"></a></caption>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+<thead>
+<tr>
+<th align="left" valign="top">Primary function </th>
+<th align="left" valign="top"> Alternate Function </th>
+<th align="left" valign="top"> Behavior if both functions used</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>UP0</strong></p></td>
+<td align="left" valign="top"><p class="table">PWM0</p></td>
+<td align="left" valign="top"><p class="table">When pwm-0-pwmdir is TRUE, this pin is the PWM output</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">OUT10</p></td>
+<td align="left" valign="top"><p class="table">XOR&#8217;d with UP0 or PWM0</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>UP1</strong></p></td>
+<td align="left" valign="top"><p class="table">PWM1</p></td>
+<td align="left" valign="top"><p class="table">When pwm-1-pwmdir is TRUE, this pin is the PWM output</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">OUT12</p></td>
+<td align="left" valign="top"><p class="table">XOR&#8217;d with UP1 or PWM1</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>UP2</strong></p></td>
+<td align="left" valign="top"><p class="table">PWM2</p></td>
+<td align="left" valign="top"><p class="table">When pwm-2-pwmdir is TRUE, this pin is the PWM output</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">OUT14</p></td>
+<td align="left" valign="top"><p class="table">XOR&#8217;d with UP2 or PWM2</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>UP3</strong></p></td>
+<td align="left" valign="top"><p class="table">PWM3</p></td>
+<td align="left" valign="top"><p class="table">When pwm-3-pwmdir is TRUE, this pin is the PWM output</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">OUT16</p></td>
+<td align="left" valign="top"><p class="table">XOR&#8217;d with UP3 or PWM3</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>DN0</strong></p></td>
+<td align="left" valign="top"><p class="table">DIR0</p></td>
+<td align="left" valign="top"><p class="table">When pwm-0-pwmdir is TRUE, this pin is the DIR output</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">OUT11</p></td>
+<td align="left" valign="top"><p class="table">XOR&#8217;d with DN0 or DIR0</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>DN1</strong></p></td>
+<td align="left" valign="top"><p class="table">DIR1</p></td>
+<td align="left" valign="top"><p class="table">When pwm-1-pwmdir is TRUE, this pin is the DIR output</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">OUT13</p></td>
+<td align="left" valign="top"><p class="table">XOR&#8217;d with DN1 or DIR1</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>DN2</strong></p></td>
+<td align="left" valign="top"><p class="table">DIR2</p></td>
+<td align="left" valign="top"><p class="table">When pwm-2-pwmdir is TRUE, this pin is the DIR output</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">OUT15</p></td>
+<td align="left" valign="top"><p class="table">XOR&#8217;d with DN2 or DIR2</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>DN3</strong></p></td>
+<td align="left" valign="top"><p class="table">DIR3</p></td>
+<td align="left" valign="top"><p class="table">When pwm-3-pwmdir is TRUE, this pin is the DIR output</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"></p></td>
+<td align="left" valign="top"><p class="table">OUT17</p></td>
+<td align="left" valign="top"><p class="table">XOR&#8217;d with DN3 or DIR3</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>QZ0</strong></p></td>
+<td align="left" valign="top"><p class="table">IN8</p></td>
+<td align="left" valign="top"><p class="table">Read same value</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>QZ1</strong></p></td>
+<td align="left" valign="top"><p class="table">IN9</p></td>
+<td align="left" valign="top"><p class="table">Read same value</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>QZ2</strong></p></td>
+<td align="left" valign="top"><p class="table">IN10</p></td>
+<td align="left" valign="top"><p class="table">Read same value</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>QZ3</strong></p></td>
+<td align="left" valign="top"><p class="table">IN11</p></td>
+<td align="left" valign="top"><p class="table">Read same value</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>QA0</strong></p></td>
+<td align="left" valign="top"><p class="table">IN12</p></td>
+<td align="left" valign="top"><p class="table">Read same value</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>QA1</strong></p></td>
+<td align="left" valign="top"><p class="table">IN13</p></td>
+<td align="left" valign="top"><p class="table">Read same value</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>QA2</strong></p></td>
+<td align="left" valign="top"><p class="table">IN14</p></td>
+<td align="left" valign="top"><p class="table">Read same value</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>QA3</strong></p></td>
+<td align="left" valign="top"><p class="table">IN15</p></td>
+<td align="left" valign="top"><p class="table">Read same value</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>QB0</strong></p></td>
+<td align="left" valign="top"><p class="table">IN16</p></td>
+<td align="left" valign="top"><p class="table">Read same value</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>QB1</strong></p></td>
+<td align="left" valign="top"><p class="table">IN17</p></td>
+<td align="left" valign="top"><p class="table">Read same value</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>QB2</strong></p></td>
+<td align="left" valign="top"><p class="table">IN18</p></td>
+<td align="left" valign="top"><p class="table">Read same value</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table"><strong>QB3</strong></p></td>
+<td align="left" valign="top"><p class="table">IN19</p></td>
+<td align="left" valign="top"><p class="table">Read same value</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="_input_latching_and_output_updating">2.2. Input latching and output updating</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+PWM duty cycles for each channel are updated at different times.
+</p>
+</li>
+<li>
+<p>
+Digital outputs OUT0 through OUT9 are all updated at the same time.
+   Digital outputs OUT10 through OUT17 are updated at the same time as the
+   PWM function they are shared with.
+</p>
+</li>
+<li>
+<p>
+Digital inputs IN0 through IN19 are all latched at the same time.
+</p>
+</li>
+<li>
+<p>
+Quadrature positions for each channel are latched at different times.
+</p>
+</li>
+</ul></div>
+<h3 id="_hal_functions_pins_and_parameters">2.3. HAL Functions, Pins and Parameters</h3><div style="clear:left"></div>
+<div class="paragraph"><p>A list of all <em>loadrt</em> arguments, HAL function names, pin names and
+parameter names is in the manual page, <em>pluto_servo.9</em>.</p></div>
+<h3 id="_compatible_driver_hardware">2.4. Compatible driver hardware</h3><div style="clear:left"></div>
+<div class="paragraph"><p>A schematic for a 2A, 2-axis PWM servo amplifier board is available
+(<a href="http://emergent.unpy.net/projects/01148303608">http://emergent.unpy.net/projects/01148303608</a>).
+The L298 H-Bridge is inexpensive and can easily be used for motors up to
+4A (one motor per L298) or up to 2A (two motors per L298) with the supply
+voltage up to 46V. However, the L298 does not have built-in current limiting, a
+problem for motors with high stall currents. For higher currents and
+voltages, some users have reported success with International
+Rectifier&#8217;s integrated high-side/low-side drivers.
+(<a href="http://www.cnczone.com/forums/showthread.php?t=25929">http://www.cnczone.com/forums/showthread.php?t=25929</a>)</p></div>
+</div>
+<h2 id="_pluto_step_300khz_hardware_step_generator_a_id_sec_pluto_step_hardware_step_a">3. Pluto-step: 300kHz Hardware Step Generator<a id="sec:Pluto-step:-Hardware-step"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Pluto-step is suitable for control of a 3- or 4-axis CNC mill with
+stepper motors. The large number of inputs allows for a full set of
+limit switches.</p></div>
+<div class="paragraph"><p>The board features:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+4 “step+direction” channels with 312.5kHz maximum step rate,
+   programmable step length, space, and direction change times
+</p>
+</li>
+<li>
+<p>
+14 dedicated digital outputs
+</p>
+</li>
+<li>
+<p>
+16 dedicated digital inputs
+</p>
+</li>
+<li>
+<p>
+EPP communication with the PC
+</p>
+</li>
+</ul></div>
+<h3 id="_pinout_2">3.1. Pinout</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+STEPx
+</dt>
+<dd>
+<p>
+    The “step” (clock) output of stepgen channel <strong>x</strong>
+</p>
+</dd>
+<dt class="hdlist1">
+DIRx
+</dt>
+<dd>
+<p>
+    The “direction” output of stepgen channel <strong>x</strong>
+</p>
+</dd>
+<dt class="hdlist1">
+INx
+</dt>
+<dd>
+<p>
+    Dedicated digital input #x
+</p>
+</dd>
+<dt class="hdlist1">
+OUTx
+</dt>
+<dd>
+<p>
+    Dedicated digital output #x
+</p>
+</dd>
+<dt class="hdlist1">
+GND
+</dt>
+<dd>
+<p>
+    Ground
+</p>
+</dd>
+<dt class="hdlist1">
+VCC
+</dt>
+<dd>
+<p>
+    +3.3V regulated DC
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>While the “extended main connector” has a superset of signals usually
+found on a Step &amp; Direction DB25 connector&#8212;4 step generators, 9
+inputs, and 6 general-purpose outputs&#8212;the layout on this header is
+different than the layout of a standard 26-pin ribbon cable to DB25
+connector.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pluto-step-pinout.png" alt="images/pluto-step-pinout.png" />
+</div>
+<div class="title">Figure 2. Pluto-Step Pinout<a id="fig:Pluto-Step-Pinout"></a></div>
+</div>
+<h3 id="_input_latching_and_output_updating_2">3.2. Input latching and output updating</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Step frequencies for each channel are updated at different times.
+</p>
+</li>
+<li>
+<p>
+Digital outputs are all updated at the same time.
+</p>
+</li>
+<li>
+<p>
+Digital inputs are all latched at the same time.
+</p>
+</li>
+<li>
+<p>
+Feedback positions for each channel are latched at different times.
+</p>
+</li>
+</ul></div>
+<h3 id="_step_waveform_timings">3.3. Step Waveform Timings</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The firmware and driver enforce step length, space, and direction
+change times. Timings are rounded up to the next multiple of
+<strong><em>1.6μs</em></strong>, with a maximum of <strong><em>49.6μs</em></strong>. The timings
+are the same as for the software stepgen component, except that
+“dirhold” and “dirsetup” have been merged into a single parameter
+“dirtime” which should be the maximum of the two, and that the same
+step timings are always applied to all channels.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pluto_step_waveform.png" alt="images/pluto_step_waveform.png" />
+</div>
+<div class="title">Figure 3. Pluto-Step Timings<a id="fig:Pluto-Step-Timings"></a></div>
+</div>
+<h3 id="_hal_functions_pins_and_parameters_2">3.4. HAL Functions, Pins and Parameters</h3><div style="clear:left"></div>
+<div class="paragraph"><p>A list of all <em>loadrt</em> arguments, HAL function names, pin names and
+parameter names is in the manual page, <em>pluto_step.9</em>.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-19 16:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/drivers/pluto_p_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+</html>

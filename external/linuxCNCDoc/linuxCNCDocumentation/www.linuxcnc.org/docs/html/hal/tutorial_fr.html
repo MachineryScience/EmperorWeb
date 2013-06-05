@@ -1,0 +1,1076 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/tutorial_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:01 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Le tutoriel de HAL</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Le tutoriel de HAL</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:Tutoriel-HAL"></a> </p></div>
+</div>
+</div>
+<h2 id="sec:Intro-tutoriel">1. Introduction</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Halrun peut être utilisé pour créer un système complet et fonctionnel.
+Il s&#8217;agit d&#8217;un outil de configuration et de mise au point très puissant, en
+ligne de commande ou en fichier texte. Les exemples suivants illustrent son
+installation et son fonctionnement.</p></div>
+</div>
+<h2 id="sec:Tutoriel-Halcmd">2. Halcmd</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Halcmd est un outil en ligne de commande pour manipuler HAL. Il existe
+une man page plus complète pour halcmd, elle sera installée en même
+temps qu' LinuxCNC depuis ses sources ou depuis un paquet. Si LinuxCNC a été
+compilé en <em>run-in-place</em>, la man page n&#8217;est pas installée, mais elle
+est accessible, dans le répertoire principal de LinuxCNC, taper:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$ man -M docs/man halcmd</tt></pre>
+</div></div>
+<h3 id="_tab_compl_tion">2.1. Tab-complétion</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Votre version de halcmd peut inclure la complétion avec la touche tab.
+Au lieu de compléter les noms de fichiers comme le fait un shell, il
+complète les commandes avec les identifiants HAL. Essayez de presser la
+touche tab après le début d&#8217;une commande HAL:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: loa&lt;TAB&gt;
+
+halcmd: load
+
+halcmd: loadrt
+
+halcmd: loadrt deb&lt;TAB&gt;
+
+halcmd: loadrt debounce</tt></pre>
+</div></div>
+<h3 id="_l_8217_environnement_rtapi">2.2. L&#8217;environnement RTAPI</h3><div style="clear:left"></div>
+<div class="paragraph"><p>RTAPI est le sigle de Real Time Application Programming Interface. De
+nombreux composants HAL travaillent en temps réel et tous les
+composants de HAL stockent leurs données dans la mémoire partagée, de
+sorte que les composants temps réel puissent y accéder. Normalement,
+Linux ne prend pas en charge les programmes temps réel ni le type de
+mémoire partagée dont HAL a besoin. Heureusement, il existe des
+systèmes d&#8217;exploitation temps réel RTOS qui fournissent les extensions
+nécessaires à Linux. Malheureusement, chaque RTOS fait les choses
+différemment des autres.</p></div>
+<div class="paragraph"><p>Pour remédier à ces différences, l'équipe de LinuxCNC a proposé RTAPI, qui
+fournit une manière cohérente aux programmes de parler au RTOS. Si vous
+êtes un programmeur qui veut travailler à l&#8217;intérieur de LinuxCNC, vous
+pouvez étudier <em>linuxcnc/src/rtapi/rtapi.h</em> pour comprendre l&#8217;API. Mais si
+vous êtes une personne normale, tout
+ce que vous avez besoin de savoir à propos de RTAPI est qu&#8217;il doit être
+(avec le RTOS) chargé dans la mémoire de votre ordinateur avant de
+pouvoir faire n&#8217;importe quoi avec HAL.</p></div>
+</div>
+<h2 id="sec:Tutoriel-Exemple-Simple">3. Tutoriel simple</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<h3 id="_charger_un_composant_temps_r_el">3.1. Charger un composant temps réel</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Pour ce tutoriel, nous allons supposer que vous avez installé avec
+succès le CD-Live ou que vous avez compilé correctement l&#8217;arborescence
+linuxcnc/src. Si nécessaire, invoquez le script <em>rip-environment</em> pour
+préparer votre shell. Dans ce cas, tout ce que vous avez à faire
+est de charger le RTOS requis et les modules RTAPI dans la mémoire.
+Tapez juste les commandes suivantes dans une console:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>$cd linuxcnc
+
+$linuxcnc halrun
+
+$halcmd:</tt></pre>
+</div></div>
+<div class="paragraph"><p>Avec l&#8217;OS temps réel et RTAPI chargés, vous pouvez passer au premier
+exemple. Notez que le prompt a changé, il est passé de <em>+$+</em> à <em>halcmd:</em>.
+La raison en est que les commandes ultérieures seront interprétées
+comme des commandes HAL et non plus comme des commandes shell.</p></div>
+<div class="paragraph"><p>Pour le premier exemple, nous allons utiliser un composant HAL appelé
+<em>siggen</em>, qui est un simple générateur de signaux. Une description
+complète de ce composant est disponible à la <a href="rtcomps_fr.html#sec:Siggen">section siggen</a>
+de ce document.
+Il s&#8217;agit d&#8217;un composant temps réel, mis en œuvre comme un module du
+noyau Linux. Pour charger siggen utiliser la commande de HAL, <em>loadrt</em>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: loadrt siggen</tt></pre>
+</div></div>
+<h3 id="_examiner_hal">3.2. Examiner HAL</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Maintenant que le module est chargé, il faut introduire <em>halcmd</em>,
+l&#8217;outil en ligne de commande utilisé pour configurer HAL. Pour une description
+plus complète essayez: <em>man halcmd</em>, ou consultez la
+section <a href="tutorial_fr.html#sec:Tutoriel-Halcmd">halcmd au début de ce document</a>. La
+première commande de halcmd et <em>show</em>, qui affichera les informations
+concernant l'état actuel de HAL. Pour afficher tout ce qui est
+installé tapez:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: show comp
+
+    Loaded HAL Components:
+    ID     Type  Name          PID   State
+    3      RT    siggen              ready
+    2      User  halcmd2177    2177  ready</tt></pre>
+</div></div>
+<div class="paragraph"><p>Puisque halcmd lui même est un composant HAL, il sera toujours
+présent dans la liste.
+Le nombre après halcmd dans la liste des composants est le
+Process ID. Il est toujours possible de lancer plus d&#8217;une instance de
+halcmd en même temps (dans différentes fenêtres par exemple), le numéro
+PID est ajouté à la fin du nom pour rendre celui-ci unique. La liste
+ montre aussi le composant <em>siggen</em>  que nous avions installé à l'étape
+précédente. Le <em>RT</em> sous <em>Type</em> indique que siggen est un composant temps réel.</p></div>
+<div class="paragraph"><p>Ensuite, voyons quelles pins siggen rend disponibles:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: show pin
+
+    Component Pins:
+    Owner   Type  Dir         Value  Name
+        3  float   IN             1  siggen.0.amplitude
+        3  float  OUT             0  siggen.0.cosine
+        3  float   IN             1  siggen.0.frequency
+        3  float   IN             0  siggen.0.offset
+        3  float  OUT             0  siggen.0.sawtooth
+        3  float  OUT             0  siggen.0.sine
+        3  float  OUT             0  siggen.0.square
+        3  float  OUT             0  siggen.0.triangle</tt></pre>
+</div></div>
+<div class="paragraph"><p>Cette commande affiche toutes les pins présentes dans HAL. Un
+système complexe peut avoir plusieurs dizaines ou centaines de pins.
+Mais pour le moment il y a seulement huit pins. Toutes ces huit pins
+sont des flottants, elles transportent toutes des données en provenance
+du composant siggen. Puisque nous n&#8217;avons pas encore exécuté le code
+contenu dans le composant, certaines pins ont une valeur de zéro.</p></div>
+<div class="paragraph"><p>L'étape suivante consiste à examiner les paramètres:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: show param
+
+    Parameters:
+    Owner   Type  Dir        Value   Name
+        3    s32   RO            0   siggen.0.update.time
+        3    s32   RW            0   siggen.0.update.tmax</tt></pre>
+</div></div>
+<div class="paragraph"><p>La commande <em>show param</em> affiche tous les paramètres de HAL. Pour le
+moment chaque paramètre à la valeur par défaut attribuée quand le
+composant a été chargé. Notez dans la colonne <em>Dir</em>, les paramètres
+marqués <em>-W</em> sont en écriture possible, pour ceux qui ne sont jamais
+modifiés par
+le composant lui-même, mais qui sont modifiables par l&#8217;utilisateur pour
+contrôler le composant. Nous verrons comment plus tard. Les paramètres
+ marqués <em>R-</em> sont en lecture seule. Il ne peuvent être modifiés que
+par le composant. Finalement, les paramètres marqués <em>RW</em> sont en
+lecture/écriture. Ils peuvent être modifiés par le composant
+ et aussi par l&#8217;utilisateur. Nota: les paramètres
+<em>siggen.0.update.time</em> et <em>siggen.0.update.tmax</em> existent dans un but
+de débogage, ils ne sont pas couverts par cette documentation.
+Les paramètres thread.time et thread.tmax sont associés avec le thread
+créé quand le composant a été chargé. Quand la réécriture de HAL sera
+terminée, le thread ne sera plus créé à ce stade, de sorte que ces
+paramètres ne seront plus visibles.</p></div>
+<div class="paragraph"><p>Il n&#8217;y a pas de thread créé ici, mais il y a quand même les paramètres
+<em>siggen.0.update.time</em> et <em>siggen.0.update.tmax</em>.</p></div>
+<div class="paragraph"><p>Les paramètres de thread sont ceux du composant 02, le module siggen.
+C&#8217;est incorrect, ils devraient être ceux du module hal_lib, parce que
+le thread lui même n&#8217;est plus la propriété de siggen, et si
+siggen est retiré, les paramètres devraient rester.</p></div>
+<div class="paragraph"><p>Et bien finalement, <em>fixer</em> les paramètres de thread aura pris plus de
+temps que je ne pensais. Donc, je les ai éliminés pour l&#8217;instant. Quand
+la réécriture de HAL sera terminée, je les remettrai.</p></div>
+<div class="paragraph"><p>La plupart des composants temps réel exportent une ou plusieurs
+fonctions pour que le code qu&#8217;elles contiennent soit exécuté en temps
+réel. Voyons ce que la fonction siggen exporte:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: show funct
+
+    Exported Functions:
+    Owner  CodeAddr  Arg       FP   Users  Name
+    00003  f801b000  fae820b8  YES      0   siggen.0.update</tt></pre>
+</div></div>
+<div class="paragraph"><p>Le composant siggen exporte une seule fonction. Il nécessite un
+flottant (Floating Point). Il n&#8217;est lié à aucun thread, puisque <em>users</em>
+est à zéro. <span class="footnote"><br />[Les champs CodeAddr et Arg ont été utilisés
+pendant le développement et devraient probablement disparaître.]<br /></span></p></div>
+<h3 id="_ex_cuter_le_code_temps_r_el">3.3. Exécuter le code temps réel</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Pour faire tourner le code actuellement contenu dans la fonction
+<em>siggen.0.update</em>, nous avons besoin d&#8217;un thread temps réel. C&#8217;est le
+composant appelé <em>threads</em> qui est utilisé pour créer le nouveau
+thread. Créons un thread appelé <em>test-thread</em> avec une période de 1 ms
+(1000 µs ou 1000000 ns):</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: loadrt threads name1=test-thread period1=1000000</tt></pre>
+</div></div>
+<div class="paragraph"><p>Voyons si il fonctionne:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: show thread
+
+    Realtime Threads:
+         Period  FP     Name               (     Time, Max-Time )
+         999855  YES           test-thread (        0,        0 )</tt></pre>
+</div></div>
+<div class="paragraph"><p>Il fonctionne. La période n&#8217;est pas exactement de 1000000 ns à cause
+des limitations dues au matériel, mais nous avons bien un thread qui
+tourne à une période approximativement correcte et qui peut manipuler
+des fonctions en virgule flottante. La prochaine étape sera de
+connecter la fonction au thread:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: addf siggen.0.update test-thread</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour le moment nous avions utilisé halcmd seulement pour regarder
+HAL. Mais cette fois-ci, nous avons
+ utilisé la commande <em>addf</em> (add function) pour changer quelque chose
+dans HAL. Nous avons dit
+ à halcmd d&#8217;ajouter la fonction <em>siggen.0.update</em> au thread
+<em>test-thread</em> et la commande suivante indique qu&#8217;il a réussi:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: show thread
+
+    Realtime Threads:
+         Period  FP     Name          (     Time, Max-Time )
+         999855  YES    test-thread   (        0,        0 )
+                    1 siggen.0.update</tt></pre>
+</div></div>
+<div class="paragraph"><p>Il y a une étape de plus avant que le composant siggen ne commence
+à générer des signaux. Quand HAL est démarré pour la
+première fois, les threads ne sont pas en marche. C&#8217;est pour vous
+permettre de compléter la configuration du système avant que le code
+temps réel ne démarre. Une fois que vous êtes satisfait de la
+configuration, vous pouvez lancer le code temps réel comme ceci:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: start</tt></pre>
+</div></div>
+<div class="paragraph"><p>Maintenant le générateur de signal est en marche. Regardons ses pins
+de sortie:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: show pin
+
+    Component Pins:
+    Owner   Type  Dir         Value  Name
+         3  float IN              1  siggen.0.amplitude
+         3  float OUT    -0.1640929  siggen.0.cosine
+         3  float IN              1  siggen.0.frequency
+         3  float IN              0  siggen.0.offset
+         3  float OUT    -0.4475303  siggen.0.sawtooth
+         3  float OUT     0.9864449  siggen.0.sine
+         3  float OUT            -1  siggen.0.square
+         3  float OUT    -0.1049393  siggen.0.triangle</tt></pre>
+</div></div>
+<div class="paragraph"><p>Regardons encore une fois:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: show pin
+
+    Component Pins:
+    Owner   Type  Dir         Value  Name
+         3  float IN              1  siggen.0.amplitude
+         3  float OUT     0.0507619  siggen.0.cosine
+         3  float IN              1  siggen.0.frequency
+         3  float IN              0  siggen.0.offset
+         3  float OUT     -0.516165  siggen.0.sawtooth
+         3  float OUT     0.9987108  siggen.0.sine
+         3  float OUT            -1  siggen.0.square
+         3  float OUT    0.03232994  siggen.0.triangle</tt></pre>
+</div></div>
+<div class="paragraph"><p>Nous avons fait, très rapidement, deux commandes <em>show pin</em> et vous
+pouvez voir que les sorties ne sont plus à zéro. Les sorties
+sinus, cosinus, dents de scie et triangle changent constamment. La
+sortie carrée fonctionne également, mais elle passe simplement de +1.0
+à -1.0 à chaque cycle.</p></div>
+<h3 id="_modifier_des_param_tres">3.4. Modifier des paramètres</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La réelle puissance de HAL est de permettre de modifier les choses.
+Par exemple, on peut utiliser la commande <em>setp</em> pour ajuster la
+valeur d&#8217;un paramètre. Modifions l&#8217;amplitude du
+signal de sortie du générateur de 1.0 à 5.0:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: setp siggen.0.amplitude 5</tt></pre>
+</div></div>
+<div class="paragraph"><p>Voyons encore une fois les paramètres et les pins:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: show param
+
+    Parameters:
+    Owner   Type  Dir         Value  Name
+         3  s32   RO           1754  siggen.0.update.time
+         3  s32   RW          16997  siggen.0.update.tmax
+
+halcmd: show pin
+
+    Component Pins:
+    Owner   Type  Dir         Value  Name
+         3  float IN              5  siggen.0.amplitude
+         3  float OUT     0.8515425  siggen.0.cosine
+         3  float IN              1  siggen.0.frequency
+         3  float IN              0  siggen.0.offset
+         3  float OUT      2.772382  siggen.0.sawtooth
+         3  float OUT     -4.926954  siggen.0.sine
+         3  float OUT             5  siggen.0.square
+         3  float OUT      0.544764  siggen.0.triangle</tt></pre>
+</div></div>
+<div class="paragraph"><p>Notez que la valeur du paramètre <em>siggen.0.amplitude</em> est bien passée
+à 5.000 et que les pins ont maintenant des valeurs
+plus grandes.</p></div>
+<h3 id="_enregistrer_la_configuration_de_hal">3.5. Enregistrer la configuration de HAL</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La plupart de ce que nous avons fait jusqu&#8217;ici avec halcmd a été de
+simplement regarder les choses avec la commande show . Toutefois,
+deux commandes ont réellement modifié des valeurs. Au fur
+et à mesure que nous concevons des systèmes plus complexes avec HAL,
+nous allons utiliser de nombreuses commandes pour le configurer comme
+nous le souhaitons. HAL a une mémoire d'éléphant et peut retenir sa
+configuration jusqu'à ce qu&#8217;il s&#8217;arrête. Mais qu&#8217;en est-il de la
+prochaine fois ? Nous ne voulons pas entrer une série de commande à
+chaque fois que l&#8217;on veut utiliser le système. Nous pouvons enregistrer
+la configuration de l&#8217;ensemble de HAL en une seule commande:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: save
+
+    # components
+    loadrt threads name1=test-thread period1=1000000
+    loadrt siggen
+    # pin aliases
+    # signals
+    # nets
+    # parameter values
+    setp siggen.0.update.tmax 14687
+    # realtime thread/function links
+    addf siggen.0.update test-thread</tt></pre>
+</div></div>
+<div class="paragraph"><p>La sortie de la commande <em>save</em> est une séquence de commandes HAL. Si
+vous commencez par un HAL <em>vide</em> et que vous tapez toute la séquence de
+commandes HAL, vous aurez la configuration qui existait lors de l&#8217;exécution de
+la commande save. Pour sauver ces commandes pour une utilisation ultérieure,
+nous allons simplement rediriger la sortie vers un fichier:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: save all saved.hal</tt></pre>
+</div></div>
+<h3 id="_quitter_halrun">3.6. Quitter halrun</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Pour quitter halrun, ne pas fermez simplement la fenêtre de terminal sans avoir
+arrêté la session de HAL, pour l&#8217;arrêter correctement tapez:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: exit
+
+~/linuxcnc$</tt></pre>
+</div></div>
+<h3 id="_restaurer_la_configuration_de_hal">3.7. Restaurer la configuration de HAL</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Pour restaurer la configuration de HAL enregistrée dans <em>saved.hal</em>, nous
+avons besoin d&#8217;exécuter toutes les commandes enregistrées. Pour ce
+faire, nous utiliserons la commande <em>-f &lt;filename&gt;</em> qui lit les
+commandes à partir d&#8217;un fichier, le <em>-I</em> affichera le prompt halcmd
+après l&#8217;exécution des commandes:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>~/linuxcnc$ halrun -I -f saved.hal</tt></pre>
+</div></div>
+<div class="paragraph"><p>Noter qu&#8217;il n&#8217;y a pas de commande <em>start</em> dans le fichier saved.hal.
+Il est nécessaire de la retaper (ou d'éditer saved.hal pour l&#8217;ajouter):</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: start
+
+halcmd: exit
+
+~/linuxcnc$</tt></pre>
+</div></div>
+<h3 id="_suppression_de_la_m_moire_de_hal">3.8. Suppression de la mémoire de HAL</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si un arrêt inattendu d&#8217;une session de HAL survient, il sera peut être
+nécessaire de décharger HAL de la mémoire avant de pouvoir lancer une autre
+session. Pour cela, taper la commande suivante dans une fenêtre de terminal:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>~/linuxcnc$ halrun -U</tt></pre>
+</div></div>
+</div>
+<h2 id="sec:Tutoriel-halmeter">4. Visualiser HAL avec halmeter</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Il est possible de construire des systèmes HAL vraiment complexes sans
+utiliser d&#8217;interface graphique. Mais il y a quelque chose de rassurant
+à visualiser le résultat du travail. Le premier et le plus simple des
+outils graphiques pour HAL, est <em>halmeter</em>. C&#8217;est un programme très
+simple qui s&#8217;utilise comme un multimètre. Il permet d&#8217;observer les pins,
+signaux ou paramètres en affichant la valeur courante de ces items. Il
+est très simple à utiliser. Dans une console taper <em>halmeter</em>.
+halmeter est une application pour environnement graphique. Deux
+fenêtres vont apparaître, la fenêtre de sélection est la plus grande.
+Elle comprend trois onglets. Un onglet liste toutes les pins
+actuellement définies dans HAL. Le suivant, liste tous les signaux et
+le dernier onglet, liste tous les paramètres. Cliquer sur un onglet,
+puis cliquer sur un des items pour le sélectionner. La petite fenêtre affichera
+le nom et la valeur de l&#8217;item sélectionné.
+L&#8217;affichage est mis à jour environ 10 fois par seconde. Pour libérer de
+la place sur l'écran, la fenêtre de sélection peut être fermée avec le
+bouton <em>Fermer</em>. Sur la petite fenêtre, cachée sous la grande à
+l&#8217;ouverture, le bouton <em>Sélectionner</em>, ré-ouvre la fenêtre de sélection et le
+bouton <em>Quitter</em> arrête le programme et ferme les fenêtres.</p></div>
+<div class="paragraph"><p>Il est possible d&#8217;ouvrir et de faire fonctionner simultanément
+plusieurs halmeter, ce qui permet de visualiser plusieurs items en
+même temps. Pour ouvrir un halmeter en libérant la console, taper
+<em>halmeter &amp;</em> pour le lancer en tâche de fond. Il est possible de
+lancer halmeter en lui faisant afficher immédiatement un item, pour cela,
+ajouter les arguments sur la ligne de commande <em>pin|sig|par[am] nom</em>. Il
+affichera le signal, la pin, ou le paramètre <em>nom</em> dès qu&#8217;il
+démarrera. Si l&#8217;item indiqué n&#8217;existe pas, il démarrera normalement.
+Finalement, si un item est spécifié pour l&#8217;affichage, il est possible
+d&#8217;ajouter <em>-s</em> devant pin|sig|param pour indiquer à halmeter d&#8217;utiliser
+une fenêtre encore plus réduite. Le nom de l&#8217;item sera affiché dans la
+barre de titre au lieu de sous la valeur et il n&#8217;y aura pas de bouton.
+Utile pour afficher beaucoup de halmeter dans un petit espace de
+l'écran.</p></div>
+<div class="paragraph"><p>Nous allons utiliser de nouveaux éléments du composant siggen pour
+vérifier halmeter. Si vous avez fini l&#8217;exemple précédent, alors siggen
+est déjà chargé. Sinon, on peut charger tout comme nous l&#8217;avons fait
+précédemment:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>~/linuxcnc$ halrun
+
+halcmd: loadrt siggen
+
+halcmd: loadrt threads name1=test-thread period1=1000000
+
+halcmd: addf siggen.0.update test-thread
+
+halcmd: start
+
+halcmd: setp siggen.0.amplitude 5</tt></pre>
+</div></div>
+<h3 id="_lancement_de_halmeter">4.1. Lancement de halmeter</h3><div style="clear:left"></div>
+<div class="paragraph"><p>À ce stade, nous avons chargé le composant siggen, il est en cours
+d&#8217;exécution. Nous pouvons lancer halmeter. Puisque halmeter est une
+application graphique, X doit être actif.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: loadusr halmeter</tt></pre>
+</div></div>
+<div class="paragraph"><p>Dans le même temps, une fenêtre s&#8217;ouvre sur votre écran, demandant de
+sélectionner l&#8217;item à observer.</p></div>
+<div class="paragraph" id="cap:halmeter-Fenetre-selection"><div class="title">Fenêtre de sélection de halmeter</div><p></p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/halmeter-select_fr.png" alt="images/halmeter-select_fr.png" />
+</div>
+</div>
+<div class="paragraph"><p>Ce dialogue contient trois onglets. Le premier onglet affiche toutes
+les HAL pins du système. La seconde affiche tous les signaux et le
+troisième affiche tous les paramètres. Si nous voulons analyser la pin
+<em>siggen.0.cosine</em> en premier, il suffit de cliquer sur elle puis sur
+le bouton <em>Fermer</em>. Le dialogue de sélection se ferme et la mesure s&#8217;affiche
+dans une fenêtre semblable à la figure ci-dessous.</p></div>
+<div class="paragraph" id="sec:halmeter-valeur"><div class="title">Affichage de la valeur</div><p></p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/halmeter-1_fr.png" alt="images/halmeter-1_fr.png" />
+</div>
+</div>
+<div class="paragraph"><p>Pour modifier ce qui est affiché sur halmeter pressez le bouton
+<em>Sélectionner</em> qui vous ramènera à la fenêtre de sélection précédente.</p></div>
+<div class="paragraph"><p>Vous devriez voir la valeur évoluer puisque siggen génère une onde
+cosinusoïdale. halmeter rafraîchi son affichage environ 5 fois par
+seconde.</p></div>
+<div class="paragraph"><p>Pour éteindre halmeter, cliquer sur le bouton <em>Quitter</em>.</p></div>
+<div class="paragraph"><p>Pour visualiser plusieurs pins, signaux ou paramètres en même temps,
+il est possible d&#8217;ouvrir plusieurs halmeter. La fenêtre de halmeter
+est intentionnellement petite justement pour permettre d&#8217;en ouvrir un
+grand nombre sur le même écran.<a id="sec:Tutoriel-Plus-Complexe"></a></p></div>
+</div>
+<h2 id="_tutoriel_plus_complexe_avec_stepgen">5. Tutoriel plus complexe avec stepgen</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Jusqu'à maintenant, nous avons chargé un composant HAL. Mais l&#8217;idée
+générale de HAL est de vous permettre de charger et de relier un grand
+nombre de composants pour en faire un système complexe. L&#8217;exemple suivant
+va utiliser deux composants.</p></div>
+<div class="paragraph"><p>Avant de mettre en place ce nouvel exemple, nous allons commencer par
+un petit nettoyage. Si vous avez fini l&#8217;un des exemples précédents, il
+faut supprimer tous les composants et ensuite recharger la RTAPI et les
+librairies de HAL en faisant:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: exit
+
+~/linuxcnc$ halrun</tt></pre>
+</div></div>
+<h3 id="_installation_des_composants">5.1. Installation des composants</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Maintenant, nous allons charger le composant générateur d&#8217;impulsions.
+Pour l&#8217;instant, nous pouvons nous passer des détails et exécuter les
+commandes suivantes:<span class="footnote"><br />[Le signe <em>\</em> à la fin d&#8217;une longue ligne
+indique que la ligne est tronquée (c&#8217;est nécessaire pour formater ce document).
+Quand vous entrez la commande en ligne dans la console, sautez simplement le <em>\</em>
+(ne pressez pas Entrée) et continuez à taper la ligne suivante.]<br /></span></p></div>
+<div class="paragraph"><p>Dans cet exemple nous utiliserons le type de contrôle <em>velocity</em> du
+composant stepgen.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halrun: loadrt stepgen step_type=0,0 ctrl_type=v,v
+
+halcmd: loadrt siggen
+
+halcmd: loadrt threads name1=fast fp1=0 period1=50000 name2=slow period2=1000000</tt></pre>
+</div></div>
+<div class="paragraph"><p>La première commande charge deux générateurs d&#8217;impulsions, configurés
+pour générer des impulsions de type 0. La seconde commande charge notre
+vieil ami siggen et la troisième crée deux threads, un rapide (fast)
+avec une période de 50 µs et un lent avec une période de 1ms. Le thread
+rapide ne prend pas en charge les fonctions à virgule flottante
+(fp1=0).</p></div>
+<div class="paragraph"><p>Comme précédemment, on peut utiliser <em>halcmd show</em> pour jeter un coup
+d&#8217;oeil à HAL. Cette fois, nous aurons beaucoup
+plus de pins et de paramètres que précédemment:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: show pin
+
+    Component Pins:
+    Owner   Type  Dir         Value  Name
+         4  float IN              1  siggen.0.amplitude
+         4  float OUT             0  siggen.0.cosine
+         4  float IN              1  siggen.0.frequency
+         4  float IN              0  siggen.0.offset
+         4  float OUT             0  siggen.0.sawtooth
+         4  float OUT             0  siggen.0.sine
+         4  float OUT             0  siggen.0.square
+         4  float OUT             0  siggen.0.triangle
+         3  s32   OUT             0  stepgen.0.counts
+         3  bit   OUT         FALSE  stepgen.0.dir
+         3  bit   IN          FALSE  stepgen.0.enable
+         3  float OUT             0  stepgen.0.position-fb
+         3  bit   OUT         FALSE  stepgen.0.step
+         3  float IN              0  stepgen.0.velocity-cmd
+         3  s32   OUT             0  stepgen.1.counts
+         3  bit   OUT         FALSE  stepgen.1.dir
+         3  bit   IN          FALSE  stepgen.1.enable
+         3  float OUT             0  stepgen.1.position-fb
+         3  bit   OUT         FALSE  stepgen.1.step
+         3  float IN              0  stepgen.1.velocity-cmd
+
+
+halcmd: show param
+
+    Parameters:
+    Owner   Type  Dir         Value  Name
+         4  s32   RO              0  siggen.0.update.time
+         4  s32   RW              0  siggen.0.update.tmax
+         3  u32   RW     0x00000001  stepgen.0.dirhold
+         3  u32   RW     0x00000001  stepgen.0.dirsetup
+         3  float RO              0  stepgen.0.frequency
+         3  float RW              0  stepgen.0.maxaccel
+         3  float RW              0  stepgen.0.maxvel
+         3  float RW              1  stepgen.0.position-scale
+         3  s32   RO              0  stepgen.0.rawcounts
+         3  u32   RW     0x00000001  stepgen.0.steplen
+         3  u32   RW     0x00000001  stepgen.0.stepspace
+         3  u32   RW     0x00000001  stepgen.1.dirhold
+         3  u32   RW     0x00000001  stepgen.1.dirsetup
+         3  float RO              0  stepgen.1.frequency
+         3  float RW              0  stepgen.1.maxaccel
+         3  float RW              0  stepgen.1.maxvel
+         3  float RW              1  stepgen.1.position-scale
+         3  s32   RO              0  stepgen.1.rawcounts
+         3  u32   RW     0x00000001  stepgen.1.steplen
+         3  u32   RW     0x00000001  stepgen.1.stepspace
+         3  s32   RO              0  stepgen.capture-position.time
+         3  s32   RW              0  stepgen.capture-position.tmax
+         3  s32   RO              0  stepgen.make-pulses.time
+         3  s32   RW              0  stepgen.make-pulses.tmax
+         3  s32   RO              0  stepgen.update-freq.time
+         3  s32   RW              0  stepgen.update-freq.tmax</tt></pre>
+</div></div>
+<h3 id="_connexion_des_pins_avec_les_signaux">5.2. Connexion des pins avec les signaux</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Nous avons donc deux générateurs d&#8217;impulsions de pas et un générateur
+de signaux. Maintenant, nous allons créer des signaux HAL pour
+connecter ces trois composants. Nous allons faire comme si nous
+pilotions les axes X et Y d&#8217;une machine avec nos générateurs
+d&#8217;impulsions de pas. Nous voulons déplacer la table en ronds. Pour ce
+faire, nous allons envoyer un signal cosinusoïdal à l&#8217;axe des X et un
+signal sinusoïdal à l&#8217;axe des Y. Le module siggen créera le sinus et le
+cosinus, mais nous aurons besoin de <em>fils</em> pour connecter les modules
+ensemble. Dans HAL, les <em>fils</em> sont appelés signaux. Nous devons en
+créer deux. Nous pouvons les appeler comme on veut, dans cet exemple il
+y aura <em>X-vel</em> et <em>Y-vel</em>. Le signal <em>X-vel</em> partira de la sortie
+cosinus du générateur de signaux et arrivera sur
+l&#8217;entrée <em>velocity</em> du premier générateur d&#8217;impulsions de pas. La
+première étape consiste à connecter le signal à la sortie du générateur
+de signaux. Pour connecter un signal à une pin, nous utilisons la
+commande <em>net</em>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: net X-vel &lt;= siggen.0.cosine</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour voir l&#8217;effet de la commande <em>net</em>, regardons les signaux:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: show sig
+
+    Signals:
+    Type          Value  Name     (linked to)
+    float             0  X-vel &lt;== siggen.0.cosine</tt></pre>
+</div></div>
+<div class="paragraph"><p>Quand un signal est connecté à une ou plusieurs pins, la commande
+<em>show</em> liste les pins immédiatement suivies par le nom du signal.
+Les flèches donnent la direction du flux de données, dans ce cas, le flux
+ va de la pin <em>siggen.0.cosine</em> vers le signal <em>X-vel</em>. Maintenant,
+connectons <em>X-vel</em> à l&#8217;entrée <em>velocity</em> du générateur d&#8217;impulsions de
+pas:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: net X-vel =&gt; stepgen.0.velocity-cmd</tt></pre>
+</div></div>
+<div class="paragraph"><p>Nous pouvons aussi connecter l&#8217;axe Y au signal <em>Y-vel</em>. Il doit partir de
+la sortie sinus du générateur de signaux pour arriver sur l&#8217;entrée du second
+générateur d&#8217;impulsions de pas. La commande suivante fait, en une ligne, la
+même chose que les deux commandes <em>net</em> précédentes ont fait pour <em>X-vel</em>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: net Y-vel siggen.0.sine =&gt; stepgen.1.velocity-cmd</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour voir l&#8217;effet de la commande net, regardons encore les signaux et
+les pins:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: show sig
+
+    Signals:
+    Type          Value  Name     (linked to)
+    float             0  X-vel &lt;== siggen.0.cosine
+                               ==&gt; stepgen.0.velocity-cmd
+    float             0  Y-vel &lt;== siggen.0.sine
+                               ==&gt; stepgen.1.velocity-cmd</tt></pre>
+</div></div>
+<div class="paragraph"><p>La commande <em>show sig</em> montre clairement comment les flux de
+données circulent dans HAL. Par exemple, le signal <em>X-vel</em>
+provient de la pin <em>siggen.0.cosine</em> et va vers la pin
+<em>stepgen.0.velocity-cmd</em>.</p></div>
+<h3 id="_ex_cuter_les_r_glages_du_temps_r_el_threads_et_functions">5.3. Exécuter les réglages du temps réel - threads et functions</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Penser à ce qui circule dans les <em>fils</em> rend les pins et les signaux
+assez faciles à comprendre. Les threads et les fonctions sont un peu
+plus délicates à appréhender. Les fonctions contiennent des instructions pour
+l&#8217;ordinateur. Les threads sont les méthodes utilisées pour faire
+exécuter ces instructions quand c&#8217;est nécessaire. Premièrement,
+regardons les fonctions dont nous disposons:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: show funct
+
+    Exported Functions:
+    Owner   CodeAddr  Arg       FP   Users  Name
+     00004  f9992000  fc731278  YES      0   siggen.0.update
+     00003  f998b20f  fc7310b8  YES      0   stepgen.capture-position
+     00003  f998b000  fc7310b8  NO       0   stepgen.make-pulses
+     00003  f998b307  fc7310b8  YES      0   stepgen.update-freq</tt></pre>
+</div></div>
+<div class="paragraph"><p>En règle générale, vous devez vous référer à la documentation de
+chaque composant pour voir ce que font ses fonctions. Dans notre
+exemple, la fonction <em>siggen.0.update</em> est utilisée pour mettre à jour
+les sorties du générateur de signaux.
+Chaque fois qu&#8217;elle est exécutée, le générateur recalcule les valeurs
+de ses sorties sinus, cosinus, dent de scie, triangle, carrée. Pour générer
+un signal régulier, il doit fonctionner à des intervalles très précis.</p></div>
+<div class="paragraph"><p>Les trois autres fonctions sont relatives au générateur d&#8217;impulsions de pas:</p></div>
+<div class="paragraph"><p>La première, <em>stepgen.capture-position</em>, est utilisée pour un retour
+de position. Elle capture la valeur d&#8217;un
+compteur interne comptant les impulsions qui sont générées. S&#8217;il n&#8217;y
+a pas de perte de pas, ce compteur indique la position du moteur.</p></div>
+<div class="paragraph"><p>La fonction principale du générateur d&#8217;impulsions est
+<em>stepgen.make-pulses</em>. Chaque fois que <em>make-pulses</em> démarre, elle
+décide qu&#8217;il est temps de faire un pas, si oui elle fixe
+les sorties en conséquence. Pour des pas plus doux, elle doit fonctionner
+le plus souvent possible. Parce qu&#8217;elle a besoin de fonctionner de
+ manière rapide, <em>make-pulses</em> est hautement optimisée et n&#8217;effectue
+que quelques calculs.
+Contrairement aux autres, elle n&#8217;a pas besoin de virgule flottante pour
+ses calculs.</p></div>
+<div class="paragraph"><p>La dernière fonction, <em>stepgen.update-freq</em>, est responsable de
+l'échelle et de quelques autres calculs qui ne doivent être effectués
+que lors d&#8217;une commande de changement de fréquence.</p></div>
+<div class="paragraph"><p>Pour notre exemple nous allons faire tourner <em>siggen.0.update</em> à une
+vitesse modérée pour le calcul des valeurs sinus et cosinus.
+ Immédiatement après avoir lancé siggen.0.update, nous lançons
+<em>stepgen.0.update_freq</em> pour charger les nouvelles valeurs dans le générateur
+d&#8217;impulsions. Finalement nous lancerons <em>stepgen.make_pulses</em> aussi vite que
+possible pour des pas plus doux.
+Comme nous n&#8217;utilisons pas de retour de position, nous n&#8217;avons pas besoin de
+lancer <em>stepgen.capture_position</em>.</p></div>
+<div class="paragraph"><p>Nous lançons les fonctions en les ajoutant aux threads. Chaque thread
+va à une vitesse précise. Regardons de quels threads nous disposons:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: show thread
+
+    Realtime Threads:
+         Period  FP     Name               (     Time, Max-Time )
+         996980  YES                  slow (        0,        0 )
+          49849  NO                   fast (        0,        0 )</tt></pre>
+</div></div>
+<div class="paragraph"><p>Les deux <em>threads</em> ont été créés lorsque nous les avons chargés. Le
+premier, <em>slow</em> , tourne toutes les millisecondes, il est capable
+d&#8217;exécuter des fonctions en virgule flottante (FP). Nous l&#8217;utilisons pour
+<em>siggen.0.update</em> et <em>stepgen.update_freq</em>. Le deuxième thread est
+<em>fast</em>, il tourne toutes les 50 microsecondes, il ne prend pas en
+charge les calculs en virgule flottante. Nous l&#8217;utilisons pour
+<em>stepgen.make_pulses</em>. Pour connecter des fonctions au bon thread,
+nous utilisons la commande <em>addf</em>. Nous spécifions la fonction en
+premier, suivie par le thread:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: addf siggen.0.update slow
+
+halcmd: addf stepgen.update-freq slow
+
+halcmd: addf stepgen.make-pulses fast</tt></pre>
+</div></div>
+<div class="paragraph"><p>Après avoir lancé ces commandes, nous pouvons exécuter la commande <em>show
+thread</em> une nouvelle fois pour voir ce qui ce passe:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: show thread
+
+    Realtime Threads:
+         Period  FP     Name               (     Time, Max-Time )
+         996980  YES                  slow (        0,        0 )
+                      1 siggen.0.update
+                      2 stepgen.update-freq
+          49849  NO                   fast (        0,        0 )
+                      1 stepgen.make-pulses</tt></pre>
+</div></div>
+<div class="paragraph"><p>Maintenant, chaque thread est suivi par les noms des fonctions, dans
+l&#8217;ordre dans lequel les fonctions seront exécutées.</p></div>
+<h3 id="_r_glage_des_param_tres">5.4. Réglage des paramètres</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Nous sommes presque prêts à démarrer notre système HAL. Mais il faut
+auparavant régler quelques paramètres. Par défaut le composant siggen
+génère des signaux qui varient entre +1 et -1. Pour notre exemple,
+c&#8217;est très bien, nous voulons que la vitesse de la table varie de +1 à
+-1 pouce par seconde. Toutefois, l'échelle du générateur d&#8217;impulsions
+de pas n&#8217;est pas bonne. Par défaut, il génère une fréquence de sortie
+de 1 pas par seconde avec une capacité de 1000. Il est fort improbable
+qu&#8217;un pas par seconde nous donne une vitesse de déplacement de la table
+d&#8217;un pouce par seconde. Supposons que notre vis fasse 5 tours par
+pouce, couplée à un moteur pas à pas de 200 pas par tour et une
+interface qui fournit 10 micropas par pas. Il faut donc 2000 pas pour
+faire un tour de vis et 5 tours pour faire un pouce. Ce qui signifie
+que notre montage utilisera 10000 pas par pouce. Nous avons besoin de
+multiplier la vitesse d&#8217;entrée à l'étape générateur d&#8217;impulsions par
+10000 pour obtenir la bonne valeur. C&#8217;est exactement pour cela
+qu&#8217;existe le paramètre <em>stepgen.n.velocity-scale</em> . Dans notre cas, les
+axes X et Y ont la même échelle et nous pouvons
+passer les deux paramètres à 10000:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: setp stepgen.0.position-scale 10000
+
+halcmd: setp stepgen.1.position-scale 10000
+
+halcmd: setp stepgen.0.enable 1
+
+halcmd: setp stepgen.1.enable 1</tt></pre>
+</div></div>
+<div class="paragraph"><p>Cela signifie que, avec la pin <em>stepgen.0.velocity-cmd</em> à 1.000 et le
+générateur réglé pour 10000 impulsions par seconde
+(10kHz), avec le moteur et la vis décrits précédemment, nos axes auront
+une vitesse de déplacement de exactement 1.000 pouce par seconde. Cela
+illustre une notion clé du concept de HAL, des éléments comme les
+échelles étant au plus bas niveau possible, dans notre exemple le
+ générateur d&#8217;impulsions de pas, le signal interne <em>X-vel</em> est celui
+de la vitesse de déplacement de la table en pouces par
+ seconde. Les autres composants comme <em>siggen</em> ne savent rien du tout
+à propos de l'échelle des autres. Si on change
+de vis, ou de moteur, il n&#8217;y a qu&#8217;un seul paramètre à changer,
+l'échelle du générateur d&#8217;impulsions de pas.</p></div>
+<h3 id="_lan_ons_le">5.5. Lançons le!</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Nous avons maintenant tout configuré et sommes prêts à démarrer. Tout
+comme dans le premier exemple, nous utilisons la commande <em>start</em>:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: start</tt></pre>
+</div></div>
+<div class="paragraph"><p>Bien que rien ne semble se produire, à l&#8217;intérieur de l&#8217;ordinateur les
+impulsions de pas sont présentes sur la sortie du générateur, variant
+entre 10kHz dans un sens et 10kHz dans l&#8217;autre à chaque seconde. Dans
+la suite de ce tutoriel, nous allons voir comment convertir ces signaux
+internes des moteurs dans le monde réel, mais nous allons d&#8217;abord les
+examiner pour voir ce qui se passe.</p></div>
+</div>
+<h2 id="sec:Tutoriel-halscope">6. Voyons-y de plus près avec halscope</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>L&#8217;exemple précédent génère certains signaux très intéressants. Mais
+beaucoup de ce qui se passe est beaucoup trop rapide pour être vu avec
+halmeter. Pour examiner de plus près ce qui se passe à l&#8217;intérieur de
+HAL, il faudrait un oscilloscope. Heureusement HAL en offre un, appelé
+<em>halscope</em>. Il permet de capturer la valeur des pins, des signaux et des
+paramètres en fonction du temps.</p></div>
+<h3 id="_d_marrer_halscope">6.1. Démarrer halscope</h3><div style="clear:left"></div>
+<div class="paragraph"><p>halscope comporte deux parties, une partie en temps réel qui est
+chargée comme un module de noyau et une partie utilisateur qui fournit
+l&#8217;interface graphique et l&#8217;affichage. Cependant, vous n&#8217;avez pas à vous
+inquiéter à ce sujet car l&#8217;interface demandera automatiquement que la
+partie temps réel soit chargée:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: loadusr halscope</tt></pre>
+</div></div>
+<div class="paragraph"><p>La fenêtre graphique du scope s&#8217;ouvre, immédiatement suivie par un
+dialogue <em>Fonction temps réel non liée</em> visible sur la figure ci-dessous:</p></div>
+<div class="paragraph" id="fig:fonction-non-liee"><div class="title">Dialogue <em>Fonction temps réel non liée</em></div><p></p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/halscope-01_fr.png" alt="images/halscope-01_fr.png" />
+</div>
+</div>
+<div class="paragraph"><p>C&#8217;est dans ce dialogue que vous définissez le taux d'échantillonnage
+de l&#8217;oscilloscope. Pour le moment nous voulons un échantillon par
+milliseconde, alors cliquez sur le thread <em>slow</em> et laissez le
+multiplicateur à 1. Nous allons aussi passer la longueur
+d&#8217;enregistrement à 4000 échantillons, de sorte que nous
+puissions utiliser jusqu'à 4 canaux simultanément. Quand vous
+sélectionnez un thread puis que vous cliquez sur le bouton <em>OK</em>, le
+dialogue disparaît et la fenêtre initiale du scope s&#8217;ouvre, comme ci-dessous.</p></div>
+<div class="paragraph" id="fig:Fenetre-initiale-halscope"><div class="title">Fenêtre initiale du scope</div><p></p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/halscope-02_fr.png" alt="images/halscope-02_fr.png" />
+</div>
+</div>
+<h3 id="_branchement_des_sondes_du_scope">6.2. Branchement des sondes du scope</h3><div style="clear:left"></div>
+<div class="paragraph"><p>À ce stade, halscope est prêt à l&#8217;emploi. Nous avons déjà choisi le
+taux d'échantillonnage et la longueur d&#8217;enregistrement, de sorte que la
+prochaine étape consiste à décider de ce qu&#8217;il faut mesurer. C&#8217;est
+équivalent à brancher les <em>sondes virtuelles du scope</em> à HAL. halscope
+dispose de 16 canaux, mais le nombre de canaux utilisables à un moment
+donné dépend de la longueur d&#8217;enregistrement, plus il y a de canaux,
+plus les enregistrements seront courts, car la mémoire disponible
+pour l&#8217;enregistrement est fixée à environ 16000 échantillons.</p></div>
+<div class="paragraph"><p>Les boutons des canaux se situent en dessous de l'écran du scope.
+Cliquez le bouton <em>1</em> et vous verrez apparaître le dialogue de
+sélection des sources dans lequel vous devrez choisir _la source qui
+devra s&#8217;afficher sur le canal 1, comme sur la figure ci-dessous.
+Ce dialogue est très similaire à celui utilisé par halmeter.</p></div>
+<div class="paragraph" id="fig:Selection-sources-halscope"><div class="title">Dialogue de sélection des sources</div><p></p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/halscope-03_fr.png" alt="images/halscope-03_fr.png" />
+</div>
+</div>
+<div class="paragraph"><p>Nous aimerions bien regarder les signaux que nous avons défini
+précédemment, pour cela, cliquons sur l&#8217;onglet <em>Signaux</em> et le dialogue
+affichera tous les signaux existants dans HAL, dans notre exemple nous
+avons seulement les deux signaux X-vel et Y-vel, comme ci-dessous.</p></div>
+<div class="paragraph"><p>Pour choisir un signal, il suffit de cliquer dessus. Dans notre cas,
+nous voulons utiliser le canal 1 pour afficher le signal <em>X-vel</em>.
+Lorsque l&#8217;on clique sur <em>X-vel</em>, la fenêtre se ferme et le canal a
+été sélectionné.</p></div>
+<div class="paragraph" id="cap:Select-Signal"><div class="title">Sélection du signal</div><p></p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/halscope-04_fr.png" alt="images/halscope-04_fr.png" />
+</div>
+</div>
+<div class="paragraph"><p>Le bouton du canal <em>1</em> est pressé, le numéro du canal 1 et le nom
+<em>X-vel</em> apparaissent sous la rangée de boutons. L&#8217;affichage indique
+toujours le canal sélectionné, vous pouvez avoir beaucoup de canaux sur
+l'écran, mais celui qui est actif sera en surbrillance.</p></div>
+<div class="paragraph" id="cap:halscope"><div class="title">halscope</div><p></p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/halscope-05_fr.png" alt="images/halscope-05_fr.png" />
+</div>
+</div>
+<div class="paragraph"><p>Les différents contrôles comme la position verticale et l&#8217;amplitude
+sont toujours relatifs au canal 1. Pour ajouter un signal sur le canal
+2, cliquer sur le bouton <em>2</em>. Dans la fenêtre de dialogue, cliquer sur
+l&#8217;onglet <em>Signaux</em>, puis cliquer sur <em>Y-vel</em>.</p></div>
+<div class="paragraph"><p>Nous voulons aussi voir les signaux carrés et triangles produits. Il
+n&#8217;existe pas de signaux connectés à ces pins, nous utilisons donc
+l&#8217;onglet <em>Pins</em>. Pour le canal <em>3</em>, sélectionnez <em>siggen.0.triangle</em>
+et pour le canal <em>4</em>, choisissez <em>siggen.0.square</em>.</p></div>
+<h3 id="_capturer_notre_premi_re_forme_d_8217_onde">6.3. Capturer notre première forme d&#8217;onde</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Maintenant que nous avons plusieurs sondes branchées sur HAL, nous
+pouvons capturer quelques formes d&#8217;ondes. Pour démarrer le scope,
+cochez la case <em>Normal</em> du groupe <em>Mode "Run"</em> (en haut à droite).
+Puisque nous avons une longueur d&#8217;enregistrement de 4000 échantillons
+et une acquisition de 1000 échantillons par seconde, il faudra à
+halscope environ 2 secondes pour remplir la moitié de son tampon.
+Pendant ce temps, une barre de progression juste au-dessus de l'écran
+principal affichera le remplissage du tampon. Une fois que le tampon
+est à moitié plein, scope attend un déclencheur (Trigger). Puisque nous n&#8217;en
+avons pas encore configuré, il attendra toujours. Pour déclencher
+manuellement, cliquez sur le bouton <em>Forcer</em> du groupe <em>Trigger</em> en
+haut à droite. Vous devriez voir le reste de la zone tampon se remplir,
+puis l'écran afficher les ondes capturées. Le résultat ressemble à la
+figure ci-dessous.</p></div>
+<div class="paragraph" id="fig:Capture-onde-halscope"><div class="title">Capture d&#8217;ondes</div><p></p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/halscope-06_fr.png" alt="images/halscope-06_fr.png" />
+</div>
+</div>
+<h3 id="_ajustement_vertical">6.4. Ajustement vertical</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les traces sont assez difficiles à distinguer car toutes les quatre
+sont les unes sur les autres. Pour résoudre ce problème, nous utilisons
+les curseurs du groupe <em>Vertical</em> situé à droite de l'écran.
+Ces deux curseurs agissent sur le canal actuellement sélectionné. En ajustant
+le <em>Gain</em>, notez qu&#8217;il couvre une large échelle (contrairement aux
+oscilloscopes réels), celle-ci permet d&#8217;afficher des signaux très petits
+(pico unités) à très grands (Tera - unités). Le curseur <em>Pos</em> déplace la
+trace affichée de haut en bas sur toute la hauteur de l'écran. Pour de plus
+grands ajustements le bouton <em>Offset</em> peut être utilisé.</p></div>
+<div class="paragraph" id="cap:Ajustement-vertical-halscope"><div class="title">Ajustement vertical</div><p></p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/halscope-07_fr.png" alt="images/halscope-07_fr.png" />
+</div>
+</div>
+<div class="paragraph"><p>Le grand bouton <em>Canal sélectionné</em> en bas, indique que le canal 1 est
+actuellement le canal sélectionné et qu&#8217;il correspond au signal
+<em>X-vel</em>. Essayez de cliquer sur les autres canaux pour mettre
+leurs traces en évidence et pouvoir les déplacer avec le curseur <em>Pos</em>.</p></div>
+<h3 id="_d_clenchement_triggering">6.5. Déclenchement (Triggering)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>L&#8217;utilisation du bouton <em>Forcer</em> n&#8217;est parfois pas satisfaisante pour
+déclencher le scope. Pour régler un déclenchement réel,
+cliquer sur le bouton <em>Source</em> situé en bas à droite. Il ouvre alors le
+dialogue <em>Trigger Source</em>, qui est simplement la liste de toutes les
+sondes actuellement branchées, voir la figure ci-dessous.
+Sélectionner la sonde à utiliser pour déclencher en cliquant dessus.
+Pour notre exemple nous utilisons 3 canaux, essayons l&#8217;onde triangle.
+Quand le dialogue ce referme, après le choix, le bouton affiche <em>Source Canal n</em>
+où n est le numéro du canal venant d'être choisi comme déclencheur.</p></div>
+<div class="paragraph" id="fig:halscope-demo-5"><div class="title">Dialogue des sources de déclenchement</div><p></p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/halscope-08_fr.png" alt="images/halscope-08_fr.png" />
+</div>
+</div>
+<div class="paragraph"><p>Après avoir défini la source de déclenchement, il est possible
+d&#8217;ajuster le niveau de déclenchement avec les curseurs du groupe
+<em>Trigger</em> le long du bord droit. Le niveau peut être modifié à partir
+du haut vers le bas de l'écran, il est affiché sous les curseurs. La
+position est l&#8217;emplacement du point de déclenchement dans
+l&#8217;enregistrement complet. Avec le curseur tout en bas, le point de
+déclenchement est à la fin de l&#8217;enregistrement et halscope affiche ce
+qui s&#8217;est passé avant le déclenchement. Lorsque le curseur est
+tout en haut, le point de déclenchement est au début de
+l&#8217;enregistrement, l&#8217;affichage représente ce qui s&#8217;est passé après le
+déclenchement. Le point de déclenchement est visible comme une petite
+ligne verticale dans la barre de progression située juste au dessus de
+l'écran. La polarité du signal de déclenchement peut être inversée en
+cliquant sur le bouton <em>Montant</em> situé juste sous l&#8217;affichage du niveau de
+déclenchement, il deviendra alors <em>descendant</em>. Notez que la modification
+de la position de déclenchement arrête le scope une fois la position ajustée,
+vous relancez le scope en cliquant sur le bouton <em>Normal</em> du groupe
+<em>Mode "Run"</em>.</p></div>
+<div class="paragraph"><p>Maintenant que nous avons réglé la position verticale et le
+déclenchement, l'écran doit ressembler à la figure ci-dessous.</p></div>
+<div class="paragraph" id="fig:halscope-demo-6"><div class="title">Formes d&#8217;ondes avec déclenchement</div><p></p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/halscope-09_fr.png" alt="images/halscope-09_fr.png" />
+</div>
+</div>
+<h3 id="_ajustement_horizontal">6.6. Ajustement horizontal</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Pour examiner de près une partie d&#8217;une forme d&#8217;onde, vous pouvez
+utiliser le <em>zoom</em> au dessus de l'écran pour étendre la trace
+horizontalement et le curseur de position horizontale, <em>Pos</em> du
+groupe <em>Horizontal</em>, pour déterminer quelle partie de l&#8217;onde zoomée est visible.
+Parfois simplement élargir l&#8217;onde n&#8217;est pas suffisant et il faut augmenter
+la fréquence d'échantillonnage. Par exemple, nous aimerions voir les impulsions
+de pas qui sont générés dans notre exemple. Mais les impulsions de pas font
+seulement 50 us de long, l'échantillonnage à 1kHz n&#8217;est pas assez rapide.
+Pour changer le taux d'échantillonnage, cliquer sur le bouton qui affiche le
+nombre d'échantillons pour avoir le dialogue <em>Sélectionner un taux
+d'échantillonnage</em>, figure ci-dessous.
+Pour notre exemple, nous cliquerons sur le thread <em>fast</em>, qui fournira un
+échantillonnage à environ 20kHz. Maintenant au lieu d&#8217;afficher environ 4
+secondes de données, un enregistrement sera de 4000 échantillons à 20kHz, soit
+environ 0.20 seconde.</p></div>
+<div class="paragraph" id="fig:halscope-demo-7"><div class="title">Dialogue de choix d'échantillonnage</div><p></p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/halscope-10_fr.png" alt="images/halscope-10_fr.png" />
+</div>
+</div>
+<h3 id="_plus_de_canaux">6.7. Plus de canaux</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Maintenant regardons les impulsions de pas. halscope dispose de 16
+canaux, mais pour cet exemple, nous en utilisons seulement 4 à la fois.
+Avant de sélectionner tout autre canal, nous avons besoin d&#8217;en éteindre
+certains. Cliquer sur le canal <em>2</em>, puis sur le bouton <em>Canal Off</em> sous le
+groupe <em>vertical</em>. Ensuite, cliquez sur le canal 3, le mettre Off et
+faire de même pour le canal 4. Même si les circuits sont éteints, ils
+sont encore en mémoire et restent connectés, en fait, nous
+continuerons a utiliser le canal 3 comme source de déclenchement. Pour
+ajouter de nouveaux canaux, sélectionner le canal <em>5</em>, choisir la pin
+<em>stepgen.0.dir</em>, puis le canal <em>6</em> et sélectionner <em>stepgen.0.step</em>.
+Ensuite, cliquer sur <em>mode Normal</em> pour lancer le scope, ajustez le
+zoom horizontal à 10 ms par division. Vous devriez voir les impulsions de
+pas ralentir à la vitesse commandée approcher de zéro, puis la
+pin de direction changer d'état et les impulsions de pas se resserrer de
+nouveau en même temps que la vitesse augmente. Vous aurez peut être besoin
+d&#8217;ajuster le gain sur le canal 1 afin de mieux voir l&#8217;action de la vitesse sur
+l'évolution des impulsions de pas. Le résultat devrait être proche de celui de
+la figure ci-dessous. Ce type de mesure est délicate car il y a un énorme écart
+d'échelle entre la fréquence des pas et l&#8217;action sur la vitesse, d&#8217;ou la courbe
+X-vel assez plate et les impulsions de pas très resserrées.</p></div>
+<div class="paragraph" id="fig:halscope-demo-8"><div class="title">Observer les impulsions de pas</div><p></p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/halscope-11_fr.png" alt="images/halscope-11_fr.png" />
+</div>
+</div>
+<h3 id="_plus_d_chantillons">6.8. Plus d'échantillons</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si vous souhaitez enregistrer plus d'échantillons à la fois,
+redémarrez le temps réel et chargez halscope avec un argument numérique
+qui indique le nombre d'échantillons que vous voulez capturer, comme:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halcmd: loadusr halscope 80000</tt></pre>
+</div></div>
+<div class="paragraph"><p>Si le composant <em>scope_rt</em> n&#8217;est pas déjà chargé, halscope va le
+charger et lui demander un total de 80000 échantillons, de sorte
+que lorsque l'échantillonnage se fera sur 4 canaux à la fois,
+il y aura 20000 échantillons par canal. (Si <em>scope_rt</em> est déjà
+chargé, l&#8217;argument numérique passé à halscope sera sans effet)</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-28 15:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/tutorial_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:18 GMT -->
+</html>

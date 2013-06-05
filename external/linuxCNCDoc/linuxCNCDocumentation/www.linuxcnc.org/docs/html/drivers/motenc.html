@@ -1,0 +1,286 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/drivers/motenc.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:14:32 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Motenc Driver</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Motenc Driver</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:montec-driver"></a> </p></div>
+<div class="paragraph"><p>Vital Systems Motenc-100 and Motenc-LITE</p></div>
+<div class="paragraph"><p>The Vital Systems Motenc-100 and Motenc-LITE are 8- and 4-channel
+servo control boards. The Motenc-100 provides 8 quadrature encoder
+counters, 8 analog inputs, 8 analog outputs, 64 (68?) digital inputs,
+and 32 digital outputs. The Motenc-LITE has only 4 encoder counters, 32
+digital inputs and 16 digital outputs, but it still has 8 analog inputs
+and 8 analog outputs. The driver automatically identifies the installed
+board and exports the appropriate HAL objects.</p></div>
+<div class="paragraph"><p>Installing:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt hal_motenc</tt></pre>
+</div></div>
+<div class="paragraph"><p>During loading (or attempted loading) the driver prints some useful
+debugging messages to the kernel log, which can be viewed with dmesg.</p></div>
+<div class="paragraph"><p>Up to 4 boards may be used in one system.</p></div>
+</div>
+</div>
+<h2 id="_pins">1. Pins</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>In the following pins, parameters, and functions, &lt;board&gt; is the board
+ID. According to the naming conventions the first board should always
+have an ID of zero. However this driver sets the ID based on a pair of
+jumpers on the board, so it may be non-zero even if there is only one
+board.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(s32) motenc.&lt;board&gt;.enc-&lt;channel&gt;-count</em> - Encoder position, in counts.
+</p>
+</li>
+<li>
+<p>
+<em>(float) motenc.&lt;board&gt;.enc-&lt;channel&gt;-position</em> - Encoder position, in
+   user units.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) motenc.&lt;board&gt;.enc-&lt;channel&gt;-index</em> - Current status of index
+   pulse input.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) motenc.&lt;board&gt;.enc-&lt;channel&gt;-idx-latch</em> - Driver sets this pin
+   true when it latches an index pulse (enabled by latch-index). Cleared
+   by clearing latch-index.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) motenc.&lt;board&gt;.enc-&lt;channel&gt;-latch-index</em> - If this pin is true,
+   the driver will reset the counter on the next index pulse.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) motenc.&lt;board&gt;.enc-&lt;channel&gt;-reset-count</em> - If this pin is true,
+   the counter will immediately be reset to zero, and the pin will be
+   cleared.
+</p>
+</li>
+<li>
+<p>
+<em>(float) motenc.&lt;board&gt;.dac-&lt;channel&gt;-value</em> - Analog output value for
+   DAC (in user units, see -gain and -offset)
+</p>
+</li>
+<li>
+<p>
+<em>(float) motenc.&lt;board&gt;.adc-&lt;channel&gt;-value</em> - Analog input value read
+   by ADC (in user units, see -gain and -offset)
+</p>
+</li>
+<li>
+<p>
+<em>(bit) motenc.&lt;board&gt;.in-&lt;channel&gt;</em> - State of digital input pin, see
+   canonical digital input.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) motenc.&lt;board&gt;.in-&lt;channel&gt;-not</em> - Inverted state of digital
+   input pin, see canonical digital input.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) motenc.&lt;board&gt;.out-&lt;channel&gt;</em> - Value to be written to digital
+   output, seen canonical digital output.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) motenc.&lt;board&gt;.estop-in</em> - Dedicated estop input, more details
+   needed.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) motenc.&lt;board&gt;.estop-in-not</em> - Inverted state of dedicated estop
+   input.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) motenc.&lt;board&gt;.watchdog-reset</em> - Bidirectional, - Set TRUE to
+   reset watchdog once, is automatically cleared.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_parameters">2. Parameters</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(float) motenc.&lt;board&gt;.enc-&lt;channel&gt;-scale</em> - The number of counts /
+   user unit (to convert from counts to units).
+</p>
+</li>
+<li>
+<p>
+<em>(float) motenc.&lt;board&gt;.dac-&lt;channel&gt;-offset</em> - Sets the DAC offset.
+</p>
+</li>
+<li>
+<p>
+<em>(float) motenc.&lt;board&gt;.dac-&lt;channel&gt;-gain</em> - Sets the DAC gain (scaling).
+</p>
+</li>
+<li>
+<p>
+<em>(float) motenc.&lt;board&gt;.adc-&lt;channel&gt;-offset</em> - Sets the ADC offset.
+</p>
+</li>
+<li>
+<p>
+<em>(float) motenc.&lt;board&gt;.adc-&lt;channel&gt;-gain</em> - Sets the ADC gain (scaling).
+</p>
+</li>
+<li>
+<p>
+<em>(bit) motenc.&lt;board&gt;.out-&lt;channel&gt;-invert</em> - Inverts a digital output,
+   see canonical digital output.
+</p>
+</li>
+<li>
+<p>
+<em>(u32) motenc.&lt;board&gt;.watchdog-control</em> - Configures the watchdog. The
+   value may be a bitwise OR of the following values:
+</p>
+</li>
+</ul></div>
+<div class="tableblock">
+<table rules="all"
+width="90%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="12%" />
+<col width="12%" />
+<col width="75%" />
+<thead>
+<tr>
+<th align="center" valign="top">Bit # </th>
+<th align="center" valign="top"> Value </th>
+<th align="center" valign="top"> Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">Timeout is 16ms if set, 8ms if unset</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">2</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">2</p></td>
+<td align="center" valign="top"><p class="table">4</p></td>
+<td align="center" valign="top"><p class="table">Watchdog is enabled</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">3</p></td>
+<td align="center" valign="top"><p class="table">8</p></td>
+<td align="center" valign="top"><p class="table"></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">4</p></td>
+<td align="center" valign="top"><p class="table">16</p></td>
+<td align="center" valign="top"><p class="table">Watchdog is automatically reset by DAC writes (the HAL dac-write function)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Typically, the useful values are 0 (watchdog disabled) or 20 (8ms
+watchdog enabled, cleared by dac-write).</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(u32) motenc.&lt;board&gt;.led-view</em> - Maps some of the I/O to onboard LEDs.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_functions">3. Functions</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(funct) motenc.&lt;board&gt;.encoder-read</em> - Reads all encoder counters.
+</p>
+</li>
+<li>
+<p>
+<em>(funct) motenc.&lt;board&gt;.adc-read</em> - Reads the analog-to-digital converters.
+</p>
+</li>
+<li>
+<p>
+<em>(funct) motenc.&lt;board&gt;.digital-in-read</em> - Reads digital inputs.
+</p>
+</li>
+<li>
+<p>
+<em>(funct) motenc.&lt;board&gt;.dac-write</em> - Writes the voltages to the DACs.
+</p>
+</li>
+<li>
+<p>
+<em>(funct) motenc.&lt;board&gt;.digital-out-write</em> - Writes digital outputs.
+</p>
+</li>
+<li>
+<p>
+<em>(funct) motenc.&lt;board&gt;.misc-update</em> - Updates misc stuff.
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-26 09:48:18 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/drivers/motenc.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:14:32 GMT -->
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/ini_homing.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:13:39 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Homing Configuration</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Homing Configuration</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:homing-configuration"></a> </p></div>
+</div>
+</div>
+<h2 id="_overview">1. Overview</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Homing seems simple enough - just move each joint to a known location,
+and set LinuxCNC&#8217;s internal variables accordingly. However, different
+machines have different requirements, and homing is actually quite
+complicated.</p></div>
+</div>
+<h2 id="_homing_sequence">2. Homing Sequence</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>There are four possible homing sequences defined by the sign of SEARCH_VEL
+and LATCH_VEL, along with the associated configuration parameters as shown
+in the following table. For a more detailed description of what each
+configuration parameter does, see the following section.</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/emc2-motion-homing-diag.png" alt="images/emc2-motion-homing-diag.png" />
+</div>
+<div class="title">Figure 1. Homing Sequences<a id="fig:motion-homing-sequence-diagram"></a></div>
+</div>
+</div>
+<h2 id="_configuration">3. Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The following determines exactly how the home sequence behaves.
+They are defined in an [AXIS] section of the inifile.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="80%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<thead>
+<tr>
+<th align="center" valign="top">Homing Type      </th>
+<th align="center" valign="top">SEARCH_VEL </th>
+<th align="center" valign="top">LATCH_VEL    </th>
+<th align="center" valign="top">USE_INDEX</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">Immediate</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">NO</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">Index-only</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">nonzero</p></td>
+<td align="center" valign="top"><p class="table">YES</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">Switch-only</p></td>
+<td align="center" valign="top"><p class="table">nonzero</p></td>
+<td align="center" valign="top"><p class="table">nonzero</p></td>
+<td align="center" valign="top"><p class="table">NO</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">Switch and Index</p></td>
+<td align="center" valign="top"><p class="table">nonzero</p></td>
+<td align="center" valign="top"><p class="table">nonzero</p></td>
+<td align="center" valign="top"><p class="table">YES</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">Any other combinations may result in an error.</td>
+</tr></table>
+</div>
+<h3 id="_home_search_vel">3.1. HOME_SEARCH_VEL </h3><div style="clear:left"></div>
+<div class="paragraph"><p>The default value is zero. A value of zero causes LinuxCNC to assume that
+there is no home switch; the search stage of homing is skipped.</p></div>
+<div class="paragraph"><p>If HOME_SEARCH_VEL is non-zero, then LinuxCNC assumes that there is a home
+switch. It begins by checking whether the home switch is already
+tripped. If tripped it backs off the switch at HOME_SEARCH_VEL. The
+direction of the back-off is opposite the sign of HOME_SEARCH_VEL. Then
+it searches for the home switch by moving in the direction specified by
+the sign of HOME_SEARCH_VEL, at a speed determined by its absolute
+value. When the home switch is detected, the joint will stop as fast as
+possible, but there will always be some overshoot. The amount of
+overshoot depends on the speed. If it is too high, the joint might
+overshoot enough to hit a limit switch or crash into the end of travel.
+On the other hand, if HOME_SEARCH_VEL is too low, homing can take a
+long time.</p></div>
+<h3 id="_home_latch_vel">3.2. HOME_LATCH_VEL </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Specifies the speed and direction that LinuxCNC uses when it makes its
+final accurate determination of the home switch (if present) and index
+pulse location (if present). It will usually be slower than the search
+velocity to maximize accuracy. If HOME_SEARCH_VEL and HOME_LATCH_VEL
+have the same sign, then the latch phase is done while moving in the
+same direction as the search phase. (In that case, LinuxCNC first backs off
+the switch, before moving towards it again at the latch velocity.) If
+HOME_SEARCH_VEL and HOME_LATCH_VEL have opposite signs, the latch phase
+is done while moving in the opposite direction from the search phase.
+That means LinuxCNC will latch the first pulse after it moves off the
+switch. If HOME_SEARCH_VEL is zero (meaning there is no home switch),
+and this parameter is nonzero, LinuxCNC goes ahead to the index pulse
+search. If HOME_SEARCH_VEL is non-zero and this parameter is zero, it
+is an error and the homing operation will fail. The default value is
+zero.</p></div>
+<h3 id="_home_final_vel">3.3. HOME_FINAL_VEL</h3><div style="clear:left"></div>
+<div class="paragraph"><p>It specifies the speed that LinuxCNC uses when it makes its move from
+HOME_OFFSET to the HOME position. If the HOME_FINAL_VEL is missing from
+the ini file, then the maximum joint speed is used to make this move.
+The value must be a positive number.</p></div>
+<h3 id="_home_ignore_limits">3.4. HOME_IGNORE_LIMITS </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Can hold the values YES / NO. The default value for this parameter is NO.
+This flag determines whether LinuxCNC will ignore the limit switch input
+for this axis while homing. Setting this to YES will not ignore limit inputs
+for other axes. If you do not have a separate home switch set this to YES and
+case connect the limit switch signal to the home switch input in HAL. LinuxCNC
+will ignore the limit switch input for this axis while homing. To use only
+one input for all homing and limits you will have to block the limit signals
+of the axes not homing in HAL and home one axis at a time.</p></div>
+<h3 id="_home_use_index">3.5. HOME_USE_INDEX </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Specifies whether or not there is an index pulse. If the flag is true
+(HOME_USE_INDEX = YES), LinuxCNC will latch on the rising edge of the index
+pulse. If false, LinuxCNC will latch on either the rising or falling edge of
+the home switch (depending on the signs of HOME_SEARCH_VEL and
+HOME_LATCH_VEL). The default value is NO.</p></div>
+<h3 id="_home_offset">3.6. HOME_OFFSET </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Contains the location of the home switch or index pulse, in joint
+coordinates. It can also be treated as the distance between the point
+where the switch or index pulse is latched and the zero point of the
+joint. After detecting the index pulse, LinuxCNC sets the joint coordinate
+of the current point to HOME_OFFSET. The default value is zero.</p></div>
+<h3 id="_home">3.7. HOME </h3><div style="clear:left"></div>
+<div class="paragraph"><p>The position that the joint will go to upon completion of the homing
+sequence. After detecting the index pulse, and setting the coordinate
+of that point to HOME_OFFSET, LinuxCNC makes a move to HOME as the final
+step of the homing process. The default value is zero. Note that even
+if this parameter is the same as HOME_OFFSET, the joint will slightly
+overshoot the latched position as it stops. Therefore there will always
+be a small move at this time (unless HOME_SEARCH_VEL is zero, and the
+entire search/latch stage was skipped). This final move will be made at
+the joint&#8217;s maximum velocity. Since the joint is now homed, there should
+be no risk of crashing the machine, and a rapid move is the quickest
+way to finish the homing sequence. <span class="footnote"><br />[The distinction between
+<em>home_offset</em> and <em>home</em> is that <em>home_offset</em> first establishes the
+scale location on the machine by applying the <em>home_offset</em> value to
+the location where home was found, and then <em>home</em> says where
+the joint should move to on that scale.]<br /></span></p></div>
+<h3 id="_home_is_shared">3.8. HOME_IS_SHARED </h3><div style="clear:left"></div>
+<div class="paragraph"><p>If there is not a separate home switch input for this axis, but a
+number of momentary switches wired to the same pin, set this value to 1
+to prevent homing from starting if one of the shared switches is
+already closed. Set this value to 0 to permit homing even if the switch
+is already closed.</p></div>
+<h3 id="_home_sequence">3.9. HOME_SEQUENCE </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Used to define a multi-axis homing sequence HOME ALL and enforce
+homing order (e.g., Z may not be homed if X is not yet homed). An axis
+may be homed after all axes with a lower HOME_SEQUENCE have already
+been homed and are at the HOME_OFFSET. If two axes have the same
+HOME_SEQUENCE, they may be homed at the same time. If HOME_SEQUENCE is
+-1 or not specified then this joint will not be homed by the HOME ALL
+sequence. HOME_SEQUENCE numbers start with 0 and there may be no unused
+numbers.</p></div>
+<h3 id="_volatile_home">3.10. VOLATILE_HOME </h3><div style="clear:left"></div>
+<div class="paragraph"><p>If this setting is true, this axis becomes unhomed whenever the
+machine transitions into the OFF state. This is appropriate for
+any axis that does not maintain position when the axis drive is
+off.  Some stepper drives, especially microstep drives, may need
+this.</p></div>
+<h3 id="_locking_indexer">3.11. LOCKING_INDEXER </h3><div style="clear:left"></div>
+<div class="paragraph"><p>If this axis is a locking rotary indexer, it will unlock before
+homing, and lock afterward.</p></div>
+<h3 id="_immediate_homing">3.12. Immediate Homing </h3><div style="clear:left"></div>
+<div class="paragraph"><p>If an axis does not have home switches or does not have a logical
+home position like a rotary axis and you want that axis to home at
+the current position when the "Home All" button is pressed in Axis
+the following ini entries for that axis are needed.</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+SEARCH_VEL = 0
+</p>
+</li>
+<li>
+<p>
+LATCH_VEL = 0
+</p>
+</li>
+<li>
+<p>
+USE_INDEX = NO
+</p>
+</li>
+<li>
+<p>
+HOME_SEQUENCE = 0
+</p>
+</li>
+</ol></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-05-29 08:36:10 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/ini_homing.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:13:39 GMT -->
+</html>

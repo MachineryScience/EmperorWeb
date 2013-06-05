@@ -1,0 +1,265 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/Integrator_Concepts_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:23 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Concepts importants pour l&#8217;intégrateur</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Concepts importants pour l&#8217;intégrateur</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:concepts-integrateur"></a> </p></div>
+</div>
+</div>
+<h2 id="_syst_me_pas_pas">1. Système pas à pas</h2>
+<div class="sectionbody">
+<h3 id="_p_riode_de_base">1.1. Période de base</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Période de base (BASE_PERIOD) est le <em>métronome</em> de
+l&#8217;ordinateur de LinuxCNC. <span class="footnote"><br />[Cette section fait référence à
+l&#8217;utilisation de <em>stepgen</em> le générateur de pas intégré à LinuxCNC.
+Certains dispositifs matériels ont leur propre générateur de pas
+et n&#8217;utilisent pas celui incorporé à LinuxCNC. Dans ce cas se référer
+au manuel du matériel concerné.]<br /></span> A chaque période le logiciel de
+génération de pas calcule si c&#8217;est le moment pour une autre impulsion
+de pas. Une période de base plus courte permet de produire plus
+d&#8217;impulsions de pas par seconde, mais si elle est trop courte l&#8217;ordinateur
+passera tout son temps à générer les impulsions et les autres services
+seront ralentis voir bloqués.
+La latence et les besoins des pilotes des moteurs pas à pas déterminent
+la durée minimum de la période que nous pouvons utiliser.</p></div>
+<div class="paragraph"><p>La latence la plus défavorable peut ne se présenter que quelquefois par
+minute ou même moins. La probabilité que cela se produise au même
+moment qu&#8217;un changement de direction du moteur et faible. Donc
+on peut obtenir des erreurs très rares et intermittentes qui
+ruinent une production de temps en temps et il est impossible
+d&#8217;intervenir pour régler le problème.</p></div>
+<div class="paragraph"><p>La façon la plus simple d'éviter ce problème est de choisir un
+BASE_PERIOD qui est la somme des plus longues exigences de temps
+de votre périphérique et le pire cas de latence de votre ordinateur.
+Ceci n&#8217;est pas toujours le meilleur choix.</p></div>
+<div class="paragraph"><p>Par exemple si le pilote moteur a besoin d&#8217;un maintien du signal
+de direction d&#8217;une durée de 20 µs est que la latence maximum est
+de 11 µs, la période de base sera de 11+20=31 µs ce qui donne une fréquence
+de génération de pas de 32258 pas par seconde dans un mode
+et de 16129 pas par seconde dans un autre mode.</p></div>
+<div class="paragraph"><p>Le problème est qu&#8217;avec les exigences de 20us pour le maintien
+du signal et les 11 µs de latence cela nous force à utiliser une
+période défavorable de 31 µs. Mais le générateur de pas du
+logiciel LinuxCNC a quelques paramètres qui nous laissent régler
+les divers temps d&#8217;une période de différentes manières.</p></div>
+<div class="paragraph"><p>Par exemple, si <em>steplen</em> <span class="footnote"><br />[Steplen se réfère à un paramètre
+qui ajuste la performance du générateur de pas incorporé à LinuxCNC,
+<em>stepgen</em>, qui est un composant de HAL. Ce paramètre ajuste
+la longueur de l&#8217;impulsion de pas. Continuez à lire, on expliquera
+tous finalement.]<br /></span> est changé de 1 à 2, alors il y aura deux
+périodes entre le commencement et la fin de l&#8217;impulsion de pas.
+De même, si <em>dirhold</em> <span class="footnote"><br />[dirhold se réfère à un paramètre
+qui adapte la longueur du maintien du signal de commande
+de direction.]<br /></span> est changé de 1 à 3, il y aura au moins trois périodes
+entre l&#8217;impulsion de pas et un changement d'état de la commande
+de direction.</p></div>
+<div class="paragraph"><p>Si nous pouvons utilisez <em>dirhold</em> pour répondre aux exigences des 20µs
+de maintiens du signal de direction, le prochain délai à respecter est
+la durée de 4.5 µs du signal de pas haut, additionnons les 11 µs de
+latence au 4.5 µs de signal haut et nous obtenons une période minimum
+de 15.5 µs.
+Lorsque nous essayons la valeur de 15.5, nous trouvons que l&#8217;ordinateur
+est lent, donc nous réglons sur 16 µs.
+Si nous laissons <em>dirhold</em> à 1 (par défaut) alors temps minimum entre
+un pas et le changement de direction est de 16 µs moins les 11 µs
+de latence ce qui nous donne 5µs. Ce qui n&#8217;est pas suffisant il nous
+manque 15 µs. Puisque la période est 16 µs, nous avons besoin d&#8217;encore
+une période. Dans ce cas nous changeons <em>dirhold</em> de 1 à 2. Maintenant
+le temps minimal entre la fin de l&#8217;impulsion de pas et le changement
+du signal de direction et de 5+16=21 µs. Nous n&#8217;avons plus à
+nous inquiéter d&#8217;une erreur de direction à cause de la latence.</p></div>
+<div class="paragraph"><p>Pour plus d&#8217;informations sur stepgen voir la section stepgen du manuel
+de HAL.</p></div>
+<h3 id="_timing_des_pas">1.2. Timing des pas</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Sur certain pilote moteur le rapport entre la durée des espaces et
+la durée des impulsions n&#8217;est pas égal, dans ce cas
+le point (le moment) du pas est important. Si le pas se déclenche
+sur le front descendant alors, la broche de sortie doit être inversée.</p></div>
+</div>
+<h2 id="_syst_mes_servomoteurs">2. Systèmes à servomoteurs</h2>
+<div class="sectionbody">
+<h3 id="_op_ration_de_base">2.1. Opération de base</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les systèmes à servomoteurs sont capables de vitesses plus élevées pour
+une précision équivalente au moteur pas-à-pas, mais ils sont plus coûteux
+et complexes. Contrairement aux systèmes pas à pas, les servo-systèmes
+nécessitent un dispositif de rétroaction pour se positionner.
+Ils ne fonctionnent pas immédiatement sorti de la boite et
+ils doivent être calibrés pour fonctionner contrairement aux moteurs
+pas à pas.</p></div>
+<div class="paragraph"><p>Cette différence s&#8217;explique par le mode de régulation différent
+des deux systèmes. Les servosystèmes sont régulés en <em>boucle fermée</em>
+et le moteur pas à pas en <em>boucle ouverte</em>.</p></div>
+<div class="paragraph"><p>Que signifie <em>boucle fermée</em> ? Regardons un schéma simplifié et
+la façon dont un système de servomoteur fonctionne.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/servo-feedback_fr.png" alt="images/servo-feedback_fr.png" />
+</div>
+<div class="title">Figure 1. Boucle fermée</div>
+</div>
+<div class="paragraph"><p>Ce diagramme montre que le signal de consigne (de commande) et le signal
+de retour pilotent l&#8217;amplificateur sommateur, ensuite celui-ci pilote
+l&#8217;amplificateur de puissance, qui pilote le moteur, qui actionne
+la charge et le dispositif de retour d&#8217;information qui fournis
+le signal de retour. Cela se perçoit comme une boucle fermée où
+A contrôle B, B contrôle C, C contrôle D et D contrôle A.</p></div>
+<div class="paragraph"><p>Si vous n&#8217;avez pas travaillé avec des systèmes à servomoteurs auparavant,
+cela sera sans aucun doute étrange au premier abord, surtout
+par rapport aux plus normal des circuits électroniques, où le bon
+déroulement des entrées vers les sorties est de ne jamais revenir
+en arrière.<span class="footnote"><br />[Si cela peut aider, l'équivalent le plus proche
+dans le monde numérique ce sont les machines d'état,
+machines séquentielles où l'état des sorties à ce moment dépend
+de l'état que les entrées et sorties avaient avant. Si cela n&#8217;aide
+pas, alors passons.]<br /></span></p></div>
+<div class="paragraph"><p>Si tout contrôle tout le reste comment cela peut-il fonctionner, qui
+en a la charge ? La réponse est que LinuxCNC peut contrôler ce système,
+mais il doit le faire en choisissant une des différentes méthodes
+de contrôle.</p></div>
+<div class="paragraph"><p>La méthode de contrôle qu&#8217;utilise LinuxCNC, est l&#8217;une des plus simples
+et la meilleure appelée PID.
+PID est l&#8217;acronyme de <strong>P</strong>roportionnelle, <strong>I</strong>ntégrale et <strong>D</strong>érivée.
+La valeur proportionnelle détermine la réaction à l&#8217;erreur actuelle,
+la valeur intégrale détermine la réaction basée sur la somme d&#8217;erreurs
+récentes et la valeur dérivée détermine la réaction basée sur
+la vitesse de variation de l&#8217;erreur. Ce sont trois techniques communes
+de mathématique qui sont appliquées pour fournir un processus de suivi
+d&#8217;une consigne. Dans le cas de LinuxCNC le processus que nous
+voulons contrôler est l&#8217;actuelle position de l&#8217;axe et le point de
+consigne qui est la position commandée l&#8217;axe.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/pid-feedback_fr.png" alt="images/pid-feedback_fr.png" />
+</div>
+<div class="title">Figure 2. Boucle PID</div>
+</div>
+<div class="paragraph"><p>En ajustant trois composantes (proportionnelle, intégrale et dérivée)
+dans l&#8217;algorithme du contrôleur PID, nous pouvons concevoir
+une régulation qui s&#8217;adapte aux exigences de processus spécifiques.
+La réponse du contrôleur peut être décrite en trois termes
+de réactivité : une erreur, de tolérance, au dépassement du point
+de consigne et au taux d&#8217;oscillation du système.</p></div>
+<h3 id="_terme_proportionnel">2.2. Terme proportionnel</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le terme proportionnel appelé plus souvent gain proportionnel
+applique un changement à la sortie qui est proportionnelle a la valeur
+d&#8217;erreur courante. Un gain élevé provoque un grand changement à
+la sortie pour un petit changement de l&#8217;erreur. Si le gain est
+trop haut, le système peut devenir instable. Au contraire,
+un gain trop faible aboutit à une faible réponse de la sortie
+en réaction à une grande erreur d&#8217;entrée. Si le gain proportionnel
+est trop bas, il peut être trop faible pour répondre aux perturbations
+du système.</p></div>
+<div class="paragraph"><p>En l&#8217;absence de perturbation, un contrôle proportionnel pur ne
+se positionnera pas à sa valeur cible, mais conservera un état
+d&#8217;erreur statique qui est une fonction du gain proportionnel et
+du gain du processus. Malgré la compensation de l'état stationnaire,
+tant la théorie des systèmes asservis que la pratique industrielle
+indiquent que c&#8217;est le terme proportionnel qui devrait contribuer
+à la plus grande partie du changement de la sortie.</p></div>
+<h3 id="_terme_int_gral">2.3. Terme intégral</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La contribution du terme intégral est proportionnelle à l&#8217;amplitude
+de l&#8217;erreur et à sa durée. La somme des erreurs instantanées au fil
+du temps (intégration) donne la compensation accumulée qui devrait
+avoir été corrigée précédemment. L&#8217;intégration de l&#8217;erreur est alors
+multipliée par le gain d&#8217;intégral et ajoutée à la sortie du contrôleur.</p></div>
+<div class="paragraph"><p>Le terme intégral lorsqu&#8217;il est ajouté augmente le mouvement
+du processus vers la consigne, il élimine l&#8217;erreur de statisme qui
+se produit avec un régulateur proportionnel seul. Cependant, puisque
+le terme intégral doit répondre aux erreurs accumulées par le passé,
+il peut causer un dépassement de la valeur de consigne actuelle
+(dépasser le point de consigne et puis créer un écart dans l&#8217;autre sens).</p></div>
+<h3 id="_terme_d_riv">2.4. Terme dérivé</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le taux de variation de l&#8217;erreur du processus est calculé en
+déterminant la pente de l&#8217;erreur au cours du temps (c&#8217;est-à-dire
+sa dérivée première en relation avec le temps) et en multipliant ce
+taux de changement par le gain de dérivé.
+Le terme dérivé ralentit le taux de variation de la sortie
+du régulateur, cet effet est plus visible à proximité du point
+de consigne du contrôleur.
+Par conséquent, le contrôle dérivé est utilisé pour réduire l&#8217;ampleur du
+dépassement que produit la composante intégrale et pour améliorer la stabilité
+de la combinaison contrôleur processus.</p></div>
+<h3 id="_r_glage_de_la_boucle">2.5. Réglage de la boucle</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si les paramètres du contrôleur PID (les gains des termes
+proportionnel, intégral et dérivé) sont mal choisis,
+l&#8217;entrée du processus contrôlé peut être instable, c&#8217;est-à-dire
+sa sortie diverge, avec ou sans oscillation et, est limitée seulement
+par la saturation ou la rupture mécanique. Le réglage fin d&#8217;une boucle
+de contrôle consiste en l&#8217;ajustement de ses paramètres de contrôle
+(gain proportionnel, gain intégral, gain dérivé) aux valeurs optimums
+pour la réponse désirée.</p></div>
+<h3 id="_r_glage_manuel">2.6. Réglage manuel</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Une méthode de réglage simple consiste à régler les valeurs <strong>I</strong> et <strong>D</strong>
+à zéro. Augmentons la valeur de <strong>P</strong> jusqu'à ce que la sortie oscille,
+<strong>P</strong> devrait être paramétré approximativement à la moitié de cette valeur
+pour diminuer d&#8217;un quart l&#8217;amplitude de ce type de réponse. Augmentons
+sa valeur pour que n&#8217;importe quelle compensation soit correcte dans un
+temps raisonnable pour le processus. Cependant, une valeur trop élevée
+apporte de l&#8217;instabilité. Ensuite, augmentons la valeur de <strong>D</strong> pour que
+la réponse soit suffisamment rapide pour atteindre sa référence après
+une perturbation de charge. Cependant, une valeur trop grande de <strong>D</strong>
+provoquera une réponse excessive et un dépassement.
+Un réglage de boucle PID rapide a un dépassement léger pour atteindre
+le point de consigne plus rapidement, cependant, certains systèmes ne
+peuvent accepter de dépassement, dans ce cas, une boucle fermée
+sur-amortie est nécessaire, cela requière une valeur <strong>P</strong>
+significativement plus basse que celle provoquant l&#8217;oscillation.</p></div>
+</div>
+<h2 id="_rtai">3. RTAI</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>La <em>Real Time Application Interface</em> (RTAI) Interface d&#8217;application
+temps réel est utilisée pour fournir la meilleure performance temps réel.
+Le noyau patché RTAI permet d'écrire des applications avec des
+contraintes temporelles strictes. RTAI donne la possibilité
+d&#8217;avoir des logiciels comme ceux de génération de pas qui ont besoin
+d&#8217;un timing précis.</p></div>
+<h3 id="_acpi">3.1. ACPI</h3><div style="clear:left"></div>
+<div class="paragraph"><p>L&#8217;Advanced Configuration and Power Interface (ACPI) a de nombreuses
+et différentes fonctions, dont la plupart interfèrent avec les
+performances du système temps réel. (Pour par exemple: la gestion de
+l'énergie, la réduction de puissance du processeur, la variation de
+fréquence du CPU, etc.)
+Le noyau LinuxCNC (et probablement tous les noyaux RTAI-patché) ont les
+fonctions ACPI désactivées. ACPI prend également soin de mettre hors
+tension le système après qu&#8217;un arrêt système a été commandé, et
+c&#8217;est pourquoi vous pourriez avoir besoin de presser sur le bouton
+d&#8217;alimentation pour éteindre complètement votre ordinateur.
+Le groupe RTAI a amélioré cela dans les versions récentes, de sorte
+que votre système LinuxCNC peut éteindre le système par lui-même.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-03-23 07:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/Integrator_Concepts_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:25 GMT -->
+</html>

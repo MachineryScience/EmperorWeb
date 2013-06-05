@@ -1,0 +1,451 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Sat Mar 17 00:36:10 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/at_pid.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>AT_PID</title>
+
+</head>
+<body>
+
+<h1 align="center">AT_PID</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#NAMING">NAMING</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#BUGS">BUGS</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">at_pid &minus;
+proportional/integral/derivative controller with auto
+tuning</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+at_pid [num_chan=</b><i>num</i> <b>|
+names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>at_pid</b>
+is a classic Proportional/Integral/Derivative controller,
+used to control position or speed feedback loops for servo
+motors and other closed-loop applications.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>at_pid</b>
+supports a maximum of sixteen controllers. The number that
+are actually loaded is set by the <b>num_chan</b> argument
+when the module is loaded. Alternatively, specify
+<b>names=</b> and unique names separated by commas.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The
+<b>num_chan=</b> and <b>names=</b> specifiers are mutually
+exclusive. If neither <b>num_chan=</b> nor <b>names=</b> are
+specified, the default value is three.</p>
+
+<p style="margin-left:11%; margin-top: 1em">If <b>debug</b>
+is set to 1 (the default is 0), some additional HAL
+parameters will be exported, which might be useful for
+tuning, but are otherwise unnecessary.</p>
+
+<p style="margin-left:11%; margin-top: 1em"><b>at_pid</b>
+has a built in auto tune mode. It works by setting up a
+limit cycle to characterize the process. From this,
+<b>Pgain/Igain/Dgain</b> or <b>Pgain/Igain/FF1</b> can be
+determined using Ziegler-Nichols. When using <b>FF1</b>,
+scaling must be set so that <b>output</b> is in user units
+per second.</p>
+
+<p style="margin-left:11%; margin-top: 1em">During auto
+tuning, the <b>command</b> input should not change. The
+limit cycle is setup around the commanded position. No
+initial tuning values are required to start auto tuning.
+Only <b>tune-cycles</b>, <b>tune-effort</b> and
+<b>tune-mode</b> need be set before starting auto tuning.
+When auto tuning completes, the tuning parameters will be
+set. If running from LinuxCNC, the FERROR setting for the
+axis being tuned may need to be loosened up as it must be
+larger than the limit cycle amplitude in order to avoid a
+following error.</p>
+
+<p style="margin-left:11%; margin-top: 1em">To perform auto
+tuning, take the following steps. Move the axis to be tuned,
+to somewhere near the center of it&rsquo;s travel. Set
+<b>tune-cycles</b> (the default value should be fine in most
+cases) and <b>tune-mode</b>. Set <b>tune-effort</b> to a
+small value. Set <b>enable</b> to true. Set <b>tune-mode</b>
+to true. Set <b>tune-start</b> to true. If no oscillation
+occurs, or the oscillation is too small, slowly increase
+<b>tune-effort</b>. Auto tuning can be aborted at any time
+by setting <b>enable</b> or <b>tune-mode</b> to false.</p>
+
+<h2>NAMING
+<a name="NAMING"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The names for
+pins, parameters, and functions are prefixed as: <b><br>
+pid.N.</b> for N=0,1,...,num-1 when using <b>num_chan=num
+<br>
+nameN.</b> for nameN=name1,name2,... when using
+<b>names=name1,name2,...</b></p>
+
+<p style="margin-left:11%; margin-top: 1em">The
+<b>pid.N.</b> format is shown in the following
+descriptions.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>pid.</b><i>N</i><b>.do-pid-calcs</b>
+(uses floating-point)</p>
+
+<p style="margin-left:22%;">Does the PID calculations for
+control loop <i>N</i>.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>pid.</b><i>N</i><b>.command</b>
+float in</p>
+
+<p style="margin-left:22%;">The desired (commanded) value
+for the control loop.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.feedback</b>
+float in</p>
+
+<p style="margin-left:22%;">The actual (feedback) value,
+from some sensor such as an encoder.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.error</b>
+float out</p>
+
+<p style="margin-left:22%;">The difference between command
+and feedback.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.output</b>
+float out</p>
+
+<p style="margin-left:22%;">The output of the PID loop,
+which goes to some actuator such as a motor.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.enable</b>
+bit in</p>
+
+<p style="margin-left:22%;">When true, enables the PID
+calculations. When false, <b>output</b> is zero, and all
+internal integrators, etc, are reset.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.tune-mode</b>
+bit in</p>
+
+<p style="margin-left:22%;">When true, enables auto tune
+mode. When false, normal PID calculations are performed.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.tune-start</b>
+bit io</p>
+
+<p style="margin-left:22%;">When set to true, starts auto
+tuning. Cleared when the auto tuning completes.</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>pid.</b><i>N</i><b>.Pgain</b>
+float rw</p>
+
+<p style="margin-left:22%;">Proportional gain. Results in a
+contribution to the output that is the error multiplied by
+<b>Pgain</b>.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.Igain</b>
+float rw</p>
+
+<p style="margin-left:22%;">Integral gain. Results in a
+contribution to the output that is the integral of the error
+multiplied by <b>Igain</b>. For example an error of 0.02
+that lasted 10 seconds would result in an integrated error
+(<b>errorI</b>) of 0.2, and if <b>Igain</b> is 20, the
+integral term would add 4.0 to the output.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.Dgain</b>
+float rw</p>
+
+<p style="margin-left:22%;">Derivative gain. Results in a
+contribution to the output that is the rate of change
+(derivative) of the error multiplied by <b>Dgain</b>. For
+example an error that changed from 0.02 to 0.03 over 0.2
+seconds would result in an error derivative (<b>errorD</b>)
+of of 0.05, and if <b>Dgain</b> is 5, the derivative term
+would add 0.25 to the output.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.bias</b>
+float rw</p>
+
+<p style="margin-left:22%;"><b>bias</b> is a constant
+amount that is added to the output. In most cases it should
+be left at zero. However, it can sometimes be useful to
+compensate for offsets in servo amplifiers, or to balance
+the weight of an object that moves vertically. <b>bias</b>
+is turned off when the PID loop is disabled, just like all
+other components of the output. If a non-zero output is
+needed even when the PID loop is disabled, it should be
+added with an external HAL sum2 block.</p>
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.FF0</b>
+float rw</p>
+
+<p style="margin-left:22%;">Zero order feed-forward term.
+Produces a contribution to the output that is <b>FF0</b>
+multiplied by the commanded value. For position loops, it
+should usually be left at zero. For velocity loops,
+<b>FF0</b> can compensate for friction or motor counter-EMF
+and may permit better tuning if used properly.</p>
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.FF1</b>
+float rw</p>
+
+<p style="margin-left:22%;">First order feed-forward term.
+Produces a contribution to the output that <b>FF1</b>
+multiplied by the derivative of the commanded value. For
+position loops, the contribution is proportional to speed,
+and can be used to compensate for friction or motor CEMF.
+For velocity loops, it is proportional to acceleration and
+can compensate for inertia. In both cases, it can result in
+better tuning if used properly.</p>
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.FF2</b>
+float rw</p>
+
+<p style="margin-left:22%;">Second order feed-forward term.
+Produces a contribution to the output that is <b>FF2</b>
+multiplied by the second derivative of the commanded value.
+For position loops, the contribution is proportional to
+acceleration, and can be used to compensate for inertia. For
+velocity loops, it should usually be left at zero.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.deadband</b>
+float rw</p>
+
+<p style="margin-left:22%;">Defines a range of
+&quot;acceptable&quot; error. If the absolute value of
+<b>error</b> is less than <b>deadband</b>, it will be
+treated as if the error is zero. When using feedback devices
+such as encoders that are inherently quantized, the deadband
+should be set slightly more than one-half count, to prevent
+the control loop from hunting back and forth if the command
+is between two adjacent encoder values. When the absolute
+value of the error is greater than the deadband, the
+deadband value is subtracted from the error before
+performing the loop calculations, to prevent a step in the
+transfer function at the edge of the deadband. (See
+<b>BUGS</b>.)</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.maxoutput</b>
+float rw</p>
+
+<p style="margin-left:22%;">Output limit. The absolute
+value of the output will not be permitted to exceed
+<b>maxoutput</b>, unless <b>maxoutput</b> is zero. When the
+output is limited, the error integrator will hold instead of
+integrating, to prevent windup and overshoot.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.maxerror</b>
+float rw</p>
+
+<p style="margin-left:22%;">Limit on the internal error
+variable used for P, I, and D. Can be used to prevent high
+<b>Pgain</b> values from generating large outputs under
+conditions when the error is large (for example, when the
+command makes a step change). Not normally needed, but can
+be useful when tuning non-linear systems.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.maxerrorD</b>
+float rw</p>
+
+<p style="margin-left:22%;">Limit on the error derivative.
+The rate of change of error used by the <b>Dgain</b> term
+will be limited to this value, unless the value is zero. Can
+be used to limit the effect of <b>Dgain</b> and prevent
+large output spikes due to steps on the command and/or
+feedback. Not normally needed.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.maxerrorI</b>
+float rw</p>
+
+<p style="margin-left:22%;">Limit on error integrator. The
+error integrator used by the <b>Igain</b> term will be
+limited to this value, unless it is zero. Can be used to
+prevent integrator windup and the resulting overshoot
+during/after sustained errors. Not normally needed.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.maxcmdD</b>
+float rw</p>
+
+<p style="margin-left:22%;">Limit on command derivative.
+The command derivative used by <b>FF1</b> will be limited to
+this value, unless the value is zero. Can be used to prevent
+<b>FF1</b> from producing large output spikes if there is a
+step change on the command. Not normally needed.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.maxcmdDD</b>
+float rw</p>
+
+<p style="margin-left:22%;">Limit on command second
+derivative. The command second derivative used by <b>FF2</b>
+will be limited to this value, unless the value is zero. Can
+be used to prevent <b>FF2</b> from producing large output
+spikes if there is a step change on the command. Not
+normally needed.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.tune-type</b>
+u32 rw</p>
+
+<p style="margin-left:22%;">When set to 0,
+<b>Pgain/Igain/Dgain</b> are caclulated. When set to 1,
+<b>Pgain/Igain/FF1</b> are calculated.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.tune-cycles</b>
+u32 rw</p>
+
+<p style="margin-left:22%;">Determines the number of cycles
+to run to characterize the process. <b>tune-cycles</b>
+actually sets the number of half cycles. More cycles results
+in a more accurate characterization as the average of all
+cycles is used.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.tune-effort</b>
+float rw</p>
+
+<p style="margin-left:22%;">Determines the effor used in
+setting up the limit cycle in the process.
+<b>tune-effort</b> should be set to a positive value less
+than <b>maxoutput</b>. Start with something small and work
+up to a value that results in a good portion of the maximum
+motor current being used. The smaller the value, the smaller
+the amplitude of the limit cycle.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.errorI</b>
+float ro (only if debug=1)</p>
+
+<p style="margin-left:22%;">Integral of error. This is the
+value that is multiplied by <b>Igain</b> to produce the
+Integral term of the output.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.errorD</b>
+float ro (only if debug=1)</p>
+
+<p style="margin-left:22%;">Derivative of error. This is
+the value that is multiplied by <b>Dgain</b> to produce the
+Derivative term of the output.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.commandD</b>
+float ro (only if debug=1)</p>
+
+<p style="margin-left:22%;">Derivative of command. This is
+the value that is multiplied by <b>FF1</b> to produce the
+first order feed-forward term of the output.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.commandDD</b>
+float ro (only if debug=1)</p>
+
+<p style="margin-left:22%;">Second derivative of command.
+This is the value that is multiplied by <b>FF2</b> to
+produce the second order feed-forward term of the
+output.</p>
+
+
+<p style="margin-left:11%;"><b>pid.</b><i>N</i><b>.ultimate-gain</b>
+float ro (only if debug=1)</p>
+
+<p style="margin-left:22%;">Determined from process
+characterization. <b>ultimate-gain</b> is the ratio of
+<b>tune-effort</b> to the limit cycle amplitude multipled by
+4.0 divided by Pi.
+<b>pid.</b><i>N</i><b>.ultimate-period</b> float ro (only if
+debug=1) Determined from process characterization.
+<b>ultimate-period</b> is the period of the limit cycle.</p>
+
+<h2>BUGS
+<a name="BUGS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Some people
+would argue that deadband should be implemented such that
+error is treated as zero if it is within the deadband, and
+be unmodified if it is outside the deadband. This was not
+done because it would cause a step in the transfer function
+equal to the size of the deadband. People who prefer that
+behavior are welcome to add a parameter that will change the
+behavior, or to write their own version of <b>at_pid</b>.
+However, the default behavior should not be changed.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/at_pid.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

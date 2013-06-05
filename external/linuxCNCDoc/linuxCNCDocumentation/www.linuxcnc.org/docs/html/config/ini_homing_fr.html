@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/ini_homing_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:25 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Prise d&#8217;origine</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Prise d&#8217;origine</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="sec:Prises-d-origine"></a> </p></div>
+</div>
+</div>
+<h2 id="_la_prise_d_8217_origine">1. La prise d&#8217;origine</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>La prise d&#8217;origine semble assez simple, il suffit de déplacer chaque
+axe à un emplacement connu et de positionner l&#8217;ensemble des variables
+internes de LinuxCNC en conséquence. Toutefois, les machines sont différentes
+les unes des autres et la prise d&#8217;origine est maintenant devenue assez
+complexe.</p></div>
+</div>
+<h2 id="_s_quence_de_prise_d_8217_origine">2. Séquence de prise d&#8217;origine</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>La figure  suivante montre les quatre séquences de prise d&#8217;origine possibles.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/linuxcnc-motion-homing-diag_fr.png" alt="images/linuxcnc-motion-homing-diag_fr.png" />
+</div>
+<div class="title">Figure 1. Les séquences de POM possibles<a id="fig:Sequences-de-prise-d-origine"></a></div>
+</div>
+</div>
+<h2 id="_configuration">3. Configuration</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Le tableau suivant détermine exactement comment se déroule la séquence de
+prise d&#8217;origines définie dans la section [AXIS] du fichier ini.</p></div>
+<div class="tableblock" id="cap:Variables-sequences-de-POM">
+<table rules="all"
+width="80%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Tableau 1. Combinaisons des variables de la POM</caption>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<thead>
+<tr>
+<th align="center" valign="top">Type de POM      </th>
+<th align="center" valign="top">SEARCH_VEL </th>
+<th align="center" valign="top">LATCH_VEL    </th>
+<th align="center" valign="top">USE_INDEX</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">Immediate</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">NON</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">Index-seul</p></td>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">nonzero</p></td>
+<td align="center" valign="top"><p class="table">OUI</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">Contact-seul</p></td>
+<td align="center" valign="top"><p class="table">nonzero</p></td>
+<td align="center" valign="top"><p class="table">nonzero</p></td>
+<td align="center" valign="top"><p class="table">NO</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">Contact et Index</p></td>
+<td align="center" valign="top"><p class="table">nonzero</p></td>
+<td align="center" valign="top"><p class="table">nonzero</p></td>
+<td align="center" valign="top"><p class="table">OUI</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">Toute autre combinaison produira une erreur.</td>
+</tr></table>
+</div>
+<h3 id="_vitesse_de_recherche_home_search_vel">3.1. Vitesse de recherche (HOME_SEARCH_VEL) </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Vitesse de la phase initiale de prise d&#8217;origine, pendant la recherche du
+contact d&#8217;origine machine. Une valeur différente de zéro indique à LinuxCNC
+la présence d&#8217;un contact d&#8217;origine machine. LinuxCNC va alors commencer par
+vérifier si ce contact est déjà pressé. Si oui, il le dégagera à la
+vitesse établie par <em>HOME_SEARCH_VEL</em>, la direction du dégagement sera
+de signe opposé à celui de <em>HOME_SEARCH_VEL</em>. Puis, il va revenir vers
+le contact en se déplaçant dans la direction spécifiée par le signe de
+<em>HOME_SEARCH_VEL</em> et à la vitesse déterminée par sa valeur absolue.
+Quand le contact d&#8217;origine machine est détecté, le mobile s&#8217;arrête
+aussi vite que possible, il y aura cependant toujours un certain
+dépassement dépendant de la vitesse. Si celle-ci est trop élevée, le
+mobile peut dépasser suffisamment le contact pour aller attaquer un fin
+de course de limite d&#8217;axe, voir même aller se crasher dans une butée
+mécanique. À l&#8217;opposé, si <em>HOME_SEARCH_VEL</em> est trop basse, la prise
+d&#8217;origine peut durer très longtemps.</p></div>
+<div class="paragraph"><p>Une valeur égale à zéro indique qu&#8217;il n&#8217;y a pas de contact d&#8217;origine
+machine, dans ce cas, les phases de recherche de ce contact seront
+occultées. La valeur par défaut est zéro.</p></div>
+<h3 id="_vitesse_de_d_tection_home_latch_vel">3.2. Vitesse de détection (HOME_LATCH_VEL) </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Spécifie la vitesse et la direction utilisée par le mobile pendant la
+dernière phase de la prise d&#8217;origine, c&#8217;est la recherche précise du
+contact d&#8217;origine machine, si il existe et de l&#8217;emplacement de
+l&#8217;impulsion d&#8217;index, si elle est présente. Cette vitesse est plus lente
+que celle de la phase de recherche initiale, afin d&#8217;améliorer la précision.
+Si <em>HOME_SEARCH_VEL</em> et <em>HOME_LATCH_VEL</em> sont de mêmes signes, la phase de
+recherche précise s&#8217;effectuera dans le même sens que la phase de
+recherche initiale. Dans ce cas, le mobile dégagera d&#8217;abord le contact
+en sens inverse avant de revenir vers lui à la vitesse définie ici.
+L&#8217;acquisition de l&#8217;origine machine se fera sur la première
+impulsion de changement d'état du contact. Si <em>HOME_SEARCH_VEL</em> et
+<em>HOME_LATCH_VEL</em> sont de signes opposés, la phase de recherche précise
+s&#8217;effectuera dans le sens opposé à celui de la recherche initiale. Dans
+ce cas, LinuxCNC dégagera le contact à la vitesse définie ici. L&#8217;acquisition
+de l&#8217;origine machine se fera sur la première impulsion de
+changement d'état du contact lors de son dégagement. Si
+<em>HOME_SEARCH_VEL</em> est à zéro, signifiant qu&#8217;il n&#8217;y a pas de contact et
+que <em>HOME_LATCH_VEL</em> et différente de zéro, le mobile continuera
+jusqu'à la prochaine impulsion d&#8217;index, l&#8217;acquisition de l&#8217;origine machine
+se fera à cet position. Si <em>HOME_SEARCH_VEL</em> est différent de zéro et
+ que <em>HOME_LATCH_VEL</em> est égale à zéro, c&#8217;est une cause d&#8217;erreur,
+l&#8217;opération de prise d&#8217;origine échouera. La valeur par défaut est zéro.</p></div>
+<h3 id="_home_ignore_limits">3.3. HOME_IGNORE_LIMITS </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Peut contenir les valeurs YES ou NO. Cette variable détermine si LinuxCNC
+doit ignorer les fins de course de limites d&#8217;axe. Certaines machines
+n&#8217;utilisent pas un contact d&#8217;origine séparé, à la place, elles
+utilisent un des interrupteurs de fin de course comme contact
+d&#8217;origine. Dans ce cas, LinuxCNC doit ignorer l&#8217;activation de cette limite
+de course pendant la séquence de prise d&#8217;origine. La valeur par défaut
+de ce paramètre est NO.</p></div>
+<h3 id="_home_use_index">3.4. HOME_USE_INDEX </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Spécifie si une impulsion d&#8217;index doit être prise en compte (cas de
+règles de mesure ou de codeurs de positions). Si cette variable est
+vraie (HOME_USE_INDEX = YES), LinuxCNC fera l&#8217;acquisition de l&#8217;origine
+machine sur le premier front de l&#8217;impulsion d&#8217;index. Si elle est fausse
+(=NO), LinuxCNC fera l&#8217;acquisition de l&#8217;origine sur le premier front produit
+par le contact d&#8217;origine (dépendra des signes de <em>HOME_SEARCH_VEL</em> et
+<em>HOME_LATCH_VEL</em>). La valeur par défaut est NO.</p></div>
+<h3 id="_home_offset">3.5. HOME_OFFSET </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Contient l&#8217;emplacement du point d&#8217;origine ou de l&#8217;impulsion d&#8217;index,
+en coordonnées relatives. Il peut aussi être traité comme le décalage
+entre le point d&#8217;origine machine et le zéro de l&#8217;axe. A la détection de
+l&#8217;impulsion d&#8217;origine, LinuxCNC ajuste les coordonnées de l&#8217;axe à la valeur
+de <em>HOME_OFFSET</em>. La valeur par défaut est zéro.</p></div>
+<h3 id="_position_de_l_8217_origine_home">3.6. Position de l&#8217;origine (HOME) </h3><div style="clear:left"></div>
+<div class="paragraph"><p>C&#8217;est la position sur laquelle ira le mobile à la fin de la séquence
+de prise d&#8217;origine machine. Après avoir détecté le contact d&#8217;origine,
+avoir ajusté les coordonnées de ce point à la valeur de <em>HOME_OFFSET</em>,
+le mobile va se déplacer sur la valeur de <em>HOME</em>, c&#8217;est le point final
+de la séquence de prise d&#8217;origine. La valeur par défaut est zéro.
+Notez que même si ce paramètre est égal à la valeur de <em>HOME_OFFSET</em>,
+le mobile dépassera très légérement la position du point d&#8217;aquisition de
+l&#8217;origine machine avant de s&#8217;arrêter. Donc il y aura toujours un petit
+mouvement à ce moment là (sauf bien sûr si <em>HOME_SEARCH_VEL</em> est à
+zéro, et que toute la séquence de POM a été sautée). Ce mouvement final
+s&#8217;effectue en vitesse de déplacement rapide. Puisque l&#8217;axe est
+maintenant référencé, il n&#8217;y a plus de risque pour la machine, un
+mouvement rapide est donc la façon la plus rapide de finir la séquence
+de prise d&#8217;origine.</p></div>
+<h3 id="_home_is_shared">3.7. HOME_IS_SHARED </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si cet axe n&#8217;a pas un contact d&#8217;origine séparé des autres, mais
+plusieurs contacts câblés sur la même broche d&#8217;entrée, mettre cette
+valeur à 1 pour éviter de commencer la prise d&#8217;origine si un de ces
+contacts partagés est déjà activé. Mettez cette valeur à 0 pour
+permettre la prise d&#8217;origine même si un contact est déjà attaqué.</p></div>
+<h3 id="_home_sequence">3.8. HOME_SEQUENCE </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Utilisé pour définir l&#8217;ordre des séquences <em>HOME_ALL</em> de prise
+d&#8217;origine des différents axes (exemple: la POM de l&#8217;axe X ne pourra se
+faire qu&#8217;après celle de Z). La POM d&#8217;un axe ne pourra se faire qu&#8217;après
+tous les autres en ayant la valeur la plus petite de <em>HOME_SEQUENCE</em> et
+après qu&#8217;ils soient déjà tous à <em>HOME_OFFSET</em>. Si deux axes ont la même
+valeur de <em>HOME_SEQUENCE</em>, leur POM s&#8217;effectueront simultanément. Si
+<em>HOME_SEQUENCE</em> est égale à -1 ou non spécifiée, l&#8217;axe ne sera pas
+compris dans la séquence <em>HOME_ALL</em>. Les valeurs de <em>HOME_SEQUENCE</em>
+débutent à 0, il ne peut pas y avoir de valeur inutilisée.</p></div>
+<h3 id="_volatile_home">3.9. VOLATILE_HOME </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si ce paramètre est vrai, l&#8217;origine machine de cet axe sera effacée
+chaque fois que la machine sera mise à l&#8217;arrêt. Cette variable est
+appropriée pour les axes ne maintenant pas la position si le moteur
+est désactivé (gravité de la broche par exemple).
+Certains moteurs pas à pas, en particulier, fonctionnant en micropas,
+peuvent se comporter de la sorte.</p></div>
+<h3 id="_locking_indexer">3.10. LOCKING_INDEXER </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si cet axe comporte un verrouillage d&#8217;indexeur rotatif, celui-ci
+sera déverrouillé avant le début de la séquence de prise d&#8217;origine,
+et verrouillé à la fin.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-11-22 19:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/ini_homing_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:26 GMT -->
+</html>

@@ -9,6 +9,8 @@ define(function(require) {
         self.Panel = null;
         self.linuxCNCServer = moduleContext.getSettings().linuxCNCServer;
 
+        self.serverUpdate = false;
+
         this.getTemplate = function()
         {
             return template;
@@ -24,17 +26,24 @@ define(function(require) {
                 self.Panel = Panel;
                 $('.switch', self.Panel.getJQueryElement()).bootstrapSwitch();
 
+                self.serverUpdate = true;
+
                 self.linuxCNCServer.vars.spindle_brake.data.subscribe( function(newVal)
                 {
+                    self.serverUpdate = true;
                     $(self.Panel.getJQueryElement()).find('#brake_toggle').bootstrapSwitch('setState',newVal);
+                    self.serverUpdate = false;
                 });
                 $(self.Panel.getJQueryElement()).find('#brake_toggle').bootstrapSwitch('setState',self.linuxCNCServer.vars.spindle_brake.data());
+
+                self.serverUpdate = false;
             }
         };
 
         self.setBrake = function()
         {
-            self.linuxCNCServer.setSpindleBrake( $( '#brake_toggle', self.Panel.getJQueryElement() ).bootstrapSwitch('status'));
+            if (!self.serverUpdate)
+                self.linuxCNCServer.setSpindleBrake( $( '#brake_toggle', self.Panel.getJQueryElement() ).bootstrapSwitch('status'));
         }
 
 

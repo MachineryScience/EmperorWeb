@@ -1,0 +1,468 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/lathe/lathe-user_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:01 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Particularités des tours</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Particularités des tours</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:Tour-Specifiques"></a> </p></div>
+<div class="paragraph"><p>Ce chapitre va regrouper les informations spécifiques aux tours, il
+est encore en cours de rédaction.</p></div>
+</div>
+</div>
+<h2 id="_mode_tour">1. Mode tour</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Si l&#8217;interface graphique Axis est utilisée et que la machine est un tour, pour
+qu&#8217;Axis représente les axes et la position de l&#8217;outil correctement il conviendra
+d'éditer le fichier <em>ini</em> et de modifier la section [DISPLAY] comme ceci:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[DISPLAY]
+
+# Pour indiquer à Axis que la machine est un tour (lathe).
+LATHE = TRUE</tt></pre>
+</div></div>
+<div class="paragraph"><p>Le mode <em>tour</em> dans Axis ne fixe pas le plan par défaut comme étant G18 (XZ). Il
+est nécessaire de l&#8217;ajouter dans le préambule de tout programmer G-code ou,
+encore mieux, de l&#8217;ajouter directement dans le fichier <em>ini</em> comme cela:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[RS274NGC]
+
+# G-code modaux pour initialiser l'interpréteur
+RS274NGC_STARTUP_CODE = G18 G20 G90</tt></pre>
+</div></div>
+</div>
+<h2 id="_fichier_d_8217_outils">2. Fichier d&#8217;outils</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>La table d&#8217;outils est un fichier texte qui contient les informations de chaque
+outil.
+Ce fichier se trouve dans le même répertoire que le fichier <em>ini</em>, il est appelé
+<em>tool.tbl</em> par défaut.
+Les outils peuvent être dans un changeur d&#8217;outils ou simplement changés
+manuellement. Le fichier peut être édité avec un éditeur de texte ou être mis
+à jour en utilisant G10 L1, L10, L11.
+Axis peut aussi lancer l'éditeur de texte du système en y chargeant la table,
+l&#8217;opérateur peut ainsi intervenir directement sur les valeurs des outils.
+Le nombre maximum d&#8217;outils dans la table d&#8217;outils est de 56.
+Les numéros d&#8217;outil et de poches peuvent aller jusqu'à 99999.</p></div>
+<div class="paragraph"><p>Les versions antérieures de LinuxCNC avaient deux différents formats de table
+d&#8217;outils pour les fraiseuses et les tours, mais depuis la version 2.4.x,
+un format de table d&#8217;outil unique est utilisé. Il faut juste ignorer les parties
+de la table d&#8217;outils qui ne concernent pas la machine.
+Plus d&#8217;informations <a href="../gcode/tool_compensation_fr.html#sec:Tool-Table-Format">ici sur le format de la table d&#8217;outils</a>.</p></div>
+</div>
+<h2 id="sec:Orientations-des-outils-de-tour">3. Orientations des outils de tournage</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>La figure suivante montre les angles d&#8217;orientations des outils de tour ainsi que
+les informations sur l&#8217;angle frontal de l&#8217;arête de coupe (FRONTANGLE) et
+l&#8217;angle arrière de l&#8217;arête de coupe (BACKANGLE).
+Les positions vont croissantes dans le sens horaire par rapport à une ligne
+parallèle à l&#8217;axe Z, le zéro étant côté Z+.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tool_positions_fr.png" alt="images/tool_positions_fr.png" />
+</div>
+<div class="title">Figure 1. Orientations des outils de tournage</div>
+</div>
+<div class="paragraph"><p>Les images ci-dessous montrent la représentation qu&#8217;Axis donne des orientations
+de l&#8217;outil, en se référant à la figure ci-dessus.</p></div>
+<div class="paragraph"><div class="title">Outil dans les positions 1, 2, 3 et 4<a id="fig:Outil-Positions-1-2-3-4"></a></div><p></p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tool_pos_1.png" alt="images/tool_pos_1.png" />
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tool_pos_2.png" alt="images/tool_pos_2.png" />
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tool_pos_3.png" alt="images/tool_pos_3.png" />
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tool_pos_4.png" alt="images/tool_pos_4.png" />
+</div>
+</div>
+<div class="paragraph"><div class="title">Outil dans les positions 5, 6, 7 et 8<a id="fig:Outil-Positions-5-6-7-8"></a></div><p></p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tool_pos_5.png" alt="images/tool_pos_5.png" />
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tool_pos_6.png" alt="images/tool_pos_6.png" />
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tool_pos_7.png" alt="images/tool_pos_7.png" />
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="images/tool_pos_8.png" alt="images/tool_pos_8.png" />
+</div>
+</div>
+</div>
+<h2 id="_correction_d_8217_outil">4. Correction d&#8217;outil</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Quand AXIS est utilisé sur un tour, il est possible de corriger l&#8217;outil sur les
+axes X et Z. Les corrections sont alors introduites directement dans la table
+d&#8217;outils en utilisant le bouton <em>Toucher</em> et sa fenêtre de dialogue.</p></div>
+<h3 id="_offset_d_8217_outil_en_x">4.1. Offset d&#8217;outil en X</h3><div style="clear:left"></div>
+<div class="paragraph"><p>L&#8217;offset X pour chaque outil correspond à un décalage de l&#8217;axe de la broche.</p></div>
+<div class="paragraph"><p>Une méthode consiste à prendre un outil de tournage standard et usiner un diamètre.
+Mesurer exactement ce diamètre puis, sans toucher à l&#8217;axe X, dans la fenêtre qui
+s&#8217;ouvre, après un appui sur le bouton <em>Toucher</em>, saisir le diamètre mesuré, ou
+le rayon si c&#8217;est le mode en cours. Ensuite, à l&#8217;aide d&#8217;encre à tracer ou
+d&#8217;un marqueur, recouvrir une zone sur la pièce, faire tangenter l&#8217;outil à cet
+endroit pour qu&#8217;il touche juste la surface encrée, ajuster alors l&#8217;offset X au
+diamètre mesuré de la pièce en utilisant le bouton <em>Toucher</em>. S&#8217;assurer que le
+rayon de bec est bien défini dans la table d&#8217;outils, pour que le point
+contrôlé soit correct. Le <em>Toucher</em> ajoute automatiquement un G43, de sorte que
+l&#8217;offset s&#8217;applique immédiatement à l&#8217;outil courant.</p></div>
+<h3 id="_s_quence_typique_de_correction_d_8217_outil_en_x">4.2. Séquence typique de correction d&#8217;outil en X:</h3><div style="clear:left"></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Prise d&#8217;origine machine de chacun des axes, si ce n&#8217;est pas déjà fait.
+</p>
+</li>
+<li>
+<p>
+Déclarer l&#8217;outil avec <em>M6 Tn</em> dans lequel <em>n</em> est le numéro de l&#8217;outil
+courant, présent en table d&#8217;outils.
+</p>
+</li>
+<li>
+<p>
+Sélectionner l&#8217;axe X dans la fenêtre de l&#8217;onglet <em>Contrôle manuel (F3)</em>.
+</p>
+</li>
+<li>
+<p>
+Déplacer l&#8217;axe X sur une position connue ou prendre une passe de test puis
+   mesurer le diamètre obtenu.
+</p>
+</li>
+<li>
+<p>
+Cliquer le bouton <em>Toucher</em> et choisir l&#8217;option <em>Table d&#8217;outils</em>, ce qui
+   entrera la correction directement dans la table d&#8217;outil.
+</p>
+</li>
+<li>
+<p>
+Recommencer la même séquence pour corriger l&#8217;axe Z.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Remarque: si le mode rayon est le mode courant, il faut évidemment entrer le
+rayon et non pas le diamètre.</p></div>
+<h3 id="_offset_d_8217_outil_en_z">4.3. Offset d&#8217;outil en Z</h3><div style="clear:left"></div>
+<div class="paragraph"><p>L&#8217;offset de l&#8217;axe Z peut être un peu déroutant au premier abord car il est
+composé de deux éléments. Le premier est l&#8217;offset de la table d&#8217;outils, le second
+est l&#8217;offset des coordonnées machine. Nous allons d&#8217;abord examiner l&#8217;offset de
+la table d&#8217;outils. Une méthode consiste à utiliser un point fixe sur le tour et
+à ajuster l&#8217;offset Z de tous les outils à partir de ce point fixe. Certains
+utilisent le nez de broche ou la face du mandrin. Cela donne la possibilité de
+changer d&#8217;outil et d&#8217;ajuster son offset Z, sans avoir à réinitialiser tous les
+outils.</p></div>
+<h3 id="_s_quence_typique_de_correction_d_8217_outil_en_z">4.4. Séquence typique de correction d&#8217;outil en Z:</h3><div style="clear:left"></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Prise d&#8217;origine machine de tous les axes, si ce n&#8217;est pas déjà fait.
+</p>
+</li>
+<li>
+<p>
+S&#8217;assurer qu&#8217;aucune compensation n&#8217;est activée pour le système de coordonnées
+courant.
+</p>
+</li>
+<li>
+<p>
+Déclarer l&#8217;outil avec <em>M6 Tn</em> dans lequel <em>n</em> est le numéro de l&#8217;outil
+courant, présent en table d&#8217;outils.
+</p>
+</li>
+<li>
+<p>
+Sélectionner l&#8217;axe Z dans la fenêtre de l&#8217;onglet <em>contrôle manuel (F3)</em>.
+</p>
+</li>
+<li>
+<p>
+Placer un cylindre dans le mandrin.
+</p>
+</li>
+<li>
+<p>
+Faire tangenter l&#8217;outil contre la face du cylindre.
+</p>
+</li>
+<li>
+<p>
+Cliquer le bouton <em>Toucher</em> puis choisir <em>Table d&#8217;outils</em> et saisir la
+position à 0.0.
+</p>
+</li>
+<li>
+<p>
+Répéter l&#8217;opération pour chaque outil, en utilisant le même cylindre.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Maintenant, tous les outils sont compensés à la même distance d&#8217;une position
+standard. Si un outil doit être changé, par exemple par un foret il suffira de
+répéter la séquence précédente pour qu&#8217;il soit synchronisé avec l&#8217;offset Z du
+reste des outils. Certains outils pourraient nécessiter un peu de réflexion
+pour déterminer le point contrôlé par rapport au point de <em>Toucher</em>.
+Par exemple, un outil de tronçonnage de 3.17mm d'épaisseur qui est touché sur le
+côté gauche, alors que l&#8217;opérateur veut Z0 sur le côté droit, il lui faudra
+alors saisir 3.17 dans la fenêtre du <em>Toucher</em>.</p></div>
+<h3 id="_machine_avec_tous_les_outils_compens_s">4.5. Machine avec tous les outils compensés</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Une fois que tous les outils ont leurs offsets renseignés dans la table
+d&#8217;outils, il est possible d&#8217;utiliser n&#8217;importe quel outil présent en table
+d&#8217;outils pour ajuster le décalage du système de coordonnées machine.</p></div>
+<h3 id="_s_quence_typique_de_d_calage_du_syst_me_de_coordonn_es">4.6. Séquence typique de décalage du système de coordonnées:</h3><div style="clear:left"></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Prise d&#8217;origine machine de tous les axes, si ce n&#8217;est pas déjà fait.
+</p>
+</li>
+<li>
+<p>
+Déclarer l&#8217;outil avec <em>M6 Tn</em> dans lequel <em>n</em> est le numéro de l&#8217;outil
+courant, présent en table d&#8217;outils.
+</p>
+</li>
+<li>
+<p>
+Envoyer un G43 pour que l&#8217;offset de l&#8217;outil soit activé. (voir ci-dessous)
+</p>
+</li>
+<li>
+<p>
+Tangenter l&#8217;outil contre la pièce et fixer l&#8217;offset machine Z.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Ne pas oublier d&#8217;envoyer le G43 sur l&#8217;outil avant de définir le décalage
+du système de coordonnées machine, les résultats ne seraient pas ceux
+attendus&#8230; puisque la compensation de l&#8217;outil serait ajoutée à l&#8217;offset
+courant lorsque l&#8217;outil sera utilisé dans le programme.</p></div>
+</div>
+<h2 id="_mouvements_avec_broche_synchronis_e">5. Mouvements avec broche synchronisée</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Sur un tour, les mouvements avec broche synchronisée nécessitent un signal de
+retour entre la broche et LinuxCNC. Généralement, c&#8217;est un codeur en quadrature
+qui fourni ce retour. Le manuel de l&#8217;intégrateur donne des explications sur
+l&#8217;utilisation des codeurs de broche.</p></div>
+<div class="paragraph"><div class="title">Filetage</div><p>Le cycle de filetage préprogrammé G76 est utilisé, tant en filetage intérieur
+qu&#8217;en filetage extérieur, voir <a href="../gcode/gcode_fr.html#sec:G76-Filetage">la section G76</a>.</p></div>
+<div class="paragraph"><div class="title">Vitesse de coupe à surface constante</div><p>La vitesse de coupe à surface constante utilise l&#8217;origine machine X modifiée
+par l&#8217;offset d&#8217;outil X, pour calculer la vitesse de rotation de la broche en tr/mn.
+La vitesse de coupe à surface constante permet de suivre les changements d&#8217;offset
+de l&#8217;outil. L&#8217;emplacement de l&#8217;origine machine de l&#8217;axe X doit être sur l&#8217;axe de
+rotation et doit se faire avec l&#8217;outil de référence (celui qui a l&#8217;offset à zéro).</p></div>
+<div class="paragraph"><div class="title">Avance par tour</div><p>L&#8217;avance par tour déplace l&#8217;axe Z de la valeur de F à chaque tour.
+Ce n&#8217;est pas destiné au filetage pour lequel il faut utiliser G76.
+D&#8217;autres informations sont dans la section sur <a href="../gcode/gcode_fr.html#sec:G93-G94-G95-Modes">G95</a>.</p></div>
+</div>
+<h2 id="_arcs">6. Arcs</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Le calcul des arcs peut être un exercice assez compliqué, même sur un tour,
+sans considérer les modes rayon et diamètre, ni l&#8217;orientation du système
+de coordonnées machine. Ce qui suit s&#8217;applique à des arcs au format centre.
+Sur un tour, il faut inclure G18 dans le préambule du programme G-code pour
+remplacer le G17 par défaut, le fait d'être en mode tour dans Axis ne suffit pas.
+Les arcs en G18, plan XZ utilisent les offsets pour I (l&#8217;axe X) et K (l&#8217;axe Z).</p></div>
+<h3 id="_les_arcs_et_la_cin_matique_du_tour">6.1. Les arcs et la cinématique du tour</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le tour classique a la broche à gauche de l&#8217;opérateur et l&#8217;outil entre
+l&#8217;opérateur et le centre de rotation du mandrin. C&#8217;est un agencement avec un
+axe Y(+) imaginaire pointant vers le sol.</p></div>
+<div class="paragraph"><p>Ce qui suit est valable pour ce type d&#8217;agencement:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Le côté positif de l&#8217;axe Z pointe vers la droite, en s'éloignant de la broche.
+</p>
+</li>
+<li>
+<p>
+Le côté positif de l&#8217;axe X pointe vers l&#8217;opérateur, quand il est du côté de
+l&#8217;opérateur par rapport au centre de rotation, ses valeur sont positives.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Certains tours ont l&#8217;outil du côté arrière et un axe Y(+) imaginaire pointant
+vers le haut.</p></div>
+<div class="paragraph"><p>Les directions des arcs G2/G3 sont basées sur l&#8217;axe autour duquel ils tournent.
+Dans le cas des tours, il s&#8217;agit de l&#8217;axe imaginaire Y. Si l&#8217;axe Y(+) pointe
+vers le sol, il faut regarder vers le haut pour que l&#8217;arc paraisse aller dans la
+bonne direction. Alors qu&#8217;en regardant depuis le dessus il faut inverser les G2/G3
+pour que l&#8217;arc semble aller dans la bonne direction.</p></div>
+<h3 id="_mode_rayon_et_mode_diam_tre">6.2. Mode rayon et mode diamètre</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Lors du calcul des arcs en mode rayon, il suffi de se rappeler la direction de
+rotation telle qu&#8217;elle s&#8217;applique à ce tour.</p></div>
+<div class="paragraph"><p>Lors du calcul des arcs en mode diamètre, X est le diamètre, l&#8217;offset X (I) est
+le rayon, même en mode diamètre G7.</p></div>
+</div>
+<h2 id="_parcours_d_8217_outil">7. Parcours d&#8217;outil</h2>
+<div class="sectionbody">
+<h3 id="_point_contr_l">7.1. Point contrôlé</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le point contrôlé pour l&#8217;outil, suit la trajectoire programmée. Le point contrôlé
+est l&#8217;intersection entre deux lignes parallèles aux axes X et Z, tangentes au
+rayon de bec de l&#8217;outil, définies en faisant tangenter l&#8217;outil en X puis en Z.
+En cylindrage ou en dressage de face sur une pièce, la trajectoire de coupe et
+l&#8217;arête de coupe de l&#8217;outil suivent le même parcours. Lors du tournage d&#8217;un
+rayon ou d&#8217;un angle, l&#8217;arête de coupe de l&#8217;outil ne suit pas la trajectoire
+programmée, sauf si la compensation d&#8217;outil est activée. Dans la figure suivante,
+on voit bien que le point contrôlé n&#8217;est pas sur l&#8217;arête de coupe de l&#8217;outil
+comme on pourrait le supposer.</p></div>
+<div class="imageblock" id="fig:Control-Point">
+<div class="content">
+<img src="images/control_point.png" alt="images/control_point.png" />
+</div>
+<div class="title">Figure 2. Point contrôlé</div>
+</div>
+<h3 id="_tourner_les_angles_sans_compensation_d_8217_outil">7.2. Tourner les angles sans compensation d&#8217;outil</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Maintenant imaginons de programmer une rampe sans compensation d&#8217;outil. La
+trajectoire programmée est représentée sur la figure suivante. Comme on peut
+le voir, la trajectoire programmée et la trajectoire de coupe souhaitée sont
+identiques uniquement si les mouvements de tournage suivent les axes X et Z.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/ramp_entry.png" alt="images/ramp_entry.png" />
+</div>
+<div class="title">Figure 3. Tournage en rampe</div>
+</div>
+<div class="paragraph"><p>Le point contrôlé progresse en suivant la trajectoire programmée mais l&#8217;arête de
+coupe ne suit pas cette trajectoire comme c&#8217;est visible sur la figure suivante.
+Pour résoudre ce problème, il est nécessaire d&#8217;activer la compensation d&#8217;outil
+et d&#8217;ajuster la trajectoire programmée pour compenser le rayon de bec de l&#8217;outil.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/ramp_cut.png" alt="images/ramp_cut.png" />
+</div>
+<div class="title">Figure 4. Trajectoire en rampe</div>
+</div>
+<div class="paragraph"><p>Dans l&#8217;exemple ci-dessus, pour suivre la rampe programmée et obtenir la bonne
+trajectoire, il suffi de décaler la trajectoire de la rampe vers la
+gauche, de la valeur d&#8217;un rayon de bec.</p></div>
+<h3 id="_tournage_avec_rayon_ext_rieur">7.3. Tournage avec rayon extérieur</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Dans cet exemple nous allons examiner ce qui se passe durant le tournage d&#8217;un
+rayon extérieur sans compensation de rayon de bec. Sur la figure suivante on voit
+l&#8217;outil tourner un diamètre extérieur sur la pièce. Le point contrôlé de l&#8217;outil
+suit bien la trajectoire programmée, l&#8217;outil touche le diamètre extérieur de la
+pièce.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/radius_1.png" alt="images/radius_1.png" />
+</div>
+<div class="title">Figure 5. Tournage du diamètre</div>
+</div>
+<div class="paragraph"><p>Sur la figure suivante, on voit que quand l&#8217;outil approche la fin la pièce,
+le point contrôlé continue de suivre la trajectoire alors que l&#8217;arête de coupe
+a déjà quitté la matière et coupe en l&#8217;air. On voit aussi que malgré qu&#8217;un rayon
+a été programmé, la pièce conserve son angle d&#8217;extrémité.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/radius_2.png" alt="images/radius_2.png" />
+</div>
+<div class="title">Figure 6. Tournage du rayon</div>
+</div>
+<div class="paragraph"><p>Maintenant, comme on le voit, le point contrôlé suit bien la trajectoire
+programmée mais l&#8217;arête de coupe est en dehors de la matière.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/radius_3.png" alt="images/radius_3.png" />
+</div>
+<div class="title">Figure 7. Tournage du rayon</div>
+</div>
+<div class="paragraph"><p>Sur la figure finale, on voit que l&#8217;arête de coupe a terminé le dressage de la
+face mais en laissant un coin carré à la place du beau rayon attendu. Noter aussi
+que, pour la même raison, pour ne pas laisser de téton au centre de la pièce
+lors du dressage de sa face, il convient de dépasser le centre de rotation de la
+valeur d&#8217;un rayon de bec de l&#8217;outil.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/radius_4.png" alt="images/radius_4.png" />
+</div>
+<div class="title">Figure 8. Dressage de la face</div>
+</div>
+<h3 id="_utiliser_la_compensation_d_8217_outil">7.4. Utiliser la compensation d&#8217;outil</h3><div style="clear:left"></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Quand la compensation d&#8217;outil est utilisée sur un tour, penser à l&#8217;arête de
+coupe de l&#8217;outil comme étant celle d&#8217;un outil rond.
+</p>
+</li>
+<li>
+<p>
+Quand la compensation d&#8217;outil est utilisée, la trajectoire doit être
+suffisamment large pour qu&#8217;un outil rond n&#8217;interfère pas avec la pièce à la
+ligne suivante.
+</p>
+</li>
+<li>
+<p>
+Pour tourner des lignes droites sur un tour, il est préférable de ne pas
+utiliser la compensation d&#8217;outil. Par exemple pour aléser un trou avec une
+barre d&#8217;alésage un peu grosse, la place pourrait manquer pour dégager l&#8217;outil
+et faire le mouvement de sortie.
+</p>
+</li>
+<li>
+<p>
+Le mouvement d&#8217;entrée dans un arc avec la compensation d&#8217;outil, est important
+pour obtenir des résultats corrects.
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-05-10 19:36:12 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/lathe/lathe-user_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:01 GMT -->
+</html>

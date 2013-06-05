@@ -1,0 +1,182 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:24 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/encoder_ratio.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>ENCODER_RATIO</title>
+
+</head>
+<body>
+
+<h1 align="center">ENCODER_RATIO</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#NAMING">NAMING</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">encoder_ratio
+&minus; an electronic gear to synchronize two axes</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadrt
+encoder_ratio [num_chan=</b><i>num</i> <b>|
+names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>encoder_ratio</b>
+can be used to synchronize two axes (like an
+&quot;electronic gear&quot;). It counts encoder pulses from
+both axes in software, and produces an error value that can
+be used with a PID loop to make the slave encoder track the
+master encoder with a specific ratio.</p>
+
+<p style="margin-left:11%; margin-top: 1em">This module
+supports up to eight axis pairs. The number of pairs is set
+by the module parameter <b>num_chan</b>. Alternatively,
+specify <b>names=</b> and unique names separated by
+commas.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The
+<b>num_chan=</b> and <b>names=</b> specifiers are mutually
+exclusive. If neither <b>num_chan=</b> nor <b>names=</b> are
+specified, the default value is one.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>encoder-ratio.sample</b></p>
+
+<p style="margin-left:22%;">Read all input pins. Must be
+called at twice the maximum desired count rate.</p>
+
+<p style="margin-left:11%;"><b>encoder-ratio.update (uses
+floating-point)</b></p>
+
+<p style="margin-left:22%;">Updates all output pins. May be
+called from a slower thread.</p>
+
+<h2>NAMING
+<a name="NAMING"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The names for
+pins and parameters are prefixed as: <b><br>
+encoder-ratio.N.</b> for N=0,1,...,num-1 when using
+<b>num_chan=num <br>
+nameN.</b> for nameN=name1,name2,... when using
+<b>names=name1,name2,...</b></p>
+
+<p style="margin-left:11%; margin-top: 1em">The
+<b>encoder-ratio.N.</b> format is shown in the following
+descriptions.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>encoder-ratio.</b><i>N</i><b>.master-A</b>
+bit in <b><br>
+encoder-ratio.</b><i>N</i><b>.master-B</b> bit in <b><br>
+encoder-ratio.</b><i>N</i><b>.slave-A</b> bit in <b><br>
+encoder-ratio.</b><i>N</i><b>.slave-B</b> bit in</p>
+
+<p style="margin-left:22%;">The encoder channels of the
+master and slave axes</p>
+
+
+<p style="margin-left:11%;"><b>encoder-ratio.</b><i>N</i><b>.enable</b>
+bit in</p>
+
+<p style="margin-left:22%;">When the enable pin is FALSE,
+the error pin simply reports the slave axis position, in
+revolutions. As such, it would normally be connected to the
+feedback pin of a PID block for closed loop control of the
+slave axis. Normally the command input of the PID block is
+left unconnected (zero), so the slave axis simply sits
+still. However when the enable input goes TRUE, the error
+pin becomes the slave position minus the scaled master
+position. The scale factor is the ratio of master teeth to
+slave teeth. As the master moves, error becomes non-zero,
+and the PID loop will drive the slave axis to track the
+master.</p>
+
+
+<p style="margin-left:11%;"><b>encoder-ratio.</b><i>N</i><b>.error</b>
+float out</p>
+
+<p style="margin-left:22%;">The error in the position of
+the slave (in revolutions)</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>encoder-ratio.N.master-ppr</b>
+unsigned rw <b><br>
+encoder-ratio.N.slave-ppr</b> unsigned rw</p>
+
+<p style="margin-left:22%;">The number of pulses per
+revolution of the master and slave axes</p>
+
+
+<p style="margin-left:11%;"><b>encoder-ratio.N.master-teeth</b>
+unsigned rw <b><br>
+encoder-ratio.N.slave-teeth</b> unsigned rw</p>
+
+<p style="margin-left:22%;">The number of &quot;teeth&quot;
+on the master and slave gears.</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>encoder(9)</b></p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/encoder_ratio.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

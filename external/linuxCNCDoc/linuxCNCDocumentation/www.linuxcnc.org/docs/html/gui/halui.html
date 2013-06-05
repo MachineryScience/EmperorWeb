@@ -1,0 +1,753 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/halui.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:14:29 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>HAL User Interface</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>HAL User Interface</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:hal-user-interface"></a> </p></div>
+</div>
+</div>
+<h2 id="_introduction_a_id_sec_haluiintroduction_a">1. Introduction<a id="sec:HaluiIntroduction"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Halui is a HAL based user interface for LinuxCNC, it connects HAL pins to
+NML commands. Most of the functionality (buttons, indicators etc.) that
+is provided by a traditional GUI (mini, Axis, etc.), is provided by HAL
+pins in Halui.</p></div>
+<div class="paragraph"><p>The easiest way to add halui is to add the following to the [HAL]
+section of the ini file.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>HALUI = halui</tt></pre>
+</div></div>
+<div class="paragraph"><p>An alternate way to invoke it is to include the following in your .hal
+file. Make sure you use the actual path to your ini file.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadusr halui -ini /path/to/inifile.ini</tt></pre>
+</div></div>
+</div>
+<h2 id="sec:Halui-pin-reference">2. Halui pin reference</h2>
+<div class="sectionbody">
+<div class="ulist"><div class="title">Abort</div><ul>
+<li>
+<p>
+<em>halui.abort</em> (bit, in) - pin to send an abort message (clears out most errors)
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Axis</div><ul>
+<li>
+<p>
+<em>halui.axis.n.pos-commanded</em> (float, out) - Commanded axis position in machine coordinates
+</p>
+</li>
+<li>
+<p>
+<em>halui.axis.n.pos-feedback</em> (float, out) - Feedback axis position in machine coordinates
+</p>
+</li>
+<li>
+<p>
+<em>halui.axis.n.pos-relative</em> (float, out) - Commanded axis position in relative coordinates
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">E-Stop</div><ul>
+<li>
+<p>
+<em>halui.estop.activate</em> (bit, in) - pin for requesting E-Stop
+</p>
+</li>
+<li>
+<p>
+<em>halui.estop.is-activated</em> (bit, out) - indicates E-stop reset
+</p>
+</li>
+<li>
+<p>
+<em>halui.estop.reset</em> (bit, in) - pin for requesting E-Stop reset
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Feed Override</div><ul>
+<li>
+<p>
+<em>halui.feed-override.count-enable</em> (bit, in) - must be true for <em>counts</em> or
+<em>direct-value</em> to work.
+</p>
+</li>
+<li>
+<p>
+<em>halui.feed-override.counts</em> (s32, in) - counts * scale = FO percentage. Can
+be used with an encoder or <em>direct-value</em>.
+</p>
+</li>
+<li>
+<p>
+<em>halui.feed-override.decrease</em> (bit, in) - pin for decreasing the FO (-=scale)
+</p>
+</li>
+<li>
+<p>
+<em>halui.feed-override.increase</em> (bit, in) - pin for increasing the FO (+=scale)
+</p>
+</li>
+<li>
+<p>
+<em>halui.feed-override.direct-value</em> (bit, in) - false when using encoder to
+change counts, true when setting counts directly. The <em>count-enable</em> pin must
+be true.
+</p>
+</li>
+<li>
+<p>
+<em>halui.feed-override.scale</em> (float, in) - pin for setting the scale for
+   increase and decrease of <em>feed-override</em>.
+</p>
+</li>
+<li>
+<p>
+<em>halui.feed-override.value</em> (float, out) - current FO value
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Mist</div><ul>
+<li>
+<p>
+<em>halui.mist.is-on</em> (bit, out) - indicates mist is on
+</p>
+</li>
+<li>
+<p>
+<em>halui.mist.off</em> (bit, in) - pin for requesting mist off
+</p>
+</li>
+<li>
+<p>
+<em>halui.mist.on</em> (bit, in) - pin for requesting mist on
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Flood</div><ul>
+<li>
+<p>
+<em>halui.flood.is-on</em> (bit, out) - indicates flood is on
+</p>
+</li>
+<li>
+<p>
+<em>halui.flood.off</em> (bit, in) - pin for requesting flood off
+</p>
+</li>
+<li>
+<p>
+<em>halui.flood.on</em> (bit, in) - pin for requesting flood on
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Homing</div><ul>
+<li>
+<p>
+<em>halui.home-all</em> (bit, in) - pin for requesting all axis to home. This
+   pin will only be there if HOME_SEQUENCE is set in the ini file.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><div class="title">Jog</div><p>&lt;n&gt; is a number between 0 and 8 and <em>selected</em>.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>halui.jog-deadband</em> (float, in) - deadband for analog jogging (smaller
+   jogging speed requests are not performed)
+</p>
+</li>
+<li>
+<p>
+<em>halui.jog-speed</em> (float, in) - pin for setting jog speed for minus/plus jogging
+</p>
+</li>
+<li>
+<p>
+<em>halui.jog.&lt;n&gt;.analog</em> (float, in) - analog velocity input for jogging
+   (useful with joysticks or other analog devices)
+</p>
+</li>
+<li>
+<p>
+<em>halui.jog.&lt;n&gt;.increment</em> (float,in) - pin for setting the jog increment for
+   axis &lt;n&gt; when using increment-minus or increment-plus to jog.
+</p>
+</li>
+<li>
+<p>
+<em>halui.jog.&lt;n&gt;.increment-minus</em> (bit, in) - pin for moving the &lt;n&gt; axis one
+   increment in the minus direction for each off to on transition.
+</p>
+</li>
+<li>
+<p>
+<em>halui.jog.&lt;n&gt;.increment-plus</em> (bit, in) - pin for moving the &lt;n&gt; axis one
+   increment in the plus direction for each off to on transition.
+</p>
+</li>
+<li>
+<p>
+<em>halui.jog.&lt;n&gt;.minus</em> (bit, in) - pin for jogging axis &lt;n&gt; in negative
+   direction at the halui.jog.speed velocity
+</p>
+</li>
+<li>
+<p>
+<em>halui.jog.&lt;n&gt;.plus</em> (bit, in) - pin for jogging axis &lt;n&gt; in positive
+   direction at the halui.jog.speed velocity
+</p>
+</li>
+<li>
+<p>
+<em>halui.jog.selected.increment</em> (float,in) - pin for setting the jog increment
+   for the selected axis when using increment-minus or incremet-plus to jog.
+</p>
+</li>
+<li>
+<p>
+<em>halui.jog.selected.increment-minus</em> (bit, in) - pin for moving the selected axis
+   one increment in the minus direction for each off to on transition.
+</p>
+</li>
+<li>
+<p>
+<em>halui.jog.selected.increment-plus</em> (bit, in) - pin for moving the selected axis
+   one increment in the plus direction for each off to on transition.
+</p>
+</li>
+<li>
+<p>
+<em>halui.jog.selected.minus</em> (bit, in) - pin for jogging the selected axis
+   in negative direction at the halui.jog.speed velocity
+</p>
+</li>
+<li>
+<p>
+<em>halui.jog.selected.plus</em> (bit, in) - pin for jogging the selected axis
+   in positive direction at the halui.jog.speed velocity
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><div class="title">Joint</div><p>&lt;n&gt; is a number between 0 and 8 and <em>selected</em>.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>halui.joint.&lt;n&gt;.has-fault</em> (bit, out) - status pin telling the joint
+   has a fault
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.&lt;n&gt;.home</em> (bit, in) - pin for homing the specific joint
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.&lt;n&gt;.is-homed</em> (bit, out) - status pin telling that the joint is homed
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.&lt;n&gt;.is-selected bit</em> (bit, out) - status pin a joint is selected* internal halui
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.&lt;n&gt;.on-hard-max-limit</em> (bit, out) - status pin telling
+   joint &lt;n&gt; is on the positive hardware limit switch
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.&lt;n&gt;.on-hard-min-limit</em> (bit, out) - status pin telling
+   joint &lt;n&gt; is on the negative hardware limit switch
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.&lt;n&gt;.on-soft-max-limit</em> (bit, out) - status pin telling
+   joint &lt;n&gt; is at the positive software limit
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.&lt;n&gt;.on-soft-min-limit</em> (bit, out) - status pin telling
+   joint &lt;n&gt; is at the negative software limit
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.&lt;n&gt;.select</em> (bit, in) - select joint (0..8) - internal halui
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.&lt;n&gt;.unhome</em> (bit, in) - unhomes this joint
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.selected</em> (u32, out) - selected joint (0..8) - internal halui
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.selected.has-fault</em> (bit, out) - status pin telling that
+   the joint &lt;n&gt; has a fault
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.selected.home</em> (bit, in) - pin for homing the selected joint
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.selected.is-homed</em> (bit, out) - status pin telling that the
+   selected joint is homed
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.selected.on-hard-max-limit</em> (bit, out) - status pin telling
+   that the selected joint is on the positive hardware limit
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.selected.on-hard-min-limit</em> (bit, out) - status pin telling
+   that the selected joint is on the negative hardware limit
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.selected.on-soft-max-limit</em> (bit, out) - status pin telling
+   that the selected joint is on the positive software limit
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.selected.on-soft-min-limit</em> (bit, out) - status pin telling
+   that the selected joint is on the negative software limit
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.selected.unhome</em> (bit, in) - pin for unhoming the selected joint.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Lube</div><ul>
+<li>
+<p>
+<em>halui.lube.is-on</em> (bit, out) - indicates lube is on
+</p>
+</li>
+<li>
+<p>
+<em>halui.lube.off</em> (bit, in) - pin for requesting lube off
+</p>
+</li>
+<li>
+<p>
+<em>halui.lube.on</em> (bit, in) - pin for requesting lube on
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Machine</div><ul>
+<li>
+<p>
+<em>halui.machine.is-on</em> (bit, out) - indicates machine on
+</p>
+</li>
+<li>
+<p>
+<em>halui.machine.off</em> (bit, in) - pin for requesting machine off
+</p>
+</li>
+<li>
+<p>
+<em>halui.machine.on</em> (bit, in) - pin for requesting machine on
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><div class="title">Max Velocity</div><p>The maximum linear velocity can be adjusted from 0 to the MAX_VELOCITY
+that is set in the [TRAJ] section of the ini file.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>halui.max-velocity.count-enable</em> (bit, in) - must be true for <em>counts</em> or
+<em>direct-value</em> to work.
+</p>
+</li>
+<li>
+<p>
+<em>halui.max-velocity.counts</em> (s32, in) - counts * scale = MV percentage. Can
+be used with an encoder or <em>direct-value</em>.
+</p>
+</li>
+<li>
+<p>
+<em>halui.max-velocity.direct-value</em> (bit, in) - false when using encoder to
+change counts, true when setting counts directly. The <em>count-enable</em> pin must
+be true.
+</p>
+</li>
+<li>
+<p>
+<em>halui.max-velocity.decrease</em> (bit, in) - pin for decreasing max velocity
+</p>
+</li>
+<li>
+<p>
+<em>halui.max-velocity.increase</em> (bit, in) - pin for increasing max velocity
+</p>
+</li>
+<li>
+<p>
+<em>halui.max-velocity.scale</em> (float, in) - the amount applied to the
+   current maximum velocity with each transition from off to on of the
+   increase or decrease pin in machine units per second.
+</p>
+</li>
+<li>
+<p>
+<em>halui.max-velocity.value</em> (float, out) - is the maximum linear velocity
+   in machine units per second.
+</p>
+</li>
+</ul></div>
+<div class="paragraph" id="sub:MDI"><div class="title">MDI</div><p></p></div>
+<div class="paragraph"><p>Sometimes the user wants to add more complicated tasks to be performed
+by the activation of a HAL pin. This is possible using the following
+MDI commands scheme:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+The MDI_COMMAND is added to the ini file in the [HALUI] section.
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>[HALUI]
+MDI_COMMAND = G0 X0</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+When halui starts it will read the MDI_COMMAND fields in the ini, and
+   export pins from 00 to the number of MDI_COMMAND&#8217;s found in the ini up
+   to a maximum of 64 commands.
+</p>
+</li>
+<li>
+<p>
+<em>halui.mdi-command-&lt;nn&gt;</em> (bit, in) - halui will try to send the MDI
+   command defined in the ini. This will not always succeed, depending on
+   the operating mode LinuxCNC is in (e.g. while in AUTO halui can&#8217;t
+   successfully send MDI commands). If the command succeeds then it will
+   place LinuxCNC in the MDI mode and then back to Manual mode.
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Joint Selection</div><ul>
+<li>
+<p>
+<em>halui.joint.select</em> (u32, in) - select joint (0..8) - internal halui
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.selected</em> (u32, out) - joint (0..8) selected* internal halui
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.x.select bit</em> (bit, in) - pins for selecting a joint* internal halui
+</p>
+</li>
+<li>
+<p>
+<em>halui.joint.x.is-selected bit</em> (bit, out) - indicates joint selected* internal halui
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Mode</div><ul>
+<li>
+<p>
+<em>halui.mode.auto</em> (bit, in) - pin for requesting auto mode
+</p>
+</li>
+<li>
+<p>
+<em>halui.mode.is-auto</em> (bit, out) - indicates auto mode is on
+</p>
+</li>
+<li>
+<p>
+<em>halui.mode.is-joint</em> (bit, out) - indicates joint by joint jog mode is on
+</p>
+</li>
+<li>
+<p>
+<em>halui.mode.is-manual</em> (bit, out) - indicates manual mode is on
+</p>
+</li>
+<li>
+<p>
+<em>halui.mode.is-mdi</em> (bit, out) - indicates mdi mode is on
+</p>
+</li>
+<li>
+<p>
+<em>halui.mode.is-teleop</em> (bit, out) - indicates coordinated jog mode is on
+</p>
+</li>
+<li>
+<p>
+<em>halui.mode.joint</em> (bit, in) - pin for requesting joint by joint jog mode
+</p>
+</li>
+<li>
+<p>
+<em>halui.mode.manual</em> (bit, in) - pin for requesting manual mode
+</p>
+</li>
+<li>
+<p>
+<em>halui.mode.mdi</em> (bit, in) - pin for requesting mdi mode
+</p>
+</li>
+<li>
+<p>
+<em>halui.mode.teleop</em> (bit, in) - pin for requesting coordinated jog mode
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Program</div><ul>
+<li>
+<p>
+<em>halui.program.block-delete.is-on</em> (bit, out) - status pin telling that block delete is on
+</p>
+</li>
+<li>
+<p>
+<em>halui.program.block-delete.off</em> (bit, in) - pin for requesting that block delete is off
+</p>
+</li>
+<li>
+<p>
+<em>halui.program.block-delete.on</em> (bit, in) - pin for requesting that block delete is on
+</p>
+</li>
+<li>
+<p>
+<em>halui.program.is-idle</em> (bit, out) - status pin telling that no program is running
+</p>
+</li>
+<li>
+<p>
+<em>halui.program.is-paused</em> (bit, out) - status pin telling that a program is paused
+</p>
+</li>
+<li>
+<p>
+<em>halui.program.is-running</em> (bit, out) - status pin telling that a program is running
+</p>
+</li>
+<li>
+<p>
+<em>halui.program.optional-stop.is-on</em> (bit, out) - status pin telling that the optional stop is on
+</p>
+</li>
+<li>
+<p>
+<em>halui.program.optional-stop.off</em> (bit, in) - pin requesting that the optional stop is off
+</p>
+</li>
+<li>
+<p>
+<em>halui.program.optional-stop.on</em> (bit, in) - pin requesting that the optional stop is on
+</p>
+</li>
+<li>
+<p>
+<em>halui.program.pause</em> (bit, in) - pin for pausing a program
+</p>
+</li>
+<li>
+<p>
+<em>halui.program.resume</em> (bit, in) - pin for resuming a paused program
+</p>
+</li>
+<li>
+<p>
+<em>halui.program.run</em> (bit, in) - pin for running a program
+</p>
+</li>
+<li>
+<p>
+<em>halui.program.step</em> (bit, in) - pin for stepping in a program
+</p>
+</li>
+<li>
+<p>
+<em>halui.program.stop</em> (bit, in) - pin for stopping a program
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Spindle Override</div><ul>
+<li>
+<p>
+<em>halui.spindle-override.count-enable</em> (bit, in) - must be true for <em>counts</em> or
+<em>direct-value</em> to work.
+</p>
+</li>
+<li>
+<p>
+<em>halui.spindle-override.counts</em> (s32, in) - counts * scale = SO percentage
+</p>
+</li>
+<li>
+<p>
+<em>halui.spindle-override.decrease</em> (bit, in) - pin for decreasing the SO (-=scale)
+</p>
+</li>
+<li>
+<p>
+<em>halui.spindle-override.direct-value</em> (bit, in) - false when using encoder to change counts,
+true when setting counts directly. The <em>count-enable</em> pin must be true.
+</p>
+</li>
+<li>
+<p>
+<em>halui.spindle-override.increase</em> (bit, in) - pin for increasing the SO (+=scale)
+</p>
+</li>
+<li>
+<p>
+<em>halui.spindle-override.scale</em> (float, in) - pin for setting the scale on changing the SO
+</p>
+</li>
+<li>
+<p>
+<em>halui.spindle-override.value</em> (float, out) - current SO value
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Spindle</div><ul>
+<li>
+<p>
+<em>halui.spindle.brake-is-on</em> (bit, out) - indicates brake is on
+</p>
+</li>
+<li>
+<p>
+<em>halui.spindle.brake-off</em> (bit, in) - pin for deactivating spindle/brake
+</p>
+</li>
+<li>
+<p>
+<em>halui.spindle.brake-on</em> (bit, in) - pin for activating spindle-brake
+</p>
+</li>
+<li>
+<p>
+<em>halui.spindle.decrease</em> (bit, in) - decreases spindle speed
+</p>
+</li>
+<li>
+<p>
+<em>halui.spindle.forward</em> (bit, in) - starts the spindle with CW motion
+</p>
+</li>
+<li>
+<p>
+<em>halui.spindle.increase</em> (bit, in)- increases spindle speed
+</p>
+</li>
+<li>
+<p>
+<em>halui.spindle.is-on</em> (bit, out) - indicates spindle is on (either direction)
+</p>
+</li>
+<li>
+<p>
+<em>halui.spindle.reverse</em> (bit, in)- starts the spindle with a CCW motion
+</p>
+</li>
+<li>
+<p>
+<em>halui.spindle.runs-backward</em> (bit, out) - indicates spindle is on, and in reverse
+</p>
+</li>
+<li>
+<p>
+<em>halui.spindle.runs-forward</em> (bit, out) - indicates spindle is on, and in forward
+</p>
+</li>
+<li>
+<p>
+<em>halui.spindle.start</em> (bit, in) - starts the spindle
+</p>
+</li>
+<li>
+<p>
+<em>halui.spindle.stop</em> (bit, in) - stops the spindle
+</p>
+</li>
+</ul></div>
+<div class="ulist"><div class="title">Tool</div><ul>
+<li>
+<p>
+<em>halui.tool.length-offset</em> (float, out) - indicates current applied tool-length-offset
+</p>
+</li>
+<li>
+<p>
+<em>halui.tool.number</em> (u32, out) - indicates current selected tool
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-05-20 13:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/halui.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:14:29 GMT -->
+</html>

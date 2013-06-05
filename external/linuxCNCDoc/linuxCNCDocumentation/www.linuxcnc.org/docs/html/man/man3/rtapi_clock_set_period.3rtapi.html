@@ -1,0 +1,124 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Thu Jan 19 18:36:21 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/rtapi_clock_set_period.3rtapi.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>rtapi_clock_set_period</title>
+
+</head>
+<body>
+
+<h1 align="center">rtapi_clock_set_period</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNTAX">SYNTAX</a><br>
+<a href="#ARGUMENTS">ARGUMENTS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#REALTIME CONSIDERATIONS">REALTIME CONSIDERATIONS</a><br>
+<a href="#RETURN VALUE">RETURN VALUE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em">rtapi_clock_set_period
+&minus; set the basic time interval for realtime tasks</p>
+
+<h2>SYNTAX
+<a name="SYNTAX"></a>
+</h2>
+
+
+
+<p style="margin-left:22%; margin-top: 1em">rtapi_clock_set_period(long
+int <i>nsec</i>)</p>
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+
+
+<h2>ARGUMENTS
+<a name="ARGUMENTS"></a>
+</h2>
+<td width="11%"></td>
+<td width="6%"></td>
+<td width="5%"></td>
+<td width="78%">
+</td></tr>
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="6%">
+
+
+<p><i>nsec</i></p></td>
+<td width="5%"></td>
+<td width="78%">
+
+
+<p>The desired basic time interval for realtime tasks.</p></td></tr>
+</table>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>rtapi_clock_set_period</b>
+sets the basic time interval for realtime tasks. All
+periodic tasks will run at an integer multiple of this
+period. The first call to <b>rtapi_clock_set_period</b> with
+<i>nsec</i> greater than zero will start the clock, using
+<i>nsec</i> as the clock period in nano-seconds. Due to
+hardware and RTOS limitations, the actual period may not be
+exactly what was requested. On success, the function will
+return the actual clock period if it is available, otherwise
+it returns the requested period. If the requested period is
+outside the limits imposed by the hardware or RTOS, it
+returns <b>-EINVAL</b> and does not start the clock. Once
+the clock is started, subsequent calls with non-zero
+<i>nsec</i> return <b>-EINVAL</b> and have no effect.
+Calling <b>rtapi_clock_set_period</b> with <i>nsec</i> set
+to zero queries the clock, returning the current clock
+period, or zero if the clock has not yet been started.</p>
+
+<h2>REALTIME CONSIDERATIONS
+<a name="REALTIME CONSIDERATIONS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Call only from
+within init/cleanup code, not from realtime tasks. This
+function is not available from user (non-realtime) code.</p>
+
+<h2>RETURN VALUE
+<a name="RETURN VALUE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">The actual
+period provided by the RTOS, which may be different than the
+requested period, or a RTAPI status code.</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man3/rtapi_clock_set_period.3rtapi.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+</html>

@@ -1,0 +1,580 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/Getting_linuxcnc_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Se procurer et installer LinuxCNC</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Se procurer et installer LinuxCNC</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<h2 id="_propos_du_logiciel_linuxcnc">1. À propos du logiciel LinuxCNC</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+LinuxCNC est un logiciel de contrôle de machines-outils telles que fraiseuses,
+    tours, robots etc.
+</p>
+</li>
+<li>
+<p>
+LinuxCNC est un logiciel libre avec code source ouvert. Les versions actuelles
+    de LinuxCNC sont entièrement sous licence GNU Lesser General Public et de GNU
+    General Public License (GPL et LGPL)
+</p>
+</li>
+<li>
+<p>
+LinuxCNC propose:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+Une installation facile à partir d&#8217;un CD live.
+</p>
+</li>
+<li>
+<p>
+Un assistant de configuration simple à utiliser pour créer rapidement une
+    configuration spécifique à la machine.
+</p>
+</li>
+<li>
+<p>
+Une interface graphique (plusieurs interfaces au choix).
+</p>
+</li>
+<li>
+<p>
+Un outil de création d&#8217;interface graphique (GladeVCP).
+</p>
+</li>
+<li>
+<p>
+Un interpréteur de G-code (RS-274NGC, langage de programmation des
+    machines-outils).
+</p>
+</li>
+<li>
+<p>
+Un système prédictif de planification de trajectoire.
+</p>
+</li>
+<li>
+<p>
+La gestion du fonctionnement de l'électronique machine de bas niveau, tels
+    que les capteurs et les moteurs.
+</p>
+</li>
+<li>
+<p>
+Un logiciel d&#8217;automate programmable pour schémas à contacts (Ladder).
+</p>
+</li>
+</ul></div>
+</li>
+<li>
+<p>
+Il ne fournit pas directement de logiciel de dessin ni de générateur de G-code,
+    mais il en existe de nombreux, faciles à mettre en œuvre.
+</p>
+</li>
+<li>
+<p>
+Il peut piloter simultanément jusqu'à 9 axes et supporte une très grande
+    variété d&#8217;interfaces.
+</p>
+</li>
+<li>
+<p>
+Le contrôleur peut fonctionner avec de vrais servomoteurs (analogiques ou PWM)
+    en boucle fermée, ou avec des <em>step-servos</em> ou encore, des moteurs pas à pas
+    en boucle ouverte.
+</p>
+</li>
+<li>
+<p>
+Le contrôleur de mouvement assure: les compensations de rayon et/ou de
+    longueur d&#8217;outil, le suivi de trajectoire d&#8217;usinage avec tolérance spécifiée,
+    le filetage sur tour, le taraudage rigide, les mouvements avec axes
+    synchronisés, la vitesse d&#8217;avance adaptative, la correction de vitesse par
+    l&#8217;opérateur, le contrôle de vitesse constante etc.
+</p>
+</li>
+<li>
+<p>
+Il supporte les systèmes à mouvements non cartésiens grâce aux modules de
+    cinématique personnalisée.
+    Les architectures disponibles incluent les hexapodes (plate-forme de Stewart
+    et concepts similaires) et les systèmes à articulations rotatives pour
+    assurer les mouvements de robots tels que PUMA ou SCARA.
+</p>
+</li>
+<li>
+<p>
+LinuxCNC fonctionne sous Linux en utilisant ses extensions temps réel RTAI.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_le_syst_me_d_8217_exploitation">2. Le système d&#8217;exploitation</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>La distribution Ubuntu a été choisie car elle s&#8217;intègre parfaitement dans les
+vues Open Source de LinuxCNC:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Ubuntu sera toujours gratuit, et il n&#8217;y a aucun frais supplémentaire pour la
+    version  <em>"Enterprise Edition"</em>,
+    nous rendons nos travaux disponibles pour  tout le monde dans les mêmes
+    conditions de gratuité.
+</p>
+</li>
+<li>
+<p>
+LinuxCNC est jumelé avec les versions LTS d&#8217;Ubuntu qui apportent le soutien et
+    les correctifs de sécurité de l'équipe Ubuntu pour 3 à 5 ans.
+</p>
+</li>
+<li>
+<p>
+Ubuntu utilise les meilleurs outils de traductions et d&#8217;accessibilité
+    à l&#8217;infrastructure, que la communauté du logiciel libre a à offrir, pour
+    rendre Ubuntu accessible à un maximum de personnes.
+</p>
+</li>
+<li>
+<p>
+La communauté Ubuntu a entièrement souscrit aux principes du développement de
+    logiciels libres, nous encourageons tout le monde à utiliser des logiciels
+    open source, à les améliorer et à les transmettre.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_trouver_de_l_8217_aide_a_id_sec_trouver_aide_a">3. Trouver de l&#8217;aide<a id="sec:Trouver-aide"></a></h2>
+<div class="sectionbody">
+<h3 id="_les_salons_irc">3.1. Les salons IRC</h3><div style="clear:left"></div>
+<div class="paragraph"><p>IRC signifie Internet Relay Chat.
+Il s&#8217;agit d&#8217;une connexion en direct avec d&#8217;autres utilisateurs LinuxCNC.
+Le canal LinuxCNC sur IRC est: #linuxcnc sur freenode.net.</p></div>
+<div class="paragraph"><p>La manière la plus simple d&#8217;aller sur IRC est d&#8217;utiliser
+le client embarqué sur cette page:
+<a href="http://webchat.freenode.net/?channels=linuxcnc">http://webchat.freenode.net/?channels=linuxcnc</a></p></div>
+<div class="paragraph"><p>Un peu d'éthique sur le canal IRC:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Posez des questions précises&#8230; Évitez le "quelqu&#8217;un peut m&#8217;aider?",
+   ce type de questions, <em>ne fonctionnera pas</em>.
+</p>
+</li>
+<li>
+<p>
+Si vous êtes vraiment nouveau dans tout cela, réfléchissez à votre question
+    avant de la poser. Assurez-vous de donner suffisamment d&#8217;informations pour
+    que quelqu&#8217;un puisse résoudre votre problème.
+</p>
+</li>
+<li>
+<p>
+Faites preuve de patience quand vous attendez une réponse, il faut parfois
+    du temps pour formuler une réponse. Tout les participants peuvent être
+    occupés, à travailler par exemple :-) ou à autre chose.
+</p>
+</li>
+<li>
+<p>
+Configurez votre compte IRC avec un pseudo unique afin que les participants
+    sachent qui vous êtes. Si vous utilisez le client java, utilisez le même
+    pseudo à chaque fois que vous  vous connecter, cela aidera les participants
+    à se rappeler qui vous êtes, ainsi, si vous êtes déjà venu avant, beaucoup
+    se souviendront des discussions passées, ce qui fait gagner du temps à tout
+    le monde.
+</p>
+</li>
+</ul></div>
+<h3 id="_partage_de_fichiers_sur_irc">3.2. Partage de fichiers sur IRC</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La façon la plus courante de partager des fichiers sur IRC est de charger le
+fichier sur un des services suivants ou service similaire, puis collez le lien
+vers le fichier, sur l&#8217;IRC:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Pour le texte
+</dt>
+<dd>
+<p>
+     <a href="http://pastebin.com/">http://pastebin.com/</a>, <a href="http://pastie.org/">http://pastie.org/</a>, <a href="https://gist.github.com/">https://gist.github.com/</a>
+</p>
+</dd>
+<dt class="hdlist1">
+Pour les photos
+</dt>
+<dd>
+<p>
+     <a href="http://imagebin.org/">http://imagebin.org/</a>, <a href="http://imgur.com/">http://imgur.com/</a>, <a href="http://bayimg.com/">http://bayimg.com/</a>
+</p>
+</dd>
+<dt class="hdlist1">
+Pour les fichiers
+</dt>
+<dd>
+<p>
+     <a href="http://filedropper.com/">http://filedropper.com/</a>, <a href="http://filefactory.com/">http://filefactory.com/</a>, <a href="http://1fichier.com/">http://1fichier.com/</a>
+</p>
+</dd>
+</dl></div>
+<h3 id="_les_listes_de_diffusion">3.3. Les listes de diffusion</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Une liste de diffusion sur Internet est un moyen de poser des questions,
+tout les abonnés à cette liste pourrons lire et répondre à leur convenance.
+Vous obtiendrez une meilleurs visibilité de vos questions sur une liste
+de diffusion plutôt que sur l&#8217;IRC et vous aurez plus de réponses.
+En quelques mots, vous envoyez un e-mail à la liste et selon comment
+vous avez configuré votre compte, vous aurez les réponses soit,
+regroupées quotidiennement, soit individuellement.</p></div>
+<div class="paragraph"><p>Inscription sur la liste de diffusion des utilisateurs de LinuxCNC sur:
+<a href="https://lists.sourceforge.net/lists/listinfo/linuxcnc-users">https://lists.sourceforge.net/lists/listinfo/linuxcnc-users</a></p></div>
+<h3 id="_le_wiki_de_linuxcnc">3.4. Le Wiki de LinuxCNC</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Un site Wiki est un site web maintenu et enrichi par les utilisateurs,
+n&#8217;importe qui peut ajouter ou modifier les pages.</p></div>
+<div class="paragraph"><p>Le Wiki de LinuxCNC est également maintenu par les utilisateurs,
+il contient un très grand nombre d&#8217;informations et d&#8217;astuces sur:
+<a href="http://wiki.linuxcnc.org/">http://wiki.linuxcnc.org/</a></p></div>
+</div>
+<h2 id="_se_procurer_linuxcnc">4. Se procurer LinuxCNC</h2>
+<div class="sectionbody">
+<h3 id="_par_t_l_chargement_classique">4.1. Par téléchargement classique</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Téléchargez le CD Live sur le <a href="http://www.linuxcnc.org/index.php?lang=french">site de LinuxCNC</a></p></div>
+<h3 id="_par_t_l_chargement_fragment">4.2. Par téléchargement fragmenté </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si le fichier est trop important pour être téléchargé en une seule
+fois parce que votre connexion Internet est lente ou mauvaise,
+utilisez <em>wget</em> qui permet la reprise après un téléchargement interrompu.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+La commande Wget sous Linux
+</dt>
+<dd>
+<p>
+
+Ouvrez un terminal. Dans Gnome, il est dans <em>Applications</em> → <em>Accessoires</em> →
+<em>Terminal</em>.
+Utilisez <em>cd</em> pour changer le répertoire dans lequel vous voulez stocker l&#8217;image
+ISO. Utilisez <em>mkdir</em> pour créer un nouveau répertoire si nécessaire.
+</p>
+<div class="paragraph"><p>Notez que les noms de fichiers réels peuvent changer, vous pourriez avoir à
+aller sur <a href="http://www.linuxcnc.org/index.php/french">le site de LinuxCNC</a> et y suivre
+le lien <em>Téléchargement</em> pour obtenir le nom réel du fichier. Dans la plupart
+des navigateurs, vous pouvez faire un clic droit sur le lien et sélectionner
+<em>Copier le lien vers</em>, ou similaire, coller ensuite ce lien dans la fenêtre du
+terminal avec un clic droit puis en choisissant <em>Coller</em>.</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="sidebar-title">Ubuntu 10.04 Lucid Lynx et LinuxCNC (version actuelle)</div>
+<div class="paragraph"><p>Pour obtenir la version de Ubuntu 10.04 Lucid Lynx, copier l&#8217;un des liens
+ci-dessous dans la fenêtre du terminal et appuyez sur <em>Entrée</em>:</p></div>
+<div class="paragraph"><p>Pour le miroir Etats-Unis:
+wget <a href="http://www.linuxcnc.org/iso/ubuntu-10.04-linuxcnc3-i386.iso">http://www.linuxcnc.org/iso/ubuntu-10.04-linuxcnc3-i386.iso</a></p></div>
+<div class="paragraph"><p>Pour le miroir européen:
+wget <a href="http://dsplabs.upt.ro/~juve/emc/get.php?file=ubuntu-10.04-linuxcnc3-i386.iso">http://dsplabs.upt.ro/~juve/emc/get.php?file=ubuntu-10.04-linuxcnc3-i386.iso</a></p></div>
+<div class="paragraph"><p>La somme MD5 du fichier ci-dessus est: <tt>76dc2416b917679b71255e464ede84ec</tt></p></div>
+</div></div>
+<div class="paragraph"><p>Pour continuer un téléchargement partiel qui aurait été interrompu par exemple,
+ajoutez l&#8217;option -c à wget:</p></div>
+<div class="paragraph"><p>wget -c <a href="http://www.linuxcnc.org/iso/ubuntu-10.04-linuxcnc3-i386.iso">http://www.linuxcnc.org/iso/ubuntu-10.04-linuxcnc3-i386.iso</a></p></div>
+<div class="paragraph"><p>Pour arrêter un téléchargement, utilisez Ctrl-C ou fermer la fenêtre du terminal.</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="sidebar-title">Ubuntu 8.04 Hardy Heron et LinuxCNC (plus)</div>
+<div class="paragraph"><p>Si vous avez besoin d&#8217;une ancienne version d&#8217;Ubuntu, vous pouvez télécharger
+Ubuntu 8.04. L&#8217;image du CD ci-dessous est l&#8217;ancienne version EMC 2.3.x, mais
+elle peut être modifiée vers la version 2.4.x en suivant les instructions sur:
+ <a href="http://wiki.linuxcnc.org/cgi-bin/wiki.pl?UpdatingTo2.4">le wiki LinuxCNC.org</a></p></div>
+<div class="paragraph"><p>Pour le miroir Etats-Unis:
+wget <a href="http://www.linuxcnc.org/iso/ubuntu-8.04-desktop-emc2-aj13-i386.iso">http://www.linuxcnc.org/iso/ubuntu-8.04-desktop-emc2-aj13-i386.iso</a></p></div>
+<div class="paragraph"><p>Pour le miroir européen:
+wget <a href="http://dsplabs.upt.ro/~juve/emc/get.php?file=ubuntu-8.04-desktop-emc2-aj13-i386.iso">http://dsplabs.upt.ro/~juve/emc/get.php?file=ubuntu-8.04-desktop-emc2-aj13-i386.iso</a></p></div>
+<div class="paragraph"><p>La somme MD5 du fichier ci-dessus est: <tt>1bab052ec879f941628927c988863f14</tt></p></div>
+</div></div>
+<div class="paragraph"><p>Quand le téléchargement est terminé, vous trouverez le fichier ISO dans le
+répertoire que vous avez sélectionné précédemment. Ensuite, il ne vous restera
+plus qu'à graver le CD.</p></div>
+</dd>
+<dt class="hdlist1">
+La commande Wget sous Windows
+</dt>
+<dd>
+<p>
+
+Le programme wget est également disponible pour Windows depuis:
+</p>
+<div class="paragraph"><p><a href="http://gnuwin32.sourceforge.net/packages/wget.htm">http://gnuwin32.sourceforge.net/packages/wget.htm</a></p></div>
+<div class="paragraph"><p>Suivez les instructions de la page web pour télécharger et installer
+le programme wget sous Windows.</p></div>
+<div class="paragraph"><p>Pour lancer wget ouvrez l&#8217;invite de commande.</p></div>
+<div class="paragraph"><p>Dans la plupart des Windows elle est dans <em>Programmes</em> → <em>Accessoires</em> →
+<em>Commande</em></p></div>
+<div class="paragraph"><p>Naviguez jusqu&#8217;au répertoire dans lequel s&#8217;est installé wget.
+Habituellement il est dans <em>C:\Program Files\GnuWin32\bin</em> si
+c&#8217;est le cas, tapez la commande:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>cd C:\Program Files\GnuWin32\bin</tt></pre>
+</div></div>
+<div class="paragraph"><p>et le prompt devrait changer pour: <em>C:\Program Files\GnuWin32</em></p></div>
+<div class="paragraph"><p>Tapez les commandes <em>wget</em> dans la fenêtre et pressez Entrée comme précédemment.</p></div>
+</dd>
+</dl></div>
+</div>
+<h2 id="_graver_l_8217_image_iso_du_cd">5. Graver l&#8217;image ISO du CD</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>LinuxCNC est distribué sous la forme d&#8217;un fichier image de CD, l&#8217;image ISO du CD.
+Pour installer LinuxCNC, vous devez d&#8217;abord graver cette image ISO sur un CD.
+Vous devez disposer d&#8217;un graveur de CD/DVD et d&#8217;un CD vierge de 80 minutes
+(700 Mio). Pour éviter tout échec de gravure, graver à la vitesse la plus lente
+possible.</p></div>
+<h3 id="_sous_linux">5.1. Sous Linux</h3><div style="clear:left"></div>
+<h4 id="_v_rifier_la_somme_de_contr_le_sous_linux">5.1.1. Vérifier la somme de contrôle sous Linux</h4>
+<div class="paragraph"><p>Avant de graver un CD, il est fortement recommandé de vérifier la
+somme de contrôle md5 (hash) du fichier de l&#8217;image iso.</p></div>
+<div class="paragraph"><p>Ouvrez un terminal.
+Dans Ubuntu il est dans <em>Applications</em> → <em>Accessoires</em> → <em>Terminal</em>.</p></div>
+<div class="paragraph"><p>Allez dans le répertoire contenant l&#8217;image ISO précédemment téléchargée avec:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>cd répertoire_de_l'image</tt></pre>
+</div></div>
+<div class="paragraph"><p>Puis lancez la commande <em>md5sum</em> suivie du nom du fichier, exemple:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>md5sum -b ubuntu-10.04-linuxcnc3-i386.iso</tt></pre>
+</div></div>
+<div class="paragraph"><p>La commande md5sum doit retourner une simple ligne après le calcul de la somme
+    de contrôle.
+Sur une machine lente le calcul peut prendre plusieurs minutes:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>76dc2416b917679b71255e464ede84ec ubuntu-10.04-linuxcnc3-i386.iso</tt></pre>
+</div></div>
+<div class="paragraph"><p>Il reste à comparer avec la somme md5 fournie sur la page de téléchargement.</p></div>
+<div class="paragraph"><p>Si vous avez téléchargé le md5sum ainsi que l&#8217;ISO, vous pouvez demander au
+programme md5sum de faire la vérification pour vous.
+Dans le même répertoire:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>md5sum -c ubuntu-10.04-linuxcnc1-i386.iso.md5</tt></pre>
+</div></div>
+<div class="paragraph"><p>Si tout va bien, après un court délai le terminal affichera:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>ubuntu-10.04-linuxcnc1-i386.iso: OK</tt></pre>
+</div></div>
+<h4 id="_graver_le_cd_sous_linux">5.1.2. Graver le CD sous Linux</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+Insérez un CD vierge dans votre graveur. Une fenêtre surgissante
+   <em>CD/DVD Creator</em> ou <em>Choisissez le type de disque</em> va s&#8217;ouvrir.
+   Fermez la, elle ne sera pas utilisée.
+</p>
+</li>
+<li>
+<p>
+Naviguez jusqu&#8217;au répertoire contenant l&#8217;image ISO.
+</p>
+</li>
+<li>
+<p>
+Faites un clic droit sur le fichier de l&#8217;image ISO et choisissez
+   <em>Graver le Disque</em>.
+</p>
+</li>
+<li>
+<p>
+Sélectionnez la vitesse de gravure. Pour graver le CD Live de LinuxCNC il
+   est recommandé de graver à la vitesse la plus lente possible pour
+   éviter toute erreur de gravure.
+</p>
+</li>
+<li>
+<p>
+Lancez la gravure.
+</p>
+</li>
+<li>
+<p>
+Si le choix d&#8217;un nom de fichier est demandé pour l&#8217;image disque,
+   cliquez juste <em>OK</em>.
+</p>
+</li>
+</ul></div>
+<h3 id="_sous_windows">5.2. Sous Windows</h3><div style="clear:left"></div>
+<h4 id="_v_rifier_la_somme_de_contr_le_sous_windows">5.2.1. Vérifier la somme de contrôle sous Windows</h4>
+<div class="paragraph"><p>Avant de graver un CD, il est fortement recommandé de vérifier la
+somme de contrôle md5 (hash) du fichier de l&#8217;image iso, malheureusement
+Windows ne dispose pas de programme de contrôle du md5. Vous devrez en
+installer un pour vérifier la somme de contrôle de l&#8217;ISO. Plus
+d&#8217;informations sont disponibles ici: <a href="http://doc.ubuntu-fr.org/md5sum">http://doc.ubuntu-fr.org/md5sum</a></p></div>
+<h4 id="_gravez_le_cd_sous_windows">5.2.2. Gravez le CD sous Windows</h4>
+<div class="ulist"><ul>
+<li>
+<p>
+Si votre Windows n&#8217;intègre pas un logiciel de gravure d&#8217;image vous
+   pouvez télécharger Infra Recorder, un logiciel de gravure d&#8217;images
+   gratuit et open source sur <a href="http://infrarecorder.org/">http://infrarecorder.org/</a>
+</p>
+</li>
+<li>
+<p>
+Insérez un CD vierge dans le graveur, sélectionnez <em>Quitter</em> ou
+   <em>Cancel</em> si un auto-run démarre.
+</p>
+</li>
+<li>
+<p>
+Cliquez bouton droit sur le fichier ISO et sélectionnez le menu
+   <em>Graver l&#8217;image disque</em> ou lancez Infra Recorder et choisissez le
+   menu <em>Actions→Graver l&#8217;image</em>.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_tester_linuxcnc">6. Tester LinuxCNC</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Avec le CD Live de LinuxCNC dans le lecteur de CD/DVD, redémarrez votre PC
+de sorte qu&#8217;il démarre sur le CD Live. Quand l&#8217;ordinateur a redémarré
+vous pouvez essayer LinuxCNC sans l&#8217;installer. Vous ne pouvez pas créer de
+configuration personnalisée ni modifier les réglages du système comme
+la résolution de l'écran sans installer LinuxCNC.</p></div>
+<div class="paragraph"><p>Pour lancer LinuxCNC allez dans le menu Applications/CNC et choisissez
+LinuxCNC. Puis sélectionnez une configuration en sim (simulation) et
+essayez le.</p></div>
+<div class="paragraph"><p>Pour savoir si votre ordinateur est utilisable par le générateur de
+trains d&#8217;impulsions du logiciel, lancez un test de latence comme
+indiqué <a href="../install/Latency_Test_fr.html#cha:test-de-latence">dans ce chapitre</a>.</p></div>
+</div>
+<h2 id="_installer_la_distribution_ubuntu_de_linuxcnc_sur_votre_pc">7. Installer la distribution Ubuntu de LinuxCNC sur votre PC</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Si vous avez envie d&#8217;aller plus loin, cliquez juste sur l&#8217;icône
+<em>Install</em> se trouvant sur le bureau, répondez à quelques questions (votre
+nom, votre fuseau horaire, le mot de passe) et faites une installation
+complète en quelques minutes. Notez bien le mot de passe indiqué et le
+nom d&#8217;utilisateur. Une fois l&#8217;installation complète et que vous êtes
+connecté, le gestionnaire de mises à jour vous proposera d&#8217;effectuer
+une mise à jour vers la dernière version stable de LinuxCNC.</p></div>
+<h3 id="_lancer_linuxcnc">7.1. Lancer LinuxCNC</h3><div style="clear:left"></div>
+<div class="paragraph"><p>LinuxCNC se lance comme un autre programme Linux:
+depuis un terminal en passant la commande <em>linuxcnc</em>,
+ou depuis le menu <em>Applications</em> → <em>CNC</em>.</p></div>
+<h3 id="_s_lecteur_de_configuration">7.2. Sélecteur de configuration</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le <em>Sélecteur de configuration</em> s&#8217;affichera à chaque fois que vous lancerez
+LinuxCNC depuis le menu <em>Applications</em> → <em>CNC</em> → <em>LinuxCNC</em>. Vos propres
+configurations personnalisées s&#8217;affichent dans le haut de la liste, suivies par
+les différentes configurations fournies en standard.
+Étant donné que chaque exemple de configuration utilise un type différent d'
+interface matérielle, la plupart ne fonctionneront pas sur votre système. Les
+configurations listées dans la catégorie <em>Sim</em> fonctionneront toutes, même sans
+matériel raccordé, ce sont des simulations de machines.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/configuration-selector1_fr.png" alt="images/configuration-selector1_fr.png" />
+</div>
+<div class="title">Figure 1. Sélecteur de configuration pour LinuxCNC<a id="cap:Selecteur-de-configuration"></a></div>
+</div>
+<div class="paragraph"><p>Cliquez dans la liste, sur les différentes configurations pour afficher les
+informations les concernant. Double-cliquez sur une configuration ou cliquez <em>OK</em>
+pour démarrer LinuxCNC avec cette configuration. Cochez la case <em>Créer un
+raccourci sur le bureau</em> puis cliquez OK pour ajouter une icône sur le bureau
+d&#8217;Ubuntu. Cette icône vous permettra par la suite de lancer directement
+LinuxCNC avec cette configuration, sans passer par le sélecteur de configuration.</p></div>
+<div class="paragraph"><p>Quand vous choisissez un exemple de configuration dans le sélecteur, un dialogue
+vous demandera si vous voulez en faire une copie dans votre répertoire home.
+Si vous répondez <em>oui</em>, un dossier <em>linuxcnc</em> autorisé en écriture sera créé, il
+contiendra un jeu de fichiers que vous pourrez éditer pour les adapter à vos
+besoins. Si vous répondez <em>non</em>, LinuxCNC démarrera mais pourra se comporter de
+façon étrange, par exemple, les décalages d&#8217;origine pièce entrés avec la commande
+<em>Toucher</em> ne seront pas pris en compte, ce comportement est lié à ce moment, à
+l&#8217;absence de répertoire autorisé en écriture sans lequel les paramètres ne
+peuvent être enregistrés.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/copy-configuration_fr.png" alt="images/copy-configuration_fr.png" />
+</div>
+<div class="title">Figure 2. Dialogue de copie de la configuration</div>
+</div>
+<h3 id="_l_8217_interface_utilisateur_graphique_axis">7.3. L&#8217;interface utilisateur graphique Axis</h3><div style="clear:left"></div>
+<div class="paragraph"><p>L&#8217;interface AXIS est une des interfaces parmi lesquelles vous avez à
+choisir. Elle peut être configurée pour lui ajouter un panneau de
+commandes virtuel personnalisé en fonction des besoins. AXIS est
+l&#8217;interface utilisateur par défaut et est activement développée.
+C&#8217;est aussi la plus populaire.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/axis_2.5_fr.png" alt="images/axis_2.5_fr.png" />
+</div>
+<div class="title">Figure 3. Interface Axis<a id="cap:Interface-Axis"></a></div>
+</div>
+<h3 id="_les_tapes_suivantes_de_la_configuration">7.4. Les étapes suivantes de la configuration</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Après avoir trouvé l&#8217;exemple de configuration qui utilise
+le même matériel que votre machine, et en avoir enregistré une copie dans votre
+répertoire personnel, vous pouvez la personnaliser en fonction des besoins
+spécifiques à votre machine. Consultez le <em>Manuel de l&#8217;intégrateur</em> pour tous
+les détails de configuration.</p></div>
+<div class="paragraph"><p>Si vous souhaitez créer une configuration personnalisée, vous pouvez utiliser
+pour cela, un des assistants graphiques de configuration, <em>StepConf</em> ou <em>PncConf</em>
+selon votre type de machine.</p></div>
+</div>
+<h2 id="_les_mises_jour_de_linuxcnc">8. Les mises à jour de LinuxCNC </h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Avec l&#8217;installation standard, le gestionnaire de mises à jour vous avertira des
+mises à jour de LinuxCNC disponibles quand vous serez en ligne et vous permettra
+de mettre à jour facilement sans connaissance particulière de Linux.
+Si vous souhaitez passer en 10.04 à partir d&#8217;une 8.04, une installation propre
+à partir du CD live est recommandée.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Attention</div>
+</td>
+<td class="content"><span style="color:red;">Ne pas mettre à jour Ubuntu vers une nouvelle distribution
+comme de 10.04 vers 12.04, car elle ne permettrait plus d&#8217;utiliser LinuxCNC, ne
+pas mettre non plus à jour le kernel, car les modules temps réels ne
+fonctionnerait plus.</span></td>
+</tr></table>
+</div>
+</div>
+<h2 id="_probl_me_d_8217_installation_possible">9. Problème d&#8217;installation possible</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Dans de rares cas, vous pourriez avoir à réinitialiser le BIOS aux réglages par
+défaut si lors de l&#8217;installation du Live CD, le disque dur n&#8217;est pas reconnu
+pendant le démarrage.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-10-10 07:36:09 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/Getting_linuxcnc_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:16 GMT -->
+</html>

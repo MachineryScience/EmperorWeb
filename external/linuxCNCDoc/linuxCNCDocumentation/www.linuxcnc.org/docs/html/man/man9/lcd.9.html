@@ -1,0 +1,313 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Fri Nov  2 17:36:07 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/lcd.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>LCD</title>
+
+</head>
+<body>
+
+<h1 align="center">LCD</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#AUTHOR">AUTHOR</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">lcd &minus;
+Stream HAL data to an LCD screen</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="89%">
+
+
+<p style="margin-top: 1em"><b>loadrt lcd
+fmt_strings=&quot;&quot;Plain Text %4.4f\nAnd So on|Second
+Page, Next Inst&quot;&quot;</b></p></td></tr>
+</table>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>lcd</b>
+(requires a floating-point thread). All LCD instances are
+updated <br>
+by the</p>
+
+<p style="margin-left:22%;">same function.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>lcd.</b><i>NN</i><b>.out</b>
+(u32) out</p>
+
+<p style="margin-left:22%;">The output byte stream is sent
+via this pin. One character is sent every thread invocation.
+There in no handshaking provided.</p>
+
+
+<p style="margin-left:11%;"><b>lcd.</b><i>NN</i><b>.page.</b><i>PP.</i><b>arg.</b><i>NN</i>
+(float/s32/u32/bit) in</p>
+
+<p style="margin-left:22%;">The input pins have types
+matched to the format string specifiers.</p>
+
+
+<p style="margin-left:11%;"><b>lcd.</b><i>NN</i><b>.page_num</b>
+(u32) in</p>
+
+<p style="margin-left:22%;">Selects the page number.
+Multiple layouts may be defined, and this pin switches
+between them.</p>
+
+
+<p style="margin-left:11%;"><b>lcd.</b><i>NN</i><b>.contrast</b>
+(u32) in</p>
+
+<p style="margin-left:22%;">Attempts to set the contrast of
+the LCD screen using the byte sequence ESC C and then a
+value from 0x20 to 0xBF. (matching the Mesa 7i73)</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>lcd.</b><i>NN</i><b>.decimal-separator</b>
+(u32) rw</p>
+
+<p style="margin-left:22%;">Sets the decimal separator used
+for floating point numbers. The default value is 46 (0x2E)
+which corresponds to &quot;.&quot;. If a comma is required
+then set this parameter to 44 (0x2C).</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>lcd</b>
+takes format strings much like those used in C and many
+other languages in the printf and scanf functions and their
+variants.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The component
+was written specifically to support the Mesa 7i73 pendant
+controller, however it may be of use streaming data to other
+character devices and, as the output format mimics the ADM3
+terminal format, it could be used to stream data to a serial
+device. Perhaps even a genuine ADM3. The strings contain a
+mixture of text values which are displayed directly,
+&quot;escaped&quot; formatting codes and numerical format
+descriptors. For a detailed description of formatting codes
+see: http://en.wikipedia.org/wiki/Printf</p>
+
+<p style="margin-left:11%; margin-top: 1em">The component
+can be configured to display an unlimited number of
+differently-formatted pages, which may be selected with a
+HAL pin. <b><br>
+Escaped codes</b></p>
+
+<p style="margin-left:22%;">\n Inserts a clear-to-end,
+carriage return and line feed character. This will still
+linefeed and clear even if an automatic wrap has occurred
+(lcd has no knowledge of the width of the lcd display.) To
+print in the rightmost column it is necessary to allow the
+format to wrap and omit the \n code.</p>
+
+<p style="margin-left:22%; margin-top: 1em">\t Inserts a
+tab (actually 4 spaces in the current version rather than a
+true tab.)</p>
+
+<p style="margin-left:22%; margin-top: 1em">\NN inserts the
+character defined by the hexadecimal code NN.</p>
+
+<p style="margin-left:22%; margin-top: 1em">\\ Inserts a
+literal \.</p>
+
+<p style="margin-left:11%;"><b>Numerical formats</b></p>
+
+<p style="margin-left:22%; margin-top: 1em"><b>lcd</b>
+differs slightly from the standard printf conventions. One
+significant difference is that width limits are strictly
+enforced to prevent the LCD display wrapping and spoiling
+the layout. The field width includes the sign character so
+that negative numbers will often have a smaller valid range
+than positive. Numbers that do not fit in the specified
+width are displayed as a line of asterisks
+(<b>********</b>).</p>
+
+<p style="margin-left:22%; margin-top: 1em">Each format
+begins with a &quot;%&quot; symbol. (For a literal % use
+&quot;%%&quot;). Immediately after the % the following
+modifiers may be used:</p>
+
+<p style="margin-left:22%; margin-top: 1em">&quot; &quot;
+(space) Pad the number to the specified width with spaces.
+This is the default and is not strictly necessary.</p>
+
+<p style="margin-left:22%; margin-top: 1em">&quot;0&quot;
+Pad the number to the specified width with the numeral
+0.</p>
+
+<p style="margin-left:22%; margin-top: 1em">&quot;+&quot;
+Force display of a + symbol before positive numbers. This
+(like the - sign) will appear immediately to the left of the
+digits for a space-padded number and in the extreme left
+position for a 0-padded number.</p>
+
+
+<p style="margin-left:22%; margin-top: 1em">&quot;1234567890&quot;
+A numerical entry (other than the leading 0 above) defines
+the total number of characters to display including the
+decimal separator and the sign. Whilst this number can be as
+many digits as required the maximum field width is 20
+characters. The inherent precison of the &quot;double&quot;
+data type means that more than 14 digits will tend to show
+errors in the least significant digits. The integer data
+types will never fill more than 10 decimal digits.</p>
+
+<p style="margin-left:22%; margin-top: 1em">Following the
+width specifier should be the decimal specifier. This can
+only be a full-stop character (.) as the comma (,) is used
+as the instance separator. Currently lcd does not access the
+locale information to determine the correct separator and
+the <b>decimal-separator</b> parameter should be used.</p>
+
+<p style="margin-left:22%; margin-top: 1em">Following the
+decimal separator should be a number that determines how
+many places of decimals to display. This entry is ignored in
+the case of integer formats.</p>
+
+<p style="margin-left:22%; margin-top: 1em">All the above
+modifiers are optional, but to specify a decimal precision
+the decimal point must precede the precision. For example
+%.3f. <br>
+The default decimal precision is 6.</p>
+
+<p style="margin-left:22%; margin-top: 1em">The numerical
+formats supported are:</p>
+
+<p style="margin-left:22%; margin-top: 1em"><b>%f %F</b>
+(for example, %+09.3f) These create a floating-point type
+HAL pin. The example would be displayed in a 9-character
+field, with 3 places of decimals, . as a decimal separator,
+padded to the left with 0s and with a sign displayed for
+both positive and negative. Conversely a plain %f would be 6
+digits of decimal, variable format width, with a sign only
+shown for negative numbers. both %f and %F create exactly
+the same format.</p>
+
+<p style="margin-left:22%; margin-top: 1em"><b>%i %d</b>
+(For example %+ 4d) Creates a signed (s32) HAL pin. The
+example would display the value at a fixed 4 characters,
+space padded, width including the + giving a range of +999
+to -999. %i and %d create identical output.</p>
+
+<p style="margin-left:22%; margin-top: 1em"><b>%u</b> (for
+example %08u) Creates an unsigned (u32) HAL pin. The example
+would be a fixed 8 characters wide, padded with zeros.</p>
+
+<p style="margin-left:22%; margin-top: 1em"><b>%x, %X</b>
+Creates an unsigned (u32) HAL pin and displays the value in
+Hexadecimal. Both %x and %X display capital letters for
+digits ABCDEF. A width may be specified, though the u32 HAL
+type is only 8 hex digits wide.</p>
+
+<p style="margin-left:22%; margin-top: 1em"><b>%o</b>
+Creates an unsigned (u32) pin and displays the value in
+Octal.</p>
+
+<p style="margin-left:22%; margin-top: 1em"><b>%c</b>
+Creates a u32 HAL pin and displays the character
+corresponding to the value of the pin. Values less than 32
+(space) are suppressed. A width specifier may be used, for
+example %20c might be used to create a complete line of one
+character.</p>
+
+<p style="margin-left:22%; margin-top: 1em"><b>%b</b> This
+specifier has no equivalent in printf. It creates a bit
+(boolean) type HAL pin. The b should be followed by two
+characters and the display will show the first of these when
+the pin is true, and the second when false. Note that the
+characters follow, not preceed the &quot;b&quot;, unlike the
+case with other formats. The characters may be
+&quot;escaped&quot; Hex values. For example &quot;%b\FF
+&quot; will display a solid black block if true, and a space
+if false and &quot;%b\7F\7E&quot; would display right-arrow
+for false and left-arrow for true. An unexpected value of
+&rsquo;E&rsquo; indicates a formatting error.</p>
+
+<p style="margin-left:22%; margin-top: 1em"><b>Pages</b>
+The page separator is the &quot;|&quot; (pipe) character.
+(if the actual character is needed then \7C may be used). A
+&quot;Page&quot; in this context refers to a separate format
+which may be displayed on the same display.</p>
+
+
+<p style="margin-left:22%; margin-top: 1em"><b>Instances</b>
+The instance separator is the comma. This creates a
+completely separate lcd instance, for example to drive a
+second lcd display on the second 7i73. The use of comma to
+separate instances is built in to the modparam reading code
+so not even escaped commas &quot;\,&quot; can be used. A
+comma may be displayed by using the \2C sequence.</p>
+
+<h2>AUTHOR
+<a name="AUTHOR"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Andy Pugh</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/lcd.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

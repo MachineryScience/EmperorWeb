@@ -1,0 +1,257 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/image-to-gcode.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:12:47 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Image to G Code</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Image to G Code</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:image-to-g-code"></a> </p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/image-to-gcode.png" alt="images/image-to-gcode.png" />
+</div>
+</div>
+</div>
+</div>
+<h2 id="_what_is_a_depth_map">1. What is a depth map?</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>A depth map is a greyscale image where the brightness of each pixel
+corresponds to the depth (or height) of the object at each point.</p></div>
+</div>
+<h2 id="_integrating_image_to_gcode_with_the_axis_user_interface">2. Integrating image-to-gcode with the AXIS user interface</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Add the following lines to the <em>[FILTER]</em>  section of your .ini file
+to make AXIS automatically invoke
+image-to-gcode when you open a .png, .gif, or .jpg image</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>PROGRAM_EXTENSION = .png,.gif,.jpg Grayscale Depth Image
+png = image-to-gcode
+gif = image-to-gcode
+jpg = image-to-gcode</tt></pre>
+</div></div>
+<div class="paragraph"><p>The standard <em>sim/axis.ini</em> configuration file is already configured
+this way.</p></div>
+</div>
+<h2 id="_using_image_to_gcode">3. Using image-to-gcode</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Start image-to-gcode either by opening an image file in AXIS, or by
+invoking image-to-gcode from the terminal, as follows:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>image-to-gcode torus.png &gt; torus.ngc</tt></pre>
+</div></div>
+<div class="paragraph"><p>Verify all the settings in the right-hand column, then press OK to
+create the gcode. Depending on the image size and options chosen, this
+may take from a few seconds to a few minutes. If you are loading the
+image in AXIS, the gcode will automatically be loaded and previewed
+once image-to-gcode completes. In AXIS, hitting reload will show the
+image-to-gcode option screen again, allowing you to tweak them.</p></div>
+</div>
+<h2 id="_option_reference">4. Option Reference</h2>
+<div class="sectionbody">
+<h3 id="_units">4.1. Units</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Specifies whether to use G20 (inches) or G21 (mm) in the generated
+g-code and as the units for each option labeled <em>(units)</em>.</p></div>
+<h3 id="_invert_image">4.2. Invert Image</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If “no”, the black pixel is the lowest point and the white pixel is
+the highest point. If “yes”, the black pixel is the highest point and
+the white pixel is the lowest point.</p></div>
+<h3 id="_normalize_image">4.3. Normalize Image</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If <em>yes</em>, the darkest pixel is remapped to black, the lightest pixel
+is remapped to white.</p></div>
+<h3 id="_expand_image_border">4.4. Expand Image Border</h3><div style="clear:left"></div>
+<div class="paragraph"><p>If <em>None</em>, the input image is used as-is, and details which are at the
+very edges of the image may be cut off. If <em>White</em> or <em>Black</em>, then a
+border of pixels equal to the tool diameter is added on all sides, and
+details which are at the very edges of the images will not be cut off.</p></div>
+<h3 id="_tolerance_units">4.5. Tolerance (units)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>When a series of points are within <em>tolerance</em> of being a straight
+line, they are output as a straight line.
+Increasing tolerance can lead to better contouring performance in LinuxCNC,
+but can also remove or blur small details in the image.</p></div>
+<h3 id="_pixel_size_units">4.6. Pixel Size (units)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>One pixel in the input image will be this many units&#8212;usually this
+number is much smaller than 1.0. For instance, to mill a 2.5x2.5-inch
+object from a 400x400 image file, use a pixel size of .00625, because
+2.5 / 400 = .00625.</p></div>
+<h3 id="_plunge_feed_rate_units_per_minute">4.7. Plunge Feed Rate (units per minute)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The feed rate for the initial plunge movement.</p></div>
+<h3 id="_feed_rate_units_per_minute">4.8. Feed Rate (units per minute)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The feed rate for other parts of the path.</p></div>
+<h3 id="_spindle_speed_rpm">4.9. Spindle Speed (RPM)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The spindle speed S code that should be put into the gcode file.</p></div>
+<h3 id="_scan_pattern">4.10. Scan Pattern</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Possible scan patterns are:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Rows
+</p>
+</li>
+<li>
+<p>
+Columns
+</p>
+</li>
+<li>
+<p>
+Rows, then Columns
+</p>
+</li>
+<li>
+<p>
+Columns, then Rows
+</p>
+</li>
+</ul></div>
+<h3 id="_scan_direction">4.11. Scan Direction</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Possible scan directions are:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Positive: Start milling at a low X or Y axis value, and move towards a
+   high X or Y axis value
+</p>
+</li>
+<li>
+<p>
+Negative: Start milling at a high X or Y axis value, and move towards
+   a low X or Y axis value
+</p>
+</li>
+<li>
+<p>
+Alternating: Start on the same end of the X or Y axis travel that the
+   last move ended on. This reduces the amount of traverse movements
+</p>
+</li>
+<li>
+<p>
+Up Milling: Start milling at low points, moving towards high points
+</p>
+</li>
+<li>
+<p>
+Down Milling: Start milling at high points, moving towards low points
+</p>
+</li>
+</ul></div>
+<h3 id="_depth_units">4.12. Depth (units)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The top of material is always at <em>Z=0</em>. The deepest cut into the
+material is <em>Z=-depth.</em></p></div>
+<h3 id="_step_over_pixels">4.13. Step Over (pixels)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The distance between adjacent rows or columns. To find the number of
+pixels for a given units distance, compute <em>distance/pixel size</em> and
+round to the nearest whole number. For example, if <em>pixel size=.006</em>
+and the desired step over <em>distance=.015</em>, then use a Step Over of 2 or
+3 pixels, because <em>.015/.006=2.5</em>'.'</p></div>
+<h3 id="_tool_diameter">4.14. Tool Diameter</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The diameter of the cutting part of the tool.</p></div>
+<h3 id="_safety_height">4.15. Safety Height</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The height to move to for traverse movements. image-to-gcode always
+assumes the top of material is at <em>Z=0</em>.</p></div>
+<h3 id="_tool_type">4.16. Tool Type</h3><div style="clear:left"></div>
+<div class="paragraph"><p>The shape of the cutting part of the tool. Possible tool shapes are:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Ball End
+</p>
+</li>
+<li>
+<p>
+Flat End
+</p>
+</li>
+<li>
+<p>
+45 degree “vee”
+</p>
+</li>
+<li>
+<p>
+60 degree “vee”
+</p>
+</li>
+</ul></div>
+<h3 id="_lace_bounding">4.17. Lace bounding</h3><div style="clear:left"></div>
+<div class="paragraph"><p>This controls whether areas that are relatively flat along a row or
+column are skipped. This option only makes sense when both rows and
+columns are being milled. Possible bounding options are:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+None: Rows and columns are both fully milled.
+</p>
+</li>
+<li>
+<p>
+Secondary: When milling in the second direction, areas that do not
+   strongly slope in that direction are skipped.
+</p>
+</li>
+<li>
+<p>
+Full: When milling in the first direction, areas that strongly slope
+   in the second direction are skipped. When milling in the second
+   direction, areas that do not strongly slope in that direction are
+   skipped.
+</p>
+</li>
+</ul></div>
+<h3 id="_contact_angle">4.18. Contact angle</h3><div style="clear:left"></div>
+<div class="paragraph"><p>When <em>Lace bounding</em> is not <em>None</em>, slopes greater than <em>Contact angle</em>
+are considered to be <em>strong</em> slopes, and slopes less than that angle
+are considered to be weak slopes.</p></div>
+<h3 id="_roughing_offset_and_depth_per_pass">4.19. Roughing offset and depth per pass</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Image-to-gcode can optionally perform rouging passes. The depth of
+successive roughing passes is given by <em>Roughing depth per pass</em>. For
+instance, entering 0.2 will perform the first roughing pass with a
+depth of 0.2, the second roughing pass with a depth of 0.4, and so on
+until the full Depth of the image is reached. No part of any roughing
+pass will cut closer than Roughing Offset to the final part. The following
+figure shows a tall vertical feature being milled.
+In this image, Roughing depth per pass is 0.2 inches and roughing
+offset is 0.1 inches.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/i2g-roughing.png" alt="images/i2g-roughing.png" />
+</div>
+<div class="title">Figure 1. Roughing passes and final pass<a id="roughing-passes"></a></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-18 13:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gui/image-to-gcode.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:13:19 GMT -->
+</html>

@@ -1,0 +1,170 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Sat Mar 17 00:36:10 2012 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/iocontrol.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>IOCONTROL</title>
+
+</head>
+<body>
+
+<h1 align="center">IOCONTROL</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#SEE ALSO">SEE ALSO</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">iocontrol
+&minus; accepts NML I/O commands, interacts with HAL in
+userspace</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>loadusr io
+[-ini</b> <i>inifile</i><b>]</b></p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">These pins are
+created by the userspace IO controller, usually found in
+$LINUXCNC_HOME/bin/io</p>
+
+<p style="margin-left:11%; margin-top: 1em">The signals are
+turned on and off in userspace - if you have strict timing
+requirements or simply need more i/o, consider using the
+realtime synchronized i/o provided by <b>motion</b>(9)
+instead.</p>
+
+<p style="margin-left:11%; margin-top: 1em">The inifile is
+searched for in the directory from which halcmd was run,
+unless an absolute path is specified.</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>iocontrol.0.coolant-flood</b></p>
+
+<p style="margin-left:22%;">(Bit, Out) TRUE when flood
+coolant is requested</p>
+
+
+<p style="margin-left:11%;"><b>iocontrol.0.coolant-mist</b></p>
+
+<p style="margin-left:22%;">(Bit, Out) TRUE when mist
+coolant is requested</p>
+
+
+<p style="margin-left:11%;"><b>iocontrol.0.emc-enable-in</b></p>
+
+<p style="margin-left:22%;">(Bit, In) Should be driven
+FALSE when an external estop condition exists.</p>
+
+<p style="margin-left:11%;"><b>iocontrol.0.lube</b></p>
+
+<p style="margin-left:22%;">(Bit, Out) TRUE when lube is
+requested</p>
+
+
+<p style="margin-left:11%;"><b>iocontrol.0.lube_level</b></p>
+
+<p style="margin-left:22%;">(Bit, In) Should be driven
+FALSE when lubrication tank is empty.</p>
+
+
+<p style="margin-left:11%;"><b>iocontrol.0.tool-change</b></p>
+
+<p style="margin-left:22%;">(Bit, Out) TRUE when a tool
+change is requested</p>
+
+
+<p style="margin-left:11%;"><b>iocontrol.0.tool-changed</b></p>
+
+<p style="margin-left:22%;">(Bit, In) Should be driven TRUE
+when a tool change is completed.</p>
+
+
+<p style="margin-left:11%;"><b>iocontrol.0.tool-number</b></p>
+
+<p style="margin-left:22%;">(s32, Out) Current tool
+number</p>
+
+
+<p style="margin-left:11%;"><b>iocontrol.0.tool-prep-number</b></p>
+
+<p style="margin-left:22%;">(s32, Out) The number of the
+next tool, from the RS274NGC T-word</p>
+
+
+<p style="margin-left:11%;"><b>iocontrol.0.tool-prep-pocket</b></p>
+
+<p style="margin-left:22%;">(s32, Out) The pocket number
+(location in tool storage mechanism) of the next tool, as
+described in the tool table</p>
+
+
+<p style="margin-left:11%;"><b>iocontrol.0.tool-prepare</b></p>
+
+<p style="margin-left:22%;">(Bit, Out) TRUE when a
+T<i>n</i> tool prepare is requested</p>
+
+
+<p style="margin-left:11%;"><b>iocontrol.0.tool-prepared</b></p>
+
+<p style="margin-left:22%;">(Bit, In) Should be driven TRUE
+when a tool prepare is completed.</p>
+
+
+<p style="margin-left:11%;"><b>iocontrol.0.user-enable-out</b></p>
+
+<p style="margin-left:22%;">(Bit, Out) FALSE when an
+internal estop condition exists</p>
+
+
+<p style="margin-left:11%;"><b>iocontrol.0.user-request-enable</b></p>
+
+<p style="margin-left:22%;">(Bit, Out) TRUE when the user
+has requested that estop be cleared</p>
+
+<h2>SEE ALSO
+<a name="SEE ALSO"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>motion</b>(9)</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man1/iocontrol.1.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

@@ -1,0 +1,971 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/halui_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:23 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>L&#8217;interface Halui</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>L&#8217;interface Halui</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:Halui"></a> </p></div>
+</div>
+</div>
+<h2 id="_introduction_a_id_sec_haluiintroduction_a">1. Introduction<a id="sec:HaluiIntroduction"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Halui est une interface utilisateur pour LinuxCNC s&#8217;appuyant sur HAL, elle
+connecte les pins de HAL à des commandes NML. La plupart des
+fonctionnalités (boutons, indicateurs etc.) utilisées par les
+interfaces graphiques traditionnelles (mini, Axis, etc.), sont fournies
+par des pins de HAL dans Halui.</p></div>
+<div class="paragraph"><p>La façon la plus facile pour utiliser halui est de modifier votre
+dossier d&#8217;ini pour inclure</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>HALUI = halui</tt></pre>
+</div></div>
+<div class="paragraph"><p>dans la section [HAL].</p></div>
+<div class="paragraph"><p>Une solution alternative pour l&#8217;invoquer (surtout si vous générez la
+config avec stepconf) est d&#8217;inclure</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadusr halui -ini /path/to/inifile.ini</tt></pre>
+</div></div>
+<div class="paragraph"><p>dans votre fichier custom.hal.</p></div>
+</div>
+<h2 id="_nomenclature_des_pins_d_8217_halui_a_id_sec_halui_pin_reference_a">2. Nomenclature des pins d&#8217;Halui<a id="sec:Halui-pin-reference"></a></h2>
+<div class="sectionbody">
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Abandon
+</dt>
+<dd>
+<p>
+(abort)
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+halui.abort (bit, in) - pin de requête d&#8217;abandon (efface les erreurs)
+</p>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+Axes
+</dt>
+<dd>
+<p>
+(axis)
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+halui.axis.n.pos-commanded (float, out) - Position de l&#8217;axe commandée, en coordonnées machine
+</p>
+</li>
+<li>
+<p>
+halui.axis.n.pos-feedback (float, out) - Position de l&#8217;axe lue, en coordonnées machine
+</p>
+</li>
+<li>
+<p>
+halui.axis.n.pos-relative (float, out) - Position de l&#8217;axe, en coordonnées relatives
+</p>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+Arrêt d&#8217;urgence
+</dt>
+<dd>
+<p>
+(E-Stop)
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+halui.estop.activate (bit, in) - pin de requête d&#8217;arrêt d&#8217;urgence (E-Stop)
+</p>
+</li>
+<li>
+<p>
+halui.estop.is-activated (bit, in) - indique si l&#8217;arrêt d&#8217;urgence est actif
+</p>
+</li>
+<li>
+<p>
+halui.estop.reset (bit, out) - pin de requête de relâchement de l&#8217;arrêt d&#8217;urgence (E-Stop reset)
+</p>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+Correcteur de vitesse d&#8217;avance
+</dt>
+<dd>
+<p>
+(Feed override)
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+halui.feed-override.count-enable (bit, in) - doit être vraie pour que
+<em>counts</em> ou <em>direct-value</em> soient opérationnels.
+</p>
+</li>
+<li>
+<p>
+halui.feed-override.counts (s32, in) - <em>counts</em> * scale = FO pourcent. Peut
+être utilisé avec un codeur ou <em>direct-value</em>.
+</p>
+</li>
+<li>
+<p>
+halui.feed-override.decrease (bit, in) - pin pour diminuer la correction (-=scale)
+</p>
+</li>
+<li>
+<p>
+halui.feed-override.increase (bit, in) - pin pour augmenter la correction (+=scale)
+</p>
+</li>
+<li>
+<p>
+halui.feed-override.direct-value (bit, in) - fausse lors de l&#8217;utilisation un
+ codeur pour changer counts, vraie pour ajuster counts directement. La pin
+<em>count-enable</em> doit être vraie.
+</p>
+</li>
+<li>
+<p>
+halui.feed-override.scale (float, in) - pin pour positionner l'échelle pour
+accroître ou décroître la correction de vitesse d&#8217;avance.
+</p>
+</li>
+<li>
+<p>
+halui.feed-override.value (float, out) - Valeur de la correction courante de vitesse d&#8217;avance
+</p>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+Arrosage par gouttelettes
+</dt>
+<dd>
+<p>
+(Mist)
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+halui.mist.is-on (bit, out) - indique si l&#8217;arrosage par gouttelettes est actif
+</p>
+</li>
+<li>
+<p>
+halui.mist.off (bit, in) - pin de requête d&#8217;arrêt de l&#8217;arrosage par gouttelettes
+</p>
+</li>
+<li>
+<p>
+halui.mist.on (bit, in) - pin de requête de l&#8217;arrosage par gouttelettes
+</p>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+Arrosage fluide
+</dt>
+<dd>
+<p>
+(Flood)
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+halui.flood.is-on (bit, out) - indique si l&#8217;arrosage fluide est actif
+</p>
+</li>
+<li>
+<p>
+halui.flood.off (bit, in) - pin de requête d&#8217;arrêt d&#8217;arrosage fluide
+</p>
+</li>
+<li>
+<p>
+halui.flood.on (bit, in) - pin de requête d&#8217;arrosage fluide
+</p>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+Prise d&#8217;origine machine de tous les axes
+</dt>
+<dd>
+<p>
+(Homing)
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+halui.home-all (bit, in) - pin de requête de prise d&#8217;origine machine de tous les axes.
+   Cette pin sera présente seulement si HOME_SEQUENCE est fixée dans le fichier ini.
+</p>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+Jog
+</dt>
+<dd>
+<p>
+(Manivelle)
+&lt;n&gt; est un nombre compris entre 0 et 8, ou &lt;selected&gt;.
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+halui.jog-deadband (float, in)- bande morte pour le jogging analogique
+   (les petites vitesses de jog sont sans effet)
+</p>
+</li>
+<li>
+<p>
+halui.jog.speed (float, in) - positionne la vitesse de jog
+</p>
+</li>
+<li>
+<p>
+halui.jog.&lt;n&gt;.analog (float, in) - entrée analogique de vitesse de jog
+   (utilisé avec les joysticks ou autres matériels analogiques)
+</p>
+</li>
+<li>
+<p>
+halui.jog.&lt;n&gt;.minus (bit, in) - jog en direction négative
+</p>
+</li>
+<li>
+<p>
+halui.jog.&lt;n&gt;.plus (bit, in) - jog en direction positive
+</p>
+</li>
+<li>
+<p>
+halui.jog.&lt;selected&gt;.minus (bit, in) - jog l&#8217;axe &lt;selected&gt; en
+   direction négative et à la vitesse de halui.jog.speed velocity
+</p>
+</li>
+<li>
+<p>
+halui.jog.&lt;selected&gt;.plus (bit, in) - jog l&#8217;axe &lt;selected&gt; en
+   direction positive et à la vitesse de halui.jog.speed velocity
+</p>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+Articulations
+</dt>
+<dd>
+<p>
+(Joints)
+&lt;n&gt; est un nombre compris entre 0 et 8, ou &lt;selected&gt;.
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+halui.joint.&lt;n&gt;.has-fault (bit, out) - pin de status indiquant que l&#8217;articulation est en défaut
+</p>
+</li>
+<li>
+<p>
+halui.joint.&lt;n&gt;.home (bit, in) - pin pour la prise d&#8217;origine d&#8217;une articulation spécifique
+</p>
+</li>
+<li>
+<p>
+halui.joint.&lt;n&gt;.is-homed (bit, out) - pin de status indiquant que l&#8217;articulation est référencée
+</p>
+</li>
+<li>
+<p>
+halui.joint.&lt;n&gt;.is-selected (bit, out) - pin indiquant que l&#8217;articulation est &lt;selected&gt; - interne à halui
+</p>
+</li>
+<li>
+<p>
+halui.joint.&lt;n&gt;.on-hard-max-limit (bit, out) - pin de status indiquant
+   que le joint est sur son fin de course de limite positive
+</p>
+</li>
+<li>
+<p>
+halui.joint.&lt;n&gt;.on-hard-min-limit (bit, out) - pin de status indiquant
+   que le joint est sur son fin de course de limite négative
+</p>
+</li>
+<li>
+<p>
+halui.joint.&lt;n&gt;.on-soft-max-limit (bit, out) - pin de status indiquant
+   que le joint est sur sa limite logicielle positive
+</p>
+</li>
+<li>
+<p>
+halui.joint.&lt;n&gt;.on-soft-min-limit (bit, out) - pin de status indiquant
+   que le joint est sur sa limite logicielle négative
+</p>
+</li>
+<li>
+<p>
+halui.joint.&lt;n&gt;.select (bit, in) - select joint (0..8) - interne à halui
+</p>
+</li>
+<li>
+<p>
+halui.joint.&lt;n&gt;.unhome (bit, in) - unhomes this joint
+</p>
+</li>
+<li>
+<p>
+halui.joint.selected (u32, out) - selected joint (0..8) - interne à halui
+</p>
+</li>
+<li>
+<p>
+halui.joint.selected.has-fault (bit, out) - pin de status
+   indiquant que le joint &lt;n&gt; est en défaut
+</p>
+</li>
+<li>
+<p>
+halui.joint.selected.home (bit, in) - pin pour la prise d&#8217;origine de l&#8217;articulation &lt;selected&gt;
+</p>
+</li>
+<li>
+<p>
+halui.joint.selected.is-homed (bit, out) - pin de status indiquant
+   que le joint &lt;selected&gt; est référencé
+</p>
+</li>
+<li>
+<p>
+halui.joint.selected.on-hard-max-limit (bit, out) - pin de status
+   indiquant que le joint &lt;selected&gt; est sur son fin de course de limite positive
+</p>
+</li>
+<li>
+<p>
+halui.joint.selected.on-hard-min-limit (bit, out) - pin de status
+   indiquant que le joint &lt;selected&gt; est sur son fin de course de limite négative
+</p>
+</li>
+<li>
+<p>
+halui.joint.selected.on-soft-max-limit (bit, out) - pin de status
+   indiquant que le joint &lt;selected&gt; est sur sa limite logicielle positive
+</p>
+</li>
+<li>
+<p>
+halui.joint.selected.on-soft-min-limit (bit, out) - pin de status
+   indiquant que le joint &lt;selected&gt; est sur sa limite logicielle négative
+</p>
+</li>
+<li>
+<p>
+halui.joint.selected.unhome (bit, in) - pin for unhoming  l&#8217;articulation selected.
+</p>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+Graissage centralisé
+</dt>
+<dd>
+<p>
+(Lube)
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+halui.lube.is-on (bit, out) - indique si le graissage est actif
+</p>
+</li>
+<li>
+<p>
+halui.lube.off (bit, in) - pin de requête d&#8217;arrêt du graissage
+</p>
+</li>
+<li>
+<p>
+halui.lube.on (bit, in) - pin de requête de graissage
+</p>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+Machine
+</dt>
+<dd>
+<p>
+(Marche / Arrêt)
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+halui.machine.is-on (bit, out) - indique que la machine est en marche
+</p>
+</li>
+<li>
+<p>
+halui.machine.off (bit, in) - pin de requête d&#8217;arrêt machine
+</p>
+</li>
+<li>
+<p>
+halui.machine.on (bit, in) - pin de requête de marche machine
+</p>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+Vitesse maximum
+</dt>
+<dd>
+<p>
+La vitesse linéaire maximum peut être ajustée entre 0 et la valeur de
+la variable MAX_VELOCITY dans la section [TRAJ] du fichier ini.
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+halui.max-velocity.count-enable (bit, in) - Doit être vraie pour que les
+<em>counts</em> ou <em>direct-value</em> soit opérationnels.
+</p>
+</li>
+<li>
+<p>
+halui.max-velocity.counts (s32, in) - counts * scale = MV pourcent. Utilisable
+avec un codeur ou <em>direct-value</em>.
+</p>
+</li>
+<li>
+<p>
+halui.max-velocity.direct-value (bit, in) - faux quand un codeur est utilisé
+pour modifier <em>counts</em>, vraie pour ajuster <em>counts</em> directement. La pin
+<em>count-enable</em> doit être vraie.
+</p>
+</li>
+<li>
+<p>
+halui.max-velocity.decrease (bit, in) - pin pour diminuer la vitesse max
+</p>
+</li>
+<li>
+<p>
+halui.max-velocity.increase (bit, in) - pin pour augmenter la vitesse max
+</p>
+</li>
+<li>
+<p>
+halui.max-velocity.scale (float, in) - Valeur appliquée sur le
+   nombre de fronts montants des pins increase ou decrease en
+   unités machine par seconde.
+</p>
+</li>
+<li>
+<p>
+halui.max-velocity.value (float, out) - Valeur de la vitesse
+   linéaire maximum en unités machine par seconde.
+</p>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+Données manuelles
+</dt>
+<dd>
+<p>
+<a id="sub:MDI"></a> 
+Il arrive que l&#8217;utilisateur veuille ajouter des tâches plus complexes
+devant être effectuées par l&#8217;activation d&#8217;une pin de HAL. C&#8217;est
+possible en utilisant le schéma de commande en données manuelles (MDI)
+suivant:
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+Une MDI_COMMAND est ajoutée dans la section [HALUI] du fichier ini,
+par exemple:
+</p>
+</li>
+</ul></div>
+</dd>
+</dl></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>    [HALUI]
+    MDI_COMMAND = G0 X0</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Quand halui démarre il va lire/détecter le champ MDI_COMMAND dans le
+   fichier ini et exporter les pins de type (bit)
+   halui.mdi-command-&lt;nr&gt;, &lt;nr&gt; est un nombre compris entre 00 et le
+   nombre de MDI_COMMAND trouvées dans le fichier ini, avec un maximum de
+   64 commandes.
+</p>
+</li>
+<li>
+<p>
+Quand la pin halui.mdi-command-&lt;nr&gt; est activée, halui va essayer
+   d&#8217;envoyer au MDI la commande définie dans le fichier ini. Ca ne
+   fonctionnera pas dans tous les modes de fonctionnement où se trouve
+   LinuxCNC, par exemple, tant qu&#8217;il est en AUTO halui ne peut pas envoyer de
+   commande MDI.
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Sélection d&#8217;une articulation
+</dt>
+<dd>
+<p>
+(Joint Selection)
+</p>
+</dd>
+</dl></div>
+</li>
+<li>
+<p>
+halui.joint.select (u32, in) - sélectionne l&#8217;articulation (0..7) - internal halui
+</p>
+</li>
+<li>
+<p>
+halui.joint.selected (u32, out) - articulation (0..7) sélectionnée - internal halui
+</p>
+</li>
+<li>
+<p>
+halui.joint.x.select bit (bit, in) - pins pour sélectinner une articulation - internal halui
+</p>
+</li>
+<li>
+<p>
+halui.joint.x.is-selected bit (bit, out) - pin de status indiquant une articulation sélectionné - internal halui
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Mode de fonctionnement
+</dt>
+<dd>
+<p>
+(Mode)
+</p>
+</dd>
+</dl></div>
+</li>
+<li>
+<p>
+halui.mode.auto (bit, in) - pin de requête du mode auto
+</p>
+</li>
+<li>
+<p>
+halui.mode.is_auto (bit, out)- indique si le mode auto est actif
+</p>
+</li>
+<li>
+<p>
+halui.mode.is-joint (bit, out) - indique si le mode articulation par articulation est actif
+</p>
+</li>
+<li>
+<p>
+halui.mode.is_manual (bit, out) - indique si le mode manuel est actif
+</p>
+</li>
+<li>
+<p>
+halui.mode.is_mdi (bit, out) - indique si le mode données manuelles est actif
+</p>
+</li>
+<li>
+<p>
+halui.mode.is-teleop (bit, out) - indique que le mode jog coordonné est actif
+</p>
+</li>
+<li>
+<p>
+halui.mode.joint (bit, in) - pin de requête du mode jog articulation par articulation
+</p>
+</li>
+<li>
+<p>
+halui.mode.manual (bit, in) - pin de requête du mode manuel
+</p>
+</li>
+<li>
+<p>
+halui.mode.mdi (bit, in) - pin de requête du mode données manuelles
+</p>
+</li>
+<li>
+<p>
+halui.mode.teleop (bit, in) - pin de requête du mode jog coordonné
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Programme
+</dt>
+<dd>
+<p>
+(Program)
+</p>
+</dd>
+</dl></div>
+</li>
+<li>
+<p>
+halui.program.block-delete.is-on (bit, out) - status pin telling that block delete is on
+</p>
+</li>
+<li>
+<p>
+halui.program.block-delete.off (bit, in) - pin for requesting that block delete is off
+</p>
+</li>
+<li>
+<p>
+halui.program.block-delete.on (bit, in) - pin for requesting that block delete is on
+</p>
+</li>
+<li>
+<p>
+halui.program.is-idle (bit, out) - pin de status indiquant qu&#8217;aucun programme n&#8217;est lancé
+</p>
+</li>
+<li>
+<p>
+halui.program.is-paused (bit, out) - pin de status indiquant qu&#8217;un programme est en pause
+</p>
+</li>
+<li>
+<p>
+halui.program.is-running (bit, out) - pin de status indiquant qu&#8217;un programme est lancé
+</p>
+</li>
+<li>
+<p>
+halui.program.optional-stop.is-on (bit, out) - status pin telling that the optional stop is on
+</p>
+</li>
+<li>
+<p>
+halui.program.optional-stop.off (bit, in) - pin requesting that the optional stop is off
+</p>
+</li>
+<li>
+<p>
+halui.program.optional-stop.on (bit, in) - pin requesting that the optional stop is on
+</p>
+</li>
+<li>
+<p>
+halui.program.pause (bit, in) - pin pour passer un programme en pause
+</p>
+</li>
+<li>
+<p>
+halui.program.resume (bit, in) - pin pour lancer la reprise d&#8217;un programme
+</p>
+</li>
+<li>
+<p>
+halui.program.run (bit, in) - pin de lancement d&#8217;un programme
+</p>
+</li>
+<li>
+<p>
+halui.program.step (bit, in) - pin pour avancer d&#8217;une ligne de programme
+</p>
+</li>
+<li>
+<p>
+halui.program.stop (bit, in) - pin pour stopper un programme
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Correcteur de vitesse de broche
+</dt>
+<dd>
+<p>
+(Spindle Override)
+</p>
+</dd>
+</dl></div>
+</li>
+<li>
+<p>
+halui.spindle-override.count-enable (bit, in) - doit être vraie pour que
+<em>counts</em> ou <em>direct-value</em> soient opérationnels.
+</p>
+</li>
+<li>
+<p>
+halui.spindle-override.counts (s32, in) - comptage depuis un codeur,
+   par exemple pour modifier la correction de vitesse de broche
+</p>
+</li>
+<li>
+<p>
+halui.spindle-override.decrease (bit, in) - pin pour diminuer la
+   correction de vitesse de broche (-=scale)
+</p>
+</li>
+<li>
+<p>
+halui.spindle-override.direct-value (bit, in) - fausse en utilisant un codeur
+pour modifier <em>counts</em> directement. La pin <em>count-enable</em> doit être vraie.
+</p>
+</li>
+<li>
+<p>
+halui.spindle-override.increase (bit, in) - pin pour augmenter la
+   correction de vitesse de broche (+=scale)
+</p>
+</li>
+<li>
+<p>
+halui.spindle-override.scale (float, in) - pin pour positionner
+   l'échelle des corrections de vitesse de broche possibles
+</p>
+</li>
+<li>
+<p>
+halui.spindle-override.value (float, out) - Valeur courante de la
+   correction de vitesse de broche
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Broche
+</dt>
+<dd>
+<p>
+(Spindle)
+</p>
+</dd>
+</dl></div>
+</li>
+<li>
+<p>
+halui.spindle.brake-is-on (bit, out) - indique si le frein est actif
+</p>
+</li>
+<li>
+<p>
+halui.spindle.brake-off (bit, in) - pin de désactivation du frein de broche
+</p>
+</li>
+<li>
+<p>
+halui.spindle.brake-on (bit, in) - pin d&#8217;activation du frein de broche
+</p>
+</li>
+<li>
+<p>
+halui.spindle.decrease (bit, in) - Diminue la vitesse de broche
+</p>
+</li>
+<li>
+<p>
+halui.spindle.forward (bit, in) - Marche broche en sens horaire
+</p>
+</li>
+<li>
+<p>
+halui.spindle.increase (bit, in) - Augmente la vitesse de broche
+</p>
+</li>
+<li>
+<p>
+halui.spindle.is-on (bit, out) - indique la broche est en marche (les deux sens)
+</p>
+</li>
+<li>
+<p>
+halui.spindle.reverse (bit, in) - Marche broche en sens anti-horaire
+</p>
+</li>
+<li>
+<p>
+halui.spindle.runs-backward (bit, out) - indique la broche est en marche et en sens inverse
+</p>
+</li>
+<li>
+<p>
+halui.spindle.runs-forward (bit, out) - indique la broche est en marche et en marche avant
+</p>
+</li>
+<li>
+<p>
+halui.spindle.start (bit, in) - Marche de la broche
+</p>
+</li>
+<li>
+<p>
+halui.spindle.stop (bit, in) - Arrêt de la broche
+</p>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Outil
+</dt>
+<dd>
+<p>
+(Tool)
+</p>
+</dd>
+</dl></div>
+</li>
+<li>
+<p>
+halui.tool.length-offset (float, out) - indique la correction de longueur d&#8217;outil appliquée
+</p>
+</li>
+<li>
+<p>
+halui.tool.number (u32, out) - indique l&#8217;outil courant sélectionné
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:Exemple-Commande-Distante">3. Exemples de programme avec Halui</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Pour que ces exemples fonctionnent, il faut ajouter la ligne
+suivante dans la section [HAL] du fichier ini.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>HALUI = halui</tt></pre>
+</div></div>
+<h3 id="_d_marrage_distance">3.1. Démarrage à distance</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Pour connecter un bouton de démarrage à distance à LinuxCNC il faut utiliser
+la pin <em>halui.program.run</em> et la pin <em>halui.mode.auto</em>.</p></div>
+<div class="paragraph"><p>Il faut s&#8217;assurer qu&#8217;il est possible de démarrer en utilisant la
+pin <em>halui.mode.is-auto</em>. On peut faire cela avec un composant de HAL <em>and2</em>.
+La figure suivante montre comment faire.</p></div>
+<div class="paragraph"><p>Quand le bouton de commande à distance est pressé, il est connecté à
+<em>halui.mode.auto</em> et à l&#8217;entrée <em>and2.0.in0</em>. Si le le mode auto est activé,
+la pin <em>halui.mode.is-auto</em> sera TRUE.</p></div>
+<div class="paragraph"><p>Si les deux entrées du composant <em>and2.0</em> sont TRUE, la sortie <em>and2.0.out</em>
+sera TRUE également et le programme sera démarré.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/remote-start.png" alt="images/remote-start.png" />
+</div>
+<div class="title">Figure 1. Exemple de commande distante</div>
+</div>
+<div class="paragraph"><p>Les commandes de Hal pour accomplir ces actions sont les suivantes:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net program-start-btn halui.mode.auto and2.0.in0 &lt;= &lt;la pin d'entrée&gt;
+net program-run-ok and2.0.in1 &lt;= halui.mode.is-auto
+net remote-program-run halui.program.run &lt;= and2.0.out</tt></pre>
+</div></div>
+<div class="paragraph"><p>Noter que sur la première ligne il y a deux pins en lecture, ce qui pourrait aussi
+se séparer en deux lignes comme ceci:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net program-start-btn halui.mode.auto &lt;= &lt;la pin d'entrée&gt;
+net program-start-btn and2.0.in0</tt></pre>
+</div></div>
+<h3 id="_pause_et_reprise">3.2. Pause et Reprise</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Cet exemple a été developpé pour permettre à LinuxCNC de déplacer un
+axe rotatif selon un signal provenant d&#8217;une machine extérieure. La
+coordination entre les deux systèmes est assurée par deux composants de Halui:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+halui.program.is-paused
+</p>
+</li>
+<li>
+<p>
+halui.program.resume
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Dans le fichier <em>custom.hal</em>, ajoutez les deux lignes suivantes
+qui seront connectées à vos entrées/sorties pour mettre le
+programme en pause ou pour le reprendre quand l&#8217;autre système veut
+qu&#8217;LinuxCNC soit relancé.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net ispaused halui.program.is paused =&gt; "la pin de sortie"
+net resume halui.program.resume &lt;= "la pin d'entrée"</tt></pre>
+</div></div>
+<div class="paragraph"><p>Les pins d&#8217;entrée et de sortie, correspondent à celles qui sont
+câblées vers l&#8217;autre contrôleur. Elles peuvent être des broches du
+port parallèle ou toutes autres broches auquelles nous avons accès.</p></div>
+<div class="paragraph"><p>Le fonctionnement est le suivant, quand un M0 est rencontré dans le
+programme G-code, <em>halui.program.is-paused</em> devient TRUE. Ce
+qui rend la broche de sortie également TRUE de sorte que
+l&#8217;autre contrôleur sait que LinuxCNC est arrêté.</p></div>
+<div class="paragraph"><p>Pour reprendre l&#8217;exécution du G-code, l&#8217;autre contrôleur devra rendre
+l&#8217;entrée TRUE. Ce qui relancera LinuxCNC jusqu&#8217;au prochain M0.</p></div>
+<div class="paragraph"><p>Difficultés de timing</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Le signal de reprise ne doit pas être plus long que le temps
+   nécessaire pour exécuter le G-code.
+</p>
+</li>
+<li>
+<p>
+Le signal <em>Is Paused</em> ne doit plus être actif quand le signal
+   suivant de reprise arrive.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Ces problèmes de timming pourraient être évités, en utilisant
+ClassicLadder pour activer le signal <em>is paused</em> avec une tempo
+et le désactiver en fin de tempo. La reprise pourrait également
+être fournie par un signal monostable très court.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-01-25 16:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/halui_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:23 GMT -->
+</html>

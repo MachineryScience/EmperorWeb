@@ -1,0 +1,113 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:46 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/match8.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>MATCH8</title>
+
+</head>
+<body>
+
+<h1 align="center">MATCH8</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">match8 &minus;
+8-bit binary match detector</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="71%">
+
+
+<p style="margin-top: 1em"><b>loadrt match8
+[count=</b><i>N</i><b>|names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]</b></p> </td>
+<td width="18%">
+</td></tr>
+</table>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>match8.</b><i>N</i></p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><i><b>match8.</b>N</i><b>.in</b>
+bit in (default: <i>TRUE</i>)</p>
+
+<p style="margin-left:22%;">cascade input - if false,
+output is false regardless of other inputs</p>
+
+
+<p style="margin-left:11%;"><b>match8.</b><i>N</i><b>.a0</b>
+bit in <b><br>
+match8.</b><i>N</i><b>.a1</b> bit in <b><br>
+match8.</b><i>N</i><b>.a2</b> bit in <b><br>
+match8.</b><i>N</i><b>.a3</b> bit in <b><br>
+match8.</b><i>N</i><b>.a4</b> bit in <b><br>
+match8.</b><i>N</i><b>.a5</b> bit in <b><br>
+match8.</b><i>N</i><b>.a6</b> bit in <b><br>
+match8.</b><i>N</i><b>.a7</b> bit in <b><br>
+match8.</b><i>N</i><b>.b0</b> bit in <b><br>
+match8.</b><i>N</i><b>.b1</b> bit in <b><br>
+match8.</b><i>N</i><b>.b2</b> bit in <b><br>
+match8.</b><i>N</i><b>.b3</b> bit in <b><br>
+match8.</b><i>N</i><b>.b4</b> bit in <b><br>
+match8.</b><i>N</i><b>.b5</b> bit in <b><br>
+match8.</b><i>N</i><b>.b6</b> bit in <b><br>
+match8.</b><i>N</i><b>.b7</b> bit in <b><br>
+match8.</b><i>N</i><b>.out</b> bit out</p>
+
+<p style="margin-left:22%;">true only if in is true and
+a[m] matches b[m] for m = 0 thru 7</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+ 
+<p style="margin-left:11%; margin-top: 1em">GPL</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/match8.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

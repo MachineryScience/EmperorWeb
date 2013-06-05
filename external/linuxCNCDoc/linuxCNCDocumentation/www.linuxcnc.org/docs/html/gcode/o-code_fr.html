@@ -1,0 +1,346 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gcode/o-code_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:59 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Les O-codes</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Les O-codes</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:O-codes"></a> </p></div>
+</div>
+</div>
+<h2 id="_utilisation_des_o_codes">1. Utilisation des O-codes</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Les O-codes permettent le contrôle de flux dans les programmes NGC.
+Ils commencent par une lettre <strong>O</strong>, qu&#8217;il ne faut pas confondre avec le
+chiffre <strong>0</strong>. Chaque bloc est associé à une adresse, qui est la valeur utilisée
+après la lettre <strong>O</strong>. Il faut prendre soin de bien faire correspondre les
+adresses des O-codes.</p></div>
+<div class="listingblock">
+<div class="title">Exemple de numérotation</div>
+<div class="content">
+<pre><tt>o100 sub
+(noter que les blocs if - endif utilisent des numéros différents)
+  o110 if [#2 GT 5]
+    (du code ici)
+  o110 endif
+  (encore du code ici)
+o100 endsub</tt></pre>
+</div></div>
+<div class="paragraph"><p>Le comportement est indéfini si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Le même nombre est utilisé pour plusieurs blocs
+</p>
+</li>
+<li>
+<p>
+D&#8217;autres mots sont utilisés sur une ligne contenant un mot O-.
+</p>
+</li>
+<li>
+<p>
+Un commentaire est utilisé sur une ligne contenant un mot O-.
+</p>
+</li>
+</ul></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Astuce</div>
+</td>
+<td class="content">L&#8217;utilisation de la lettre <strong>o</strong> minuscule facilite la distinction avec le
+chiffre <strong>0</strong> qui peut être tapé par erreur. Par exemple:<br />
+<strong><tt>o100</tt></strong> est plus facile à distinguer de <strong><tt>0100</tt></strong> que <strong><tt>O100</tt></strong>.</td>
+</tr></table>
+</div>
+</div>
+<h2 id="sec:Sous-programmes">2. Sous-programmes: <strong>sub</strong>, <strong>endsub</strong>, <strong>return</strong>, <strong>call</strong></h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Les sous-programmes s'étendent d&#8217;un <em>O- sub</em> à un <em>O- endsub</em>.
+Les lignes, à l&#8217;intérieur du sous-programme (le corps du
+sous-programme), ne sont pas exécutées dans l&#8217;ordre, mais
+elles sont exécutées à chaque fois que le sous-programme
+est appelé avec un <em>O-call</em>.</p></div>
+<div class="listingblock">
+<div class="title">Exemple de sous-programme</div>
+<div class="content">
+<pre><tt>O100 sub (sous-programme de mouvement rapide à l'origine)
+  G53 X0 Y0 Z0
+O100 endsub
+  (autres lignes)
+O100 call (ici, appel du sous-programme)
+M2</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour plus de détails sur ces instructions voir:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="gcode_fr.html#sec:G53-Mouvement-Coordonnees-Absolues">mouvement G53</a>,
+</p>
+</li>
+<li>
+<p>
+<a href="gcode_fr.html#sec:G0">mouvement rapide G0</a>,
+</p>
+</li>
+<li>
+<p>
+<a href="m-code_fr.html#sec:M2-M30">fin de programme M2</a>.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><div class="title">O- return</div><p>À l&#8217;intérieur d&#8217;un sous-programme, <em>O- return</em> peut être exécuté,
+pour retourner immédiatement au code appelant,
+comme si <em>O- endsub</em> avait été rencontré.</p></div>
+<div class="listingblock">
+<div class="title">Exemple avec <em>O- return</em></div>
+<div class="content">
+<pre><tt>o100 sub
+  o110 if [#2 GT 5] (teste si le paramètre #2 est supérieur à 5)
+    o100 return (si le test est vrai, retourne au début du sous-programme)
+  o110 endif
+  (autre code ici, qui sera exécuté si le paramètre #2 est inférieur à 5)
+o100 endsub</tt></pre>
+</div></div>
+<div class="paragraph"><p>Voir également les sections:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="overview_fr.html#sec:Operateurs-Binaires">les opérateurs binaires</a>,
+</p>
+</li>
+<li>
+<p>
+<a href="overview_fr.html#sec:parametres">les paramètres</a>.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><div class="title">O- call</div><p><em>O- call</em> peut prendre jusqu'à 30 arguments optionnels, qui sont
+passés au sous-programme comme <em>#1</em>, <em>#2</em> , &#8230;, <em>#N</em>. Les paramètres de <em>#N+1</em> à
+<em>#30</em> ont la même valeur dans le contexte de l&#8217;appel.
+Au retour du sous-programme, les valeurs des
+paramètres #1 jusqu'à #30 (quel que soit le nombre d&#8217;arguments) sont
+restaurés aux valeurs qu&#8217;ils avaient avant l&#8217;appel.</p></div>
+<div class="paragraph"><p>Parce que <em>1 2 3</em> est analysé comme le nombre 123, les paramètres
+doivent être placés entre crochets. L&#8217;appel de sous-programme suivant,
+s&#8217;effectue avec 3 arguments:</p></div>
+<div class="listingblock">
+<div class="title">Exemple d&#8217;appel <em>O-</em></div>
+<div class="content">
+<pre><tt>O200 call [1] [2] [3]</tt></pre>
+</div></div>
+<div class="paragraph"><p>Les corps de sous-programme ne peuvent pas être imbriqués. Ils ne
+peuvent être appelés qu&#8217;après avoir été définis. Ils peuvent être
+appelés depuis d&#8217;autres fonctions et peuvent s&#8217;appeler eux même
+récursivement, s&#8217;il est judicieux de le faire. Le niveau maximum
+d&#8217;imbrication des sous-programmes est de 10.</p></div>
+<div class="paragraph"><p>Les sous-programmes n&#8217;ont pas de <em>valeur de retour</em>, mais ils peuvent
+changer la valeur des paramètres au dessus de #30 et ces changements
+sont visibles depuis le code appelant. Les sous-programmes peuvent
+aussi changer la valeur des paramètres nommés globaux.</p></div>
+</div>
+<h2 id="sec:Boucles">3. Boucles: <strong>do</strong>, <strong>while</strong>, <strong>endwhile</strong>, <strong>break</strong>, <strong>continue</strong></h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>La boucle <em>while</em> a deux structures possibles: <em>while - endwhile</em> et <em>do - while</em>.
+Dans chaque cas, la boucle est quittée quand la condition du <em>while</em> devient
+fausse. La différence se trouve en fin de test de la condition. La boucle
+<em>do - while</em> exécute le code dans la boucle puis test la condition.
+La boucle <em>while - endwhile</em> effectue le test d&#8217;abord.</p></div>
+<div class="listingblock">
+<div class="title">Exemple avec <em>while - endwhile</em></div>
+<div class="content">
+<pre><tt>(dessine la forme d'une dent de scie)
+G0 X1 Y0 (déplacement en position de départ)
+#1 = 1 (assigne la valeur 1 au paramètre #1)
+F25 (fixe la vitesse d'avance travail)
+o101 while [#1 LT 10]
+  G1 X0
+  G1 Y[#1/10] X1
+  #1 = [#1+1] (incrémente le compteur de test)
+o101 endwhile
+M2 (fin de programme)</tt></pre>
+</div></div>
+<div class="listingblock">
+<div class="title">Exemple avec <em>do - while</em></div>
+<div class="content">
+<pre><tt>#1 = 0 (assigne la valeur 0 au paramètre #1)
+o100 do
+  (debug, paramètre 1 = #1)
+  o110 if [#1 EQ 2]
+    #1 = 3 (assigne la valeur 3 au paramètre #1)
+    (msg, #1 s'est vu assigné la valeur 3)
+    o100 continue (saute au début de la boucle)
+  o110 endif
+  (le code d'usinage ici)
+  #1 = [#1 + 1] (incrémente le compteur de test)
+o100 while [#1 LT 3]
+(msg, boucle terminée)
+M2</tt></pre>
+</div></div>
+<div class="paragraph"><p>À l&#8217;intérieur d&#8217;une boucle while, <em>O- break</em>, quitte immédiatement
+la boucle et <em>O- continue</em>, saute immédiatement à la prochaine
+évaluation de la condition du <em>while</em>. Si elle est vraie, la boucle
+recommence au début. Si elle est fausse, la boucle est quittée.</p></div>
+</div>
+<h2 id="sec:Conditionnels">4. Conditionnel: <strong>if</strong>, <strong>elseif</strong>, <strong>else</strong>, <strong>endif</strong></h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Le <em>if</em> conditionnel exécute un groupe d&#8217;instructions avec le même nombre <em>O</em>
+qui commence avec <em>if</em> et se termine avec <em>endif</em>. Les conditions optionnelles
+<em>elseif</em> et <em>else</em> peuvent se trouver entre le <em>if</em> et le <em>endif</em>.</p></div>
+<div class="paragraph"><p>Si la condition du <em>if</em> est vraie, les instructions qui suivent le <em>if</em> seront
+exécutées jusqu'à, au maximum, l&#8217;instruction conditionnelle suivante.</p></div>
+<div class="paragraph"><p>Si la condition du <em>if</em> est fausse, alors les instructions conditionnelles
+<em>elseif</em> suivantes seront évaluées l&#8217;une après l&#8217;autre. Si la condition du
+<em>elseif</em> est vraie alors les instructions suivant ce <em>elseif</em> seront exécutées
+jusqu'à l&#8217;instruction conditionnelle suivante. Si aucune des conditions du <em>if</em>
+ou du <em>elseif</em> n&#8217;est vraie, alors les instructions suivant le <em>else</em> seront
+exécutées. Quand une condition est vraie, les autres instructions
+conditionnelles du groupe ne sont plus évaluées.</p></div>
+<div class="listingblock">
+<div class="title">Exemple avec <em>if - endif</em></div>
+<div class="content">
+<pre><tt>O102 if [#31 EQ 3] (si le paramètre #31 est égal à 3 alors S2000)
+    S2000
+O102 endif</tt></pre>
+</div></div>
+<div class="listingblock">
+<div class="title">Exemple avec <em>if - elseif - else - endif</em></div>
+<div class="content">
+<pre><tt>o102 if [#2 GT 5] (si le paramètre #2 est supérieur à 5 alors F100)
+  F100
+o102 elseif [#2 LT 2] (sinon si le paramètre #2 est inférieur à 2 alors F200)
+  F200
+o102 else (sinon le paramètre #2 vaut entre 2 et 5 alors F150)
+  F150
+o102 endif</tt></pre>
+</div></div>
+</div>
+<h2 id="sec:Repetitions">5. Répétition: <strong>Repeat</strong></h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>La répétition <em>repeat</em>, exécutera les blocs contenus entre <em>repeat</em> et
+<em>endrepeat</em> le nombre de fois spécifié entre crochets. L&#8217;exemple
+suivant montre comment usiner une séries de 5 formes diagonales
+commençant à la position courante.</p></div>
+<div class="listingblock">
+<div class="title">Exemple avec <em>repeat</em></div>
+<div class="content">
+<pre><tt>(Usine 5 formes diagonales)
+G91 (Mode incrémental)
+O103 repeat [5]
+    (insérer le code d'usinage ici)
+    G0 X1 Y1 (Mouvement en diagonale vers la position suivante)
+O103 endrepeat
+G90 (Mode absolu)</tt></pre>
+</div></div>
+</div>
+<h2 id="_indirection">6. Indirection</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>L&#8217;adresse de O- peut être donnée par un paramètre ou un calcul.</p></div>
+<div class="listingblock">
+<div class="title">Exemple d&#8217;indirection</div>
+<div class="content">
+<pre><tt>O[#101+2] call</tt></pre>
+</div></div>
+<div class="paragraph"><div class="title">Calcul des valeurs dans les O-codes</div><p>Voici un condensé des sections utiles aux calculs des O-codes:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<a href="overview_fr.html#sec:parametres">les paramètres</a>,
+</p>
+</li>
+<li>
+<p>
+<a href="overview_fr.html#sec:Expressions">les expressions</a>,
+</p>
+</li>
+<li>
+<p>
+<a href="overview_fr.html#sec:Operateurs-Binaires">les opérateurs binaires</a>,
+</p>
+</li>
+<li>
+<p>
+<a href="overview_fr.html#sec:Fonctions">les fonctions</a>.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_appel_de_fichier">7. Appel de fichier</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Pour appeler un sous-programme par son nom, ce sous-programme doit contenir
+un <em>sub</em> et un <em>endsub</em>. Le fichier appelé doit se trouver dans le répertoire
+pointé par la variable <em>PROGRAM_PREFIX</em> ou <em>SUBROUTINE_PATH</em> du fichier ini.
+Les noms de fichiers ne peuvent inclure que des lettres <strong>minuscules</strong>, des
+chiffres, des points et des tirets bas. Un fichier de sous-programme nommé ne
+peut contenir qu&#8217;une seule définition de sous-programme.</p></div>
+<div class="listingblock">
+<div class="title">Exemple: l&#8217;appel d&#8217;un fichier nommé</div>
+<div class="content">
+<pre><tt>o&lt;monfichier&gt; call (appel un fichier nommé)</tt></pre>
+</div></div>
+<div class="listingblock">
+<div class="title">Exemple: l&#8217;appel d&#8217;un fichier numéroté</div>
+<div class="content">
+<pre><tt>o123 call (appel un fichier numéroté)</tt></pre>
+</div></div>
+<div class="paragraph"><p>Dans le fichier appelé doit se touver le <em>sub</em> et le <em>endsub</em>
+correspondant à l&#8217;appel. Le fichier doit être un fichier valide.</p></div>
+<div class="listingblock">
+<div class="title">Exemple: le fichier <em>monfichier.ngc</em> appelé</div>
+<div class="content">
+<pre><tt>o&lt;monfichier&gt; sub
+  (du code ici)
+o&lt;monfichier&gt; endsub
+M2</tt></pre>
+</div></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">Les noms de fichiers doivent être en lettres minuscules, ainsi <em>o&lt;MonFichier&gt;</em>
+sera transformé en <em>o&lt;monfichier&gt;</em> par l&#8217;interpréteur.</td>
+</tr></table>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-05-02 09:36:10 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gcode/o-code_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:59 GMT -->
+</html>

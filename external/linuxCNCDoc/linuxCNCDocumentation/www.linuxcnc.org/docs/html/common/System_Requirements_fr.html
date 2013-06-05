@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/System_Requirements_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Quelle configuration est requise ?</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Quelle configuration est requise ?</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:Configuration-requise"></a> </p></div>
+</div>
+</div>
+<h2 id="_configuration_minimale">1. Configuration minimale</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>La configuration minimale pour faire tourner LinuxCNC sous Ubuntu varie
+selon l&#8217;usage envisagé. Les moteurs pas à pas en général exigent, pour
+générer leurs trains d&#8217;impulsions de pas, des machines plus rapides que
+les systèmes à servomoteurs. Il est possible de tester le logiciel à
+partir du CD-Live avant de l&#8217;installer sur un ordinateur. Guarder à
+l&#8217;esprit que les valeurs retournées par le test de latence (Latency
+Test), sont plus importantes que la vitesse du µP pour la génération
+logicielle des pas. Plus d&#8217;informations à ce propos dans la section
+relative au <a href="../install/Latency_Test_fr.html#cha:test-de-latence">test de latence</a>.</p></div>
+<div class="paragraph"><p>Des informations additionnelles sont disponibles sur le
+<a href="http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?Hardware_Requirements">wiki de linuxcnc.org.</a></p></div>
+<div class="paragraph"><p>LinuxCNC et Ubuntu doivent fonctionner raisonnablement bien sur la
+configuration matérielle minimale suivante. Ces valeurs ne sont pas des
+valeurs minimales absolues mais donneront des performances acceptables
+de la plupart des systèmes à moteurs pas à pas.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Microprocesseur x86 à 700 MHz (x86 à 1.2 GHz recommandé)
+</p>
+</li>
+<li>
+<p>
+384 Mio de RAM (512 Mio ou plus de 1 Gio recommandé)
+</p>
+</li>
+<li>
+<p>
+8 GB d&#8217;espace disque
+</p>
+</li>
+<li>
+<p>
+Carte graphique avec une résolution minimale de 1024x768
+</p>
+</li>
+<li>
+<p>
+Une connection Internet ou réseau (optionnelle mais très pratique pour
+   les mises à jour)
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_probl_matique_du_mat_riel">2. Problématique du matériel</h2>
+<div class="sectionbody">
+<h3 id="_les_portables">2.1. Les portables</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les portables donnent généralement de piètres performances pour les
+tâches temps réel utilisées pour la génération logicielle de pas.
+Encore une fois, lancer un test de latence sur une grande période de
+temps vous permettra de déterminer si le portable envisagé est
+utilisable ou non.</p></div>
+<h3 id="_les_cartes_graphiques">2.2. Les cartes graphiques</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si votre installation se termine par un écran avec une résolution de
+800 x 600 il est alors probable que Ubuntu n&#8217;a pas reconnu votre carte
+graphique. Les cartes graphiques intégrées aux cartes mères donnent
+souvent de mauvaises performances temps réel.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-02-03 18:36:08 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/System_Requirements_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+</html>

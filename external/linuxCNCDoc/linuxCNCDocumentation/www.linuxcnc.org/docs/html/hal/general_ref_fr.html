@@ -1,0 +1,621 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/general_ref_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:01 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Conventions générales</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Conventions générales</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:References-generales"></a> </p></div>
+</div>
+</div>
+<h2 id="_les_noms">1. Les noms</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Toutes les entités de HAL sont accessibles et manipulées par leurs
+noms, donc, documenter les noms des pins, signaux, paramètres, etc, est
+très important. Les noms dans HAL ont un maximum de 41 caractères de
+long (comme défini par HAL_NAME_LEN dans hal.h). De nombreux noms
+seront présentés dans la forme générale, avec un texte mis en forme
+<em>&lt;comme-cela&gt;</em> représentant les champs de valeurs diverses.</p></div>
+<div class="paragraph"><p>Quand les pins, signaux, ou paramètres sont décrits pour la première
+fois, leur nom sera précédé par leur type entre parenthèses (<em>float</em>) et
+suivi d&#8217;une brève description. Les définitions typiques de pins
+ressemblent à ces exemples:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+(bit) parport.&lt;portnum&gt;.pin-&lt;pinnum&gt;-in
+</dt>
+<dd>
+<p>
+    La HAL pin associée avec la broche physique d&#8217;entrée <em>&lt;pinnum&gt;</em> du
+    connecteur db25.
+</p>
+</dd>
+<dt class="hdlist1">
+(float) pid.&lt;loopnum&gt;.output
+</dt>
+<dd>
+<p>
+    La sortie de la boucle PID.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>De temps en temps, une version abrégée du nom peut être utilisée, par
+exemple la deuxième pin ci-dessus pourrait être appelée simplement
+avec <em>.output</em> quand cela peut être fait sans prêter à confusion.</p></div>
+</div>
+<h2 id="_conventions_g_n_rales_de_nommage_a_id_sec_gr_conventions_nommage_a">2. Conventions générales de nommage<a id="sec:GR-Conventions-nommage"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Le but des conventions de nommage est de rendre l&#8217;utilisation de HAL
+plus facile. Par exemple, si plusieurs interfaces de codeur fournissent
+le même jeu de pins et qu&#8217;elles sont nommées de la même façon, il
+serait facile de changer l&#8217;interface d&#8217;un codeur à un autre.
+Malheureusement, comme tout projet open-source, HAL est la combinaison
+de choses diversement conçues et comme les choses simples évoluent. Il
+en résulte de nombreuses incohérences. Cette section vise à remédier à
+ce problème en définissant certaines conventions, mais il faudra
+certainement un certain temps avant que tous les modules soient
+convertis pour les suivre.</p></div>
+<div class="paragraph"><p>Halcmd et d&#8217;autres utilitaires HAL de bas niveau, traitent les noms
+HAL comme de simples entités, sans structure. Toutefois, la plupart des
+modules ont une certaine structure implicite. Par exemple, une carte
+fournit plusieurs blocs fonctionnels, chaque bloc peut avoir plusieurs
+canaux et chaque canal, une ou plusieurs broches. La structure qui en
+résulte ressemble à une arborescence de répertoires. Même si halcmd ne
+reconnait pas la structure arborescente, la convention de nommage est
+un bon choix, elles lui permettra de regrouper ensemble, les items du
+même groupe, car il trie les noms. En outre, les outils de haut niveau
+peuvent être conçus pour reconnaitre de telles structures si les noms
+fournissent les informations nécessaires. Pour cela, tous les modules
+de HAL devraient suivrent les règles suivantes:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Les points (<em>.</em>) séparent les niveaux hiérarchiques. C&#8217;est analogue à
+   la barre de fraction (<em>/</em>) dans les noms de fichiers.
+</p>
+</li>
+<li>
+<p>
+Le tiret (<em>-</em>) sépare les mots ou les champs dans la même hiérarchie.
+</p>
+</li>
+<li>
+<p>
+Les modules HAL ne doivent pas utiliser le caractère souligné ou les
+   casses mélangées. <span class="footnote"><br />[Les caractères souslignés ont été enlevés,
+   mais il reste quelques cas
+   de mélange de casses, par exemple <em>pid.0.Pgain</em> au lieux de
+   <em>pid.0.p-gain</em>.]<br /></span>
+</p>
+</li>
+<li>
+<p>
+Utiliser seulement des caractères minuscules, lettres et chiffres.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_conventions_de_nommage_des_pilotes_de_mat_riels_a_id_sec_gr_nommage_pilotes_materiel_a">3. Conventions de nommage des pilotes de matériels<a id="sec:GR-Nommage-pilotes-materiel"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p><span class="footnote"><br />[La plupart des pilotes ne suivent pas ces conventions dans la version 2.0.
+Ce chapitre est réellement un guide pour les développements futurs.]<br /></span></p></div>
+<h3 id="_noms_de_pin_param_tre">3.1. Noms de pin/paramètre</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les pilotes matériels devraient utiliser cinq champs (sur trois
+niveaux) pour obtenir un nom de pin ou de paramètre, comme le suivant:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;device-name&gt;.&lt;device-num&gt;.&lt;io-type&gt;.&lt;chan-num&gt;.&lt;specific-name&gt;</tt></pre>
+</div></div>
+<div class="paragraph"><p>Les champs individuels sont:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+&lt;device-name&gt;
+</dt>
+<dd>
+<p>
+      Le matériel avec lequel le pilote est sensé travailler. Il s&#8217;agit le
+    plus souvent d&#8217;une carte d&#8217;interface d&#8217;un certain type, mais il existe
+    d&#8217;autres possibilités.
+</p>
+</dd>
+<dt class="hdlist1">
+&lt;device-num&gt;
+</dt>
+<dd>
+<p>
+      Il est possible d&#8217;installer plusieurs cartes servo, ports parallèles
+    ou autre périphérique matériel dans un ordinateur. Le numéro du
+    périphérique identifie un périphérique spécifique. Les numéros de
+    périphériques commencent à 0 et s&#8217;incrémentent.<span class="footnote"><br />[Certains
+    matériels utilisent des cavaliers ou d&#8217;autres dispositifs
+    pour définir une identification spécifique à chacun. Idéalement, le
+    pilote fournit une manière à l&#8217;utilisateur de dire, le <em>device-num 0
+    est spécifique au périphérique qui a l&#8217;ID XXX</em>, ses sous-ensembles
+    porterons tous un numéro commençant par 0. Mais à l&#8217;heure actuelle,
+    certains pilotes utilisent l&#8217;ID directement comme numéro de
+    périphérique. Ce qui signifie qu&#8217;il est possible d&#8217;avoir un
+    périphérique Numéro 2, sans en avoir en Numéro 0. C&#8217;est un bug qui
+    devrait disparaître en version 2.1.]<br /></span>
+</p>
+</dd>
+<dt class="hdlist1">
+&lt;io-type&gt;
+</dt>
+<dd>
+<p>
+      La plupart des périphériques fournissent plus d&#8217;un type d&#8217;I/O. Même
+    le simple port parallèle a, à la fois plusieurs entrées et plusieurs
+    sorties numériques. Les cartes commerciales plus complexes peuvent
+    avoir des entrées et des sorties numériques, des compteurs de codeurs,
+    des générateurs d&#8217;impulsions de pas ou de PWM, des convertisseurs
+    numérique/analogique, analogique/numérique et d&#8217;autres possibilités
+    plus spécifiques. Le <em>I/O type</em> est utilisé pour identifier le type
+    d&#8217;I/O avec lequel la pin ou le paramètre est associé. Idéalement, les
+    pilotes qui implémentent les mêmes type d&#8217;I/O, même sur des dispositifs
+    très différents, devraient fournir un jeu de pins et de paramètres
+    cohérents et de comportements identiques. Par exemple, toutes les
+    entrées numériques doivent se comporter de la même manière quand elles
+    sont vues de l&#8217;intérieur de HAL, indépendamment du périphérique.
+</p>
+</dd>
+<dt class="hdlist1">
+&lt;chan-num&gt;
+</dt>
+<dd>
+<p>
+      Quasiment tous les périphériques d&#8217;I/O ont plusieurs canaux, le
+    numéro de canal <em>chan-num</em> identifie un de ceux ci. Comme les numéros
+    de périphériques <em>device-num</em>, les numéros de canaux, <em>chan-num</em>,
+    commencent à zéro et s&#8217;incrémentent.<span class="footnote"><br />[Une exception à la règle
+    du <em>numéro de canal commençant à zéro</em> est le
+    port parallèle. Ses <em>HAL pins</em> sont numérotées avec le numéro de la
+    broche correspondante du connecteur DB-25. C&#8217;est plus pratique pour le
+    câblage, mais non cohérent avec les autres pilotes. Il y a débat pour
+    savoir si c&#8217;est un bogue ou une fonctionnalité.]<br /></span>
+    Si plusieurs périphériques sont installés, les numéro de canaux des
+    périphériques supplémentaires recommencent à zéro. Comme il est
+    possible d&#8217;avoir un numéro de canal supérieur à 9, les numéros de
+    canaux doivent avoir deux chiffres, avec un zéro en tête pour les
+    nombres inférieur à 10 pour préserver l&#8217;ordre des tris. Certains
+    modules ont des pins et/ou des paramètres qui affectent plusieurs
+    canaux. Par exemple un générateur de PWM peut avoir quatre canaux avec
+    quatre entrées <em>duty-cycle</em> indépendantes, mais un seul paramètre
+    <em>frequency</em> qui contrôle les quatres canaux (à cause de limitations
+    matérielles). Le paramètre <em>frequency</em> doit utiliser les numéros de
+    canaux de <em>00-03</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+&lt;specific-name&gt;
+</dt>
+<dd>
+<p>
+      Un canal individuel d&#8217;I/O peut avoir une seule HAL pin associée avec
+    lui, mais la plupart en ont plus. Par exemple, une entrée numérique a
+    deux pins, une qui est l'état de la broche physique, l&#8217;autre qui est la
+    même chose mais inversée. Cela permet au configurateur de choisir entre
+    les deux états de l&#8217;entrée, active haute ou active basse. Pour la
+    plupart des types d' entrée/sortie, il existe un jeu standard de
+    broches et de paramètres, (appelé l'<em>interface canonique</em>) que le
+    pilote doit implémenter. Les interfaces canoniques sont décrites
+    <a href="general_ref_fr.html#sec:Peripheriques-canoniques">dans ce chapitre qui leur est dédié</a>.
+</p>
+</dd>
+</dl></div>
+<h4 id="_exemples">3.1.1. Exemples</h4>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+motenc.0.encoder.2.position
+</dt>
+<dd>
+<p>
+     La sortie position du troisième canal codeur sur la première carte Motenc.
+</p>
+</dd>
+<dt class="hdlist1">
+stg.0.din.03.in
+</dt>
+<dd>
+<p>
+     L'état de la quatrième entrée numérique sur la première carte Servo-to-Go.
+</p>
+</dd>
+<dt class="hdlist1">
+ppmc.0.pwm.00-03.frequency
+</dt>
+<dd>
+<p>
+     La fréquence porteuse utilisée sur les canaux PWM de 0 à 3 sur la
+    première carte Pico Systems ppmc.
+</p>
+</dd>
+</dl></div>
+<h3 id="_noms_des_fonctions">3.2. Noms des fonctions</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les pilotes matériels ont généralement seulement deux types de
+fonctions HAL, une qui lit l'état du matériel et met à jour les pins
+HAL, l&#8217;autre qui écrit sur le matériel en utilisant les données
+fournies sur les pins HAL. Ce qui devrait être nommé de la façon
+suivante:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>&lt;device-name&gt;-&lt;device-num&gt;.&lt;io-type&gt;-&lt;chan-num-range&gt;.read|write</tt></pre>
+</div></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+&lt;device-name&gt;
+</dt>
+<dd>
+<p>
+     Le même que celui utilisé pour les pins et les paramètres.
+</p>
+</dd>
+<dt class="hdlist1">
+&lt;device-num&gt;
+</dt>
+<dd>
+<p>
+     Le périphérique spécifique auquel la fonction aura accès.
+</p>
+</dd>
+<dt class="hdlist1">
+&lt;io-type&gt;
+</dt>
+<dd>
+<p>
+      Optionnel. Une fonction peut accéder à toutes les d&#8217;entrées/sorties
+    d&#8217;une carte ou, elle peut accéder seulement à un certain type. Par
+    exemple, il peut y avoir des fonctions indépendantes pour lire les
+    compteurs de codeurs et lire les entrées/sorties numériques. Si de
+    telles fonctions indépendantes existent, le champ &lt;io-type&gt; identifie
+    le type d&#8217;I/O auxquelles elles auront accès. Si une simple fonction lit
+    toutes les entrés/sorties fournies par la carte, &lt;io-type&gt; n&#8217;est pas
+    utilisé.<span class="footnote"><br />[Note aux programmeurs de pilotes: ne PAS implémenter
+    des fonctions
+    séparées pour différents types d&#8217;I/O à moins qu&#8217;elles ne soient
+    interruptibles et puissent marcher dans des threads indépendants. Si
+    l&#8217;interruption de la lecture d&#8217;un codeur pour lire des entrées
+    numériques, puis reprendre la lecture du codeur peut poser problème,
+    alors implémentez une fonction unique qui fera tout.]<br /></span>
+</p>
+</dd>
+<dt class="hdlist1">
+&lt;chan-num-range&gt;
+</dt>
+<dd>
+<p>
+      Optionnel. Utilisé seulement si l&#8217;entrée/sortie &lt;io-type&gt; est cassée
+    dans des groupes et est accédée par différentes fonctions.
+</p>
+</dd>
+<dt class="hdlist1">
+read|write
+</dt>
+<dd>
+<p>
+     Indique si la fonction lit le matériel ou lui écrit.
+</p>
+</dd>
+</dl></div>
+<h4 id="_exemples_2">3.2.1. Exemples</h4>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+motenc.0.encoder.read
+</dt>
+<dd>
+<p>
+     Lit tous les codeurs sur la première carte motenc.
+</p>
+</dd>
+<dt class="hdlist1">
+generic8255.0.din.09-15.read
+</dt>
+<dd>
+<p>
+     Lit le deuxième port 8 bits sur la première carte
+    d&#8217;entrées/sorties à base de 8255.
+</p>
+</dd>
+<dt class="hdlist1">
+ppmc.0.write
+</dt>
+<dd>
+<p>
+     Écrit toutes les sorties (générateur de pas, pwm, DAC et ADC) sur
+    la première carte Pico Systems ppmc.
+</p>
+</dd>
+</dl></div>
+</div>
+<h2 id="sec:Peripheriques-canoniques">4. Périphériques d&#8217;interfaces canoniques</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Les sections qui suivent expliquent les pins, paramètres et fonctions
+qui sont fournies par les <em>périphériques canoniques</em>. Tous les pilotes
+de périphériques HAL devraient fournir les mêmes pins et paramètres et
+implémenter les mêmes comportements.</p></div>
+<div class="paragraph"><p>Noter que seuls les champs <em>&lt;io-type&gt;</em> et <em>&lt;specific-name&gt;</em> sont
+définis pour un périphérique canonique. Les champs <em>&lt;device-name&gt;</em>,
+<em>&lt;device-num&gt;</em> et <em>&lt;chan-num&gt;</em> sont définis en fonction des
+caractéristiques du périphérique réel.</p></div>
+</div>
+<h2 id="_entr_e_num_rique_digital_input_a_id_sec_canondigin_a">5. Entrée numérique (Digital Input)<a id="sec:CanonDigIn"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>L&#8217;entrée numérique canonique (I/O type: <em>digin</em>) est assez simple.</p></div>
+<h3 id="_pins">5.1. Pins</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+(bit) <em>in</em>
+</dt>
+<dd>
+<p>
+   État de l&#8217;entrée matérielle.
+</p>
+</dd>
+<dt class="hdlist1">
+(bit) <em>in-not</em>
+</dt>
+<dd>
+<p>
+   État inversé de l&#8217;entrée matérielle.
+</p>
+</dd>
+</dl></div>
+<h3 id="_param_tres">5.2. Paramètres</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Aucun</p></div>
+<h3 id="_fonctions">5.3. Fonctions</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+(funct) <em>read</em>
+</dt>
+<dd>
+<p>
+     Lire le matériel et ajuster les HAL pins <em>in</em> et <em>in-not</em>.
+</p>
+</dd>
+</dl></div>
+</div>
+<h2 id="_sortie_num_rique_digital_output_a_id_sec_canondigout_a">6. Sortie numérique (Digital Output)<a id="sec:CanonDigOut"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>La sortie numérique canonique est également très simple (I/O type: <em>digout</em>).</p></div>
+<h3 id="_pins_2">6.1. Pins</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+(bit) <em>out</em>
+</dt>
+<dd>
+<p>
+    Valeur à écrire (éventuellement inversée) sur une sortie matérielle.
+</p>
+</dd>
+</dl></div>
+<h3 id="_param_tres_2">6.2. Paramètres</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+(bit) <em>invert</em>
+</dt>
+<dd>
+<p>
+    Si TRUE, <em>out</em> est inversée avant écriture sur la sortie matérielle.
+</p>
+</dd>
+</dl></div>
+<h3 id="_fonctions_2">6.3. Fonctions</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+(funct) <em>write</em>
+</dt>
+<dd>
+<p>
+    Lit <em>out</em> et <em>invert</em> et ajuste la sortie en conséquence.
+</p>
+</dd>
+</dl></div>
+</div>
+<h2 id="_entr_e_analogique_analog_input">7. Entrée analogique (Analog Input)</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>L&#8217;entrée analogique canonique (I/O type: <em>adcin</em> ). Devrait être
+utilisée pour les convertisseurs
+analogiques/numériques, qui convertissent par exemple, les tensions en
+une échelle continue de valeurs.</p></div>
+<h3 id="_pins_3">7.1. Pins</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+(float) <em>value</em>
+</dt>
+<dd>
+<p>
+     Lecture du matériel, avec mise à l'échelle ajustée par les
+    paramètres <em>scale</em> et <em>offset</em>. <em>Value</em> = ((lecture entrée, en unités
+    dépendantes du matériel) x <em>scale</em>) - <em>offset</em>
+</p>
+</dd>
+</dl></div>
+<h3 id="_param_tres_3">7.2. Paramètres</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+(float) <em>scale</em>
+</dt>
+<dd>
+<p>
+     La tension d&#8217;entrée (ou l&#8217;intensité) sera
+    multipliée par <em>scale</em> avant d'être placée dans <em>value</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+(float) <em>offset</em>
+</dt>
+<dd>
+<p>
+     Sera soustrait à la tension d&#8217;entrée (ou l&#8217;intensité) après que
+    la mise à l'échelle par scale ait été appliquée.
+</p>
+</dd>
+<dt class="hdlist1">
+(float) <em>bit_weight</em>
+</dt>
+<dd>
+<p>
+     Valeur du bit le moins significatif (LSB). C&#8217;est effectivement, la
+    granularité de lecture en entrée.
+</p>
+</dd>
+<dt class="hdlist1">
+(float) <em>hw_offset</em>
+</dt>
+<dd>
+<p>
+     Valeur présente sur l&#8217;entrée quand aucune tension n&#8217;est appliquée sur la
+    pin.
+</p>
+</dd>
+</dl></div>
+<h3 id="_fonctions_3">7.3. Fonctions</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+(funct) <em>read</em>
+</dt>
+<dd>
+<p>
+     Lit les valeurs de ce canal d&#8217;entrée analogique. Peut être utilisé pour
+    lire un canal individuellement, ou pour lire tous les canaux à la fois.
+</p>
+</dd>
+</dl></div>
+</div>
+<h2 id="_sortie_analogique_analog_output">8. Sortie analogique (Analog Output)</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>La sortie analogique canonique (I/O Type: <em>adcout</em> ). Elle est
+destinée à tout type de matériel capable de sortir une
+échelle plus ou moins étendue de valeurs. Comme par exemple les
+convertisseurs numérique/analogique ou les générateurs de PWM.</p></div>
+<h3 id="_pins_4">8.1. Pins</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+(float) <em>value</em>
+</dt>
+<dd>
+<p>
+     La valeur à écrire. La valeur réelle sur la sortie matérielle dépends
+    de la mise à l'échelle des paramètres d&#8217;offset.
+</p>
+</dd>
+<dt class="hdlist1">
+(bit) <em>enable</em>
+</dt>
+<dd>
+<p>
+     Si fausse, la sortie matérielle passera à 0, indépendamment de la pin <em>value</em>.
+</p>
+</dd>
+</dl></div>
+<h3 id="_param_tres_4">8.2. Paramètres</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+(float) <em>offset</em>
+</dt>
+<dd>
+<p>
+     Sera ajouté à <em>value</em> avant l&#8217;actualisation du
+   matériel.
+</p>
+</dd>
+<dt class="hdlist1">
+(float) <em>scale</em>
+</dt>
+<dd>
+<p>
+     Doit être défini de sorte qu&#8217;une entrée avec 1 dans <em>value</em> produira 1V
+</p>
+</dd>
+<dt class="hdlist1">
+(float) <em>high_limit</em>
+</dt>
+<dd>
+<p>
+     (optionnel) Quand la valeur en sortie matérielle est calculée,
+    si <em>value</em> + <em>offset</em> est plus grande que <em>high_limit</em>, alors <em>high_limit</em>
+    lui sera substitué.
+</p>
+</dd>
+<dt class="hdlist1">
+(float) <em>low_limit</em>
+</dt>
+<dd>
+<p>
+     (optionnel) Quand la valeur en sortie matérielle est calculée,
+    si <em>value</em> + <em>offset</em> est plus petite que <em>low_limit</em>, alors <em>low_limit</em>
+    lui sera substitué.
+</p>
+</dd>
+<dt class="hdlist1">
+(float) <em>bit_weight</em>
+</dt>
+<dd>
+<p>
+     (optionnel) La valeur du bit le moins significatif (LSB), en Volts
+    (ou mA, pour les sorties courant)
+</p>
+</dd>
+<dt class="hdlist1">
+(float) <em>hw_offset</em>
+</dt>
+<dd>
+<p>
+     (optionnel) La tension actuelle (ou l&#8217;intensité) présente sur la
+    sortie quand 0 est écrit sur le matériel.
+</p>
+</dd>
+</dl></div>
+<h3 id="_fonctions_4">8.3. Fonctions</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+(funct) <em>write</em>
+</dt>
+<dd>
+<p>
+     Ecrit la valeur calculée sur la sortie matérielle. Si enable est FALSE,
+    la sortie passera à 0, indépendamment des valeurs de <em>value</em>, <em>scale</em> et
+    <em>offset</em> . La signification de <em>0</em> dépend du matériel. Par exemple, un
+    convertisseur A/D 12 bits peut vouloir écrire 0x1FF (milieu d'échelle)
+    alors que le convertisseur D/A reçoit 0 Volt de la broche matérielle.
+    Si enable est TRUE, l'échelle, l&#8217;offset et la valeur sont traités et
+    (<em>scale</em> _ <em>value</em>) + <em>offset</em> sont envoyés à la sortie du DAC . Si
+    enable est FALSE, la sortie passe à 0.
+</p>
+</dd>
+</dl></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-02-03 18:36:08 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/general_ref_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:01 GMT -->
+</html>

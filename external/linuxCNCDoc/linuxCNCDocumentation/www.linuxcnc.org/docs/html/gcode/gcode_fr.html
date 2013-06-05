@@ -1,0 +1,3615 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gcode/gcode_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:58 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Tout le G-code de LinuxCNC</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Tout le G-code de LinuxCNC</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:Le-G-code"></a> </p></div>
+</div>
+</div>
+<h2 id="_conventions_d_criture_du_g_code">1. Conventions d'écriture du G-code</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Dans une commande type, le tiret (<em>-</em>) signifie une valeur réelle et les signes
+(<em>&lt;&gt;</em>) indiquent un item facultatif.</p></div>
+<div class="paragraph"><p>Si <em>L-</em> est écrit dans une commande, le signe <em>-</em> fera référence à <em>Lnombre</em>.
+De la même manière, le signe <em>-</em> dans <em>H-</em> peut être appelé le <em>Hnombre</em> et
+ainsi de suite pour les autres lettres. Une valeur facultative sera
+écrite <em>&lt;L-&gt;</em>.</p></div>
+<div class="paragraph"><p>Dans les blocs de G-code, le mot <em>axes</em> signifie n&#8217;importe quel axe
+défini dans la configuration.</p></div>
+<div class="paragraph"><p>Une valeur réelle peut être:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+- un nombre explicite, <em>4</em> par exemple.
+</p>
+</li>
+<li>
+<p>
+- une expression, <em>[2+2]</em> par exemple.
+</p>
+</li>
+<li>
+<p>
+- une valeur de paramètre, <em>#88</em> par exemple.
+</p>
+</li>
+<li>
+<p>
+- une fonction unaire de la valeur, <em>acos[0]</em> par exemple.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Dans la plupart des cas, si des mots d&#8217;axes sont donnés
+parmi <em>XYZABCUVW</em>, ils spécifient le point de destination.</p></div>
+<div class="paragraph"><p>Les axes sont donnés dans le système de coordonnées courant,
+à moins qu&#8217;explicitement décrit comme étant dans le système de coordonnées
+absolues (machine).</p></div>
+<div class="paragraph"><p>Les axes sont facultatifs, tout axe omis gardera sa valeur courante.</p></div>
+<div class="paragraph"><p>Tout item dans un bloc de G-code, non explicitement décrit comme facultatif,
+sera requis. Une erreur sera signalée si un item requis est omis.</p></div>
+<div class="paragraph"><p>Dans les commandes, les valeurs suivant les lettres sont souvent
+données comme des nombres explicites. Sauf indication contraire, les
+nombres explicites peuvent être des valeurs réelles. Par exemple, <em>G10
+L2</em> pourrait aussi bien être écrite <em>G[2*5] L[1+1]</em>. Si la valeur du
+paramètre <em>100</em> étaient <em>2</em>, <em>G10 L#100</em> signifierait également la même
+chose.</p></div>
+</div>
+<h2 id="sec:Table-des-index-du-G-code">2. Table d&#8217;index du G-code</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="tableblock">
+<table rules="all"
+width="75%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="28%" />
+<col width="71%" />
+<thead>
+<tr>
+<th align="center" valign="top">Sections                        </th>
+<th align="left" valign="top"> Descriptions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G0">G0</a></p></td>
+<td align="left" valign="top"><p class="table">Interpolation linéaire en vitesse rapide</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G1">G1</a></p></td>
+<td align="left" valign="top"><p class="table">Interpolation linéaire en vitesse travail</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G2-G3">G2/G3</a></p></td>
+<td align="left" valign="top"><p class="table">Interpolation circulaire sens horaire/anti-horaire</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G4-Tempo">G4</a></p></td>
+<td align="left" valign="top"><p class="table">Temporisation</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G5_1-B-spline">G5.1</a></p></td>
+<td align="left" valign="top"><p class="table">B-Spline quadratique</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G5_2-G5_3-NURBs">G5.2 G5.3</a></p></td>
+<td align="left" valign="top"><p class="table">NURBs Block <em>(expérimental)</em></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G7-Mode-diametre">G7</a></p></td>
+<td align="left" valign="top"><p class="table">Mode diamètre (sur les tours)</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G8-Mode-rayon">G8</a></p></td>
+<td align="left" valign="top"><p class="table">Mode rayon (sur les tours)</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G10-L1">G10 L1</a></p></td>
+<td align="left" valign="top"><p class="table">Ajuste les valeurs de l&#8217;outil en table d&#8217;outils</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G10-L10">G10 L10</a></p></td>
+<td align="left" valign="top"><p class="table">Modifie les valeurs de l&#8217;outil dans la table d&#8217;outils</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G10-L11">G10 L11</a></p></td>
+<td align="left" valign="top"><p class="table">Fixe les valeurs de l&#8217;outil dans la table d&#8217;outils</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G10-L2">G10 L2</a></p></td>
+<td align="left" valign="top"><p class="table">Fixe l&#8217;origine d&#8217;un système de coordonnées</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G10-L20">G10 L20</a></p></td>
+<td align="left" valign="top"><p class="table">Fixe l&#8217;origine du système de coord. aux valeurs calculées</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G17-G18-G19">G18 G19</a></p></td>
+<td align="left" valign="top"><p class="table">Choix du plan de travail</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G20-G21-Unites-Machine">G20 G21</a></p></td>
+<td align="left" valign="top"><p class="table">Unités machine</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G28-G28_1-Aller-a-une-position">G28 G28.1</a></p></td>
+<td align="left" valign="top"><p class="table">Aller à une position prédéfinie</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G30-G30_1-Aller-a-une-position-predefinie">G30 G30.1</a></p></td>
+<td align="left" valign="top"><p class="table">Aller à une position
+prédéfinie</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G33-Broche-synchronisee">G33</a></p></td>
+<td align="left" valign="top"><p class="table">Mouvement avec broche synchronisée</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G33_1-Taraudage-rigide">G33.1</a></p></td>
+<td align="left" valign="top"><p class="table">Taraudage rigide</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G38-x-Palpeur">G38</a></p></td>
+<td align="left" valign="top"><p class="table">Mesures au palpeur</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G40">G40</a></p></td>
+<td align="left" valign="top"><p class="table">Révocation de la compensation de rayon d&#8217;outil</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G41-G42">G41 G42</a></p></td>
+<td align="left" valign="top"><p class="table">Compensation de rayon d&#8217;outil</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G41_1-G42_1">G41.1 G42.1</a></p></td>
+<td align="left" valign="top"><p class="table">Comp. dynamique de rayon d&#8217;outil à gauche/à droite</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G43">G43</a></p></td>
+<td align="left" valign="top"><p class="table">Compensation de longueur d&#8217;outil d&#8217;après une table d&#8217;outils</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G43_1">G43.1</a></p></td>
+<td align="left" valign="top"><p class="table">Compensation dynamique de longueur d&#8217;outil</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G49-Revocation-Longueur-Outil">G49</a></p></td>
+<td align="left" valign="top"><p class="table">Révocation de la compensation de
+longueur d&#8217;outil</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G53-Mouvement-Coordonnees-Absolues">G53</a></p></td>
+<td align="left" valign="top"><p class="table">Déplacements en coordonnées
+machine (Absolues)</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G54-a-G59_3">G54 à G59.3</a></p></td>
+<td align="left" valign="top"><p class="table">Choix du système de coordonnées (1 à 9)</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G61-G61_1">G61 G61.1</a></p></td>
+<td align="left" valign="top"><p class="table">Mode trajectoire exacte/mode arrêts exacts</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G64">G64</a></p></td>
+<td align="left" valign="top"><p class="table">Mode trajectoire continue avec tolérance</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G73-Percage-avec-brise-copeaux">G73</a></p></td>
+<td align="left" valign="top"><p class="table">Cycle de perçage avec brise copeau</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G76-Filetage">G76</a></p></td>
+<td align="left" valign="top"><p class="table">Cycle de filetage multipasses (tour)</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G80-Revocation-modaux">G80</a></p></td>
+<td align="left" valign="top"><p class="table">Révocation des codes modaux</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G81-Cycle-de-percage">G81</a></p></td>
+<td align="left" valign="top"><p class="table">Cycle de perçage</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G82-Cycle-de-percage">G82</a></p></td>
+<td align="left" valign="top"><p class="table">Autres cycles de perçage</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G83-Percage-avec-debourrage">G83</a></p></td>
+<td align="left" valign="top"><p class="table">Perçage avec débourrage</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G84-Taraudage-a-droite">G84</a></p></td>
+<td align="left" valign="top"><p class="table">Taraudage à droite <em>(pas encore implémenté)</em></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G85-Alesage-retrait-travail">G85</a></p></td>
+<td align="left" valign="top"><p class="table">Alésage, retrait en vitesse travail</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G86-Alesage-retrait-rapide">G86</a></p></td>
+<td align="left" valign="top"><p class="table">Alésage, retrait en vitesse rapide</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G87-Back-Boring">G87</a></p></td>
+<td align="left" valign="top"><p class="table">Cycle d&#8217;alésage arrière <em>(pas encore implémenté)</em></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G88-Alesage-Retrait-Manuel-Out">G88</a></p></td>
+<td align="left" valign="top"><p class="table">Cycle alésage, Stop, Retrait manuel
+<em>(pas encore implémenté)</em></p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G89-Alesage-Tempo">G89</a></p></td>
+<td align="left" valign="top"><p class="table">Cycle d&#8217;alésage avec tempo, recul vitesse travail</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="#sec:G90-G91-Set">G90</a></p></td>
+<td align="left" valign="top"><p class="table">Types de déplacement</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G90_1-G91_1">G90.1 G91.1</a></p></td>
+<td align="left" valign="top"><p class="table">Arc I,J,K, centre absolu ou relatif</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G92">G92</a></p></td>
+<td align="left" valign="top"><p class="table">Décalages d&#8217;origines avec mise à jour des paramètres</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="#sec:G92_1-G92-2">G92.1 G92.2</a></p></td>
+<td align="left" valign="top"><p class="table">Révocation des décalages d&#8217;origine</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G92_3">G92.3</a></p></td>
+<td align="left" valign="top"><p class="table">Applique contenu des paramètres aux déc. d&#8217;origine</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G93-G94-G95-Modes">G93</a></p></td>
+<td align="left" valign="top"><p class="table">Modes de vitesse</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G96-G97-Broche">G96</a></p></td>
+<td align="left" valign="top"><p class="table">Vitesse de coupe constante (IPM ou m/mn)</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G96-G97-Broche">G97</a></p></td>
+<td align="left" valign="top"><p class="table">Vitesse en tours par minute</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table"><a href="gcode_fr.html#sec:G98-G99-Set">G98</a></p></td>
+<td align="left" valign="top"><p class="table">Options de retrait des cycles de perçage</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<h2 id="sec:G0">3. G0 Interpolation linéaire en vitesse rapide</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G0 axes</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour un mouvement linéaire en vitesse rapide, programmer <em>G0 axes</em>,
+tous les mots d&#8217;axe sont facultatifs. Le <em>G0</em> est facultatif si le mode mouvement
+courant est déjà <em>G0</em>. Cela produit un mouvement linéaire vers le point de
+destination à la vitesse rapide courante (ou moins vite si la machine n&#8217;atteint
+pas cette vitesse). Il n&#8217;est pas prévu d&#8217;usiner la matière quand une
+commande G0 est exécutée. Un G0 seul peut être utilisé pour passer le mode
+de mouvement courant en G0.</p></div>
+<div class="listingblock">
+<div class="title">Exemple avec G0:</div>
+<div class="content">
+<pre><tt>G90 (Fixe les déplacements en mode absolu)
+G0 X1 Y-2.3 (mouvement linéaire en vitesse rapide du point courant à X1 Y-2.3)
+M2 (fin de programme)</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Voir les sections <a href="#sec:G90-G91-Set">G90</a> et <a href="m-code_fr.html#sec:M2-M30">M2</a> pour plus
+d&#8217;informations.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Si la compensation d&#8217;outil est active, le mouvement sera
+différent de celui décrit ci-dessus, voir la section
+<a href="tool_compensation_fr.html#sec:Compensation-rayon-d-outil">sur la compensation de d&#8217;outil</a>.</p></div>
+<div class="paragraph"><p>Si <em>G53</em> est programmé sur la même ligne, le mouvement sera également
+différent, voir la section <a href="gcode_fr.html#sec:G53-Mouvement-Coordonnees-Absolues">sur les mouvements en coordonnées absolues</a>.</p></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Un mot d&#8217;axe est indiqué sans valeur réelle.
+</p>
+</li>
+<li>
+<p>
+Un mot d&#8217;axe est indiqué qui n&#8217;est pas configuré.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G1">4. G1 Interpolation linéaire en vitesse travail</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G1 axes</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour un mouvement linéaire en vitesse travail, (pour usiner ou non)
+programmer <em>G1 axes</em>, tous les mots d&#8217;axe sont facultatifs. Le <em>G1</em> est
+facultatif si le mode de mouvement courant est déjà <em>G1</em>.
+Cela produira un mouvement linéaire vers le point de destination à
+la vitesse de travail courante (ou moins vite si la machine n&#8217;atteint
+pas cette vitesse). Un G1 seul peut être utilisé pour passer le mode de
+mouvement courant en G1.</p></div>
+<div class="listingblock">
+<div class="title">Exemple avec G1:</div>
+<div class="content">
+<pre><tt>G90 (Fixe les déplacements en mode absolu)
+G1 X1.2 Y-3 F10 (mouvement linéaire à 10 unités/mn du point courant à X1.2 Y-3)
+Z-2.3 (mouvement linéaire à 10 unités/mn du point courant à Z-2.3)
+Z1 F25 (mouvement linéaire de l'axe Z à 25 unités/mn vers Z1)
+M2 (Fin de programme)</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Voir les sections <a href="#sec:G90-G91-Set">G90</a> et <a href="m-code_fr.html#sec:M2-M30">M2</a> pour plus
+d&#8217;informations.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Si la compensation d&#8217;outil est active, le mouvement sera
+différent de celui décrit ci-dessus, voir la section
+<a href="tool_compensation_fr.html#sec:Compensation-rayon-d-outil">sur la compensation d&#8217;outil</a>.
+Si <em>G53</em> est programmé sur la même ligne, le mouvement sera également
+différent, voir la section <a href="gcode_fr.html#sec:G53-Mouvement-Coordonnees-Absolues">sur les mouvements en coordonnées absolues</a>.</p></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+- Aucune vitesse d&#8217;avance travail n&#8217;est fixée.
+</p>
+</li>
+<li>
+<p>
+- un mot d&#8217;axe est indiqué sans valeur réelle.
+</p>
+</li>
+<li>
+<p>
+- un mot d&#8217;axe est indiqué qui n&#8217;est pas configuré.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G2-G3">5. G2, G3 Interpolation circulaire en vitesse travail</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G2 ou G3 axes décalages (format centre)
+G2 ou G3 axes R- (format rayon)
+G2 ou G3 décalages &lt;P-&gt; (cercles complet)</tt></pre>
+</div></div>
+<div class="paragraph"><p>Un mouvement circulaire ou hélicoïdal est spécifié en sens horaire
+avec <em>G2</em> ou en sens anti-horaire avec <em>G3</em>. La direction est vue depuis
+le côté positif de l&#8217;axe autour duquel le mouvement se produit.</p></div>
+<div class="paragraph"><p>Les axes de cercle ou les hélicoïdes, doivent être parallèles aux
+axes X, Y ou Z du système de coordonnées machine.
+Les axes (ou, leurs équivalents, les plans perpendiculaires aux axes)
+sont sélectionnés avec <em>G17</em> (axe Z, plan XY),
+<em>G18</em> (axe Y, plan XZ), ou <em>G19</em> (axe X, plan YZ).
+Les plans <em>17,1</em>, <em>18,1</em> et <em>19,1</em> ne sont pas actuellement pris en charge.
+Si l&#8217;arc est circulaire, il se trouve dans un plan parallèle au plan sélectionné.</p></div>
+<div class="paragraph"><p>Pour programmer un hélicoïde, inclure le mot d&#8217;axe perpendiculaire au
+plan de l&#8217;arc. Par exemple, si nous sommes dans le plan <em>G17</em>, inclure
+un mot <em>Z</em>, ceci provoquera un mouvement de l&#8217;axe <em>Z</em> vers valeur programmée
+durant tout le mouvement circulaire <em>XY</em>.</p></div>
+<div class="paragraph"><p>Pour programmer un arc qui fera plus d&#8217;un tour complet, utiliser un
+mot <em>P</em> spécifiant le nombre de tours complets ou partiels de l&#8217;arc.
+Si <em>P</em> n&#8217;est pas spécifié, le comportement sera comme si <em>P1</em> avait été
+donné, ceci étant, un seul tour complet ou partiel sera effectué,
+donnant un arc plus petit ou égal à un tour complet.
+Par exemple, si un arc est programmé avec P2, le mouvement résultant
+sera supérieur à un tour complet, il sera au maximum de deux tours, selon
+où est programmé le point d&#8217;arrivée. Les arcs hélicoïdaux multi-tours sont
+supportés ce qui donne des mouvements très intéressants pour usiner des
+trous ou des formes.</p></div>
+<div class="paragraph"><p>Si une ligne de G-code crée un arc et inclus le mouvement d&#8217;un
+axe rotatif, l&#8217;axe rotatif tournera à vitesse constante de sorte que
+le mouvement de l&#8217;axe rotatif commence et se termine en même temps que
+les autres axes XYZ. De telles lignes sont rarement programmées.</p></div>
+<div class="paragraph"><p>Si la compensation d&#8217;outil est active, le mouvement sera
+différent de celui décrit ci-dessus, voir les sections
+<a href="gcode_fr.html#sec:G40">sur G40</a> et <a href="gcode_fr.html#sec:G41-G42">sur G41-G42</a>.</p></div>
+<div class="paragraph"><p>Le centre de l&#8217;arc est absolu ou relatif, tel que fixé par
+ <a href="gcode_fr.html#sec:G90_1-G91_1">G90.1 ou G91.1</a>, respectivement.</p></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Aucune vitesse d&#8217;avance travail n&#8217;est spécifiée.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Deux formats sont possibles pour spécifier un arc: Le format centre et
+le format rayon.</p></div>
+<h3 id="_arc_au_format_centre_format_recommand">5.1. Arc au format centre (format recommandé)</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Les arcs au format centre sont plus précis que les arcs au format rayon, c&#8217;est
+le format à privilégier.</p></div>
+<div class="paragraph"><p>La distance entre la position courante et le centre de l&#8217;arc et,
+facultativement, le nombre de tours, sont utilisés pour programmer des arcs
+inférieurs au cercle complet. Il est permis d&#8217;avoir le point final de l&#8217;arc
+égal à la position courante.</p></div>
+<div class="paragraph"><p>Le décalage entre le centre de l&#8217;arc et la position courante ainsi
+que facultativement, le nombre de tours, sont utilisés pour programmer des
+cercles complets.</p></div>
+<div class="paragraph"><p>Une erreur d&#8217;arrondi peut se produire quand un arc est programmé avec une
+précision inférieure à 4 décimales (0.0000) pour les pouces et à moins de
+3 décimales (0.000) pour les millimètres.</p></div>
+<div class="paragraph"><div class="title">Arc en mode distance relative</div><p>Les décalages par rapport au centre de l&#8217;arc sont des distances relatives au
+point de départ de l&#8217;arc. Le mode distance relative de l&#8217;arc est le
+mode par défaut.</p></div>
+<div class="paragraph"><p>Un ou plusieurs mots d&#8217;axe et un ou plusieurs décalages doivent être programmés
+pour un arc qui fait moins de 360 degrés.</p></div>
+<div class="paragraph"><p>Aucun mot d&#8217;axe mais un ou plusieurs décalages doivent être programmés pour un
+cercle complet. Le mot <em>P</em>, par défaut à 1, est facultatif.</p></div>
+<div class="paragraph"><p>Pour d&#8217;avantage d&#8217;information sur les arcs en mode relatif, voir la
+ <a href="gcode_fr.html#sec:G90_1-G91_1">section G91.1</a>.</p></div>
+<div class="paragraph"><div class="title">Arc en mode distance absolue</div><p>Les décalages par rapport au centre de l&#8217;arc sont des distances absolues depuis
+la position 0 courante des axes (origine machine).</p></div>
+<div class="paragraph"><p>Un ou plusieurs mots d&#8217;axe et <em>tous</em> les décalages doivent être programmés pour
+les arcs de moins de 360 degrés.</p></div>
+<div class="paragraph"><p>Aucun mots d&#8217;axe mais tous les décalages doivent être programmés pour un
+cercle complet. Le mot <em>P</em>, par défaut à 1, est facultatif.</p></div>
+<div class="paragraph"><p>Pour d&#8217;avantage d&#8217;information sur les arcs en mode absolu, voir la
+<a href="gcode_fr.html#sec:G90_1-G91_1">section G90.1</a>.</p></div>
+<div class="listingblock">
+<div class="title">Plan XY (G17)</div>
+<div class="content">
+<pre><tt>G2 ou G3 &lt;X- Y- Z- I- J- P-&gt;</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Z</em> - hélicoïde
+</p>
+</li>
+<li>
+<p>
+<em>I</em> - décalage en X
+</p>
+</li>
+<li>
+<p>
+<em>J</em> - décalage en Y
+</p>
+</li>
+<li>
+<p>
+<em>P</em> - nombre de tours
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">Plan XZ (G18)</div>
+<div class="content">
+<pre><tt>G2 ou G3 &lt;X- Z- Y- I- K- P-&gt;</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Y</em> - hélicoïde
+</p>
+</li>
+<li>
+<p>
+<em>I</em> - décalage en X
+</p>
+</li>
+<li>
+<p>
+<em>K</em> - décalage en Z
+</p>
+</li>
+<li>
+<p>
+<em>P</em> - nombre de tours
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">YZ-plane (G19)</div>
+<div class="content">
+<pre><tt>G2 ou G3 &lt;Y- Z- X- J- K- P-&gt;</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>X</em> - hélicoïde
+</p>
+</li>
+<li>
+<p>
+<em>J</em> - décalage en Y
+</p>
+</li>
+<li>
+<p>
+<em>K</em> - décalage en Z
+</p>
+</li>
+<li>
+<p>
+<em>P</em> - nombre de tours
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Aucune vitesse d&#8217;avance travail n&#8217;est fixée avec <a href="other-code_fr.html#sec:F-Vitesse">le mot F</a>.
+</p>
+</li>
+<li>
+<p>
+Aucun décalage n&#8217;est programmé.
+</p>
+</li>
+<li>
+<p>
+Quand l&#8217;arc est projeté dans le plan courant, la distance depuis le point
+courant et le centre diffère de la distance entre le point final et le centre,
+de plus de (.05 pouce/.5 mm) OU ((.0005 pouce/.005mm) ET .1% du rayon).
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Déchiffrer le message d&#8217;erreur <em>Le rayon à la fin de l&#8217;arc diffère de celui
+du début:</em></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>début</em> - position courante
+</p>
+</li>
+<li>
+<p>
+<em>centre</em> - la position du centre telle que calculée avec les paramètres I,J ou
+ K
+</p>
+</li>
+<li>
+<p>
+<em>fin</em> - le point final programmé
+</p>
+</li>
+<li>
+<p>
+<em>r1</em> - le rayon entre le point de départ et le centre
+</p>
+</li>
+<li>
+<p>
+<em>r2</em> - le rayon entre le point final et le centre
+</p>
+</li>
+</ul></div>
+<h3 id="_exemples_d_8217_arcs_au_format_centre">5.2. Exemples d&#8217;arcs au format centre</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Calculer des arcs à la main peut être difficile.
+Il est possible de dessiner l&#8217;arc à l&#8217;aide d&#8217;un programme de DAO
+pour obtenir les coordonnées et les décalages.
+Garder à l&#8217;esprit les tolérances, il pourrait être nécessaire de modifier
+la précision de la DAO pour obtenir les résultats souhaités.
+Une autre option consiste à calculer les coordonnées et les décalages
+en utilisant des formules. Comme vous pouvez le voir sur la figure suivante
+un triangle peut être formé à partir de la position courante,
+de la position de fin et du centre de l&#8217;arc.</p></div>
+<div class="paragraph"><p>Sur la figure suivante, vous voyez que la position de départ est X0 Y0, la
+position finale est X1 Y1. La position du centre de l&#8217;arc est X1 Y0.
+Ceci donne un décalage de 1 depuis la position de départ sur l&#8217;axe X et
+0 sur l&#8217;axe Y. Dans ce cas seul le décalage I est nécessaire.</p></div>
+<div class="paragraph"><p>Le G-code de cet exemple serait:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G2 X1 Y1 I1 F10 (arc en sens horaire dans le plan XY)</tt></pre>
+</div></div>
+<div class="imageblock" id="fig:G2-Exemple" style="text-align:center;">
+<div class="content">
+<img src="images/g2_fr.png" alt="images/g2_fr.png" />
+</div>
+<div class="title">Figure 1. Exemple avec G2</div>
+</div>
+<div class="paragraph"><p>Dans cet autre exemple, nous pouvons voir les différences de décalages
+pour Y selon que nous faisons un mouvement G2 ou un mouvement G3.
+Pour le mouvement G2 la position de départ est en X0 Y0, alors que
+pour le mouvement G3 elle est en X0 Y1. Le centre de l&#8217;arc est en
+X1 Y0.5 pour les deux. Le décalage J du mouvement G2 est 0.5 alors que
+celui du mouvement G3 est -0.5.</p></div>
+<div class="paragraph"><p>Le G-code de cet exemple serait:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G2 X0 Y1 I1 J0.5 F25 (arc en sens horaire dans le plan XY)
+G3 X0 Y0 I1 J-0.5 F25 (arc en sens anti-horaire dans le plan XY)</tt></pre>
+</div></div>
+<div class="imageblock" id="fig:G2-G3-Exemple" style="text-align:center;">
+<div class="content">
+<img src="images/g2-3_fr.png" alt="images/g2-3_fr.png" />
+</div>
+<div class="title">Figure 2. Exemple avec G2-G3</div>
+</div>
+<div class="paragraph"><p>Voici un exemple au format centre pour usiner une hélice:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G17 G2 X10 Y16 I3 J4 Z9 (arc hélicoïde avec mouvement en Z)</tt></pre>
+</div></div>
+<div class="paragraph"><p>Cet exemple signifie, faire un mouvement circulaire ou hélicoïdal en
+sens horaire (vu du côté positif sur l&#8217;axe Z), dont l&#8217;axe est parallèle
+à l&#8217;axe Z, se terminant en X10, Y16 et Z9, avec son centre décalé
+de 3 unités dans la direction X, par rapport à la position X courante.
+Son centre décalé dans la direction Y de 4 unités depuis la position Y courante.
+Si la position courante est X7, Y7 au départ, le centre sera en X10, Y11.
+Si la valeur de départ en Z est 9, ce sera un arc circulaire. Autrement,
+ce sera un arc hélicoïdal. Le rayon de cet arc serait de 5 unités.</p></div>
+<div class="paragraph"><p>Dans le format centre, le rayon de l&#8217;arc n&#8217;est pas spécifié, mais il
+peut facilement être trouvé puisque c&#8217;est la distance entre le
+point courant et le centre du cercle, ou le point final de l&#8217;arc et le centre.</p></div>
+<h3 id="_arcs_au_format_rayon_format_non_recommand">5.3. Arcs au format rayon (format non recommandé)</h3><div style="clear:left"></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G2 ou G3 axes R-</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+R - rayon depuis la position courante
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Ce n&#8217;est pas une bonne pratique de programmer au format rayon des
+arcs qui sont presque des cercles entiers ou des demi-cercles, car un
+changement minime dans l&#8217;emplacement du point d&#8217;arrivée va produire un
+changement beaucoup plus grand dans l&#8217;emplacement du centre du cercle
+(et donc, du milieu de l&#8217;arc). L&#8217;effet de grossissement est tellement
+important, qu&#8217;une erreur d&#8217;arrondi peut facilement produire un usinage
+hors tolérance. Par exemple, 1% de déplacement de l&#8217;extrémité d&#8217;un arc
+de 180 degrés produit 7% de déplacement du point situé à 90 degrés le
+long de l&#8217;arc. Les cercles presque complets sont encore pires.
+Autrement, l&#8217;usinage d&#8217;arcs, inférieurs à 165 degrés ou compris entre
+195 et 345 degrés sera possible.</p></div>
+<div class="paragraph"><p>Dans le format rayon, les coordonnées du point final de l&#8217;arc, dans le
+plan choisi, sont spécifiées en même temps que le rayon de l&#8217;arc.
+Programmer <em>G2 axes R-</em> (ou utiliser <em>G3</em> au lieu de <em>G2</em> ). R est le
+rayon. Les mots d&#8217;axes sont facultatifs sauf au moins un
+des deux du plan choisi, qui doit être utilisé. Un rayon positif
+indique que l&#8217;arc fait moins de 180 degrés, alors qu&#8217;un rayon négatif
+indique un arc supérieur à 180 degrés. Si l&#8217;arc est hélicoïdal, la
+valeur du point d&#8217;arrivée de l&#8217;arc dans les coordonnées de l&#8217;axe
+perpendiculaire au plan choisi sera également spécifiée.</p></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Les deux mots d&#8217;axes pour le plan choisi sont omis.
+</p>
+</li>
+<li>
+<p>
+Le point d&#8217;arrivée de l&#8217;arc est identique au point courant.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Voici un exemple de commande pour usiner un arc au format rayon:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G17 G2 X10 Y15 R20 Z5 (arc au format rayon)</tt></pre>
+</div></div>
+<div class="paragraph"><p>Cet exemple signifie, faire un mouvement en arc ou hélicoïdal en sens horaire
+(vu du côté positif de l&#8217;axe Z), se terminant en X=10, Y=15 et Z=5,
+avec un rayon de 20. Si la valeur de départ de Z est 5, ce sera un arc
+de cercle parallèle au plan XY sinon, ce sera un arc hélicoïdal.</p></div>
+</div>
+<h2 id="sec:G4-Tempo">6. G4 Tempo</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G4 P-</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>P</em> - durée de la temporisation en secondes (un flottant)
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Les axes s&#8217;immobiliseront pour une durée de P secondes. Cette commande n&#8217;affecte
+pas la broche, les arrosages ni les entrées/sorties.</p></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Le nombre P est négatif ou n&#8217;est pas spécifié.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G5_1-B-spline">7. G5.1 B-spline quadratique</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G5.1 Xn Yn I[X offset] J[Y offset]</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>I</em> - offset en X
+</p>
+</li>
+<li>
+<p>
+<em>J</em> - offset en Y
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>G5.1 crée une B-spline quadratique dans le plan XY avec seulement les axes X
+et Y.</p></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Les offsets I et J ne sont pas spécifiés
+</p>
+</li>
+<li>
+<p>
+Un axe autre que X ou Y est spécifié
+</p>
+</li>
+<li>
+<p>
+Le plan actif n&#8217;est pas G17
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G5_2-G5_3-NURBs">8. G5.2 G5.3 NURBs Block</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Attention</div>
+</td>
+<td class="content">G5.2, G5.3 sont expérimentaux, il n&#8217;ont pas encore été testés
+totalement.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>G5.2 is for opening the data block defining a NURBs and G5.3 for
+closing the data block. In the lines between these two codes the curve
+control points are defined with both their related "weights" (P) and
+their parameter (L) which determines the order of the curve (k) and
+subsequently its degree (k-1).</p></div>
+<div class="paragraph"><p>Using this curve definition the knots of the NURBs curve are not
+defined by the user they are calculated by the inside algorithm, in the
+same way as it happens in a great number of graphic applications, where
+the curve shape can be modified only acting on either control points or
+weights.</p></div>
+<div class="paragraph"><p>Sample NURBs Code</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>    G0 X0 Y0
+    F10
+    G5.2 X0 Y1 P1 L3
+         X2 Y2 P1
+         X2 Y0 P1
+         X0 Y0 P2
+    G5.3
+    / The rapid moves show the same path without the NURBs Block
+    G0 X0 Y1
+       X2 Y2
+       X2 Y0
+       X0 Y0
+    M2</tt></pre>
+</div></div>
+<div class="paragraph"><div class="title">Sample NURBs Output</div><p><span class="image">
+<img src="images/nurbs01.png" alt="images/nurbs01.png" />
+</span></p></div>
+<div class="paragraph"><p><a href="http://wiki.linuxcnc.org/cgi-bin/wiki.pl?NURBS">D&#8217;autres informations sont
+disponible ici, sur le wiki</a>.</p></div>
+</div>
+<h2 id="sec:G7-Mode-diametre">9. G7 Mode diamètre sur les tours</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G7</tt></pre>
+</div></div>
+<div class="paragraph"><p>Sur un tour, programmer <em>G7</em> pour passer l&#8217;axe X en mode diamètre. En
+mode diamètre, les mouvements de l&#8217;axe X font la moitié de la cote
+programmée. Par exemple, X10 placera l&#8217;outil à 5 unités du centre, ce
+qui produira bien une pièce d&#8217;un diamètre de 10 unités.</p></div>
+</div>
+<h2 id="sec:G8-Mode-rayon">10. G8 Mode rayon sur les tours</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G8</tt></pre>
+</div></div>
+<div class="paragraph"><p>Sur un tour, programmer <em>G8</em> pour passer l&#8217;axe X en mode rayon. En mode
+rayon, les mouvements de l&#8217;axe X sont égaux à la cote programmée. Ce
+qui signifie que X10 placera l&#8217;outil à 10 unités du centre et aura pour
+résultat une pièce d&#8217;un diamètre de 20 unités. G8 est le mode par
+défaut à la mise sous tension.</p></div>
+</div>
+<h2 id="sec:G10-L1">11. G10 L1 Ajustements dans la table d&#8217;outils</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G10 L1 P- axes &lt;R- I- J- Q-&gt;</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>P</em> - numéro d&#8217;outil
+</p>
+</li>
+<li>
+<p>
+<em>R</em> - rayon de bec
+</p>
+</li>
+<li>
+<p>
+<em>I</em> - angle frontal (tour)
+</p>
+</li>
+<li>
+<p>
+<em>J</em> - angle arrière (tour)
+</p>
+</li>
+<li>
+<p>
+<em>Q</em> - orientation (tour)
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><em>G10 L1</em> ajuste les valeurs de la table d&#8217;outils pour l&#8217;outil N°<em>P</em> aux valeurs
+passées dans les paramètres. Les nouvelles valeurs peuvent être passées depuis
+un programme ou depuis la fenêtre d&#8217;entrées manuelles (MDI). Un G10 L1 valide,
+réécrit et recharge la table d&#8217;outils.</p></div>
+<div class="listingblock">
+<div class="title">Exemples avec G10 L1:</div>
+<div class="content">
+<pre><tt>G10 L1 P1 Z1.5 (fixe le décalage en Z de l'outil 1 à 1.5 de l'origine machine)
+G10 L1 P2 R0.15 Q3 (fixe le rayon de bec de l'outil 2 à 0.15 avec une orientation 3)</tt></pre>
+</div></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+La compensation d&#8217;outil est active
+</p>
+</li>
+<li>
+<p>
+Le mot P n&#8217;est pas spécifié
+</p>
+</li>
+<li>
+<p>
+Le mot P ne correspond pas à un numéro d&#8217;outil valide de la table d&#8217;outils.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>D&#8217;autres informations sur l&#8217;orientation <a href="../lathe/lathe-user_fr.html#sec:Orientations-des-outils-de-tour">des outils de tour sont disponibles ici</a>.</p></div>
+</div>
+<h2 id="sec:G10-L2">12. G10 L2 Établissement de l&#8217;origine d&#8217;un système de coordonnées</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G10 L2 P- &lt;axes R-&gt;</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>P</em> - système de coordonnées (0 à 9)
+</p>
+</li>
+<li>
+<p>
+<em>R</em> - rotation autour de l&#8217;axe Z
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>G10 L2 décale l&#8217;origine des axes dans le système de coordonnées spécifié par
+la valeur du mot d&#8217;axe. Le décalage s&#8217;effectue à partir de l&#8217;origine machine
+établie par la prise d&#8217;origine machine (homing). Les valeurs de ce décalage vont
+remplacer toutes celles en effet sur le système de coordonnées spécifié. Les
+mots d&#8217;axe inutilisés resteront inchangés.</p></div>
+<div class="paragraph"><p>Programmer P0 à P9 pour spécifier le système de coordonnées à décaler.</p></div>
+<div class="tableblock" id="sec:Systeme-Coordonnees">
+<table rules="all"
+width="50%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Tableau 1. Systèmes de coordonnées</caption>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+<thead>
+<tr>
+<th align="center" valign="top">Valeur P</th>
+<th align="center" valign="top"> Système de coordonnées </th>
+<th align="center" valign="top"> G-code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center" valign="top"><p class="table">0</p></td>
+<td align="center" valign="top"><p class="table">Actif courant</p></td>
+<td align="center" valign="top"><p class="table">n/a</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">G54</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">2</p></td>
+<td align="center" valign="top"><p class="table">2</p></td>
+<td align="center" valign="top"><p class="table">G55</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">3</p></td>
+<td align="center" valign="top"><p class="table">3</p></td>
+<td align="center" valign="top"><p class="table">G56</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">4</p></td>
+<td align="center" valign="top"><p class="table">4</p></td>
+<td align="center" valign="top"><p class="table">G57</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">5</p></td>
+<td align="center" valign="top"><p class="table">5</p></td>
+<td align="center" valign="top"><p class="table">G58</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">6</p></td>
+<td align="center" valign="top"><p class="table">6</p></td>
+<td align="center" valign="top"><p class="table">G59</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">7</p></td>
+<td align="center" valign="top"><p class="table">7</p></td>
+<td align="center" valign="top"><p class="table">G59.1</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">8</p></td>
+<td align="center" valign="top"><p class="table">8</p></td>
+<td align="center" valign="top"><p class="table">G59.2</p></td>
+</tr>
+<tr>
+<td align="center" valign="top"><p class="table">9</p></td>
+<td align="center" valign="top"><p class="table">9</p></td>
+<td align="center" valign="top"><p class="table">G59.3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Facultativement, programmer <em>R</em> pour indiquer la rotation des axes <em>XY</em> autour
+de l&#8217;axe <em>Z</em>.
+La direction de rotation est anti-horaire comme vue depuis le côté positif de
+l&#8217;axe Z.</p></div>
+<div class="paragraph"><p>Tous les mots d&#8217;axe sont facultatifs.</p></div>
+<div class="paragraph"><p>Être en mode relatif (<em>G91</em>) est sans effet sur <em>G10 L2</em>.</p></div>
+<div class="paragraph"><p>Concepts importants:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+G10 L2 Pn ne change pas l&#8217;actuel système de coordonnées par celui spécifié
+par P, il est nécessaire d&#8217;utiliser G54 à 59.3 pour sélectionner le système de
+coordonnées.
+</p>
+</li>
+<li>
+<p>
+Quand un mouvement de rotation est en cours, jogger un axe, déplacera celui-ci
+seulement dans le sens négatif ou positif et non pas le long de l&#8217;axe de
+rotation.
+</p>
+</li>
+<li>
+<p>
+Si un décalage d&#8217;origine créé avec <em>G92</em> est actif avant la commande <em>G10 L2</em>,
+il reste actif après.
+</p>
+</li>
+<li>
+<p>
+Le système de coordonnées dont l&#8217;origine est définie par la commande <em>G10</em>
+peut être actif ou non au moment de l&#8217;exécution de <em>G10</em>. Si il est actif à
+ce moment là, les nouvelles coordonnées prennent effet immédiatement.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Le nombre P n&#8217;est pas évalué comme étant un nombre entier compris entre 0 et 9.
+</p>
+</li>
+<li>
+<p>
+Un axe est programmé mais n&#8217;est pas défini dans la configuration.
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">Premier exemple avec G10 L2:</div>
+<div class="content">
+<pre><tt>G10 L2 P1 X3.5 Y17.2</tt></pre>
+</div></div>
+<div class="paragraph"><p>Place l&#8217;origine du premier système de coordonnées (celui sélectionné par G54)
+au points X3.5 et Y17.2 (en coordonnées absolues).
+La coordonnée Z de l&#8217;origine, ainsi que les coordonnées de tous les autres axes,
+restent inchangées puisque seuls X et Y étaient spécifiés.</p></div>
+<div class="listingblock">
+<div class="title">Deuxième exemple avec G10 L2:</div>
+<div class="content">
+<pre><tt>G10 L2 P1 X0 Y0 Z0 (révoque les décalages en X, Y et Z du système N°1)</tt></pre>
+</div></div>
+<div class="paragraph"><p>L&#8217;exemple précédent fixe les origines XYZ du système de coordonnées G54, à
+l&#8217;origine machine.</p></div>
+<div class="paragraph"><p>Les systèmes de coordonnées <a href="coordinates_fr.html#cha:Systemes-de-coordonnees">sont décrits en détail ici</a>.</p></div>
+</div>
+<h2 id="sec:G10-L10">13. G10 L10 modifie les offsets d&#8217;outil dans la table d&#8217;outils</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G10 L10 P- axes &lt;R- I- J- Q-&gt;</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>P</em> - numéro d&#8217;outil
+</p>
+</li>
+<li>
+<p>
+<em>R</em> - rotation autour de l&#8217;axe Z
+</p>
+</li>
+<li>
+<p>
+<em>I</em> - angle frontal (tour)
+</p>
+</li>
+<li>
+<p>
+<em>J</em> - angle arrière (tour)
+</p>
+</li>
+<li>
+<p>
+<em>Q</em> - orientation (tour)
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>G10 L10 modifie les valeurs de l&#8217;outil <em>P</em> dans la table d&#8217;outils, de sorte
+que si la compensation d&#8217;outil est rechargée, avec la machine à la position
+courante et avec les G5x et G92 actifs, les coordonnées courantes pour
+l&#8217;axe spécifié deviendront les coordonnées spécifiées. Les axes non spécifiés
+dans la commande G10 L10 ne seront pas modifiés.</p></div>
+<div class="listingblock">
+<div class="title">Exemple avec G10 L10:</div>
+<div class="content">
+<pre><tt>M6 T1 G43 (appel l'outil 1 et active la correction de longueur d'outil)
+G10 L10 P1 Z1.5 (fixe la position courante en Z à 1.5 dans la table d'outils)
+G43 (recharge l'offset de longueur d'outil depuis la table d'outils modifiée)
+M2 (fin de programme)</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour d&#8217;autres détals voir les commandes <a href="m-code_fr.html#sec:M6-Appel-Outil">M6</a>,
+<a href="other-code_fr.html#sec:T-Choix-Outil">Tn</a> et <a href="gcode_fr.html#sec:G43">G43</a>/<a href="gcode_fr.html#sec:G43_1">G43.1</a>.</p></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+La compensation d&#8217;outil est activée.
+</p>
+</li>
+<li>
+<p>
+Le mot P n&#8217;est pas spécifié.
+</p>
+</li>
+<li>
+<p>
+Le mot P ne correspond pas à un numéro d&#8217;outil valide de la table d&#8217;outils.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G10-L11">14. G10 L11 modifie les offsets d&#8217;outil dans la table d&#8217;outils</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G10 L11 P- axes &lt;R- I- J- Q-&gt;</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>P</em> - numéro d&#8217;outil
+</p>
+</li>
+<li>
+<p>
+<em>R</em> - rotation autour de l&#8217;axe Z
+</p>
+</li>
+<li>
+<p>
+<em>I</em> - angle frontal (tour)
+</p>
+</li>
+<li>
+<p>
+<em>J</em> - angle arrière (tour)
+</p>
+</li>
+<li>
+<p>
+<em>Q</em> - orientation (tour)
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>G10 L11 est identique à G10 L10 excepté qu&#8217;au lieux de fixer les valeurs
+par rapport aux décalages de coordonnées courants, il les fixe de sorte que les
+coordonnées courantes deviennent celles spécifiées par les paramètres si la
+nouvelle compensation d&#8217;outil est rechargée et que la machine est placée dans
+le système de coordonnées G59.3, système sans aucun décalage G92 actif.</p></div>
+<div class="paragraph"><p>Ceci permet à l&#8217;utilisateur de fixer le système de coordonnées G59.3 à
+un point fixe de la machine et d&#8217;utiliser cet emplacement pour mesurer
+l&#8217;outil sans s&#8217;occuper des autres décalages courants actifs.</p></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+La compensation d&#8217;outil est activée
+</p>
+</li>
+<li>
+<p>
+Le mot P n&#8217;est pas spécifié.
+</p>
+</li>
+<li>
+<p>
+Le mot P ne correspond pas à un numéro d&#8217;outil valide de la table d&#8217;outils.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G10-L20">15. G10 L20 Établissement de l&#8217;origine d&#8217;un système de coordonnées</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G10 L20 P- axes</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>P</em> - système de coordonnées (0-9)
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>G10 L20 est similaire à G10 L2 excepté qu&#8217;au lieu d&#8217;ajuster les offsets à des
+valeurs données, il les place à des valeurs calculées de sorte que les
+coordonnées courantes deviennent les valeurs données en paramètres.</p></div>
+<div class="listingblock">
+<div class="title">Exemple avec G10 L20:</div>
+<div class="content">
+<pre><tt>G10 L20 P1 X1.5 (fixe la position courante en X du système de coordonnées G54
+à 1.5)</tt></pre>
+</div></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Le nombre P n&#8217;est pas évalué comme une entier compris entre 0 et 9.
+</p>
+</li>
+<li>
+<p>
+Un axe non défini dans la configuration est programmé.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G17-G18-G19">16. G17 à G19.1 Choix du plan de travail</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Ces codes sélectionnent le plan de travail courant comme décrit ci-dessous:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+G17 - XY (par défaut)
+</p>
+</li>
+<li>
+<p>
+G18 - ZX
+</p>
+</li>
+<li>
+<p>
+G19 - YZ
+</p>
+</li>
+<li>
+<p>
+G17.1 - UV
+</p>
+</li>
+<li>
+<p>
+G18.1 - WU
+</p>
+</li>
+<li>
+<p>
+G19.1 - VW
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Les plans UV, WU et VW ne supportent pas les arcs. Il est de bonne pratique
+d&#8217;inclure la sélection du plan de travail dans le préambule du programme G-code.
+Les effets de la sélection d&#8217;un plan de travail sont discutés dans la section
+<a href="gcode_fr.html#sec:G2-G3">sur les arcs</a>.</p></div>
+</div>
+<h2 id="sec:G20-G21-Unites-Machine">17. G20, G21 Choix des unités machine</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>G20</em> - pour utiliser le pouce comme unité de longueur.
+</p>
+</li>
+<li>
+<p>
+<em>G21</em> - pour utiliser le millimètre comme unité de longueur.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>C&#8217;est toujours une bonne pratique de programmer soit <em>G20</em>, soit <em>G21</em>, dans
+le préambule du programme, avant tout mouvement et de ne plus en changer
+ailleurs dans le programme.</p></div>
+</div>
+<h2 id="sec:G28-G28_1-Aller-a-une-position">18. G28, G28.1 Aller à une position prédéfinie</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Attention</div>
+</td>
+<td class="content">Pour une bonne répétabilité de la position et que la position soit correctement
+enregistrée avec G28.1, faire la prise d&#8217;origine générale avant d&#8217;utiliser G28.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>G28 utilise les valeurs enregistrées dans les paramètres 5161 à 5166 comme
+points finaux des mouvements des axes X Y Z A B C U V W.
+Les valeurs des paramètres sont des coordonnées machine <em>absolues</em>, en unités
+machine natives, telles que fixées dans le fichier ini. Tous les axes définis
+dans le fichier ini seront déplacés lors d&#8217;un G28.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+G28 - effectue un mouvement en vitesse rapide de la position courante à la
+position <em>absolue</em> définie dans les paramètres 5161 à 5166.
+</p>
+</li>
+<li>
+<p>
+<em>G28 axes</em> - effectue un déplacement en vitesse rapide depuis la position
+spécifiée par <em>axes</em> y compris les décalages, puis effectuera un mouvement en
+vitesse rapide aux coordonnées <em>absolues</em> stockées dans les paramètres 5161
+à 5166.
+</p>
+</li>
+<li>
+<p>
+G28.1 - enregistre la position <em>absolue</em> courante dans les paramètres 5161
+à 5166.
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">Exemple avec G28</div>
+<div class="content">
+<pre><tt>G28 Z2.5 (vitesse rapide vers Z2.5 puis emplacement spécifié dans les paramètres enregistrés de G28)</tt></pre>
+</div></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+La compensation d&#8217;outil est active.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G30-G30_1-Aller-a-une-position-predefinie">19. G30, G30.1 Aller à une position prédéfinie</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Attention</div>
+</td>
+<td class="content">Pour une bonne répétabilité de la position et que la position soit correctement
+enregistrée avec G30.1, faire la prise d&#8217;origine générale avant d&#8217;utiliser G30.</td>
+</tr></table>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>G30</em> - effectue un mouvement en vitesse rapide de la position courante à la
+position <em>absolue</em> stockée dans les paramètres 5181 à 5186.
+Les valeurs stockées dans les paramètres font référence au système de
+coordonnées absolues qui est le système de coordonnées machine.
+</p>
+</li>
+<li>
+<p>
+<em>G30 axes</em> - effectue un déplacement en vitesse rapide depuis la position
+courante jusqu'à la position spécifiée par <em>axes</em>, y compris les décalages,
+suivi d&#8217;un mouvement rapide à la position <em>absolue</em> stockée dans les paramètres
+5181 à 5186.
+</p>
+</li>
+<li>
+<p>
+<em>G30.1</em> - enregistre la position absolue courante dans les paramètres 5181 à
+5186.
+</p>
+</li>
+</ul></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">Les paramètres de <em>G30</em> peuvent être utilisés pour déplacer l&#8217;outil quand un M6
+est programmé avec la variable <em>[TOOL_CHANGE_AT_G30]=1</em> dans la section
+<em>[EMCIO]</em> du fichier ini.</td>
+</tr></table>
+</div>
+<div class="listingblock">
+<div class="title">Exemple avec G30</div>
+<div class="content">
+<pre><tt>G30 Z2.5 (mvt rapide à Z2.5 puis déplacement selon les paramètres de G30
+stockés)</tt></pre>
+</div></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+La compensation de d&#8217;outil est active.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G33-Broche-synchronisee">20. G33 Mouvement avec broche synchronisée</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G33 X- Y- Z- K-</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>K</em> - distance par tour
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Pour un mouvement avec broche synchronisée dans une direction, programmer
+<em>G33 X- Y- Z- K-</em> où K donne la longueur du mouvement en XYZ pour chaque tour
+de broche. Par exemple, si il commence à <em>Z=0</em>, <em>G33 Z-1 K.0625</em> produira
+un mouvement d&#8217;un pouce de long en Z en même temps que 16 tours de broche.
+Cette commande peut être la base d&#8217;un programme pour faire un filetage de
+16 filets par pouce. Un autre exemple en métrique, <em>G33 Z-15 K1.5</em> produira
+un mouvement de 15mm de long pendant que la broche fera 10 tours soit un
+pas de 1.5mm.</p></div>
+<div class="paragraph"><p>Les mouvements avec broche synchronisée utilisent l&#8217;index de broche et les pins
+<em>spindle at speed</em> pour le filetage multi-passes. Un mouvement avec <em>G33</em> se
+termine au point final programmé.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">K suit la ligne d&#8217;avance décrite par <em>X- Y- Z-</em>. K n&#8217;est pas parallèle à
+l&#8217;axe Z si les points d&#8217;arrivée des axes X et Y sont utilisés, par exemple pour
+réaliser un filetage conique.</td>
+</tr></table>
+</div>
+<div class="paragraph"><div class="title">Informations techniques<a id="g33-tech-info"></a></div><p>Au début de chaque passe G33, LinuxCNC utilise la vitesse de broche et les
+limites d&#8217;accélération de la machine pour calculer combien de temps prendra Z
+pour accélérer après chaque impulsion d&#8217;index et détermine de combien de degrés
+la broche tournera pendant ce temps là. Il ajoute alors cet angle à la position
+de l&#8217;index puis calcule la position de Z utilisant l&#8217;angle de broche correct.
+Cela signifie que Z aura atteints la position correcte juste en fin
+d&#8217;accélération à la bonne vitesse, il peux immédiatement usiner le bon filetage.</p></div>
+<div class="paragraph"><div class="title">Connections de hAL</div><p>Les pins <em>motion.spindle-at-speed</em> et l&#8217;index <em>encoder.n.phase-Z</em> pour la broche
+doivent être connectés dans le fichier HAL pour que G33 soit opérationnel.
+Voir le Manuel de l&#8217;intégrateur pour plus d&#8217;informations sur les mouvements
+synchronisés avec la broche.</p></div>
+<div class="listingblock">
+<div class="title">Exemple avec G33:</div>
+<div class="content">
+<pre><tt>G90 (mode distance absolue)
+G0 X1 Z0.1 (positionnement en vitesse rapide)
+S100 M3 (broche en rotation à 100tr/mn)
+G33 Z-2 K0.125 (mouvement vers Z -2 avec une avance de 0.125 par tour)
+G0 X1.25 (mouvement de dégagement en vitesse rapide)
+Z0.1 (mouvement en vitesse rapide à Z0.1)
+M2 (fin de programme)</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Voir les sections <a href="#sec:G90-G91-Set">G90</a>, <a href="gcode_fr.html#sec:G0">G0</a>
+et <a href="m-code_fr.html#sec:M2-M30">M2</a> pour plus d&#8217;informations.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Tous les axes sont omis.
+</p>
+</li>
+<li>
+<p>
+La broche ne tourne pas quand cette commande est exécutée.
+</p>
+</li>
+<li>
+<p>
+Le mouvement linéaire requis excède les limites de vitesse machine
+en raison de la vitesse de broche.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G33_1-Taraudage-rigide">21. G33.1 Taraudage Rigide</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G33.1 X- Y- Z- K-</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>K</em> - distance par tour
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Pour un taraudage rigide avec broche synchronisée et mouvement de retour,
+programmer <em>G33.1 X- Y- Z- K-</em> où <em>K-</em> donne la longueur du mouvement
+pour chaque tour de broche. Un mouvement de taraudage rigide suit cette
+séquence:</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Attention</div>
+</td>
+<td class="content">Si pour un taraudage rigide, les coordonnées X et Y spécifiées ne sont pas
+les coordonnées courantes lors de l&#8217;appel de G33.1, le mouvement ne
+s&#8217;effectuera pas le long de l&#8217;axe Z mais de la position courante jusqu&#8217;aux
+coordonnées X et Y spécifiées.</td>
+</tr></table>
+</div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Un mouvement aux coordonnées spécifiées, synchronisé avec la rotation de
+la broche, avec le ratio donné et débutant à l&#8217;impulsion d&#8217;index du codeur
+de broche.
+</p>
+</li>
+<li>
+<p>
+Quand le point final est atteint, la commande inverse le sens de rotation
+de la broche (ex: de 300 tours/mn en sens horaire à 300 tours/mn en sens
+anti-horaire)
+</p>
+</li>
+<li>
+<p>
+Le mouvement reste synchronisé en continu avec la broche, même _au delà_
+de la coordonnée du point final spécifié pendant l&#8217;arrêt de la broche et
+son inversion.
+</p>
+</li>
+<li>
+<p>
+Le mouvement synchronisé se poursuit pour revenir aux coordonnées initiales.
+</p>
+</li>
+<li>
+<p>
+Quand les coordonnées initiale sont atteintes, la commande inverse la
+broche une seconde fois (ex: de 300tr/mn sens anti-horaire à 300tr/mn en
+sens horaire)
+</p>
+</li>
+<li>
+<p>
+Le mouvement reste synchronisé même _au delà_ des coordonnées initiales
+pendant que la broche s&#8217;arrête, puis s&#8217;inverse.
+</p>
+</li>
+<li>
+<p>
+Un mouvement <em>non synchronisé</em> ramène le mobile en arrière, aux
+coordonnées initiales.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Tous les mouvements avec broche synchronisée ont besoin d&#8217;un index de broche,
+pour conserver la trajectoire prévue et que les passes se chevauchent
+exactement. Un mouvement avec <em>G33.1</em> se termine aux coordonnées initiales.
+Les mots d&#8217;axes sont facultatifs, sauf au moins un qui doit être utilisé.</p></div>
+<div class="listingblock">
+<div class="title">Exemple avec G33.1:</div>
+<div class="content">
+<pre><tt>G90 (mode distance absolue)
+G0 X1.000 Y1.000 Z0.100 (mouvement rapide au point de départ taraudage rigide
+en 20 filets par pouce)
+G33.1 Z-0.750 K0.05 (et une profondeur de filet de 0.750)
+M2 (fin de programme)</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Voir les sections <a href="#sec:G90-G91-Set">G90</a>, <a href="gcode_fr.html#sec:G0">G0</a>
+et <a href="m-code_fr.html#sec:M2-M30">M2</a> pour plus d&#8217;informations.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Tous les axes sont omis.
+</p>
+</li>
+<li>
+<p>
+La broche ne tourne pas quand cette commande est exécutée.
+</p>
+</li>
+<li>
+<p>
+Le mouvement linéaire requis excède les limites de vitesse machine
+   en raison d&#8217;une vitesse de broche trop élevée.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G38-x-Palpeur">22. G38.x Mesure au palpeur</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G38.x axes</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>G38.2</em> - palpe vers la pièce, stoppe au toucher, signale une erreur en cas de
+défaut.
+</p>
+</li>
+<li>
+<p>
+<em>G38.3</em> - palpe vers la pièce, stoppe au toucher.
+</p>
+</li>
+<li>
+<p>
+<em>G38.4</em> - palpe en quittant la pièce, stoppe en perdant le contact, signal une
+erreur en cas de défaut.
+</p>
+</li>
+<li>
+<p>
+<em>G38.5</em> - palpe en quittant la pièce, stoppe en perdant le contact.
+</p>
+</li>
+</ul></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">Cette commande n&#8217;est pas utilisable si la machine n&#8217;a pas été configurée pour
+exploiter un signal de sonde entre HAL et LinuxCNC.
+Le signal de la sonde doit être envoyé sur une broche d&#8217;entrée puis transmis à
+<em>motion.probe-entrée (bit, In)</em>. G38.x utilise la valeur de cette broche pour
+déterminer quand la sonde a touché ou perdu le contact. TRUE si le contact de
+la sonde est fermé (Touché), FALSE si il est ouvert.</td>
+</tr></table>
+</div>
+<div class="paragraph"><p>Programmer <em>G38.x axes</em>, pour effectuer une mesure au palpeur. Les mots d&#8217;axe
+sont facultatifs excepté au moins un. Les mots d&#8217;axe définissent ensemble,
+le point de destination, à partir de l&#8217;emplacement actuel, vers lequel la
+sonde se déplace. Si le palpeur n&#8217;a pas déclenché avant que la destination soit
+atteinte, G38.2 et G38.4 signaleront une erreur. L&#8217;outil dans la broche doit
+être un palpeur ou un actionneur de contact.</p></div>
+<div class="paragraph"><p>En réponse à cette commande, la machine déplace le point contrôlé
+(qui est le centre de la boule du stylet du palpeur) en ligne droite,
+à la vitesse travail courante, vers le point programmé.
+En mode vitesse inverse du temps, la vitesse est telle que le mouvement
+depuis le point courant jusqu&#8217;au point programmé, prendra le temps spécifié.
+Le mouvement s&#8217;arrête (dans les limites d&#8217;accélération de la machine)
+lorsque le point programmé est atteint ou quand l&#8217;entrée du palpeur
+bascule dans l'état attendu selon la première éventualité.</p></div>
+<div class="paragraph"><p>Le tableau de signification des différents codes de mesure.</p></div>
+<div class="tableblock" id="sec:Codes-de-mesure">
+<table rules="all"
+width="90%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Tableau 2. Codes de mesure</caption>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<thead>
+<tr>
+<th align="left" valign="top">Code  </th>
+<th align="left" valign="top"> État ciblé    </th>
+<th align="left" valign="top"> Sens de destination </th>
+<th align="left" valign="top"> Signal d&#8217;erreur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">G38.2</p></td>
+<td align="left" valign="top"><p class="table">Touché</p></td>
+<td align="left" valign="top"><p class="table">Vers la pièce</p></td>
+<td align="left" valign="top"><p class="table">Oui</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">G38.3</p></td>
+<td align="left" valign="top"><p class="table">Touché</p></td>
+<td align="left" valign="top"><p class="table">Vers la pièce</p></td>
+<td align="left" valign="top"><p class="table">Non</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">G38.4</p></td>
+<td align="left" valign="top"><p class="table">Quitté</p></td>
+<td align="left" valign="top"><p class="table">Depuis la pièce</p></td>
+<td align="left" valign="top"><p class="table">Oui</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">G38.5</p></td>
+<td align="left" valign="top"><p class="table">Quitté</p></td>
+<td align="left" valign="top"><p class="table">Depuis la pièce</p></td>
+<td align="left" valign="top"><p class="table">Non</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Après une mesure réussie, <a href="overview_fr.html#sec:Log-des-mesures">les paramètres 5061 à 5069</a>
+contiendront les coordonnées des axes XYZABCUVW, pour l&#8217;emplacement du
+point contrôlé à l&#8217;instant du changement d'état du palpeur.
+Après une mesure manquée, ils contiendront les coordonnées du point programmé.
+Le paramètre 5070 est mis à 1 si la mesure est réussie et à 0 si elle est
+manquée. Si la mesure n&#8217;a pas réussi, G38.2 et G38.4 signaleront une erreur
+en affichant un message à l'écran si l&#8217;interface graphique choisie le permet.</p></div>
+<div class="paragraph"><p>Un commentaire de la forme <em>(PROBEOPEN filename.txt)</em> ouvrira le
+fichier <em>filename.txt</em> et y enregistrera les 9 coordonnées de
+XYZABCUVW pour chaque mesure réussie.
+Le fichier doit être fermé avec <a href="overview_fr.html#sec:Log-des-mesures">le commentaire</a>
+<em>(PROBECLOSE)</em>.</p></div>
+<div class="paragraph"><p>Dans le répertoire des exemples, le fichier <em>smartprobe.ngc</em> montre
+l&#8217;utilisation d&#8217;un palpeur et l&#8217;enregistrement des coordonnées de la pièce
+dans un fichier. Le fichier <em>smartprobe.ngc</em> peut être utilisé par <em>ngcgui</em>
+avec un minimum de modifications.</p></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Le point programmé est le même que le point courant.
+</p>
+</li>
+<li>
+<p>
+Aucun mot d&#8217;axe n&#8217;est utilisé.
+</p>
+</li>
+<li>
+<p>
+La compensation de d&#8217;outil est activée.
+</p>
+</li>
+<li>
+<p>
+La vitesse travail est à zéro.
+</p>
+</li>
+<li>
+<p>
+Le palpeur est déjà au contact de la cible.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G40">23. G40 Révocation de la compensation de rayon d&#8217;outil</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>G40</em> - révoque la compensation de rayon d&#8217;outil. Le mouvement suivant, de
+sortie de compensation, doit être une droite au moins aussi longue que le
+diamètre de l&#8217;outil. Ce n&#8217;est pas une erreur de désactiver la compensation
+quand elle est déjà inactive.
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">Exemple avec G40</div>
+<div class="content">
+<pre><tt>; la position courante est X1 après la fin du mvt avec compensation
+G40 (révoque la compensation)
+G0 X1.6 (mouvement linéaire aussi long que le diamètre d'outil)
+M2 (fin de programme)</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Voir les sections <a href="gcode_fr.html#sec:G0">G0</a> et <a href="m-code_fr.html#sec:M2-M30">M2</a>
+pour plus d&#8217;informations.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Un mouvement en arc avec G2 ou G3 suit un G40.
+</p>
+</li>
+<li>
+<p>
+Le mouvement suivant la révocation de compensation est inférieur au
+diamètre de l&#8217;outil.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G41-G42">24. G41, G42 Compensation de rayon d&#8217;outil</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G41 &lt;D-&gt; (compensation à gauche du profil)
+G42 &lt;D-&gt; (compensation à droite du profil)</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>D</em> - Numéro d&#8217;outil
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Le mot D est facultatif. En son absence ou si il est à zéro, le rayon de l&#8217;outil
+courant est utilisé. Si le mot D est présent, il devrait normalement correspondre
+au numéro de l&#8217;outil monté dans la broche, bien que cela ne soit pas
+indispensable, il doit par contre correspondre à un numéro d&#8217;outil valide.</p></div>
+<div class="paragraph"><p>Pour activer la compensation d&#8217;outil à gauche du profil,
+programmer <em>G41</em>. G41 applique la compensation d&#8217;outil à gauche de la
+ligne programmée vu de l&#8217;extrémité positive de l&#8217;axe perpendiculaire au plan.</p></div>
+<div class="paragraph"><p>Pour activer la compensation d&#8217;outil à droite du profil,
+programmer <em>G42</em>. G42 applique la correction d&#8217;outil à droite de la
+ligne programmée vu de l&#8217;extrémité positive de l&#8217;axe perpendiculaire au plan.</p></div>
+<div class="paragraph"><p>Le mouvement d&#8217;entrée doit être au moins aussi long que le rayon de l&#8217;outil.
+Le mouvement d&#8217;entrée peut être effectué en vitesse rapide.</p></div>
+<div class="paragraph"><p>La compensation d&#8217;outil ne peut être effectuée que si le plan XY ou
+le plan XZ est actif.</p></div>
+<div class="paragraph"><p>Les commandes définies par l&#8217;utilisateur, M100 à M199, sont autorisées
+lorsque la compensation d&#8217;outil est activée.</p></div>
+<div class="paragraph"><p>Le comportement de la machine, quand la compensation d&#8217;outil est activée,
+est décrit dans la section <a href="tool_compensation_fr.html#sec:Compensation-rayon-d-outil">sur la compensation d&#8217;outil</a>.</p></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Le nombre D ne correspond, ni à zéro, ni à un numéro d&#8217;outil valide.
+</p>
+</li>
+<li>
+<p>
+Le plan YZ est le plan de travail actif.
+</p>
+</li>
+<li>
+<p>
+La compensation d&#8217;outil est activée alors qu&#8217;elle est déjà active.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G41_1-G42_1">25. G41.1, G42.1 Compensation dynamique d&#8217;outil</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G41.1 D- &lt;L-&gt; (à gauche du profil)
+G42.1 D- &lt;L-&gt; (à droite du profil)</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Le mot D spécifie le diamètre de l&#8217;outil.
+</p>
+</li>
+<li>
+<p>
+Le mot L spécifie l&#8217;orientation de l&#8217;outil, est à 0 par défaut si
+non spécifié.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Pour activer la compensation dynamique d&#8217;outil à gauche du profil,
+programmer <em>G41.1 D- L-</em>.</p></div>
+<div class="paragraph"><p>Pour activer la compensation dynamique d&#8217;outil à droite du profil,
+programmer <em>G42.1 D- L-</em>.</p></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Le plan YZ est le plan de travail actif.
+</p>
+</li>
+<li>
+<p>
+La valeur de L n&#8217;est pas comprise entre 0 et 9 inclus.
+</p>
+</li>
+<li>
+<p>
+Le nombre L est utilisée alors que le plan XZ n&#8217;est pas le plan actif.
+</p>
+</li>
+<li>
+<p>
+La compensation d&#8217;outil est activée alors qu&#8217;elle est déjà active.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Plus d&#8217;informations sur <a href="../lathe/lathe-user_fr.html#sec:Orientations-des-outils-de-tour">l&#8217;orientation des outils</a>, sur <a href="../lathe/lathe-user_fr.html#fig:Outil-Positions-1-2-3-4">les outils de tour en 1-2-3-4</a> et
+<a href="../lathe/lathe-user_fr.html#fig:Outil-Positions-5-6-7-8">les outils de tour en 5-6-7-8</a>.</p></div>
+</div>
+<h2 id="sec:G43">26. G43 Activation de la compensation de longueur d&#8217;outil</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>H</em> - Numéro d&#8217;outil
+</p>
+</li>
+<li>
+<p>
+<em>G43</em> - Utilise l&#8217;outil courant chargé par le dernier Tn M6. G43 modifie les
+mouvements ultérieurs en décalant les coordonnées de Z et/ou de X, de la
+longueur de l&#8217;outil. G43 ne provoque aucun mouvement. L&#8217;effet de la
+compensation ne se produira qu&#8217;au cours du prochain mouvement des axes compensés,
+de sorte que le point final de ce mouvement sera la position compensée.
+</p>
+</li>
+<li>
+<p>
+<em>G43 H-</em> - Utilise l&#8217;offset de l&#8217;outil correspondant fourni par la table
+d&#8217;outils. Ce n&#8217;est pas une erreur d&#8217;avoir la valeur de H à zéro, le numéro de
+l&#8217;outil courant sera utilisé.
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">Exemple de ligne avec G43 H-</div>
+<div class="content">
+<pre><tt>G43 H1 (ajuste les offsets d'outil avec les valeurs de l'outil 1 fournies par
+la table d'outils)</tt></pre>
+</div></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+La valeur de H n&#8217;est pas un entier, il est négatif, ou il ne correspond, ni
+à zéro, ni à un numéro d&#8217;outil valide.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G43_1">27. G43.1 Compensation dynamique de longueur d&#8217;outil</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G43.1 axes</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>G43.1 axes</em> - Modifie les mouvements ultérieurs en décalant les coordonnées
+de Z et/ou de X, selon les offsets stockés dans la table d&#8217;outils. G43.1 ne
+provoque aucun mouvement. L&#8217;effet de la compensation ne se produira qu&#8217;au cours
+du prochain mouvement des axes compensés de sorte que le point final de ce
+mouvement sera la position compensée.
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">Exemple avec G43.1</div>
+<div class="content">
+<pre><tt>G90 (passe en mode absolu)
+T1 M6 G43 (charge l'outil N°1 et son offset de longueur, Z est à la position
+machine 0 et la visu affiche Z1.500)
+G43.1 Z0.250 (décale l'outil courant de 0.250, la visu affiche maintenant
+Z1.250)
+M2 (fin de programme)</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Voir les sections <a href="gcode_fr.html#sec:G90-G91">G90</a> &amp; <a href="other-code_fr.html#sec:T-Choix-Outil">T</a> et
+<a href="m-code_fr.html#sec:M2-M30">M2</a> pour plus d&#8217;informations.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Une commande de mouvement est sur la même ligne que <em>G43.1</em>
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G49-Revocation-Longueur-Outil">28. G49 Révocation de la compensation de longueur d&#8217;outil</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Pour révoquer la compensation de longueur d&#8217;outil, programmer <em>G49</em>.</p></div>
+<div class="paragraph"><p>Ce n&#8217;est pas une erreur de programmer une compensation qui est déjà
+utilisée. Ce n&#8217;est pas non plus une erreur de révoquer une compensation de
+longueur d&#8217;outil alors qu&#8217;aucune n&#8217;est couramment utilisée.</p></div>
+</div>
+<h2 id="sec:G53-Mouvement-Coordonnees-Absolues">29. G53 Mouvement en coordonnées absolues</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G53 axes</tt></pre>
+</div></div>
+<div class="paragraph"><p>Pour un déplacement exprimé en coordonnées système, programmer
+<em>G53</em> sur la même ligne qu&#8217;un mouvement linéaire. <em>G53</em> n&#8217;est pas modal, il doit
+donc être programmé sur chaque ligne où il doit être actif. <em>G0</em> ou <em>G1</em> ne
+doivent pas se trouver sur la même ligne si un d&#8217;eux est déjà actif.
+Par exemple:</p></div>
+<div class="listingblock">
+<div class="title">Exemple avec G53</div>
+<div class="content">
+<pre><tt>G53 G0 X0 Y0 Z0 (mouvement linéaire rapide des axes à leur positions d'origine)
+G53 X2 (mouvement linéaire rapide à la coordonnée absolue X=2)</tt></pre>
+</div></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>G53</em> est utilisé sans que G0 ou G1 ne soit actif.
+</p>
+</li>
+<li>
+<p>
+<em>G53</em> est utilisé alors que la compensation d&#8217;outil est active.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Étudier le <a href="coordinates_fr.html#cha:Systemes-de-coordonnees">chapitre sur les systèmes de coordonnées</a> et de leurs décalages, pour bien maîtriser ces concepts.</p></div>
+</div>
+<h2 id="sec:G54-a-G59_3">30. G54 à G59.3 Choix du système de coordonnées</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+<em>G54</em> - Système de coordonnées pièce 1
+</p>
+</li>
+<li>
+<p>
+<em>G55</em> - Système de coordonnées pièce 2
+</p>
+</li>
+<li>
+<p>
+<em>G56</em> - Système de coordonnées pièce 3
+</p>
+</li>
+<li>
+<p>
+<em>G57</em> - Système de coordonnées pièce 4
+</p>
+</li>
+<li>
+<p>
+<em>G58</em> - Système de coordonnées pièce 5
+</p>
+</li>
+<li>
+<p>
+<em>G59</em> - Système de coordonnées pièce 6
+</p>
+</li>
+<li>
+<p>
+<em>G59.1</em> - Système de coordonnées pièce 7
+</p>
+</li>
+<li>
+<p>
+<em>G59.2</em> - Système de coordonnées pièce 8
+</p>
+</li>
+<li>
+<p>
+<em>G59.3</em> - Système de coordonnées pièce 9
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Le code <em>G54</em> est apparié avec le système de coordonnées pièce N°1,
+pour le choisir programmer <em>G54</em> et ainsi de suite pour les autres systèmes.</p></div>
+<div class="paragraph"><p>Les systèmes de coordonnées stockent les valeurs de chacun des axes dans les
+variables indiquées dans le tableau ci-dessous.</p></div>
+<div class="tableblock">
+<table rules="all"
+width="80%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<caption class="title">Tableau 3. Paramètres des systèmes de coordonnées pièce<a id="sec:Coordonnees-Piece"></a></caption>
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<col width="8%" />
+<thead>
+<tr>
+<th align="left" valign="top">Choix </th>
+<th align="center" valign="top">CS</th>
+<th align="center" valign="top">X   </th>
+<th align="center" valign="top">Y   </th>
+<th align="center" valign="top">Z   </th>
+<th align="center" valign="top">A   </th>
+<th align="center" valign="top">B   </th>
+<th align="center" valign="top">C   </th>
+<th align="center" valign="top">U   </th>
+<th align="center" valign="top">V   </th>
+<th align="center" valign="top">W   </th>
+<th align="center" valign="top">R</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">G54</p></td>
+<td align="center" valign="top"><p class="table">1</p></td>
+<td align="center" valign="top"><p class="table">5221</p></td>
+<td align="center" valign="top"><p class="table">5222</p></td>
+<td align="center" valign="top"><p class="table">5223</p></td>
+<td align="center" valign="top"><p class="table">5224</p></td>
+<td align="center" valign="top"><p class="table">5225</p></td>
+<td align="center" valign="top"><p class="table">5226</p></td>
+<td align="center" valign="top"><p class="table">5227</p></td>
+<td align="center" valign="top"><p class="table">5228</p></td>
+<td align="center" valign="top"><p class="table">5229</p></td>
+<td align="center" valign="top"><p class="table">5230</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">G55</p></td>
+<td align="center" valign="top"><p class="table">2</p></td>
+<td align="center" valign="top"><p class="table">5241</p></td>
+<td align="center" valign="top"><p class="table">5242</p></td>
+<td align="center" valign="top"><p class="table">5243</p></td>
+<td align="center" valign="top"><p class="table">5244</p></td>
+<td align="center" valign="top"><p class="table">5245</p></td>
+<td align="center" valign="top"><p class="table">5246</p></td>
+<td align="center" valign="top"><p class="table">5247</p></td>
+<td align="center" valign="top"><p class="table">5248</p></td>
+<td align="center" valign="top"><p class="table">5249</p></td>
+<td align="center" valign="top"><p class="table">5250</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">G56</p></td>
+<td align="center" valign="top"><p class="table">3</p></td>
+<td align="center" valign="top"><p class="table">5261</p></td>
+<td align="center" valign="top"><p class="table">5262</p></td>
+<td align="center" valign="top"><p class="table">5263</p></td>
+<td align="center" valign="top"><p class="table">5264</p></td>
+<td align="center" valign="top"><p class="table">5265</p></td>
+<td align="center" valign="top"><p class="table">5266</p></td>
+<td align="center" valign="top"><p class="table">5267</p></td>
+<td align="center" valign="top"><p class="table">5268</p></td>
+<td align="center" valign="top"><p class="table">5269</p></td>
+<td align="center" valign="top"><p class="table">5270</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">G57</p></td>
+<td align="center" valign="top"><p class="table">4</p></td>
+<td align="center" valign="top"><p class="table">5281</p></td>
+<td align="center" valign="top"><p class="table">5282</p></td>
+<td align="center" valign="top"><p class="table">5283</p></td>
+<td align="center" valign="top"><p class="table">5284</p></td>
+<td align="center" valign="top"><p class="table">5285</p></td>
+<td align="center" valign="top"><p class="table">5286</p></td>
+<td align="center" valign="top"><p class="table">5287</p></td>
+<td align="center" valign="top"><p class="table">5288</p></td>
+<td align="center" valign="top"><p class="table">5289</p></td>
+<td align="center" valign="top"><p class="table">5290</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">G58</p></td>
+<td align="center" valign="top"><p class="table">5</p></td>
+<td align="center" valign="top"><p class="table">5301</p></td>
+<td align="center" valign="top"><p class="table">5302</p></td>
+<td align="center" valign="top"><p class="table">5303</p></td>
+<td align="center" valign="top"><p class="table">5304</p></td>
+<td align="center" valign="top"><p class="table">5305</p></td>
+<td align="center" valign="top"><p class="table">5306</p></td>
+<td align="center" valign="top"><p class="table">5307</p></td>
+<td align="center" valign="top"><p class="table">5308</p></td>
+<td align="center" valign="top"><p class="table">5309</p></td>
+<td align="center" valign="top"><p class="table">5310</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">G59</p></td>
+<td align="center" valign="top"><p class="table">6</p></td>
+<td align="center" valign="top"><p class="table">5321</p></td>
+<td align="center" valign="top"><p class="table">5322</p></td>
+<td align="center" valign="top"><p class="table">5323</p></td>
+<td align="center" valign="top"><p class="table">5324</p></td>
+<td align="center" valign="top"><p class="table">5325</p></td>
+<td align="center" valign="top"><p class="table">5326</p></td>
+<td align="center" valign="top"><p class="table">5327</p></td>
+<td align="center" valign="top"><p class="table">5328</p></td>
+<td align="center" valign="top"><p class="table">5329</p></td>
+<td align="center" valign="top"><p class="table">5330</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">G59.1</p></td>
+<td align="center" valign="top"><p class="table">7</p></td>
+<td align="center" valign="top"><p class="table">5341</p></td>
+<td align="center" valign="top"><p class="table">5342</p></td>
+<td align="center" valign="top"><p class="table">5343</p></td>
+<td align="center" valign="top"><p class="table">5344</p></td>
+<td align="center" valign="top"><p class="table">5345</p></td>
+<td align="center" valign="top"><p class="table">5346</p></td>
+<td align="center" valign="top"><p class="table">5347</p></td>
+<td align="center" valign="top"><p class="table">5348</p></td>
+<td align="center" valign="top"><p class="table">5349</p></td>
+<td align="center" valign="top"><p class="table">5350</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">G59.2</p></td>
+<td align="center" valign="top"><p class="table">8</p></td>
+<td align="center" valign="top"><p class="table">5361</p></td>
+<td align="center" valign="top"><p class="table">5362</p></td>
+<td align="center" valign="top"><p class="table">5363</p></td>
+<td align="center" valign="top"><p class="table">5364</p></td>
+<td align="center" valign="top"><p class="table">5365</p></td>
+<td align="center" valign="top"><p class="table">5366</p></td>
+<td align="center" valign="top"><p class="table">5367</p></td>
+<td align="center" valign="top"><p class="table">5368</p></td>
+<td align="center" valign="top"><p class="table">5369</p></td>
+<td align="center" valign="top"><p class="table">5370</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">G59.3</p></td>
+<td align="center" valign="top"><p class="table">9</p></td>
+<td align="center" valign="top"><p class="table">5381</p></td>
+<td align="center" valign="top"><p class="table">5382</p></td>
+<td align="center" valign="top"><p class="table">5383</p></td>
+<td align="center" valign="top"><p class="table">5384</p></td>
+<td align="center" valign="top"><p class="table">5385</p></td>
+<td align="center" valign="top"><p class="table">5386</p></td>
+<td align="center" valign="top"><p class="table">5387</p></td>
+<td align="center" valign="top"><p class="table">5388</p></td>
+<td align="center" valign="top"><p class="table">5389</p></td>
+<td align="center" valign="top"><p class="table">5390</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Un de ces G-codes est utilisé alors que la compensation d&#8217;outil est active.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Voir la section <a href="coordinates_fr.html#cha:Systemes-de-coordonnees">sur les systèmes de coordonnée</a>
+pour une vue complète.</p></div>
+</div>
+<h2 id="sec:G61-G61_1">31. G61, G61.1 Contrôle de trajectoire exacte</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>G61</em> - Met la machine en mode de trajectoire exacte. G61 suivra exactement
+la trajectoire programmée même si cela doit aboutir à un arrêt complet
+momentané du mobile.
+</p>
+</li>
+<li>
+<p>
+<em>G61.1</em> - Met la machine en mode arrêts exacts.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G64">32. G64 Contrôle de trajectoire continue avec tolérance</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G64 &lt;P- &lt;Q-&gt;&gt;</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>P-</em> - Déviation maximale tolérée par rapport à la trajectoire programmée.
+</p>
+</li>
+<li>
+<p>
+<em>Q-</em> - Tolérance <a href="../common/User_Concepts_fr.html#cha:Concepts-pour-utilisateur">naïve cam</a>.
+</p>
+</li>
+<li>
+<p>
+<em>G64</em> - Recherche de la meilleure vitesse possible.
+</p>
+</li>
+<li>
+<p>
+<em>G64 P-</em> - Mélange entre meilleure vitesse et tolérance de déviation.
+</p>
+</li>
+<li>
+<p>
+<em>G64 P- Q-</em> - Est le moyen d&#8217;affiner encore pour obtenir le meilleur
+compromis entre vitesse et précision de la trajectoire. La vitesse sera
+réduite si nécessaire pour maintenir la trajectoire, même si ça doit aboutir
+à un arrêt complet momentané. Le <em>détecteur naïve cam</em> est activé. Quand il
+y a une série de mouvements linéaires XYZ en vitesse travail, avec une
+même vitesse de déplacement, inférieure à <em>Q-</em>, ils sont regroupés en
+un seul segment linéaire, ainsi la vitesse s&#8217;en trouve améliorée puisqu&#8217;il
+n&#8217;y a plus de décélération/arrêt/accélération aux points de jonction des
+segments. Sur les mouvements G2/G3 dans le plan <em>G17</em> (XY) lorsque le
+maximum d'écart entre un arc et une ligne droite est inférieur à
+la déviation maximale <em>P-</em>, la tolérance de l&#8217;arc est divisée en deux lignes
+(depuis le début de l&#8217;arc jusqu&#8217;au milieu et du milieu jusqu'à la fin). Ces
+deux lignes sont ensuite soumises à l&#8217;algorithme <em>naïve cam</em>. Ainsi, les cas
+ligne-arc, arc-arc et arc-ligne et le cas ligne-ligne, bénéficient de
+l&#8217;algorithme <em>naïve cam</em>, ce qui améliore les performances en simplifiant
+les trajectoires. Il est permis de programmer ce mode même si il est déjà actif.
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">Exemple de ligne de programme avec G64</div>
+<div class="content">
+<pre><tt>G64 P0.015 (fixe la déviation d'usinage à 0.015 maximum de la trajectoire
+programmée)</tt></pre>
+</div></div>
+<div class="paragraph"><p>Il est de bonne pratique de spécifier un type de contrôle de trajectoire
+dans le préambule de chaque programme G-code.</p></div>
+</div>
+<h2 id="sec:G73-Percage-avec-brise-copeaux">33. G73 Cycle de perçage avec brise copeaux</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G73 axes R- Q- &lt;L-&gt;</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>R-</em> - Position du plan de retrait en Z
+</p>
+</li>
+<li>
+<p>
+<em>Q-</em> - Incrément <em>delta</em> parallèle à l&#8217;axe Z
+</p>
+</li>
+<li>
+<p>
+<em>L-</em> - Répétition
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Le cycle <em>G73</em> est destiné au perçage profond ou au fraisage avec brise-copeaux.
+Les retraits, au cours de ce cycle, fragmentent les copeaux longs (fréquents
+lors de l&#8217;usinage de l&#8217;aluminium). Ce cycle utilise la valeur <em>Q-</em> qui
+représente un incrément <em>delta</em> parallèle à l&#8217;axe Z. Le cycle se décompose de la
+manière suivante:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Un mouvement préliminaire. Comme décrit dans <a href="#sec:Mouvement-Preliminaire">cet  exposé sur le mouvement préliminaire</a>
+</p>
+</li>
+<li>
+<p>
+Un mouvement de l&#8217;axe Z seul, en vitesse travail, sur la position la moins
+profonde entre, l&#8217;incrément <em>delta</em> ou la position de Z programmée.
+</p>
+</li>
+<li>
+<p>
+Une petite remontée en vitesse rapide.
+</p>
+</li>
+<li>
+<p>
+Répétition des étapes 2 et 3 jusqu'à ce que la position programmée de Z
+soit atteinte à l'étape 2.
+</p>
+</li>
+<li>
+<p>
+Un mouvement de l&#8217;axe Z en vitesse rapide jusqu&#8217;au plan de retrait.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+La valeur de Q est négative ou égale à zéro.
+</p>
+</li>
+<li>
+<p>
+Le nombre R n&#8217;est pas spécifié.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G76-Filetage">34. G76 Cycle de filetage préprogrammé</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G76 P- Z- I- J- R- K- Q- H- E- L-</tt></pre>
+</div></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/g76-threads_fr.png" alt="images/g76-threads_fr.png" />
+</div>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Ligne pilote</em> - La ligne pilote est une ligne imaginaire, parallèle à
+    l&#8217;axe de la broche (Z), située en sécurité à l&#8217;extérieur du matériau à
+    fileter. La ligne pilote va du point initial en Z jusqu'à la fin du
+    filetage donnée par la valeur de <em>Z</em> dans la commande.
+</p>
+</li>
+<li>
+<p>
+<em>P-</em> - Le pas du filet en distance de déplacement par tour.
+</p>
+</li>
+<li>
+<p>
+<em>Z-</em> - La position finale du filetage. A la fin du cycle, l&#8217;outil sera
+    à cette position <em>Z</em>.
+</p>
+</li>
+</ul></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">En mode diamètre G7, les valeurs <em>I</em>, <em>J</em> et <em>K</em> sont des mesures de diamètre.
+En mode rayon G8, les valeurs <em>I</em>, <em>J</em> et <em>K</em> sont des mesures de rayon.</td>
+</tr></table>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>I-</em> - La crête du filet est une distance entre la ligne pilote et la
+    surface de la pièce. Une valeur négative de <em>I</em>,
+    indique un filetage externe et une valeur positive, indique un
+    filetage interne. C&#8217;est généralement à ce diamètre nominal que le
+    matériau est cylindré avant de commencer le cycle <em>G76</em>.
+</p>
+</li>
+<li>
+<p>
+<em>J-</em> - Une valeur positive, spécifie la profondeur de la passe initiale.
+     La première passe sera à <em>J</em> au delà de la crête du filet <em>I</em>.
+</p>
+</li>
+<li>
+<p>
+<em>K-</em> - Une valeur positive, spécifie la profondeur finale du filet.
+    La dernière passe du filetage sera à <em>K</em> au delà de la crête du filet <em>I</em>.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Paramètres facultatifs:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>R-</em> - La profondeur de dégressivité. <em>R1.0</em> spécifie une profondeur
+    de passe constante pour les passes successives du filetage.
+    <em>R2.0</em> spécifie une surface constante.
+    Les valeurs comprises entre 1.0 et 2.0 spécifient
+    une profondeur décroissante mais une surface croissante.
+    Enfin, les valeurs supérieures à 2.0 sélectionnent une surface décroissante.
+</p>
+</li>
+</ul></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Attention</div>
+</td>
+<td class="content">Les valeurs inutilement hautes de dégressivité, produiront un nombre inutilement
+important de passes. (dégressivité = plongée par paliers)</td>
+</tr></table>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Q-</em> - L&#8217;angle de pénétration oblique. C&#8217;est l&#8217;angle (en degrés)
+    décrivant de combien, les passes successives doivent être décalées
+    le long de l&#8217;axe Z. C&#8217;est utilisé pour faire enlever plus de matériau
+    d&#8217;un côté de l&#8217;outil que de l&#8217;autre.
+    Une valeur positive de <em>Q</em> fait couper d&#8217;avantage le bord de l&#8217;outil.
+    Typiquement, les valeurs sont 29, 29.5 ou 30 degrés.
+</p>
+</li>
+<li>
+<p>
+<em>H-</em> - Le nombre de passes de finition. Les passes de finition sont
+    des passes additionnelles en fond de filet.
+    Pour ne pas faire de passe de finition, programmer <em>H0</em>.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Les entrées et sorties de filetage peuvent être programmées coniques
+    avec les valeurs de <em>E</em> et <em>L</em>.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>E-</em> - Spécifie la longueur des parties coniques le long de l&#8217;axe Z.
+    L&#8217;angle du cône ira de la profondeur de la dernière passe à la
+    crête du filet <em>I</em>. <em>E2.0</em> donnera un cône d&#8217;entrée et de sortie
+    d&#8217;une longueur de 2.0 unités dans le sens du filetage. Pour
+    un cône à 45 degrés, programmer <em>E</em> identique à <em>K</em>.
+</p>
+</li>
+<li>
+<p>
+<em>L-</em> - Spécifie quelles extrémités du filetage doivent être coniques.
+    Programmer <em>L0</em> pour aucune (par défaut), <em>L1</em> pour une
+    entrée conique, <em>L2</em> pour une sortie conique, ou <em>L3</em> pour l&#8217;entrée et
+    la sortie coniques.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>L&#8217;outil fera une brève pause pour la synchronisation
+avec l&#8217;impulsion d&#8217;index avant chaque passe de filetage. Une gorge de
+dégagement sera requise à l&#8217;entrée, à moins que le début du filetage
+ne soit après l&#8217;extrémité de la pièce ou qu&#8217;un cône d&#8217;entrée soit utilisé.</p></div>
+<div class="paragraph"><p>À moins d&#8217;utiliser un cône de sortie, le mouvement de sortie (retour
+rapide sur X initial) n&#8217;est pas synchronisé sur la vitesse de broche.
+Avec une broche lente, la sortie pourrait se faire sur une petite
+fraction de tour. Si la vitesse de broche est augmentée après qu&#8217;un
+certain nombre de passes soient déjà faites, la sortie va prendre
+une plus grande fraction de tour, il en résultera un usinage <em>très
+brutal</em> pendant ce nouveau mouvement de sortie. Ceci peut être évité en
+prévoyant une gorge de sortie, ou en ne changeant pas la vitesse de
+broche pendant le filetage.</p></div>
+<div class="paragraph"><p>La position finale de l&#8217;outil sera à la fin de la <em>ligne pilote</em>.
+Un mouvement de sécurité peut être nécessaire avec un filetage interne,
+pour sortir l&#8217;outil de la pièce.</p></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Le plan de travail actif n&#8217;est pas ZX.
+</p>
+</li>
+<li>
+<p>
+D&#8217;autres mots d&#8217;axes que X ou Y, sont spécifiés.
+</p>
+</li>
+<li>
+<p>
+La dégressivité <em>R</em> est inférieure à 1.0.
+</p>
+</li>
+<li>
+<p>
+Tous les mots requis ne sont pas spécifiés.
+</p>
+</li>
+<li>
+<p>
+<em>P</em>, <em>J</em>, <em>K</em> ou <em>H</em> est négatif.
+</p>
+</li>
+<li>
+<p>
+<em>E-</em> est supérieur à la moitié de la longueur de la ligne pilote.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><div class="title">Connections de HAL</div><p>Les pins <em>motion.spindle-at-speed</em> et l&#8217;index <em>encoder.n.phase-Z</em> doivent être
+connectées dans le fichier HAL pour que G76 soit opérationnel.
+Voir le Manuel de l&#8217;intégrateur pour plus d&#8217;informations sur les mouvements
+synchronisés avec la broche.</p></div>
+<div class="paragraph"><div class="title">Informations techniques</div><p>Le cycle préprogrammé G76 est basé sur le mouvement avec broche synchronisée G33,
+voir les <a href="gcode_fr.html#g33-tech-info">informations technique relatives à G33</a>.</p></div>
+<div class="paragraph"><p>Un programme de filetage, <em>g76.ngc</em> montre l&#8217;utilisation d&#8217;un cycle de
+filetage G76, il peut être visualisé et exécuté sur n&#8217;importe quelle machine
+utilisant la configuration <em>sim/lathe.ini</em>.</p></div>
+<div class="listingblock">
+<div class="title">Exemple de G-Code avec G76</div>
+<div class="content">
+<pre><tt>G0 Z-0.5 X0.2
+G76 P0.05 Z-1 I-0.075 J0.008 K0.045 Q29.5 L2 E0.045</tt></pre>
+</div></div>
+<div class="paragraph"><p>Sur l&#8217;image ci-dessous, l&#8217;outil est à la position finale après que le cycle
+G76 soit terminé. On voit que le parcours d&#8217;entrée de l&#8217;outil sur la droite,
+spécifié par Q29.5 et le parcours de sortie conique à gauche comme
+spécifié par L2 E0.045. Les lignes blanches sont les mouvements de coupe.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/g76-01.png" alt="images/g76-01.png" />
+</div>
+<div class="title">Figure 3. Parcours d&#8217;outil de l&#8217;exemple<a id="fig:G76-cycle-de-filetage"></a></div>
+</div>
+</div>
+<h2 id="sec:G81-a-G89">35. Les cycles de perçage G81 à G89</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Les cycles de perçage de <em>G81</em> à <em>G89</em> et la révocation de ces cycle <em>G80</em>,
+sont décrits dans cette section. Des exemples sont donnés plus bas avec
+les descriptions.</p></div>
+<div class="paragraph"><p>Tous les cycles de perçage sont effectués dans le respect du plan
+de travail courant. N&#8217;importe lequel des six plans de travail peut être
+choisi. Dans cette section, la plupart des descriptions supposeront que
+le plan de travail XY est le plan courant. Le comportement reste
+analogue pour les autres plans de travail et les mots corrects doivent
+être utilisés. Par exemple, dans le plan G17.1, l&#8217;action de retrait
+s&#8217;effectue parallèlement à l&#8217;axe W et les positions ou incréments sont
+donnés avec U et W. Dans ce cas, substituer U, V, W avec X, Y, Z dans les
+instructions suivantes.</p></div>
+<div class="paragraph"><p>Les mots d&#8217;axes rotatifs ne sont pas autorisés dans les cycles de perçage.
+Quand le plan actif est X, Y, Z, les mots d&#8217;axes U, V, W ne sont pas autorisés.
+De même, si le plan actif est U, V, W, les mots d&#8217;axes X, Y, Z ne sont
+pas autorisés.</p></div>
+<h3 id="_mots_communs">35.1. Mots communs</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Tous les cycles de perçage utilisent les groupes X, Y, Z ou U, V, W selon
+le plan sélectionné, ainsi que le mot <em>R</em>. La position de R- (signifiant
+retrait) est perpendiculaire au plan de travail courant (axe Z pour le plan XY,
+axe X pour le plan YZ, axe Y pour le plan XZ, etc.). Quelques cycles de
+perçage utilisent des arguments supplémentaires.</p></div>
+<h3 id="_mots_em_sticky_em">35.2. Mots <em>sticky</em></h3><div style="clear:left"></div>
+<div class="paragraph"><p>Dans les cycles de perçage, un nombre est qualifié de <em>sticky</em> (persistante,
+collant) si, quand le même cycle est répété sur plusieurs lignes de code en
+colonne, le nombre doit être indiqué la première fois, mais il
+devient facultatif pour le reste des lignes suivantes. Les nombres
+<em>sticky</em> conservent leur valeur tant qu&#8217;ils ne sont pas explicitement
+programmés avec une nouvelle valeur. La valeur de R est toujours <em>sticky</em>.</p></div>
+<div class="paragraph"><p>En mode de déplacements incrémentaux (G91), les valeurs X, Y, est R
+sont traitées comme des incréments depuis la position courante, Z est
+un incrément depuis la position de l&#8217;axe Z avant le mouvement
+impliquant l&#8217;axe Z. En mode de déplacements absolus, les valeurs de X,
+Y, R, et Z sont des positions absolues dans le système de coordonnées courant.</p></div>
+<h3 id="_r_p_tition_de_cycle">35.3. Répétition de cycle</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le mot L est facultatif et représente le nombre de répétitions.
+L=0 n&#8217;est pas permis. Si les fonctionnalités de répétition sont utilisées,
+elles le sont normalement en mode relatif, de sorte que la même séquence de
+mouvements se répète à plusieurs emplacements régulièrement espacés le long
+d&#8217;une ligne droite. Quand L&gt;1 en mode relatif et XY comme plan courant,
+les positions X et Y sont déterminées en ajoutant les valeurs X et Y de
+la commande à celles de la position courante, pour le premier trajet ou
+ensuite, à celles de la position finale du précédent trajet, pour les
+répétitions. Ainsi, si vous programmez <tt>L10</tt>, vous obtiendrez 10 cycles.
+Le premier cycle sera la distance X, Y depuis la position d&#8217;origine.
+Les positions de R- et Z- ne changent pas durant toutes les
+répétitions. En mode absolu, L&gt;1 signifie <tt>faire le même cycle à la même
+place plusieurs fois</tt>, omis, le mot L est équivalent à L=1. La valeur de L
+n&#8217;est pas <em>sticky</em>.</p></div>
+<h3 id="_mode_de_retrait">35.4. Mode de retrait</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La hauteur du mouvement de retrait à la fin de chaque répétition
+(appelée <em>plan de retrait</em> dans les descriptions suivantes) est
+déterminée par le mode de retrait: retrait sur la position initiale de
+Z, si elle est au dessus de la valeur de R et que le mode de retrait
+est <em>G98</em>, OLD_Z, sinon, à la position de R. Voir la section
+<a href="gcode_fr.html#sec:G98-G99-Set">sur les options du plan de retrait</a>.</p></div>
+<h3 id="_erreurs_des_cycles_de_per_age">35.5. Erreurs des cycles de perçage</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Il y a une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Tous les mots X, Y et Z sont manquants durant un cycle de perçage.
+</p>
+</li>
+<li>
+<p>
+Des mots d&#8217;axes de différents groupes (XYZ) (UVW) sont utilisés.
+</p>
+</li>
+<li>
+<p>
+Un nombre P est requis mais un nombre P négatif est utilisé.
+</p>
+</li>
+<li>
+<p>
+Un nombre L est utilisé mais n&#8217;est pas un entier positif.
+</p>
+</li>
+<li>
+<p>
+Un mouvement d&#8217;axe rotatif est utilisé durant un cycle de perçage.
+</p>
+</li>
+<li>
+<p>
+Une vitesse inverse du temps est activée durant un cycle de perçage.
+</p>
+</li>
+<li>
+<p>
+La compensation d&#8217;outil est activée durant un cycle de perçage.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Quand le plan XY est actif, la valeur de Z est <em>sticky</em>, et c&#8217;est une
+erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+La valeur de Z est manquante alors qu&#8217;un même cycle de perçage n&#8217;a
+   pas encore été activé.
+</p>
+</li>
+<li>
+<p>
+La valeur de R est inférieure à celle de Z.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Si un autre plan est actif, les conditions d&#8217;erreur sont analogues à
+celles du plan XY décrites ci-dessus.</p></div>
+<h3 id="sec:Mouvement-Preliminaire">35.6. Mouvement préliminaire et Intermédiaire</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Le mouvement préliminaire est un ensemble de mouvements commun à tous les
+cycles de perçage.</p></div>
+<div class="paragraph"><p>Tout au début de l&#8217;exécution d&#8217;un cycle de perçage, si la position
+actuelle de Z est en dessous de la position de retrait R, l&#8217;axe Z va
+à la position R. Ceci n&#8217;arrive qu&#8217;une fois, sans tenir compte de la
+valeur de L.</p></div>
+<div class="paragraph"><p>En plus, au début du premier cycle et à chaque répétition, un ou deux
+des mouvements suivants sont faits:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Un déplacement en ligne droite, parallèle au plan XY, vers le position
+   programmée.
+</p>
+</li>
+<li>
+<p>
+Un déplacement en ligne droite, de l&#8217;axe Z seul vers la position de
+   retrait R, si il n&#8217;est pas déjà à cette position R.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>Si un autre plan est actif, le mouvement préliminaire et intermédiaire
+est analogue.</p></div>
+<h3 id="_pourquoi_utiliser_les_cycles_de_per_age">35.7. Pourquoi utiliser les cycles de perçage?</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Il y a au moins deux raisons pour utiliser les cycles de perçage. La
+première est l'économie de code et la seconde la sécurité offerte par le
+mouvement préliminaire qui permet de ne pas s&#8217;occuper du point de départ
+du cycle.</p></div>
+</div>
+<h2 id="sec:G80-Revocation-modaux">36. G80 Révocation des codes modaux</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>G80</em> - Permet de s&#8217;assurer qu&#8217;aucun mouvement d&#8217;axe ne surviendra
+sans G-code modal.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Des mots d&#8217;axes sont programmés quand G80 est actif.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Dans l&#8217;interpréteur de LinuxCNC, G80 est un code modal révoqué par tout
+autre G-code. Les résultats des lignes suivantes sont identiques:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G90 G81 X1 Y1 Z1.5 R2.8 (cycle de perçage en mode de déplacement absolu)
+G80 (révoque G81)
+G0 X0 Y0 Z0 (active les mouvements en vitesse rapide et déplace le
+mobile en X0, Y0 et Z0)</tt></pre>
+</div></div>
+<div class="paragraph"><p>produit le même déplacement et le même état final de la machine que:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G90 G81 X1 Y1 Z1.5 R2.8 (cycle de perçage en mode de déplacement absolu)
+G0 X0 Y0 Z0 (active les mouvements en vitesse rapide et déplace le
+mobile en X0, Y0 et Z0)</tt></pre>
+</div></div>
+<div class="paragraph"><p>L&#8217;avantage du premier programme, la ligne du G80 révoque clairement le cycle
+G81. Avec ce premier programme, le programmeur doit revenir en mode
+mouvement avec G0, comme c&#8217;est fait sur la ligne suivante, ou tout
+autre mot G de mouvement.</p></div>
+<div class="paragraph"><p>Autre exemple, Utilisation d&#8217;un cycle de perçage avec un code de
+mouvement modal.</p></div>
+<div class="paragraph"><p>Si un cycle de perçage n&#8217;est pas révoqué avec G80 ou un autre mot G
+de mouvement, le cycle de perçage attend de se répéter en utilisant
+le prochaine ligne de code contenant un (ou plusieurs) mot d&#8217;axe X, Y
+ou Z. Le fichier suivant perce (G81) un ensemble de huit trous. Noter
+que la position de Z change après les quatre premiers trous.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G90 G0 X0 Y0 Z0 (coordonnées d'origine)
+G1 X0 G4 P0.1
+G81 X1 Y0 Z0 R1 (cycle de perçage)
+X2
+X3
+X4
+Y1 Z0.5
+X3
+X2
+X1
+G80 (révocation du cycle G81)
+G0 X0 (mouvement en vitesse rapide)
+Y0
+Z0
+M2 (fin du programme)</tt></pre>
+</div></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/G81mult.png" alt="images/G81mult.png" />
+</div>
+</div>
+<div class="paragraph"><p>L&#8217;utilisation de G80 est facultative puisqu&#8217;il y a un G0
+sur la ligne suivante qui révoque le cycle G81. Mais utiliser G80,
+comme l&#8217;exemple le montre, donne une meilleure lisibilité au code du
+cycle de perçage.</p></div>
+<div class="paragraph"><p>Si G80 est utilisé sans placer un code de mouvement modal juste derrière,
+un de ces messages pourra s&#8217;afficher:</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="literalblock">
+<div class="content">
+<pre><tt>Cannot use axis commands with G80
+Coordinate setting given with G80</tt></pre>
+</div></div>
+</div></div>
+<div class="paragraph"><p>Ils rappellent qu&#8217;un nouveau mot de mouvement doit être écrit.</p></div>
+</div>
+<h2 id="sec:G81-Cycle-de-percage">37. G81 Cycle de perçage</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G81 (X- Y- Z- ) ou (U- V- W- ) R- L-</tt></pre>
+</div></div>
+<div class="paragraph"><p>Le cycle <em>G81</em> est destiné au perçage.</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Un mouvement préliminaire, comme décrit <a href="#sec:Mouvement-Preliminaire">sur cette page</a>.
+</p>
+</li>
+<li>
+<p>
+Un déplacement de l&#8217;axe Z seul à la vitesse programmée, vers la
+   position Z programmée.
+</p>
+</li>
+<li>
+<p>
+Retrait de l&#8217;axe Z en vitesse rapide jusqu&#8217;au plan de retrait R.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><div class="title">Exemple 1: G81 en position absolue<a id="sec:G81-exemple1"></a></div><p>Supposons que la position courante soit, X1, Y2, Z3 dans
+le plan XY, la ligne de code suivante est interprétée:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G90 G81 G98 X4 Y5 Z1.5 R2.8</tt></pre>
+</div></div>
+<div class="paragraph"><p>Le mode de déplacements absolus est appelé <em>(G90)</em>, le plan de retrait
+est positionné sur OLD_Z <em>(G98)</em>, l&#8217;appel du cycle de perçage <em>G81</em> va
+lancer ce cycle une fois. La position X deviendra celle demandée,
+X4. La position de Y deviendra celle demandée, Y5. La position de Z
+deviendra celle demandée, Z1.5. La valeur de R fixe le plan de retrait
+de Z à 2.8. La valeur de OLD_Z est 3. Les mouvements suivants vont se
+produire.</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="images/G81ex1.png" alt="images/G81ex1.png" />
+</span></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Un mouvement en vitesse rapide, parallèle au plan XY vers X4, Y5, Z3
+</p>
+</li>
+<li>
+<p>
+Un mouvement en vitesse rapide, parallèle à l&#8217;axe Z vers X4, Y5, Z2.8
+</p>
+</li>
+<li>
+<p>
+Un mouvement en vitesse travail, parallèle à l&#8217;axe Z vers X4, Y5, Z1.5
+</p>
+</li>
+<li>
+<p>
+Un mouvement en vitesse rapide, parallèle à l&#8217;axe Z vers X4, Y5, Z3
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p><em>Exemple 2:</em> Supposons que la position courante soit, X1, Y2, Z3 dans
+le plan XY, la ligne de codes suivante est interprétée:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G91 G81 G98 X4 Y5 Z-0.6 R1.8 L3</tt></pre>
+</div></div>
+<div class="paragraph"><p>Le mode de déplacements incrémentaux est appelé <em>(G91)</em>, le plan de
+retrait est positionné sur OLD_Z <em>(G98)</em>, l&#8217;appel du cycle de perçage
+<em>G81</em> demande 3 répétitions du cycle. La valeur demandée de X est 4,
+la
+valeur demandée de Y est 5, la valeur demandée de Z est -0.6 et le
+retrait R est à 1.8. La position initiale de X sera 5 (1+4), la
+position initiale de Y sera 7 (2+5), le plan de retrait sera positionné
+sur 4.8 (1.8+3) et Z positionné sur 4.2 (4.8-0.6). OLD_Z est à 3.</p></div>
+<div class="paragraph"><p>Le premier mouvement en vitesse rapide le long de l&#8217;axe Z vers X1, Y2,
+Z4.8), puisque OLD_Z est inférieur au plan de retrait.</p></div>
+<div class="paragraph"><p>La première répétition produira 3 mouvements.</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Un déplacement en vitesse rapide, parallèle au plan XY vers X5, Y7, Z4.8
+</p>
+</li>
+<li>
+<p>
+Un déplacement en vitesse travail, parallèle à l&#8217;axe Z vers X5, Y7, Z4.2
+</p>
+</li>
+<li>
+<p>
+Un déplacement en vitesse rapide, parallèle à l&#8217;axe Z vers X5, Y7, Z4.8
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>La deuxième répétition produira 3 mouvements. La position de X est
+augmentée de 4 et passe à 9, la position de Y est augmentée de 5 et
+passe à 12.</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Un déplacement en vitesse rapide, parallèle au plan XY vers X9, Y12, Z4.8
+</p>
+</li>
+<li>
+<p>
+Un déplacement en vitesse travail, parallèle à l&#8217;axe Z vers X9, Y12, Z4.2
+</p>
+</li>
+<li>
+<p>
+Un déplacement en vitesse rapide, parallèle à l&#8217;axe Z vers X9, Y12, Z4.8
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>La troisième répétition produira 3 mouvements. La position de X est
+augmentée de 4 et passe à 13, la position de Y est augmentée de 5 et
+passe à 17.</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Un déplacement en vitesse rapide, parallèle au plan XY vers X13, Y17, Z4.8
+</p>
+</li>
+<li>
+<p>
+Un déplacement en vitesse travail, parallèle à l&#8217;axe Z vers X13, Y17, Z4.2
+</p>
+</li>
+<li>
+<p>
+Un déplacement en vitesse rapide, parallèle à l&#8217;axe Z vers X13, Y17, Z4.8
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p><span class="image">
+<img src="images/G81ex2.png" alt="images/G81ex2.png" />
+</span></p></div>
+<div class="paragraph"><p><em>Exemple 3:</em> G81 en position relative</p></div>
+<div class="paragraph"><p>Supposons maintenant que le premier g81 de la ligne de
+code soit exécuté, mais de (0, 0, 0) plutôt que de (1, 2, 3).
+G90 G81 G98 X4 Y5 Z1.5 R2.8 Depuis OLD_Z est inférieur à la valeur de R,
+il n&#8217;ajoute rien au mouvement, mais puisque la valeur initiale de Z est
+inférieure à la valeur spécifiée dans R, un premier mouvement de Z sera
+effectué durant le mouvement préliminaire.</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="images/G81.png" alt="images/G81.png" />
+</span></p></div>
+<div class="paragraph"><p><em>Exemple 4:</em> G81 en absolu avec R &gt; Z</p></div>
+<div class="paragraph"><p>Il s&#8217;agit de la trajectoire pour le second bloc de code de G81.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G91 G81 G98 X4 Y5 Z-0.6 R1.8 L3</tt></pre>
+</div></div>
+<div class="paragraph"><p>Cette trajectoire commence en (0, 0, 0), l&#8217;interpréteur ajoute les
+valeurs initiales Z0 et R 1.8 et déplace le mobile en vitesse rapide
+vers cet emplacement. Après ce premier déplacement initial de Z, la
+répétition fonctionne de manière identique à celle de l&#8217;exemple 3 avec
+le mouvement final de Z à 0.6 en dessous de la valeur de R.</p></div>
+<div class="paragraph"><p><span class="image">
+<img src="images/G81a.png" alt="images/G81a.png" />
+</span></p></div>
+<div class="paragraph"><p><em>Exemple 5:</em> G81 en relatif avec R &gt; Z</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G90 G98 G81 X4 Y5 Z-0.6 R1.8</tt></pre>
+</div></div>
+<div class="paragraph"><p>Puisque ce tracé commence en (X0, Y0, Z0), l&#8217;interpréteur ajoute R1.8 au Z0
+initial et déplace le mobile en vitesse rapide à cet emplacement, comme dans
+<em>l&#8217;exemple 4</em>. Après ce mouvement initial à une hauteur Z0.6, le
+mouvement en vitesse rapide se terminera en X4 Y5.
+Alors la hauteur Z sera à 0.6 en dessous de la valeur de R. La fonction de
+répétition fera encore déplacer Z au même emplacement.</p></div>
+</div>
+<h2 id="sec:G82-Cycle-de-percage">38. G82 Cycle de perçage avec temporisation</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G82 (X- Y- Z- ) ou (U- V- W- ) R- L- P-</tt></pre>
+</div></div>
+<div class="paragraph"><p>Le cycle <em>G82</em> est destiné au perçage.
+Les mouvements du cycle G82 ressemblent à ceux de G81 avec une
+temporisation supplémentaire en fin de mouvement Z. La longueur de
+cette temporisation, exprimée en secondes, est spécifiée par un mot P#
+sur la ligne du G82.</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Un mouvement préliminaire. Comme décrit <a href="#sec:Mouvement-Preliminaire">sur cette page</a>.
+</p>
+</li>
+<li>
+<p>
+Un déplacement de l&#8217;axe Z seul en vitesse programmée, vers la position Z programmée.
+</p>
+</li>
+<li>
+<p>
+Une temporisation de <em>P</em> secondes.
+</p>
+</li>
+<li>
+<p>
+Retrait de l&#8217;axe Z en vitesse rapide jusqu&#8217;au plan de retrait <em>R</em>.
+</p>
+</li>
+</ol></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G90 G82 G98 X4 Y5 Z1.5 R2.8 P2</tt></pre>
+</div></div>
+<div class="paragraph"><p>Sera équivalent à l&#8217;exemple 3 ci-dessus mais avec une temporisation de
+2 secondes en fond de trou.</p></div>
+</div>
+<h2 id="sec:G83-Percage-avec-debourrage">39. G83 Cycle de perçage avec débourrage</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G83 (X- Y- Z-) or (U- V- W-) R- L- Q-</tt></pre>
+</div></div>
+<div class="paragraph"><p>Le cycle <em>G83</em> est destiné au perçage profond ou au fraisage avec
+brise-copeaux. Les retraits, au cours de ce cycle, dégagent les copeaux du
+trou et fragmentent les copeaux longs (qui sont fréquents lors du perçage dans
+l&#8217;aluminium). Ce cycle utilise la valeur <em>Q</em> qui représente un incrément
+<em>delta</em> le long de l&#8217;axe Z.</p></div>
+<div class="paragraph"><p>donnera:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Un mouvement préliminaire, comme décrit <a href="#sec:Mouvement-Preliminaire">sur cette page</a>.
+</p>
+</li>
+<li>
+<p>
+Un mouvement de l&#8217;axe Z seul, en vitesse travail, sur la position la
+  moins profonde entre, un incrément delta, ou la position de Z programmée.
+</p>
+</li>
+<li>
+<p>
+Un mouvement en vitesse rapide au plan de retrait.
+</p>
+</li>
+<li>
+<p>
+Une plongée en vitesse rapide dans le même trou, presque jusqu&#8217;au fond.
+</p>
+</li>
+<li>
+<p>
+Répétition des étapes 2, 3 et 4 jusqu'à ce que la position programmée
+   de Z soit atteinte à l'étape 2.
+</p>
+</li>
+<li>
+<p>
+Un mouvement de l&#8217;axe Z en vitesse rapide vers le plan de retrait.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+La valeur de Q est négative ou égale à zéro.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G84-Taraudage-a-droite">40. G84 Cycle de taraudage à droite</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Ce code n&#8217;est pas encore implémenté dans LinuxCNC. Il est accepté mais son
+comportement n&#8217;est pas défini. Voir le <a href="gcode_fr.html#sec:G33_1-Taraudage-rigide">taraudage rigide</a>.</p></div>
+</div>
+<h2 id="sec:G85-Alesage-retrait-travail">41. G85 Cycle d&#8217;alésage, sans temporisation, retrait en vitesse travail</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G85 (X- Y- Z-) or (U- V- W-) R- L-</tt></pre>
+</div></div>
+<div class="paragraph"><p>Le cycle <em>G85</em> est destiné à l&#8217;alésage, mais peut être utilisé pour
+le perçage ou le fraisage.</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Un mouvement préliminaire, comme décrit <a href="#sec:Mouvement-Preliminaire">sur cette page</a>.
+</p>
+</li>
+<li>
+<p>
+Un déplacement de l&#8217;axe Z seul en vitesse travail, vers la position Z programmée.
+</p>
+</li>
+<li>
+<p>
+Retrait de l&#8217;axe Z en vitesse travail vers le plan de retrait.
+</p>
+</li>
+</ol></div>
+</div>
+<h2 id="sec:G86-Alesage-retrait-rapide">42. G86 Cycle d&#8217;alésage, arrêt de broche, retrait en vitesse rapide</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G86 (X- Y- Z-) or (U- V- W-) R- L- P-</tt></pre>
+</div></div>
+<div class="paragraph"><p>Le cycle <em>G86</em> est destiné à l&#8217;alésage. Ce cycle utilise la valeur P pour
+une temporisation en secondes.</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Un mouvement préliminaire, comme décrit sur <a href="#sec:Mouvement-Preliminaire">cette page</a>.
+</p>
+</li>
+<li>
+<p>
+Un déplacement de l&#8217;axe Z seul en vitesse travail, vers la position Z programmée.
+</p>
+</li>
+<li>
+<p>
+Une temporisation de P secondes.
+</p>
+</li>
+<li>
+<p>
+L&#8217;arrêt de rotation de la broche.
+</p>
+</li>
+<li>
+<p>
+Retrait de l&#8217;axe Z en vitesse rapide vers le plan de retrait.
+</p>
+</li>
+<li>
+<p>
+Reprise de la rotation de la broche dans la même direction que
+   précédemment.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p>La broche doit tourner avant le lancement de ce cycle. C&#8217;est une
+erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+La broche ne tourne pas avant que ce cycle ne soit exécuté.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G87-Back-Boring">43. G87 Alésage inverse</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Ce code n&#8217;est pas encore implémenté dans LinuxCNC. Il est accepté mais son
+comportement n&#8217;est pas défini.</p></div>
+</div>
+<h2 id="sec:G88-Alesage-Retrait-Manuel-Out">44. G88 Alésage, arrêt de broche, retrait en manuel</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Ce code n&#8217;est pas encore implémenté dans LinuxCNC. Il est accepté mais son
+comportement n&#8217;est pas défini.</p></div>
+</div>
+<h2 id="sec:G89-Alesage-Tempo">45. G89 Cycle d&#8217;alésage, temporisation, retrait en vitesse travail</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G89 (X- Y- Z-) or (U- V- W-) R- L- P-</tt></pre>
+</div></div>
+<div class="paragraph"><p>Le cycle <em>G89</em> est destiné à l&#8217;alésage. Il utilise la valeur de P
+pour une temporisation en secondes.</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Un mouvement préliminaire, comme décrit <a href="#sec:Mouvement-Preliminaire">sur cette page</a>.
+</p>
+</li>
+<li>
+<p>
+Un déplacement de l&#8217;axe Z seul en vitesse travail, vers la position Z programmée.
+</p>
+</li>
+<li>
+<p>
+Temporisation de P secondes.
+</p>
+</li>
+<li>
+<p>
+Retrait de l&#8217;axe Z en vitesse travail vers le plan de retrait.
+</p>
+</li>
+</ol></div>
+<h3 id="_pourquoi_utiliser_les_cycles_de_per_age_2">45.1. Pourquoi utiliser les cycles de perçage ?</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Il y a au moins deux raisons, la première est l'économie de code. Un
+simple trou demande plusieurs lignes de code pour être exécuté.</p></div>
+<div class="paragraph"><p>Nous avons montré plus haut, comment les cycles
+de perçage peuvent être utilisés pour produire 8 trous avec dix
+lignes de code. Le programme ci-dessous permet de produire le même jeu
+de 8 trous en utilisant cinq lignes pour le cycle de perçage. Il ne
+suit pas exactement le même parcours et ne perce pas dans le même ordre
+que l&#8217;exemple précédent, mais le programme a été écrit de manière
+économique, une bonne pratique qui devrait être courante avec les
+cycles de perçage.</p></div>
+<div class="paragraph"><p><em>Exemple 5:</em> perçage de huit trous, réécrit.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G90 G0 X0 Y0 Z0 (coordonnées d'origine)
+G1 F10 X0 G4 P0.1
+G91 G81 X1 Y0 Z-1 R1 L4 (cycle de perçage)
+G90 G0 X0 Y1
+Z0
+G91 G81 X1 Y0 Z-.5 R1 L4 (cycle de perçage)
+G80 (révocation du cycle G81)
+M2 (fin de programme)</tt></pre>
+</div></div>
+<div class="paragraph"><p><span class="image">
+<img src="images/eight.png" alt="images/eight.png" />
+</span></p></div>
+<div class="paragraph"><p><em>Exemple 6:</em> Douze trous en carré</p></div>
+<div class="paragraph"><p>Cet exemple montre l&#8217;utilisation du mot L pour répéter une série
+incrémentale de cycles de perçage pour des blocs de code successifs
+dans le même mode mouvements G81. Ici, nous produisons 12 trous au
+moyen de cinq lignes de code dans le mouvement modal.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G90 G0 X0 Y0 Z0 (coordonnées d'origine)
+G1 F50 X0 G4 P0.1
+G91 G81 X1 Y0 Z-0.5 R1 L4 (cycle de perçage)
+X0 Y1 R0 L3 (répétition)
+X-1 Y0 L3 (répétition)
+X0 Y-1 L2 (répétition)
+G80 (révocation du cycle G81)
+G90 G0 X0 (retour vers l'origine en vitesse rapide)
+Y0
+Z0
+M2 (fin de programme)</tt></pre>
+</div></div>
+<div class="paragraph"><p><span class="image">
+<img src="images/twelve.png" alt="images/twelve.png" />
+</span></p></div>
+<div class="paragraph"><p>La deuxième raison d&#8217;utiliser les cycles de perçages, c&#8217;est qu&#8217;il
+produisent un mouvement préliminaire et retournent à une position
+prévisible et contrôlable, quel que soit le point de départ du cycle.</p></div>
+</div>
+<h2 id="sec:G90-G91">46. G90, G91: Modes de déplacement</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>G90</em> est le mode de déplacement absolu, les valeurs d&#8217;axes
+<em>X, Y, Z, A, B, C, U, V, W</em> représentent les positions dans le système de
+coordonnées courant. Les exceptions à cette règle sont décrites dans
+la section <a href="gcode_fr.html#sec:G81-a-G89">sur les cycles de perçage</a>.
+</p>
+</li>
+<li>
+<p>
+<em>G91</em> est le mode de déplacement relatif, en mode relatif, les
+valeurs d&#8217;axes représentent un incrément depuis la position courante.
+</p>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">Exemple avec G90</div>
+<div class="content">
+<pre><tt>G90 (passe en mode de déplacement absolu)
+G0 X2.5 (déplacement linéaire en vitesse rapide à la coordonnée X=2.5 en
+incluant tous les offsets en cours)</tt></pre>
+</div></div>
+<div class="listingblock">
+<div class="title">Exemple avec G91</div>
+<div class="content">
+<pre><tt>G91 (passe en mode de déplacement relatif)
+G0 X2.5 (déplacement linéaire en vitesse rapide, à +2.5 en X de la position
+courante)</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Voir <a href="gcode_fr.html#sec:G0">G0</a> pour plus d&#8217;information.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G90_1-G91_1">47. G90.1, G91.1: Mode de déplacement en arc (I, J et K)</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+<em>G90.1</em> - Mode de déplacement absolu pour les offsets I, J et K. Quand
+G90.1 est actif, I et J doivent être tous les deux spécifiés avec G2/G3 pour
+le plan XY ou J et K pour le plan XZ, sinon c&#8217;est une erreur.
+</p>
+</li>
+<li>
+<p>
+<em>G91.1</em> - Mode de déplacement relatif pour les offsets I, J et K. G91.1
+replace I, J et K à leur fonctionnement normal.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G92">48. G92 Décalage d&#8217;origine des systèmes de coordonnées</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G92 axes</tt></pre>
+</div></div>
+<div class="paragraph"><p>Voir ce chapitre <a href="coordinates_fr.html#cha:Systemes-de-coordonnees">pour une vision générale</a>
+des systèmes de coordonnées.</p></div>
+<div class="paragraph"><p>G92 fixera de nouvelles valeurs de coordonnées au point actuel (sans
+faire de mouvement). Les mots d&#8217;axes contiennent les valeurs souhaitées. Au
+moins un mot d&#8217;axe est obligatoire, les autres sont facultatifs. Si il
+n&#8217;y a pas de mot d&#8217;axe pour un axe donné, les coordonnées de cet axe
+resteront inchangées.</p></div>
+<div class="paragraph"><p>Quand <em>G92</em> est exécuté, les origines de tous les systèmes de
+coordonnées sont déplacées. Elles seront déplacées de sorte que les valeurs du
+point contrôlé courant, dans le système de coordonnées courant, deviendront
+celles spécifiées dans la ligne du G92. Les origines de tous les systèmes de
+coordonnées sont décalées de la même distance.</p></div>
+<div class="paragraph"><p>Par exemple, supposons que le point courant soit à X=4 et qu&#8217;aucun
+décalage G92 ne soit actif. La ligne <em>G92 X7</em> est programmée, toutes les
+origines seront décalées de -3 en X, ce qui fera que le point courant
+deviendra X=7. Ce -3 est enregistré dans le paramètre 5211.</p></div>
+<div class="paragraph"><p>Être en mode de déplacement relatif est sans effet sur l&#8217;action de <em>G92</em>.</p></div>
+<div class="paragraph"><p>Des décalages G92 peuvent déjà être actifs quand <em>G92</em> est appelé. Si
+c&#8217;est le cas, ils seront remplacés par le nouveau décalage, de sorte que le
+point courant devienne la valeur spécifiée.</p></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Tous les mots d&#8217;axes sont omis.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>LinuxCNC conserve les décalages G92 et les réutilise au prochain démarrage
+du logiciel. Pour éviter cela, programmer un <em>G92.1</em> qui les effacera, ou
+un G92.2 qui supprimera les valeurs enregistrées.</p></div>
+<div class="paragraph"><p>Voir le chapitre sur les <a href="coordinates_fr.html#cha:Systemes-de-coordonnees">systèmes de coordonnées</a>.</p></div>
+<div class="paragraph"><p>Voir la section sur les <a href="coordinates_fr.html#sec:G92-Decalages">décalages G92</a>.</p></div>
+<div class="paragraph"><p>Voir la section sur les <a href="overview_fr.html#sec:parametres">paramètres</a>.</p></div>
+</div>
+<h2 id="sec:G92_1-G92_2">49. G92.1, G92.2 Remise à zéro des décalages des systèmes de coordonnées</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+<em>G92.1</em> - Positionne les décalages d&#8217;axes à 0 et passe les paramètres
+5211 à 5219 à zéro.
+</p>
+</li>
+<li>
+<p>
+<em>G92.2</em> - Positionne les décalages d&#8217;axes à 0, laisse les valeurs des
+paramètres inchangées, elles ne seront pas utilisées.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G92_3">50. G92.3 Restauration des décalages d&#8217;axe</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+<em>G92.3</em> - Positionne les décalages d&#8217;axes aux valeurs enregistrées dans
+les paramètres 5211 à 5219.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Il est possible de positionner les décalages d&#8217;axes dans un programme puis de
+ré-utiliser les mêmes dans un autre programme. Pour cela, programmer <em>G92</em> dans
+le premier programme, ce qui positionnera les paramètres 5211 à
+5219. Ne pas utiliser G92.1 dans la suite du premier programme. Les
+valeurs des paramètres seront enregistrées lors de la sortie du premier
+programme et rétablies au chargement du second programme. Utiliser
+<em>G92.3</em> vers le début du deuxième programme, ce qui restaurera les
+décalages d&#8217;axes enregistrés par le premier.</p></div>
+</div>
+<h2 id="sec:G93-G94-G95-Modes">51. G93, G94, G95: Choix des modes de vitesse</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>G93</em> - Passe en mode inverse du temps. Dans le mode vitesse inverse du
+temps, le mot <em>F</em> signifie que le mouvement doit être terminé en <em>[1/F]</em>
+minutes. Par exemple, si la valeur de <em>F</em> est <em>2.0</em>, les mouvements
+doivent être terminés en <em>1/2</em> minute.
+</p>
+<div class="paragraph"><p>Quand le mode vitesse inverse du temps est actif, le mot <em>F</em> doit
+apparaître sur chaque ligne contenant un mouvement <em>G1</em>, <em>G2</em>, ou <em>G3</em>. Les
+mots F qui sont sur des lignes sans G1, G2, ou G3 sont ignorés. Être en
+mode vitesse inverse du temps est sans effet sur les mouvements G0
+(vitesse rapide).</p></div>
+</li>
+<li>
+<p>
+<em>G94</em> - Passe en mode unités par minute. Dans le mode vitesse en unités
+par minute, le mot <em>F</em> indique le déplacement du point contrôlé en millimètres
+par minute, en pouces par minute, ou en degrés par minute, selon l&#8217;unité
+utilisée.
+</p>
+</li>
+<li>
+<p>
+<em>G95</em> - Passe en mode unités par tour. Dans le mode vitesse en unités
+par tour, le mot <em>F</em> donne le déplacement du point contrôlé à effectuer sur
+l&#8217;axe Z, en millimètres par tour de broche ou en pouces, selon l&#8217;unité utilisée.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Le mode vitesse inverse du temps est actif et qu&#8217;une ligne avec G1,
+   G2, ou G3 (explicitement ou implicitement) n&#8217;a pas de mot F.
+</p>
+</li>
+<li>
+<p>
+Une nouvelle vitesse n&#8217;a pas été spécifiée après un passage en G94 ou G95.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G96-G97-Broche">52. G96, G97: Modes de contrôle de la broche</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G96 &lt;D-&gt; S- (vitesse de coupe constante)
+G97         (mode tr/mn)</tt></pre>
+</div></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>D-</em> - Vitesse de broche maximale en tours par minute.
+</p>
+</li>
+<li>
+<p>
+<em>S-</em> - Vitesse de coupe constante.
+</p>
+</li>
+<li>
+<p>
+<em>G96 D- S-</em> - Passe à une vitesse de coupe constante de <em>S</em> pieds par minute,
+si G20 est actif, ou <em>S</em> mètres par minute, si G21 est actif. D- est facultatif.
+</p>
+<div class="paragraph"><p>Lorsque <em>G96</em> est utilisé, s&#8217;assurer que <em>X0</em> dans le système de coordonnées
+en cours (y compris les compensations d&#8217;outils) est bien le centre de
+rotation, sinon LinuxCNC ne donnera pas la vitesse de broche désirée.
+<em>G96</em> n&#8217;est pas affecté par les mode rayon ou diamètre.</p></div>
+</li>
+</ul></div>
+<div class="listingblock">
+<div class="title">Exemple avec G96</div>
+<div class="content">
+<pre><tt>G96 D2500 S250 (passe en vitesse de coupe constante à 2500 tr/mn maximum et une
+surface de 250)</tt></pre>
+</div></div>
+<div class="paragraph"><p>C&#8217;est une erreur si:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+S n&#8217;est pas spécifié avec G96.
+</p>
+</li>
+<li>
+<p>
+Une vitesse est spécifiée en mode G96 et la broche ne tourne pas.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="sec:G98-G99-Set">53. G98, G99: Options du plan de retrait</h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Quand la broche se rétracte pendant les cycles de perçage, il
+existe deux options pour indiquer comment elle doit se rétracter:</p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+<em>G98</em> Retrait perpendiculaire au plan de travail courant jusqu'à
+   la position qui était celle de cet axe juste avant le début du cycle de
+   perçage. (à moins que cette position ne soit inférieure à celle indiquée
+   par le mot R, auquel cas, c&#8217;est cette dernière qui serait utilisée).
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p><span class="image">
+<img src="images/G81g98d.png" alt="images/G81g98d.png" />
+</span></p></div>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+<em>G99</em> Retrait perpendiculaire au plan de travail courant jusqu'à la position
+   indiquée par le mot <em>R</em>.
+</p>
+</li>
+</ol></div>
+<div class="paragraph"><p><span class="image">
+<img src="images/G81ret.png" alt="images/G81ret.png" />
+</span></p></div>
+<div class="paragraph"><p>Ne pas oublier que la signification du mot R change selon que le mode de
+déplacement est absolu ou relatif.</p></div>
+<div class="paragraph"><p>Le plan de retrait initial (G98) est annulé chaque fois que le mode de
+mouvement est abandonné, que ce soit explicitement avec G80 ou implicitement
+(tout code de mouvement qui n&#8217;est pas un cycle).
+Basculer d&#8217;un mode de cycle à un autre, par exemple entre G81 et G83
+n&#8217;annule pas le plan de retrait initial. Il est permis de basculer entre
+G98 et G99 durant une série de cycles de perçage.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2013-05-10 19:36:12 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gcode/gcode_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:59 GMT -->
+</html>

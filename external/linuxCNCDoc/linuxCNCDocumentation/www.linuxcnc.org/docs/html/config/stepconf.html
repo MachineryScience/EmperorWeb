@@ -1,0 +1,786 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/stepconf.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:10:15 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Stepper Configuration Wizard</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Stepper Configuration Wizard</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:stepconf-wizard"></a> </p></div>
+<div class="paragraph"><p>LinuxCNC is capable of controlling a wide range of machinery
+using many different hardware interfaces.</p></div>
+<div class="paragraph"><p>Stepconf is a program that generates configuration files for LinuxCNC
+for a specific class of CNC machine:
+those that are controlled via a <em>standard parallel port</em>, and
+controlled by signals of type <em>step &amp; direction</em>.</p></div>
+<div class="paragraph"><p>Stepconf is installed when you install LinuxCNC and is in the CNC menu.</p></div>
+<div class="paragraph"><p>Stepconf places a file in the emc2/config directory
+to store the choices for each configuration you create.
+When you change something, you need to pick the file
+that matches your configuration name.
+The file extension is .stepconf.</p></div>
+<div class="paragraph"><p>The Stepconf Wizard needs at least 800 x 600 screen resolution
+to see the buttons on the bottom of the pages.</p></div>
+<h id="_step_by_step_instructions" class="float">Step by Step Instructions</h>
+</div>
+</div>
+<h2 id="_entry_page_a_id_sec_entry_page_a">1. Entry Page<a id="sec:Entry-Page"></a></h2>
+<div class="sectionbody">
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/stepconf-config.png" alt="images/stepconf-config.png" />
+</div>
+<div class="title">Figure 1. Entry Page<a id="cap:Entry-Page"></a></div>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Create New</em> - Creates a fresh configuration.
+</p>
+</li>
+<li>
+<p>
+<em>Modify</em> - Modify an existing configuration. After selecting this a file
+picker pops up so you can select the .stepconf file for modification. If you
+made any modifications to the main .hal or the .ini file these will be lost.
+Modifications to custom.hal and custom_postgui.hal will not be changed by
+the Stepconf Wizard.
+</p>
+</li>
+<li>
+<p>
+<em>Create Desktop Shortcut</em> - This will place a link on your desktop to the
+files.
+</p>
+</li>
+<li>
+<p>
+<em>Create Desktop Launcher</em> - This will place a launcher on your desktop to
+start your application.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_basic_information_a_id_sec_basic_information_a">2. Basic Information<a id="sec:Basic-Information"></a></h2>
+<div class="sectionbody">
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/stepconf-basic.png" alt="images/stepconf-basic.png" />
+</div>
+<div class="title">Figure 2. Basic Information Page<a id="cap:Basic-Information-Page"></a></div>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Machine Name</em> - Choose a name for your machine. Use only uppercase letters,
+lowercase letters, digits, - and _.
+</p>
+</li>
+<li>
+<p>
+<em>Axis Configuration</em> - Choose XYZ (Mill), XYZA (4-axis mill) or XZ (Lathe).
+</p>
+</li>
+<li>
+<p>
+<em>Machine Units</em> - Choose Inch or mm. All subsequent entries will be in the
+chosen units
+</p>
+</li>
+<li>
+<p>
+<em>Driver Type</em> - If you have one of the stepper drivers listed in the pull down
+box, choose it. Otherwise, select <em>Other</em> and find the timing values in your
+driver&#8217;s data sheet and enter them as <em>nano seconds</em> in the <em>Driver Timing
+Settings</em>. If the data sheet gives a value in microseconds, multiply by 1000.
+For example, enter 4.5us as 4500ns.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>A list of some popular drives, along with their timing values, is on the
+LinuxCNC.org Wiki under
+<a href="http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?Stepper_Drive_Timing">Stepper Drive Timing</a>.</p></div>
+<div class="paragraph"><p>Additional signal conditioning or isolation such as optocouplers and RC filters
+on break out boards can impose timing constraints of their own, in addition
+to those of the driver. You may find it necessary to add some time to the
+drive requirements to allow for this.</p></div>
+<div class="paragraph"><p>The LinuxCNC Configuration Selector has configs for Sherline already configured.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Step Time</em> - How long the step pulse is <em>on</em> in nano seconds. If your not
+sure about this setting a value of 10,000 will work with most drives.
+</p>
+</li>
+<li>
+<p>
+<em>Step Space</em> - Minimum time between step pulses in nano seconds. If your
+not sure about this setting a value of 10,000 will work with most drives.
+</p>
+</li>
+<li>
+<p>
+<em>Direction Hold</em> - How long the direction pin is held after a change of
+direction in nanoseconds. If your not sure about this setting a value of
+200,000 will work with most drives.
+</p>
+</li>
+<li>
+<p>
+<em>Direction Setup</em> - How long before a direction change after the last
+step pulse in nanoseconds.  If your not sure about this setting a value of
+200,000 will work with most drives.
+</p>
+</li>
+<li>
+<p>
+<em>First Parport</em> - Usually the default of 0x378 is correct.
+</p>
+</li>
+<li>
+<p>
+<em>Second Parport</em> - If you need to specify additional parallel ports enter
+the address and the type. For information on finding the address of PCI
+parallel ports see the Port Address in the Integrator Manual.
+(Try 0x278 or 0x3BC first.)
+</p>
+</li>
+<li>
+<p>
+<em>Base Period Maximum Jitter</em> - Enter the result of the Latency Test here.
+To run a latency test press the <em>Test Base Period Jitter</em> button. See the
+<a href="stepconf.html#latency-test">Latency Test</a> section for more details.
+</p>
+</li>
+<li>
+<p>
+<em>Max Step Rate</em> -Stepconf automatically calculates the Max Step Rate based
+on the driver characteristics entered and the latency test result.
+</p>
+</li>
+<li>
+<p>
+<em>Min Base Period</em> - Stepconf automatically determines the Min Base Period
+based on the driver characteristics entered and latency test result.
+</p>
+</li>
+<li>
+<p>
+<em>Onscreen Prompt For Tool Change</em> - If this box is checked, LinuxCNC will
+pause and prompt you to change the tool when <em>M6</em> is encountered. This feature
+is usually only useful if you have presettable tools.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_latency_test_a_id_latency_test_a">3. Latency Test<a id="latency-test"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>While the test is running, you should <em>abuse</em> the computer. Move
+windows around on the screen. Surf the web. Copy some large files
+around on the disk. Play some music. Run an OpenGL program such as
+glxgears. The idea is to put the PC through its paces while the latency
+test checks to see what the worst case numbers are.  Run the test at least a few
+minutes. The longer you run the test the
+better it will be at catching events that might occour at less frequent
+intervals. This is a test for your computer only, so no hardware needs
+to be connected to run the test.</p></div>
+<div class="admonitionblock">
+<table><tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">Do not attempt run LinuxCNC while the latency test is running.</td>
+</tr></table>
+</div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/latency.png" alt="images/latency.png" />
+</div>
+<div class="title">Figure 3. Latency Test<a id="cap:Latency-Test"></a></div>
+</div>
+<div class="paragraph"><p>Latency is how long it takes the PC to stop what it is doing and
+respond to an external request. In our case, the request is the
+periodic <em>heartbeat</em> that serves as a timing reference for the step
+pulses. The lower the latency, the faster you can run the heartbeat,
+and the faster and smoother the step pulses will be.</p></div>
+<div class="paragraph"><p>Latency is far more important than CPU speed. The CPU isn&#8217;t the only
+factor in determining latency. Motherboards, video cards, USB ports,
+SMI issues, and a number of other things can hurt the latency.</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="sidebar-title">Troubleshooting SMI Issues (LinuxCNC.org Wiki)</div>
+<div class="paragraph"><p>Fixing Realtime problems caused by SMI on Ubuntu</p></div>
+<div class="paragraph"><p><a href="http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?FixingSMIIssues">http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?FixingSMIIssues</a></p></div>
+</div></div>
+<div class="paragraph"><p>The important numbers are the <em>max jitter</em>. In the example above 9075
+nanoseconds, or 9.075 microseconds, is the highest jitter.
+Record this number, and enter it in
+the Base Period Maximum Jitter box.</p></div>
+<div class="paragraph"><p>If your Max Jitter number is less than about 15-20 microseconds
+(15000-20000 nanoseconds), the computer should give very nice results
+with software stepping. If the max latency is more like 30-50
+microseconds, you can still get good results, but your maximum step
+rate might be a little disappointing, especially if you use
+microstepping or have very fine pitch leadscrews. If the numbers are
+100 us  or more (100,000 nanoseconds), then the PC is not a good
+candidate for software stepping. Numbers over 1 millisecond (1,000,000
+nanoseconds) mean the PC is not a good candidate for LinuxCNC, regardless of
+whether you use software stepping or not.</p></div>
+</div>
+<h2 id="_parallel_port_setup_a_id_sec_parallel_port_setup_a">4. Parallel Port Setup<a id="sec:Parallel-Port-Setup"></a></h2>
+<div class="sectionbody">
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/stepconf-pinout.png" alt="images/stepconf-pinout.png" />
+</div>
+<div class="title">Figure 4. Parallel Port Setup Page<a id="cap:Parallel-Port-Setup"></a></div>
+</div>
+<div class="paragraph"><p>For each pin, choose the signal which matches
+your parallel port pinout.
+Turn on the <em>invert</em> check box if the signal is inverted
+(0V for true/active, 5V for false/inactive).</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Output pinout presets</em> - Automatically set pins 2 through 9 according to
+the Sherline standard (Direction on pins 2, 4, 6, 8) or the Xylotex standard
+(Direction on pins 3, 5, 7, 9).
+</p>
+</li>
+<li>
+<p>
+<em>Inputs and Outputs</em> - If the input or output is not used set the option
+to <em>Unused</em>.
+</p>
+</li>
+<li>
+<p>
+<em>External E Stop</em> - This can be selected from an input pin drop down box.
+A typical E Stop chain uses all normally closed contacts.
+</p>
+</li>
+<li>
+<p>
+<em>Homing &amp; Limit Switches</em> - These can be selected from an input pin drop
+down box for most configurations.
+</p>
+</li>
+<li>
+<p>
+<em>Charge Pump</em> - If your driver board requires a charge pump signal select
+Charge Pump from the drop down list for the output pin you wish to connect
+to your charge pump input. The charge pump output is connected to the base
+thread by Stepconf. The charge pump output will be about 1/2 of the maximum
+step rate shown on the Basic Machine Configuration page.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_axis_configuration_a_id_sec_axis_configuration_a">5. Axis Configuration<a id="sec:Axis-Configuration"></a></h2>
+<div class="sectionbody">
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/stepconf-axis.png" alt="images/stepconf-axis.png" />
+</div>
+<div class="title">Figure 5. Axis Configuration Page<a id="cap:Axis-Configuration-Page"></a></div>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Motor Steps Per Revolution</em> - The number of full steps per motor revolution.
+If you know how many degrees per step the motor is (e.g., 1.8 degree), then
+divide 360 by the degrees per step to find the number of steps per motor
+revolution.
+</p>
+</li>
+<li>
+<p>
+<em>Driver Microstepping</em> - The amount of microstepping performed by the driver.
+Enter <em>2</em> for half-stepping.
+</p>
+</li>
+<li>
+<p>
+<em>Pulley Ratio</em> - If your machine has pulleys between the motor and leadscrew,
+enter the ratio here. If not, enter <em>1:1</em>.
+</p>
+</li>
+<li>
+<p>
+<em>Leadscrew Pitch</em> - Enter the pitch of the leadscrew here. If you chose
+<em>Inch</em> units, enter the number of threads per inch If you chose <em>mm</em> units,
+enter the number of millimeters per revolution (e.g., enter 2 for 2mm/rev).
+If the machine travels in the wrong direction, enter a negative number here
+instead of a positive number, or invert the direction pin for the axis.
+</p>
+</li>
+<li>
+<p>
+<em>Maximum Velocity</em> -Enter the maximum velocity for the axis in units per
+second.
+</p>
+</li>
+<li>
+<p>
+<em>Maximum Acceleration</em> - The correct values for these items can only be
+determined through experimentation. See
+<a href="stepconf.html#finding-maximum-velocity">Finding Maximum Velocity</a> to set the speed and
+<a href="stepconf.html#finding-maximum-acceleration">Finding Maximum Acceleration</a> to set the
+acceleration.
+</p>
+</li>
+<li>
+<p>
+<em>Home Location</em> - The position the machine moves to after completing the
+homing procedure for this axis. For machines without home switches, this is
+the location the operator manually moves the machine to before pressing the
+Home button. If you combine the home and limit switches you must move off of
+the switch to the home position or you will get a joint limit error.
+</p>
+</li>
+<li>
+<p>
+<em>Table Travel</em> - The range of travel for that axis based on the machine
+origin. The home location must be inside the <em>Table Travel</em> and not equal to
+one of the Table Travel values.
+</p>
+</li>
+<li>
+<p>
+<em>Home Switch Location</em> - The location at which the home switch trips
+or releases reletive to the machine origin. This item and the two below only
+appear when Home Switches were chosen in the Parallel Port Pinout. If
+you combine home and limit switches the home switch location can not be
+the same as the home position or you will get a joint limit error.
+</p>
+</li>
+<li>
+<p>
+<em>Home Search Velocity</em> - The velocity to use when searching for the home
+switch. If the switch is near the end of travel, this velocity must be chosen
+ so that the axis can decelerate to a stop before hitting the end of travel.
+If the switch is only closed for a short range of travel
+(instead of being closed from its trip point to one end of travel),
+this velocity must be chosen so that the axis can decelerate to a stop
+before the switch opens again, and homing must always be started from
+the same side of the switch.
+If the machine moves the wrong direction at the beginning of the
+homing procedure, negate the value of <em>Home Search Velocity</em>.
+</p>
+</li>
+<li>
+<p>
+<em>Home Latch Direction</em> - Choose <em>Same</em> to have the axis back off the switch,
+then approach it again at a very low speed. The second time the switch
+closes, the home position is set. Choose <em>Opposite</em> to have the axis back off
+the switch and when the switch opens, the home position is set.
+</p>
+</li>
+<li>
+<p>
+<em>Time to accelerate to max speed</em> - Time to reach maximum speed calculated
+from <em>Max Acceleration</em> and <em>Max Velocity</em>.
+</p>
+</li>
+<li>
+<p>
+<em>Distance to accelerate to max speed</em> - Distance to reach maximum speed from
+a standstill.
+</p>
+</li>
+<li>
+<p>
+<em>Pulse rate at max speed</em> - Information computed based on the values entered
+above. The greatest <em>Pulse rate at max speed</em> determines the <em>BASE_PERIOD</em>.
+Values above 20000Hz may lead to slow response time or even lockups
+(the fastest usable pulse rate varies from computer to computer)
+</p>
+</li>
+<li>
+<p>
+<em>Axis SCALE</em> - The number that will be used in the ini file [SCALE] setting.
+This is how many steps per user unit.
+</p>
+</li>
+<li>
+<p>
+<em>Test this axis</em> - This will open a window to allow testing for each axis.
+This can be used after filling out all the information for this axis.
+</p>
+</li>
+</ul></div>
+<h3 id="_test_this_axis">5.1. Test This Axis</h3><div style="clear:left"></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/stepconf-test.png" alt="images/stepconf-test.png" />
+</div>
+<div class="title">Figure 6. Test This Axis<a id="cap:Test-This-Axis"></a></div>
+</div>
+<div class="paragraph"><p>With Stepconf it is easy to try different values for acceleration and velocity.</p></div>
+<h4 id="_finding_maximum_velocity_a_id_finding_maximum_velocity_a">5.1.1. Finding Maximum Velocity<a id="finding-maximum-velocity"></a></h4>
+<div class="paragraph"><p>Begin with a low Acceleration
+
+
+(for example, <strong><tt>2 inches/s<sup>2</sup></tt></strong> or <strong><tt>50 mm/s<sup>2</sup></tt></strong>)
+and the velocity you hope to attain.
+Using the buttons provided, jog the axis to near the center of travel.
+Take care because with a low acceleration value,
+it can take a surprising distance for the axis to decelerate to a stop.</p></div>
+<div class="paragraph"><p>After gaging the amount of travel available,
+enter a safe distance in Test Area, keeping in mind that
+after a stall the motor may next start to move in an unexpected direction.
+Then click Run.
+The machine will begin to move back and forth along this axis.
+In this test, it is important that the combination of Acceleration and
+Test Area allow the machine to reach the selected Velocity and <em>cruise</em> for
+at least a short distance&#8201;&#8212;&#8201;the more distance, the better this test is.
+The formula <strong><tt>d = 0.5 * v * v/a</tt></strong>
+
+gives the minimum distance required to reach the
+specified velocity with the given acceleration.
+If it is convenient and safe to do so,
+push the table against the direction of motion to simulate cutting forces.
+If the machine stalls, reduce the speed and start the test again.</p></div>
+<div class="paragraph"><p>If the machine did not obviously stall, click the <em>Run</em> button off. The axis
+now returns to the position where it started. If the position is incorrect,
+then the axis stalled or lost steps during the test. Reduce Velocity and start
+the test again.</p></div>
+<div class="paragraph"><p>If the machine doesn&#8217;t move, stalls, or loses steps, no matter how low
+you turn Velocity, verify the following:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Correct step waveform timings
+</p>
+</li>
+<li>
+<p>
+Correct pinout, including <em>Invert</em> on step pins
+</p>
+</li>
+<li>
+<p>
+Correct, well-shielded cabling
+</p>
+</li>
+<li>
+<p>
+Physical problems with the motor, motor coupling, leadscrew, etc.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Once you have found a speed at which the axis does not stall or lose steps
+during this testing procedure, reduce it by 10% and use that as the axis
+<em>Maximum Velocity</em>.</p></div>
+<h4 id="_finding_maximum_acceleration_a_id_finding_maximum_acceleration_a">5.1.2. Finding Maximum Acceleration<a id="finding-maximum-acceleration"></a></h4>
+<div class="paragraph"><p>With the Maximum Velocity you found in the previous step,
+enter the acceleration value to test.
+Using the same procedure as above,
+adjust the Acceleration value up or down as necessary.
+In this test, it is important that the combination of
+Acceleration and Test Area allow the machine to reach the selected Velocity.
+Once you have found a value at which the axis
+does not stall or lose steps during this testing procedure,
+reduce it by 10% and use that as the axis Maximum Acceleration.</p></div>
+</div>
+<h2 id="_spindle_configuration_a_id_sec_spindle_configuration_a">6. Spindle Configuration<a id="sec:Spindle-Configuration"></a></h2>
+<div class="sectionbody">
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/stepconf-spindle.png" alt="images/stepconf-spindle.png" />
+</div>
+<div class="title">Figure 7. Spindle Configuration Page<a id="cap:Spindle-Configuration-Page"></a></div>
+</div>
+<div class="paragraph"><p>This page only appears when <em>Spindle PWM</em> is chosen in the
+<em>Parallel Port Pinout</em> page for one of the outputs.</p></div>
+<h3 id="_spindle_speed_control_a_id_spindle_speed_control_a">6.1. Spindle Speed Control<a id="spindle-speed-control"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p>If <em>Spindle PWM</em> appears on the pinout,
+the following information should be entered:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>PWM Rate</em> - The <em>carrier frequency</em> of the PWM signal to the spindle. Enter
+<em>0</em> for PDM mode, which is useful for generating an analog control voltage.
+Refer to the documentation for your spindle controller for the appropriate value.
+</p>
+</li>
+<li>
+<p>
+<em>Speed 1 and 2, PWM 1 and 2</em> - The generated configuration file uses a simple
+linear relationship to determine the PWM value for a given RPM value. If the
+values are not known, they can be determined. For more information see
+<a href="stepconf.html#determining-spindle-calibration">Determining Spindle Calibration</a>.
+</p>
+</li>
+</ul></div>
+<h3 id="_spindle_synchronized_motion_a_id_sub_spindle_synchronized_motion_lathe_a">6.2. Spindle-synchronized motion<a id="sub:Spindle-synchronized-motion-lathe"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>When the appropriate signals from a spindle encoder are connected to
+LinuxCNC via HAL, LinuxCNC supports lathe threading.
+These signals are:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Spindle Index</em> - Is a pulse that occurs once per revolution of the spindle.
+</p>
+</li>
+<li>
+<p>
+<em>Spindle Phase A</em> - This is a pulse that occurs in multiple equally-spaced
+locations as the spindle turns.
+</p>
+</li>
+<li>
+<p>
+<em>Spindle Phase B (optional)</em> - This is a second pulse that occurs, but with
+an offset from Spindle Phase A. The advantages to using both A and B are
+direction sensing, increased noise immunity, and increased resolution.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>If <em>Spindle Phase A</em> and <em>Spindle Index</em> appear
+on the pinout, the following information should be entered:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Cycles per revolution</em> - The number of cycles of the <em>Spindle A</em> signal
+during one revolution of the spindle. This option is only enabled when an
+input has been set to <em>Spindle Phase A</em>
+</p>
+</li>
+<li>
+<p>
+<em>Maximum speed in thread</em> - The maximum spindle speed used in threading.
+For a high spindle RPM or a spindle encoder with high resolution, a low value
+of <em>BASE_PERIOD</em> is required.
+</p>
+</li>
+</ul></div>
+<h3 id="_determining_spindle_calibration_a_id_determining_spindle_calibration_a">6.3. Determining Spindle Calibration<a id="determining-spindle-calibration"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Enter the following values in the Spindle Configuration page:</p></div>
+<div class="tableblock">
+<table rules="all"
+width="80%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Speed 1:</p></td>
+<td align="left" valign="top"><p class="table">0</p></td>
+<td align="left" valign="top"><p class="table">PWM 1:</p></td>
+<td align="left" valign="top"><p class="table">0</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Speed 2:</p></td>
+<td align="left" valign="top"><p class="table">1000</p></td>
+<td align="left" valign="top"><p class="table">PWM 2:</p></td>
+<td align="left" valign="top"><p class="table">1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Finish the remaining steps of the configuration process,
+then launch LinuxCNC with your configuration.
+Turn the machine on and select the MDI tab.
+Start the spindle turning by entering: <em>M3 S100</em>.
+Change the spindle speed by entering a different S-number: <em>S800</em>.
+Valid numbers (at this point) range from 1 to 1000.</p></div>
+<div class="paragraph"><p>For two different S-numbers, measure the actual spindle speed in RPM.
+Record the S-numbers and actual spindle speeds. Run Stepconf again.
+For <em>Speed</em> enter the measured speed, and
+for <em>PWM</em> enter the S-number divided by 1000.</p></div>
+<div class="paragraph"><p>Because most spindle drivers are somewhat nonlinear in their response
+curves, it is best to:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Make sure the two calibration speeds are not too close together in RPM
+</p>
+</li>
+<li>
+<p>
+Make sure the two calibration speeds are in the range of speeds you
+will typically use while milling
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>For instance, if your spindle will go from 0 RPM to 8000 RPM,
+but you generally use speeds from 400 RPM (10%) to 4000 RPM (100%),
+then find the PWM values that give 1600 RPM (40%) and 2800 RPM (70%).</p></div>
+</div>
+<h2 id="_advanced_configuration_options_a_id_sec_advanced_configuration_options_a">7. Advanced Configuration Options<a id="sec:Advanced-Configuration-Options"></a></h2>
+<div class="sectionbody">
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/stepconf-advanced.png" alt="images/stepconf-advanced.png" />
+</div>
+<div class="title">Figure 8. Advanced Configuration<a id="cap:Advanced-Configuration"></a></div>
+</div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Include Halui</em> - This will add the Halui user interface component. See the
+Integrator Manual for more information on Halui.
+</p>
+</li>
+<li>
+<p>
+<em>Include pyVCP</em> - This option adds the pyVCP panel base file or a sample file
+to work on. See the Integrator Manual for more information on pyVCP.
+</p>
+</li>
+<li>
+<p>
+<em>Include ClassicLadder PLC</em> - This option will add the ClassicLadder PLC
+(Programmable Logic Controller). See the Integrator Manual for more information
+on ClassicLadder.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_machine_configuration_complete_a_id_sub_machine_configuration_complete_a">8. Machine Configuration Complete<a id="sub:Machine-Configuration-Complete"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Click <em>Apply</em> to write the configuration files.
+Later, you can re-run this program and tweak the settings you entered before.</p></div>
+</div>
+<h2 id="_axis_travel_home_location_and_home_switch_location_a_id_sec_axis_travel_home_a">9. Axis Travel, Home Location, and Home Switch Location<a id="sec:Axis-Travel-Home"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>For each axis, there is a limited range of travel.
+The physical end of travel is called the <em>hard stop</em>.</p></div>
+<div class="paragraph"><p>Before the <em>hard stop</em> there is a <em>limit switch</em>.
+If the limit switch is encountered during normal operation,
+LinuxCNC shuts down the motor amplifier.
+The distance between the <em>hard stop</em> and <em>limit switch</em>
+must be long enough to allow an unpowered motor to coast to a stop.</p></div>
+<div class="paragraph"><p>Before the <em>limit switch</em> there is a <em>soft limit</em>.
+This is a limit enforced in software after homing.
+If a MDI command or g code program would pass the soft limit, it is not executed.
+If a jog would pass the soft limit, it is terminated at the soft limit.</p></div>
+<div class="paragraph"><p>The <em>home switch</em> can be placed anywhere within the travel (between hard stops).
+As long as external hardware does not deactivate the motor amplifiers
+when the limit switch is reached, one of the limit switches
+can be used as a home switch.</p></div>
+<div class="paragraph"><p>The <em>zero position</em> is the location on the axis that is 0 in
+the machine coordinate system.
+Usually the <em>zero position</em> will be within the <em>soft limits</em>.
+On lathes, constant surface speed mode requires that machine <em>X=0</em>
+correspond to the center of spindle rotation when no tool offset is in effect.</p></div>
+<div class="paragraph"><p>The <em>home position</em> is the location within travel that the axis will
+be moved to at the end of the homing sequence.
+This value must be within the <em>soft limits</em>.
+In particular, the <em>home position</em>
+should never be exactly equal to a <em>soft limit</em>.</p></div>
+<h3 id="_operating_without_limit_switches_a_id_sub_operating_without_limit_a">9.1. Operating without Limit Switches<a id="sub:Operating-without-Limit"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>A machine can be operated without limit switches. In this case, only
+the soft limits stop the machine from reaching the hard stop.
+Soft limits only operate after the machine has been homed.</p></div>
+<h3 id="_operating_without_home_switches_a_id_sub_operating_without_home_a">9.2. Operating without Home Switches<a id="sub:Operating-without-Home"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>A machine can be operated without home switches.
+If the machine has limit switches, but no home switches,
+it is best to use a limit switch as the home switch
+(e.g., choose <em>Minimum Limit + Home X</em>  in the pinout).
+If the machine has no switches at all, or the limit
+switches cannot be used as home switches for another reason, then the
+machine must be homed <em>by eye</em> or by using match marks. Homing by eye
+is not as repeatable as homing to switches, but it still allows the
+soft limits to be useful.</p></div>
+<h3 id="_home_and_limit_switch_wiring_options_a_id_sub_home_and_limit_a">9.3. Home and Limit Switch wiring options<a id="sub:Home-and-Limit"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>The ideal wiring for external switches would be one input per switch.
+However, the PC parallel port only offers a total of 5 inputs,
+while there are as many as 9 switches on a 3-axis machine.
+Instead, multiple switches are wired together in various
+ways so that a smaller number of inputs are required.</p></div>
+<div class="paragraph"><p>The figures below show the general idea of wiring multiple switches
+to a single input pin.
+In each case, when one switch is actuated,
+the value seen on INPUT goes from logic HIGH to LOW.
+However, LinuxCNC expects a TRUE value when a switch is closed,
+so the corresponding <em>Invert</em> box
+must be checked on the pinout configuration page.
+The pull up resistor show in the diagrams pulls the input high
+until the connection to ground is made and then the input goes low.
+Otherwise the input might float between on and off when the circuit is open.
+Typically for a parallel port you might use 47k.</p></div>
+<div class="paragraph"><div class="title">Normally Closed Switches<a id="cap:Normally-Closed-Switches"></a></div><p>Wiring N/C switches in series (simplified diagram)</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/switch-nc-series.png" alt="images/switch-nc-series.png" />
+</div>
+</div>
+<div class="paragraph"><div class="title">Normally Open Switches<a id="cap:Normally-Open-Switches"></a></div><p>Wiring N/O switches in parallel (simplified diagram)</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/switch-no-parallel.png" alt="images/switch-no-parallel.png" />
+</div>
+</div>
+<div class="paragraph"><p>The following combinations of switches are permitted in Stepconf:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Combine home switches for all axes
+</p>
+</li>
+<li>
+<p>
+Combine limit switches for all axes
+</p>
+</li>
+<li>
+<p>
+Combine both limit switches for one axis
+</p>
+</li>
+<li>
+<p>
+Combine both limit switches and the home switch for one axis
+</p>
+</li>
+<li>
+<p>
+Combine one limit switch and the home switch for one axis
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-07-01 09:36:08 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/stepconf.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:10:26 GMT -->
+</html>

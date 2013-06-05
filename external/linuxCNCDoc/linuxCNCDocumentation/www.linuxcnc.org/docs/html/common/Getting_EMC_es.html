@@ -1,0 +1,955 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/Getting_EMC_es.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Sobre LinuxCNC</title>
+<style type="text/css">
+/* Debug borders */
+p, li, dt, dd, div, pre, h1, h2, h3, h4, h5, h6 {
+/*
+  border: 1px solid red;
+*/
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+tt {
+  color: navy;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  font-family: sans-serif;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+
+div.sectionbody {
+  font-family: serif;
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+
+pre {
+  padding: 0;
+  margin: 0;
+}
+
+span#author {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+span#email {
+}
+span#revnumber, span#revdate, span#revremark {
+  font-family: sans-serif;
+}
+
+div#footer {
+  font-family: sans-serif;
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+div#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+div#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+div#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.tableblock, div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #dddddd;
+  color: #777777;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > div.content {
+  white-space: pre;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-family: sans-serif;
+  font-weight: bold;
+}
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+
+@media print {
+  div#footer-badges { display: none; }
+}
+
+div#toc {
+  margin-bottom: 2.5em;
+}
+
+div#toctitle {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+/* Workarounds for IE6's broken and incomplete CSS2. */
+
+div.sidebar-content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+}
+div.sidebar-title, div.image-title {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  margin-top: 0.0em;
+  margin-bottom: 0.5em;
+}
+
+div.listingblock div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock-attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock-content {
+  white-space: pre;
+}
+div.verseblock-attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+
+div.exampleblock-content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+/* IE6 sets dynamically generated links as visited. */
+div#toc a:visited { color: blue; }
+:target { background: #DEF !important;  }
+tt { font-family: monospace !important; }
+pre { font-family: monospace !important; }
+h1, h2 { background: #c0c0f0; }
+h1, h2, h3, h4, h5 { border-bottom: 2px solid #8080c0; color: black; }
+div.nav { float: right; background: #ffffff; }
+dt { font-weight: bold; }
+pre { margin-left: 4ex; auto; color: black; padding: 1ex; }
+div.float { text-align: center; margin: 2ex; padding: 1ex; }
+div.float span.caption { display: block; margin: 1em; }
+.typewriter { font-family: monospace; }
+table { border-collapse: collapse; margin-left: auto; margin-right: auto; }
+.alignment_center { text-align: center; }
+.topline { border-top: 1px solid black; }
+.bottomline { border-bottom: 1px solid black; }
+.leftline { border-left: 1px solid black; }
+.rightline { border-right: 1px solid black; }
+.v_top { vertical-align: baseline; }
+.a_center { text-align: center; }
+.a_left { text-align: left; }
+.a_right { text-align: right; }
+.block { display: block }
+.blockformula { display: block; text-align: center }
+.f_typewriter { font-family: monospace; }
+.noun { font-variant: small-caps; }
+.s_bold { font-weight: bold; }
+.clist { -moz-column-width: 40ex; -moz-column-gap: 4ex }
+.nclist { -moz-column-width: 20ex; -moz-column-gap: 4ex }
+ .nclist li { list-style-type: none; text-indent: -.5ex; }
+.toc li { list-style-type: none; }
+.toc li a { display: block; border: 1px solid transparent; text-indent: -1ex; }
+
+/* AsciiDoc stuff */
+div.note {
+	padding-left: 0.5em;
+	border-left: 3px solid #c0c0f0;
+}
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([2-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  var cont = document.getElementById("content");
+  var noteholder = document.getElementById("footnotes");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      // Use [\s\S] in place of . so multi-line matches work.
+      // Because JavaScript has no s (dotall) regex flag.
+      note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      spans[i].innerHTML =
+        "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+        "' title='View footnote' class='footnote'>" + n + "</a>]";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+}
+
+}
+/*]]>*/
+</script>
+</head>
+<body>
+<div id="header">
+<h1>Sobre LinuxCNC</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<h2 id="_el_software">1. El Software</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>*LinuxCNC (El “Enhanced Machine Control”) es un software para computador que permite el control de maquinas herramienta tales como fresadoras, tornos, robots tipo puma o scara y cualquier otro tipo de maquina de hasta 9 ejes.
+*LinuxCNC es software libre con un código fuente abierto. Las versiones actuales de EMC están enteramente licenciadas bajo las licencia GPL y LGPL (General Public License y Lesser GNU General Public License)
+*LinuxCNC proporciona:
+<strong> una interfase gráfica  (se puede elegir entre varias interfaces diferentes)
+</strong> un interprete para código G (el lenguaje de programación de maquina RS-274)
+<strong>un planeador de movimientos en tiempo real con análisis de instrucción siguiente
+</strong> operación de electrónica de maquina de bajo nivel como sensores y controladores para motores
+<strong> una capa de aislamiento sencilla de usar que permite crear rápidamente configuraciones únicas para cada maquina
+</strong> un PLC basado en software programable con lógica de escalera
+**una instalación sencilla con un Live-CD
+* No provee capacidades de dibujo (CAD - Dibujo asistido por computadora) o generación de código G a partir de dibujos (CAM – Manufactura asistida por computadora).
+* Puede mover 9 ejes simultáneos y soportar una variedad de interfaces.
+* El control puede operar servomecanismos verdaderos (analógicos o por PWM) con retroalimentación del el lazo cerrado por el software LinuxCNC en la computadora, o puede operar en lazo abierto con motores a pasos o “paso-servos”
+*Algunas características del controlador de movimientos: compensación de radio y largo, desviación de la trayectoria limitada a una tolerancia especificada, roscado en torno, movimientos de ejes sincronizados, velocidad de alimentación adaptiva, velocidad de alimentación controlada por el operador, control de velocidad constante.
+*Soporte para sistemas no cartesianos a través de un modulo de cinemática. Algunas de las arquitecturas disponibles son hexapodos (plataformas Stewart y conceptos similares) y sistemas con juntas rotatorias para proporcionar movimiento como en los robots PUMA o SCARA.
+*LinuxCNC se ejecuta en Linux usando exenciones de tiempo real.</p></div>
+</div>
+<h2 id="_el_sistema_operativo">2. El Sistema Operativo</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Ubuntu fue seleccionado porque encaja perfectamente en la visión de fuente abierta del LinuxCNC:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Ubuntu sera siempre libre de cargo, y no se tiene que pagar extra por la “versión empresarial”, nosotros hacemos disponible nuestro mejor trabajo para cualquiera en los mismos términos de gratuidad.
+</p>
+</li>
+<li>
+<p>
+LinuxCNC esta acoplado con las versiones con soporte extendido (LTS) de Ubuntu, lo que provee soporte y arreglos de seguridad por parte del equipo de Ubuntu por 3 – 5 años.
+</p>
+</li>
+<li>
+<p>
+Ubuntu utiliza lo mejor en traducciones y fácil acceso que la comunidad de software libre tiene para ofrecer, para hacer Ubuntu practico de usar para la mayor cantidad de gente posible.
+</p>
+</li>
+<li>
+<p>
+La comunidad de Ubuntu esta completamente alineada a los principios de desarrollo del software libre; Nosotros fomentamos el uso por parte de la gente de software de fuente abierta, su mejoramiento y su distribución.
+</p>
+</li>
+</ul></div>
+</div>
+<h2 id="_obtener_ayuda">3. Obtener Ayuda</h2>
+<div class="sectionbody">
+<h3 id="_irc">3.1. IRC</h3><div style="clear:left"></div>
+<div class="paragraph"><p>IRC (Internet Relay Chat) es un protocolo de comunicaciones en tiempo real basado en texto.
+Permite una conexión en vivo con otros usuarios del LinuxCNC.
+El canal del LinuxCNC en IRC es #linuxcnc en freenode.</p></div>
+<div class="paragraph"><p>La manera mas simple de utilizar IRC es utilizar el cliente integrado en la siguiente pagina de internet, <a href="http://www.linuxcnc.org/index.php/english/community">pagina</a>.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Reglas de comportamiento en IRC
+</dt>
+<dd>
+<div class="ulist"><ul>
+<li>
+<p>
+Pregunte cuestiones especificas&#8230; Evite realizar preguntas como: “¿Puede alguien ayudarme?”.
+</p>
+</li>
+<li>
+<p>
+Si usted es realmente nuevo en la materia, piense un poco en lo que va a preguntar antes de comenzar a escribir. Asegúrese de proporcionar suficiente información así alguien podría ayudarle a resolver su pregunta.
+</p>
+</li>
+<li>
+<p>
+Sea paciente mientras espera por una respuesta, en algunas ocasiones toma tiempo formular la respuesta o todos los otros usuarios pueden estar ocupados trabajando en algo mas.
+</p>
+</li>
+<li>
+<p>
+Inicie sesión en IRC con un único nombre así la gente sabrá quien es usted. Si utiliza el cliente Java, utilice el mismo apodo cada vez que entre. Esto ayuda a la gente a recordar quien es usted y esto reduce el gasto de tiempo de las dos partes.
+</p>
+</li>
+<li>
+<p>
+La mayoría de los usuarios del canal linuxcnc en IRC son anglo parlantes, tendrá mas probabilidad de éxito si formula sus preguntas en el idioma ingles.
+</p>
+</li>
+</ul></div>
+</dd>
+<dt class="hdlist1">
+Compartiendo Archivos
+</dt>
+<dd>
+<p>
+La forma mas común de compartir archivos en IRC es subir el archivo a uno de los siguientes servidores y pegar el enlace (puede utilizar servidores similares).
+</p>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>Para texto</em> - <a href="http://pastebin.com/">http://pastebin.com/</a> , <a href="http://pastie.org/">http://pastie.org/</a>, <a href="https://gist.github.com/">https://gist.github.com/</a>
+</p>
+</li>
+<li>
+<p>
+<em>Para Imagenes</em> - <a href="http://imagebin.org/">http://imagebin.org/</a> , <a href="http://imgur.com/">http://imgur.com/</a> , <a href="http://bayimg.com/">http://bayimg.com/</a>
+</p>
+</li>
+<li>
+<p>
+<em>Para archivos</em> - <a href="http://filedropper.com/">http://filedropper.com/</a> , <a href="http://filefactory.com/">http://filefactory.com/</a> , <a href="http://1fichier.com/">http://1fichier.com/</a>
+</p>
+</li>
+</ul></div>
+</dd>
+</dl></div>
+<h3 id="_lista_de_correo">3.2. Lista de Correo</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Una Lista de Correo es una forma para preguntar a todos los miembros de la lista y obtener una respuesta a su conveniencia. Usted obtiene una mejor exposición de su pregunta utilizando la Lista de Correo que utilizando IRC, pero las respuestas pueden tardar mas tiempo. En pocas palabras usted manda un correo electrónico con su pregunta a la lista de correo y recibe respuestas individuales o un compilado diario de respuestas individuales, dependiendo de como configure su cuenta.</p></div>
+<div class="paragraph"><p>Información sobre la lista de correo de LinuxCNC se encuentra en: <a href="https://lists.sourceforge.net/lists/listinfo/emc-users">https://lists.sourceforge.net/lists/listinfo/emc-users</a> [emc-users lista de correo]</p></div>
+<h3 id="_linuxcnc_wiki">3.3. LinuxCNC Wiki</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Un sitio Wiki es un sitio de internet mantenido por los usuarios en donde todos pueden modificar o agregar información.</p></div>
+<div class="paragraph"><p>El sitio wiki mantenido por los usuarios del LinuxCNC contiene mucha información y consejos y se encuentra en:</p></div>
+<div class="paragraph"><p><a href="http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl">wiki.linuxcnc.org</a></p></div>
+</div>
+<h2 id="_obteniendo_linuxcnc">4. Obteniendo LinuxCNC</h2>
+<div class="sectionbody">
+<h3 id="_descarga_normal">4.1. Descarga Normal</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Descargue el Live-CD de:</p></div>
+<div class="paragraph"><p><a href="http://www.linuxcnc.org/">La pagina principal del LinuxCNC www.linuxcnc.org</a></p></div>
+<div class="paragraph"><p>y siga el vinculo para descarga.</p></div>
+<h3 id="_descarga_multi_sesion">4.2. Descarga Multi-sesion </h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si el archivo es demasiado grande para ser descargado en una sesión debido a una conexión a internet lenta o defectuosa, utilice <tt>wget</tt> (o bittorrent) para permitir restaurar la descarga despues de una interrupción.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Linux Wget
+</dt>
+<dd>
+<p>
+
+Abra una ventana de terminal. En Ubuntu valla a Applications/Accessories/Terminal.
+Utilice <em>cd</em> para cambiar al directorio donde desea guardar el ISO.
+Si lo necesita utilice <em>mkdir</em> para crear un nuevo directorio.
+</p>
+<div class="paragraph"><p>Note que los nombres de los archivos pueden cambiar, usted debería de ir a
+<a href="http://www.linuxcnc.org/">http://www.linuxcnc.org/</a>
+y seguir el vinculo de descarga para obtener el nombre actual del archivo.
+En la mayoría de los buscadores usted puede hacer clic derecho en el vinculo y seleccionar la opción de copiar la locación del vinculo, posteriormente pegue esa locación en la ventana de la terminal utilizando un clic del botón derecho y seleccionando la opción pegar.</p></div>
+</dd>
+</dl></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="sidebar-title">Ubuntu 10.04 Lucid Lynx y LinuxCNC (versión actual)</div>
+<div class="paragraph"><p>Para obtener la versión Ubuntu 10.04 Lucid Lynx,
+copie una de las siguientes direcciones en la ventana de terminal y presione la tecla enter:</p></div>
+<div class="paragraph"><p>Para el espejo en USA:
+wget <a href="http://www.linuxcnc.org/lucid/ubuntu-10.04-linuxcnc1-i386.iso">http://www.linuxcnc.org/lucid/ubuntu-10.04-linuxcnc1-i386.iso</a></p></div>
+<div class="paragraph"><p>Para el espejo en Europa:
+wget <a href="http://dsplabs.upt.ro/~juve/emc/get.php?file=ubuntu-10.04-linuxcnc1-i386.iso">http://dsplabs.upt.ro/~juve/emc/get.php?file=ubuntu-10.04-linuxcnc1-i386.iso</a></p></div>
+<div class="paragraph"><p>La md5sum del archivo anterior es: <em>5283b33b7e23e79da1ee561ad476b05f</em></p></div>
+</div></div>
+<div class="paragraph"><p>+
+Para continuar una descarga parcial que fue interrumpida
+agregue la opción -c al comando wget:</p></div>
+<div class="paragraph"><p>+
+wget -c <a href="http://www.linuxcnc.org/lucid/ubuntu-10.04-linuxcnc1-i386.iso">http://www.linuxcnc.org/lucid/ubuntu-10.04-linuxcnc1-i386.iso</a></p></div>
+<div class="paragraph"><p>+
+Para detener una descarga en progreso utilice Ctrl-C o cierre la pantalla de la terminal.</p></div>
+<div class="paragraph"><p>+
+.Ubuntu 8.04 Hardy Heron y LinuxCNC (antiguo)</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="paragraph"><p>Si usted requiere una versión antigua de Ubuntu, usted puede descargar Ubuntu 8.04.
+La imagen CD siguiente tiene el antiguo emc 2.3.x en ella, pero puede ser actualizada a
+la versión 2.4.x siguiendo las instrucciones en el wiki de LinuxCNC.org que se encuentran aquí:
+<a href="http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?UpdatingTo2.4">http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?UpdatingTo2.4</a></p></div>
+<div class="paragraph"><p>Para el espejo en USA:
+wget <a href="http://www.linuxcnc.org/hardy/ubuntu-8.04-desktop-emc2-aj13-i386.iso">http://www.linuxcnc.org/hardy/ubuntu-8.04-desktop-emc2-aj13-i386.iso</a></p></div>
+<div class="paragraph"><p>Para el espejo en Europa:
+wget <a href="http://dsplabs.upt.ro/~juve/emc/get.php?file=ubuntu-8.04-desktop-emc2-aj13-i386.iso">http://dsplabs.upt.ro/~juve/emc/get.php?file=ubuntu-8.04-desktop-emc2-aj13-i386.iso</a></p></div>
+<div class="paragraph"><p>La md5sum del archivo anterior es: <em>1bab052ec879f941628927c988863f14</em></p></div>
+</div></div>
+<div class="paragraph"><p>+
+Cuando la descarga sea completada usted encontrara el archivo ISO en el
+directorio que selecciono. A continuación quemaremos el CD.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Wget Windows
+</dt>
+<dd>
+<p>
+
+El programa wget se encuentra también disponible para Windows descargado de:
+</p>
+<div class="paragraph"><p><a href="http://gnuwin32.sourceforge.net/packages/wget.htm">http://gnuwin32.sourceforge.net/packages/wget.htm</a></p></div>
+<div class="paragraph"><p>Siga las instrucciones de la pagina de internet para descargar e instalar la versión de Windows
+del programa wget.</p></div>
+<div class="paragraph"><p>Para correr wget abra una ventana de linea de comandos.</p></div>
+<div class="paragraph"><p>En la mayoría de las instalaciones de Windows esto se hace en Programs/Accessories/Command Prompt</p></div>
+<div class="paragraph"><p>Primero usted tiene que cambiarse al directorio donde wget esta instalado.</p></div>
+<div class="paragraph"><p>Típicamente es en  C:\Program Files\GnuWin32\bin por lo tanto en la ventana de la linea de comandos escriba:</p></div>
+<div class="paragraph"><p>---
+<em>cd C:\Program Files\GnuWin32\bin</em>
+---</p></div>
+<div class="paragraph"><p>y el prompt debería de cambiar a: <em>C:\Program Files\GnuWin32\bin&gt;</em></p></div>
+<div class="paragraph"><p>Escriba el comando wget en la ventana de la linea de comandos como se describió en las secciones anteriores dependiendo
+de la versión de LinuxCNC que requiera y presione enter.</p></div>
+</dd>
+</dl></div>
+<h3 id="_quemando_el_cd_de_linuxcnc">4.3. Quemando el CD de LinuxCNC</h3><div style="clear:left"></div>
+<div class="paragraph"><p>LinuxCNC es distribuido como una imagen de CD con un formato llamado ISO.
+Para instalar LinuxCNC, usted necesitara primero quemar el archivo ISO en un CD.
+Usted necesita un quemador CD/DVD que funcione y un CD en blanco de 80 minutos (700Mb) para hacer esto.
+Si la escritura del CD falla trate de nuevo con una velocidad de escritura mas baja.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Verificando la integridad del CD con md5sum en Linux
+</dt>
+<dd>
+<p>
+Antes de quemar el CD, es altamente recomendable que verifique el md5sum (hash)
+del archivo .iso.
+</p>
+<div class="paragraph"><p>Abra una ventana de terminal.
+En Ubuntu valla a Applications/Accessories/Terminal.</p></div>
+<div class="paragraph"><p>Cambie el directorio a donde el archivo ISO fue descargado.</p></div>
+<div class="paragraph"><p>---
+cd download_directory
+---</p></div>
+<div class="paragraph"><p>Ejecute el comando de verificación de md5sum con el nombre del archivo guardado.</p></div>
+<div class="paragraph"><p>---
+md5sum -b ubuntu-10.04-linuxcnc1-i386.iso
+---</p></div>
+<div class="paragraph"><p>El comando md5sum deberá de imprimir una linea sencilla después de calcular el hash.</p></div>
+</dd>
+</dl></div>
+<div class="paragraph"><p>En computadoras lentas esto puede tardar un minuto o dos.</p></div>
+<div class="paragraph"><p>+
+---
+5283b33b7e23e79da1ee561ad476b05f *ubuntu-10.04-linuxcnc1-i386.iso
+---</p></div>
+<div class="paragraph"><p>+
+Ahora compare este valor con el que realmente debería de ser.</p></div>
+<div class="paragraph"><p>+
+Si descarga el md5sum asi como el iso,
+usted puede preguntar al programa md5sum el hacer la revisión por usted.
+En el mismo directorio:</p></div>
+<div class="paragraph"><p>+
+---
+md5sum -c ubuntu-10.04-linuxcnc1-i386.iso.md5
+---</p></div>
+<div class="paragraph"><p>+
+Si todo va bien despues de una pausa la terminal deveria de imprimir:</p></div>
+<div class="paragraph"><p>+
+---
+ubuntu-10.04-linuxcnc1-i386.iso: OK
+---</p></div>
+<div class="paragraph"><p>+</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Quemando el archivo ISO en Linux
+</dt>
+<dd>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Inserte un CD en blanco en su quemador. Una ventana de <em>CD/DVD creador</em> o <em>Seleccione tipo de disco</em> aparecera seleccione no hacer nada y cierre la ventana.
+</p>
+</li>
+<li>
+<p>
+Busque la imagen Iso en el buscador de archivos.
+</p>
+</li>
+<li>
+<p>
+Haga click derecro sobre la imagen ISO y seleccione la opcion escrivir a disco.
+</p>
+</li>
+<li>
+<p>
+Seleccione la velocidad de escritura. Si se esta quemando un disco Live CD de Ubuntu seleccione la velocidad mas baja posible.
+</p>
+</li>
+<li>
+<p>
+Inicie el proceso de quemado.
+</p>
+</li>
+<li>
+<p>
+Si una ventana con el titulo <em>seleccione el nombre para la imagen de disco</em> aparece, solo seleccione la opcion OK.
+</p>
+</li>
+</ol></div>
+</dd>
+<dt class="hdlist1">
+Verificar md5sum con Windows
+</dt>
+<dd>
+<p>
+Antes de quemar el CD, es altamente recomendable que verifique el md5sum (hash)
+del archivo .iso que se descargo.
+</p>
+<div class="paragraph"><p>Windows no incluye un programa de verificacion de mdsum. Se tendra que descargar e instalar uno para provar la md5sum. mas informacion puede ser encontrada en:</p></div>
+<div class="paragraph"><p><a href="https://help.ubuntu.com/community/HowToMD5SUM">https://help.ubuntu.com/community/HowToMD5SUM</a></p></div>
+</dd>
+<dt class="hdlist1">
+Quemando el archivo ISO en Windows
+</dt>
+<dd>
+<div class="olist arabic"><ol class="arabic">
+<li>
+<p>
+Descargue e instale Infra Recorder, el cual es un programa para quemar imagenes de disco gratuito y libre: <a href="http://infrarecorder.org/">http://infrarecorder.org/</a>
+</p>
+</li>
+<li>
+<p>
+Inserte un CD en blanco en la unidad de disco y seleccione la opcion de hacer nada o cancelar si alguna pantalla emergente aparece.
+</p>
+</li>
+<li>
+<p>
+Abra Infra Recorder, seleccione la opcion <em>Acciones</em> del menu, posteriormente seleccione <em>Quemar Imagen</em>.
+</p>
+</li>
+</ol></div>
+</dd>
+</dl></div>
+<h3 id="_probando_linuxcnc">4.4. Probando LinuxCNC</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Con el Live CD en la unidad CD/DVD apague la computadora y enciéndala de nuevo.
+Esto hará que la computadora arranque desde el Live CD.
+Una vez que la computadora haya arrancado usted puede probar LinuxCNC sin instalarlo.
+Usted no puede crear configuraciones personalizadas o modificar la mayoría de los
+parámetros del sistema tales como la resolución de pantalla amenos que instale LinuxCNC.</p></div>
+<div class="paragraph"><p>Para probar LinuxCNC desde el menú de Applications/CNC seleccione LinuxCNC. Entonces seleccione
+una configuración sim (simulador) para hacer pruebas.</p></div>
+<div class="paragraph"><p>Para revisar si su computadora es candidata apta para la generación de pasos por software
+corra una prueba de latencia como se describe en la sección (<a href="../config/stepconf_es.html#sub:latency-test">Latency Test</a>)</p></div>
+<h3 id="_instalar_linuxcnc">4.5. Instalar LinuxCNC</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si le gustan los resultados que obtuvo probando LinuxCNC, solo haga clic en el icono de instalación del escritorio,
+conteste unas cuantas preguntas (su nombre, zona horaria, contraseña) y la instalación se completara en unos pocos minutos. Asegúrese de conservar el nombre y la contraseña que introdujo. Una vez que el proceso de instalación concluya y usted se encuentre en linea el administrador de actualizaciones le permitirá actualizar a la ultima versión estable de LinuxCNC.</p></div>
+<h3 id="_actualizaciones_a_linuxcnc">4.6. Actualizaciones a LinuxCNC</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Con la instalación normal el agente de actualizaciones le notificara de las actualizaciones disponibles para LinuxCNC cuando se conecte a internet, y usted podrá actualizar sin necesidad de conocer mas sobre LINUX.</p></div>
+<div class="paragraph"><p>Si usted desea actualizar a 10.04 de 8.04 se recomienda una instalación limpia de EMC.
+Es correcto actualizar todo cuando se le pregunte por hacerlo exepto el sistema operativo.</p></div>
+<div class="paragraph"><p>Advertencia: No actualice Ubuntu a una versión que no sea LTS (Por ejemplo de 8.04 a 8.10) lo anterior arruinara su instalación de EMC y no podrá utilizarlo.</p></div>
+<h3 id="_problemas_con_la_instalaci_n">4.7. Problemas con la instalación</h3><div style="clear:left"></div>
+<div class="paragraph"><p>En casos raros deberá de resetear el BIOS a su configuración de fabrica si durante el proceso de instalación desde el Live CD el disco duro no es detectado correctamente.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-30 07:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/common/Getting_EMC_es.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+</html>

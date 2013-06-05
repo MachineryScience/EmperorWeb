@@ -1,0 +1,1546 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/stepconf_es.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Asistente de configuracion Stepconf</title>
+<style type="text/css">
+/* Debug borders */
+p, li, dt, dd, div, pre, h1, h2, h3, h4, h5, h6 {
+/*
+  border: 1px solid red;
+*/
+}
+
+body {
+  margin: 1em 5% 1em 5%;
+}
+
+a {
+  color: blue;
+  text-decoration: underline;
+}
+a:visited {
+  color: fuchsia;
+}
+
+em {
+  font-style: italic;
+  color: navy;
+}
+
+strong {
+  font-weight: bold;
+  color: #083194;
+}
+
+tt {
+  color: navy;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #527bbd;
+  font-family: sans-serif;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  line-height: 1.3;
+}
+
+h1, h2, h3 {
+  border-bottom: 2px solid silver;
+}
+h2 {
+  padding-top: 0.5em;
+}
+h3 {
+  float: left;
+}
+h3 + * {
+  clear: left;
+}
+
+div.sectionbody {
+  font-family: serif;
+  margin-left: 0;
+}
+
+hr {
+  border: 1px solid silver;
+}
+
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+ul, ol, li > p {
+  margin-top: 0;
+}
+
+pre {
+  padding: 0;
+  margin: 0;
+}
+
+span#author {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+span#email {
+}
+span#revnumber, span#revdate, span#revremark {
+  font-family: sans-serif;
+}
+
+div#footer {
+  font-family: sans-serif;
+  font-size: small;
+  border-top: 2px solid silver;
+  padding-top: 0.5em;
+  margin-top: 4.0em;
+}
+div#footer-text {
+  float: left;
+  padding-bottom: 0.5em;
+}
+div#footer-badges {
+  float: right;
+  padding-bottom: 0.5em;
+}
+
+div#preamble {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+div.tableblock, div.imageblock, div.exampleblock, div.verseblock,
+div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
+div.admonitionblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.admonitionblock {
+  margin-top: 2.0em;
+  margin-bottom: 2.0em;
+  margin-right: 10%;
+  color: #606060;
+}
+
+div.content { /* Block element content. */
+  padding: 0;
+}
+
+/* Block element titles. */
+div.title, caption.title {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  text-align: left;
+  margin-top: 1.0em;
+  margin-bottom: 0.5em;
+}
+div.title + * {
+  margin-top: 0;
+}
+
+td div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content div.title:first-child {
+  margin-top: 0.0em;
+}
+div.content + div.title {
+  margin-top: 0.0em;
+}
+
+div.sidebarblock > div.content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+}
+
+div.listingblock > div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock, div.verseblock {
+  padding-left: 1.0em;
+  margin-left: 1.0em;
+  margin-right: 10%;
+  border-left: 5px solid #dddddd;
+  color: #777777;
+}
+
+div.quoteblock > div.attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock > div.content {
+  white-space: pre;
+}
+div.verseblock > div.attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+/* DEPRECATED: Pre version 8.2.7 verse style literal block. */
+div.verseblock + div.attribution {
+  text-align: left;
+}
+
+div.admonitionblock .icon {
+  vertical-align: top;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-decoration: underline;
+  color: #527bbd;
+  padding-right: 0.5em;
+}
+div.admonitionblock td.content {
+  padding-left: 0.5em;
+  border-left: 3px solid #dddddd;
+}
+
+div.exampleblock > div.content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+div.imageblock div.content { padding-left: 0; }
+span.image img { border-style: none; }
+a.image:visited { color: white; }
+
+dl {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+dt {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+  font-style: normal;
+  color: navy;
+}
+dd > *:first-child {
+  margin-top: 0.1em;
+}
+
+ul, ol {
+    list-style-position: outside;
+}
+ol.arabic {
+  list-style-type: decimal;
+}
+ol.loweralpha {
+  list-style-type: lower-alpha;
+}
+ol.upperalpha {
+  list-style-type: upper-alpha;
+}
+ol.lowerroman {
+  list-style-type: lower-roman;
+}
+ol.upperroman {
+  list-style-type: upper-roman;
+}
+
+div.compact ul, div.compact ol,
+div.compact p, div.compact p,
+div.compact div, div.compact div {
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-family: sans-serif;
+  font-weight: bold;
+}
+tfoot {
+  font-weight: bold;
+}
+td > div.verse {
+  white-space: pre;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+div.hdlist {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+div.hdlist tr {
+  padding-bottom: 15px;
+}
+dt.hdlist1.strong, td.hdlist1.strong {
+  font-weight: bold;
+}
+td.hdlist1 {
+  vertical-align: top;
+  font-style: normal;
+  padding-right: 0.8em;
+  color: navy;
+}
+td.hdlist2 {
+  vertical-align: top;
+}
+div.hdlist.compact tr {
+  margin: 0;
+  padding-bottom: 0;
+}
+
+.comment {
+  background: yellow;
+}
+
+.footnote, .footnoteref {
+  font-size: 0.8em;
+}
+
+span.footnote, span.footnoteref {
+  vertical-align: super;
+}
+
+#footnotes {
+  margin: 20px 0 20px 0;
+  padding: 7px 0 0 0;
+}
+
+#footnotes div.footnote {
+  margin: 0 0 5px 0;
+}
+
+#footnotes hr {
+  border: none;
+  border-top: 1px solid silver;
+  height: 1px;
+  text-align: left;
+  margin-left: 0;
+  width: 20%;
+  min-width: 100px;
+}
+
+
+@media print {
+  div#footer-badges { display: none; }
+}
+
+div#toc {
+  margin-bottom: 2.5em;
+}
+
+div#toctitle {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 1.0em;
+  margin-bottom: 0.1em;
+}
+
+div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+div.toclevel2 {
+  margin-left: 2em;
+  font-size: 0.9em;
+}
+div.toclevel3 {
+  margin-left: 4em;
+  font-size: 0.9em;
+}
+div.toclevel4 {
+  margin-left: 6em;
+  font-size: 0.9em;
+}
+/* Workarounds for IE6's broken and incomplete CSS2. */
+
+div.sidebar-content {
+  background: #ffffee;
+  border: 1px solid silver;
+  padding: 0.5em;
+}
+div.sidebar-title, div.image-title {
+  color: #527bbd;
+  font-family: sans-serif;
+  font-weight: bold;
+  margin-top: 0.0em;
+  margin-bottom: 0.5em;
+}
+
+div.listingblock div.content {
+  border: 1px solid silver;
+  background: #f4f4f4;
+  padding: 0.5em;
+}
+
+div.quoteblock-attribution {
+  padding-top: 0.5em;
+  text-align: right;
+}
+
+div.verseblock-content {
+  white-space: pre;
+}
+div.verseblock-attribution {
+  padding-top: 0.75em;
+  text-align: left;
+}
+
+div.exampleblock-content {
+  border-left: 3px solid #dddddd;
+  padding-left: 0.5em;
+}
+
+/* IE6 sets dynamically generated links as visited. */
+div#toc a:visited { color: blue; }
+:target { background: #DEF !important;  }
+tt { font-family: monospace !important; }
+pre { font-family: monospace !important; }
+h1, h2 { background: #c0c0f0; }
+h1, h2, h3, h4, h5 { border-bottom: 2px solid #8080c0; color: black; }
+div.nav { float: right; background: #ffffff; }
+dt { font-weight: bold; }
+pre { margin-left: 4ex; auto; color: black; padding: 1ex; }
+div.float { text-align: center; margin: 2ex; padding: 1ex; }
+div.float span.caption { display: block; margin: 1em; }
+.typewriter { font-family: monospace; }
+table { border-collapse: collapse; margin-left: auto; margin-right: auto; }
+.alignment_center { text-align: center; }
+.topline { border-top: 1px solid black; }
+.bottomline { border-bottom: 1px solid black; }
+.leftline { border-left: 1px solid black; }
+.rightline { border-right: 1px solid black; }
+.v_top { vertical-align: baseline; }
+.a_center { text-align: center; }
+.a_left { text-align: left; }
+.a_right { text-align: right; }
+.block { display: block }
+.blockformula { display: block; text-align: center }
+.f_typewriter { font-family: monospace; }
+.noun { font-variant: small-caps; }
+.s_bold { font-weight: bold; }
+.clist { -moz-column-width: 40ex; -moz-column-gap: 4ex }
+.nclist { -moz-column-width: 20ex; -moz-column-gap: 4ex }
+ .nclist li { list-style-type: none; text-indent: -.5ex; }
+.toc li { list-style-type: none; }
+.toc li a { display: block; border: 1px solid transparent; text-indent: -1ex; }
+
+/* AsciiDoc stuff */
+div.note {
+	padding-left: 0.5em;
+	border-left: 3px solid #c0c0f0;
+}
+</style>
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+var asciidoc = {  // Namespace.
+
+/////////////////////////////////////////////////////////////////////
+// Table Of Contents generator
+/////////////////////////////////////////////////////////////////////
+
+/* Author: Mihai Bazon, September 2002
+ * http://students.infoiasi.ro/~mishoo
+ *
+ * Table Of Content generator
+ * Version: 0.4
+ *
+ * Feel free to use this script under the terms of the GNU General Public
+ * License, as long as you do not remove or alter this notice.
+ */
+
+ /* modified by Troy D. Hanson, September 2006. License: GPL */
+ /* modified by Stuart Rackham, 2006, 2009. License: GPL */
+
+// toclevels = 1..4.
+toc: function (toclevels) {
+
+  function getText(el) {
+    var text = "";
+    for (var i = el.firstChild; i != null; i = i.nextSibling) {
+      if (i.nodeType == 3 /* Node.TEXT_NODE */) // IE doesn't speak constants.
+        text += i.data;
+      else if (i.firstChild != null)
+        text += getText(i);
+    }
+    return text;
+  }
+
+  function TocEntry(el, text, toclevel) {
+    this.element = el;
+    this.text = text;
+    this.toclevel = toclevel;
+  }
+
+  function tocEntries(el, toclevels) {
+    var result = new Array;
+    var re = new RegExp('[hH]([2-'+(toclevels+1)+'])');
+    // Function that scans the DOM tree for header elements (the DOM2
+    // nodeIterator API would be a better technique but not supported by all
+    // browsers).
+    var iterate = function (el) {
+      for (var i = el.firstChild; i != null; i = i.nextSibling) {
+        if (i.nodeType == 1 /* Node.ELEMENT_NODE */) {
+          var mo = re.exec(i.tagName);
+          if (mo && (i.getAttribute("class") || i.getAttribute("className")) != "float") {
+            result[result.length] = new TocEntry(i, getText(i), mo[1]-1);
+          }
+          iterate(i);
+        }
+      }
+    }
+    iterate(el);
+    return result;
+  }
+
+  var toc = document.getElementById("toc");
+  var entries = tocEntries(document.getElementById("content"), toclevels);
+  for (var i = 0; i < entries.length; ++i) {
+    var entry = entries[i];
+    if (entry.element.id == "")
+      entry.element.id = "_toc_" + i;
+    var a = document.createElement("a");
+    a.href = "#" + entry.element.id;
+    a.appendChild(document.createTextNode(entry.text));
+    var div = document.createElement("div");
+    div.appendChild(a);
+    div.className = "toclevel" + entry.toclevel;
+    toc.appendChild(div);
+  }
+  if (entries.length == 0)
+    toc.parentNode.removeChild(toc);
+},
+
+
+/////////////////////////////////////////////////////////////////////
+// Footnotes generator
+/////////////////////////////////////////////////////////////////////
+
+/* Based on footnote generation code from:
+ * http://www.brandspankingnew.net/archive/2005/07/format_footnote.html
+ */
+
+footnotes: function () {
+  var cont = document.getElementById("content");
+  var noteholder = document.getElementById("footnotes");
+  var spans = cont.getElementsByTagName("span");
+  var refs = {};
+  var n = 0;
+  for (i=0; i<spans.length; i++) {
+    if (spans[i].className == "footnote") {
+      n++;
+      // Use [\s\S] in place of . so multi-line matches work.
+      // Because JavaScript has no s (dotall) regex flag.
+      note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+      noteholder.innerHTML +=
+        "<div class='footnote' id='_footnote_" + n + "'>" +
+        "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
+        n + "</a>. " + note + "</div>";
+      spans[i].innerHTML =
+        "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+        "' title='View footnote' class='footnote'>" + n + "</a>]";
+      var id =spans[i].getAttribute("id");
+      if (id != null) refs["#"+id] = n;
+    }
+  }
+  if (n == 0)
+    noteholder.parentNode.removeChild(noteholder);
+  else {
+    // Process footnoterefs.
+    for (i=0; i<spans.length; i++) {
+      if (spans[i].className == "footnoteref") {
+        var href = spans[i].getElementsByTagName("a")[0].getAttribute("href");
+        href = href.match(/#.*/)[0];  // Because IE return full URL.
+        n = refs[href];
+        spans[i].innerHTML =
+          "[<a href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+      }
+    }
+  }
+}
+
+}
+/*]]>*/
+</script>
+</head>
+<body>
+<div id="header">
+<h1>Asistente de configuracion Stepconf</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:stepconf-wizard"></a> </p></div>
+<div class="paragraph"><p>LinuxCNC es capaz de controlar un vasto rango de diferentes tipos de maquinaria,
+ utilizando diferentes interfaces de Hardware.</p></div>
+<div class="paragraph"><p>Stepconf es un programa que genera archivos de configuracion para LinuxCNC
+para un tipo especifico de maquina CNC:
+Aquellas que son controladas atravez de un <em>Puerto paralelo estandar</em>, y
+que son controladas utilizando las senales <em>Paso y Direccion</em></p></div>
+<div class="paragraph"><p>Stepconf se instala automaticamente cuando instala LinuxCNC y se encuentra en el menu CNC.</p></div>
+<div class="paragraph"><p>Stepconf genera un archivo en el directorio emc2/config
+en el cual guarda las selecciones de cada configuracion que usted genere.
+Cuando se desea cambia algo, se necesita seleccionar el archivo
+que tenga el mismo numaero que la configuracion que desea modificar.
+La extencion del archivo es .stepconf.</p></div>
+<div class="paragraph"><p>El asistente Stepconf necesita al menos una resolucion de pantalla de 800 x 600
+para que los botones de la parte baja de la pantalla sean visibles.</p></div>
+<h id="_instrucciones_paso_a_paso" class="float">Instrucciones paso a paso</h>
+</div>
+</div>
+<h2 id="_pagina_de_entrada_a_id_sec_entry_page_a">1. Pagina de entrada<a id="sec:Entry-Page"></a></h2>
+<div class="sectionbody">
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/stepconf-config.png" alt="images/stepconf-config.png" />
+</div>
+<div class="title">Figure 1. Pagina de entrada<a id="cap:Entry-Page"></a></div>
+</div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Create New
+</dt>
+<dd>
+<p>
+    Crea una configuracion nueva.
+</p>
+</dd>
+<dt class="hdlist1">
+Modify
+</dt>
+<dd>
+<p>
+    Modifica una configuracion existente.
+    Despues de seleccionar esta opcion una pantalla de seleccion de archivo
+    aparecera y usted devera el archivo con extencion .stepconf que dese modificar.
+    Si usted relizo alguna modificacion previa a los archivos principales .hal o .ini estas modificaciones se perderan.
+    Modificaciones a los archivos custom.hal y custom_postgui.hal no seran canbiadas por el
+</p>
+</dd>
+<dt class="hdlist1">
+asistente Stepconf.Create Desktop Shortcut
+</dt>
+<dd>
+<p>
+    This will place a link on your desktop to the files.
+</p>
+</dd>
+<dt class="hdlist1">
+Create Desktop Shortcut
+</dt>
+<dd>
+<p>
+    Se generara un acceso rapido en su a los archivos.
+</p>
+</dd>
+<dt class="hdlist1">
+Create Desktop Launcher
+</dt>
+<dd>
+<p>
+    Se generara un acceso rapido pra iniciar la aplicacion.
+</p>
+</dd>
+</dl></div>
+</div>
+<h2 id="_informacion_basica_a_id_sec_basic_information_a">2. Informacion Basica<a id="sec:Basic-Information"></a></h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="images/stepconf-basic.png" alt="images/stepconf-basic.png" />
+</div>
+<div class="title">Figure 2. Informacion Basica<a id="cap:Basic-Information-Page"></a></div>
+</div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Machine Name
+</dt>
+<dd>
+<p>
+    
+    Seleccione un nombre para su maquina
+    Utilise solo letras mayusculas, minusculas, digitos, <em>-</em> y <em>_</em>.
+</p>
+</dd>
+<dt class="hdlist1">
+Axis Configuration
+</dt>
+<dd>
+<p>
+    
+    Seleccione XYZ (Fresadora), XYZA (Fresadora de 4 ejes) o XZ (Torno).
+</p>
+</dd>
+<dt class="hdlist1">
+Machine Units
+</dt>
+<dd>
+<p>
+    
+    Seleccione entre pulgadas y milimetros. Todas las preguntas posteriores
+    (Tales como el largo de los ejes, el paso de los tornillos, etc)
+    deveran ser contestadas utilizando las unidades seleccionadas
+</p>
+</dd>
+<dt class="hdlist1">
+Driver Type
+</dt>
+<dd>
+<p>
+    
+    Si usted tiene uno de los controladores de motor a pasos listados en el menu desplegable, seleccionelo directamente.
+    En cualquier otor caso, busque los 4 valores de tiempo necesarios
+    utilize los manuales de su controlador y rellene los campos.
+    Si sus manuales le dan los datos en microsegundos multipliquelos por 1000.
+    por ejemplo, si el manual marca 4.5us escriva 4500ns.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>Una lista de controladores populares, asi como sus tiempos
+puede ser consultada en la pagina wiki de LinuxCNC.org en la siguiente direccion
+<a href="http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?Stepper_Drive_Timing">Stepper Drive Timing</a>.</p></div>
+<div class="paragraph"><p>Acondicionamiento estra de senal o aislamiento electrico como el uso
+de optoacopladores y filtros RC en targetas de aislamiento
+pueden imponer diferentes valores de tiempo a los normales de su controlador.
+Puede ser el caso que se requiera agregar tiempo extra a los valores de tiepo para compensar los filtros o aislamientos.
+La seccionde seleccion de configuracion tiene las maquinas de marca Sherline ya configuradas para su uso en caso de que posea una de estas.</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Step Time
+</dt>
+<dd>
+<p>
+    Cuanto tiempo el pulso de paso esta "Encendido" en nanosegundos.
+</p>
+</dd>
+<dt class="hdlist1">
+Step Space
+</dt>
+<dd>
+<p>
+    Tiempo minimo entre dos pulsos de paso en nanosegundos.
+</p>
+</dd>
+<dt class="hdlist1">
+Direction Hold
+</dt>
+<dd>
+<p>
+    Cuanto tiempo el pin de direccion deve ser mantenido despues de un cambio de direecion en nanosegundos.
+</p>
+</dd>
+<dt class="hdlist1">
+Direction Setup
+</dt>
+<dd>
+<p>
+     Cuanto tiempo debe aver antes de un cambio de direccion despues del ultimo pulso de paso.
+</p>
+</dd>
+<dt class="hdlist1">
+First Parport
+</dt>
+<dd>
+<p>
+    Usualmente la direcion en hexadecimal del primer puerto paralelo es 0x378.
+</p>
+</dd>
+<dt class="hdlist1">
+Second Parport
+</dt>
+<dd>
+<p>
+    En caso de ser necesario especificar un puerto paralelo extra introduca la direccion
+    y el tipo. Para informacion de como encontrar la direccion de puertos paralelos PCI
+    vea la seccion Port Address en el manual de integrador. (Trate primero con 0x278 o 0x3BC)
+</p>
+</dd>
+<dt class="hdlist1">
+Base Period Maximum Jitter
+</dt>
+<dd>
+<p>
+    
+    Introduca el resultado de la prueba de latencia.
+    Para correr la prueba de latencia precione el boton "Test Base Period Jitter".
+    Vea la seccion de la prueba de latencia para mas detalles.
+</p>
+</dd>
+<dt class="hdlist1">
+Max Step Rate
+</dt>
+<dd>
+<p>
+    
+    Stepconf automaticamente calculara la taza maxima de pulsos de pasos
+    basandose en las caracteristicas del controlador de motor a pasos y el resultado de la prueba de latencia.
+</p>
+</dd>
+<dt class="hdlist1">
+Min Base Period
+</dt>
+<dd>
+<p>
+    
+    Stepconf automaticamente calculara el periodo base minimo
+    basandose en las caracteristicas del controlador de motor a pasos y el resultado de la prueba de latencia.
+</p>
+</dd>
+<dt class="hdlist1">
+Onscreen Prompt For Tool Change
+</dt>
+<dd>
+<p>
+    
+    Si esta casilla es seleccionada, LinuxCNC pausara la ejecucion de un programa y le preguntara
+    por el cambio de herramienta cuando el comando <strong>M6</strong> sea encontrado en el codigo G.
+    Deje esta casilla sin checar amenos que usted planie agregar soporte
+    para una torreta automatica de cambio de herramientas en un archivo HAL personalizado.
+</p>
+</dd>
+</dl></div>
+</div>
+<h2 id="_prueba_de_latencia_a_id_sub_latency_test_a">3. Prueba de latencia<a id="sub:latency-test"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Mientras se ejecute la prueba, usted devera de <em>abusar</em> de la computadora. Mueva
+ventanas alrededor de la pantalla. Navegue en internet. Copie algunos archivos de gran tamano
+en diferentes partes del disco duro. Reproduca musica. Corra algun programa OpenGl como glxgears.
+La idea es poner a la computadora en apuros mientras se ejecuta la prueba para poder tener una idea de
+cuales seran los peores casos de demanda a la computadora y sus tiempo de respuesta.
+Ejecute la prueba almenos unos cuantos minutos. Entre mas tiempo la ejecute mas probable es que detecte
+casos especiales que solo suceden en intervalos poco frecuentes. Esta prueba es solo para
+la computadora, no se requiere que conecte los controladores de motores o la maquina herramienta.</p></div>
+<div class="paragraph"><p>No ejecute LinuxCNC mientras realiza la prueba de latencia.</p></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/latency.png" alt="images/latency.png" />
+</div>
+<div class="title">Figure 3. Prueba de Latencia<a id="cap:Latency-Test"></a></div>
+</div>
+<div class="paragraph"><p>Latencia es cuanto le tomara a la PC detenerse en lo que esta haciendo
+y responder a una solicitud externa. En este caso, la solicitud
+el el <em>latido periodico</em> que sirve como referencia de tiempo
+para la genracion de los pulsos de paso.
+Entre menor sea la latencia, mas rapido se generaran los latidos,
+y mas rapidos y suabes seran los pulsos de paso.</p></div>
+<div class="paragraph"><p>La latencia es mucho mas importante que la velocidad del CPU. La velocidad
+del CPU no es el unico factor determinate en la latencia. Tahgetas madre, targetas de video, puertos
+USB, Problemas con SMI, y otra cantidad de coasas pueden afectar la latencia.</p></div>
+<div class="sidebarblock">
+<div class="sidebar-content">
+<div class="sidebar-title">Troubleshooting SMI Issues (LinuxCNC.org Wiki)</div>
+<div class="paragraph"><p>Encuentre soluciones a algunos problemas de SMI comunes en Ubuntu</p></div>
+<div class="paragraph"><p><a href="http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?FixingSMIIssues">http://wiki.linuxcnc.org/cgi-bin/emcinfo.pl?FixingSMIIssues</a></p></div>
+</div></div>
+<div class="paragraph"><p>Los numeros importantes son el "max jitter". en el ejemplo de abajo 9075
+nanosegundos, o 9.075 microsegundos, es el maximo retraso.
+Guarde este numero, y escrivalo en la caja Base Period Maximum Jitter.</p></div>
+<div class="paragraph"><p>Si el maximo retrazo es menor o se encuentra entre 15-20 microsegundos
+(15000-20000 nanosegundos), la computadora deveria de dar muy buenos resultados
+con la generacion de pulsos de pasos. Si la latencia maxima esta entre 30-50
+microsegundos, se pueden seguir obteniendo buenos resultados, pero la tasa
+maxima de generacion de pulsos puede ser un poco desepcionante, especialmente si se usan
+micropasos o un tornillo con un paso muy fino. si los numeros son
+100us o mas (100 000 nanosegundos), la PC no es una buena candidata para la generacion
+de pulsos de paso por software. Numeros arriva de 1 milisegundo (1 000 000 nanosegundos)
+significan que la PC no es una buena candidata para ejecutar LinuxCNC, sin importar si se
+usa generacion de pulsos de paso por software o no.</p></div>
+</div>
+<h2 id="_ajustes_del_puerto_paralelo_a_id_sec_parallel_port_setup_a">4. Ajustes del puerto Paralelo<a id="sec:Parallel-Port-Setup"></a></h2>
+<div class="sectionbody">
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/stepconf-pinout.png" alt="images/stepconf-pinout.png" />
+</div>
+<div class="title">Figure 4. Pagina de ajuste del Puerto Paralelo<a id="cap:Parallel-Port-Setup"></a></div>
+</div>
+<div class="paragraph"><p>Para cada pin se devera seleccionar la señal de control
+que concuerde con la configuracion del puerto.</p></div>
+<div class="paragraph"><p>Active la casilla "invert" si la señal de control requiere
+ser invertida (0V para activo/Verdadero, 5V para inactivo/Falso)</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Esquemas de pines predefinidos
+</dt>
+<dd>
+<p>
+   Se configuraran automaticamente los pines del 2 al 9 deacuerdo al estandar
+   de las maquinas Sherline (Direccion en los pines 2, 4, 6, 8) o Xylotex (Direccion en los
+   pines 3, 5, 7, 9).
+</p>
+</dd>
+<dt class="hdlist1">
+Entradas y Salidas
+</dt>
+<dd>
+<p>
+    Si el pin no sera utilizado como entrada o salida seleccionarlo como "Unused".
+</p>
+</dd>
+<dt class="hdlist1">
+Señal de Paro Externo (E stop)
+</dt>
+<dd>
+<p>
+    Esta señal pude ser tipicamente seleccionado en la casilla desplegable.
+    Una cadena de señal de paro tipica utiliza solo contactos normalmnete cerrados en serie.
+</p>
+</dd>
+<dt class="hdlist1">
+Posicion de inicio y limites de seguridad (Homing &amp; Limit Switches)
+</dt>
+<dd>
+<p>
+    Estos pines pueden ser seleccionados para la mayoria de las configuraciones
+    utilizando la casilla desplegable.
+</p>
+</dd>
+<dt class="hdlist1">
+Bomba de Carga (Charge Pump)
+</dt>
+<dd>
+<p>
+    Si el controlador de motores requiere de una se;al de bomba de carga
+    simplemente seleccione esta opcion de lalista desplegable y conecte la señal
+    al pin seleccionado.
+    La salida de la bomba de carga sera conectada a la tarea base por el programa Stepconf.
+    La salida de bomba de carga sera aproximadamente 1/2 de la maxima tasa de generacion
+    de pulsos de paso mostrados en la pagina de configuracion basica.
+</p>
+</dd>
+</dl></div>
+</div>
+<h2 id="_configuracion_de_los_ejes_a_id_sec_axis_configuration_a">5. Configuracion de los Ejes<a id="sec:Axis-Configuration"></a></h2>
+<div class="sectionbody">
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/stepconf-axis.png" alt="images/stepconf-axis.png" />
+</div>
+<div class="title">Figure 5. Pagina de configuracion de eje<a id="cap:Axis-Configuration-Page"></a></div>
+</div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Pasos del motor por revolucion (Motor Steps Per Revolution)
+</dt>
+<dd>
+<p>
+    
+    El numero de pasos completos por revolucion del motor.
+    Si solo se tiene el dato de los grados por paso del motor (ejemplo 1.8 grados),
+    se deve dividir 360 por el numero de grados por paso
+    para encontrar el numero de pasos por revolucion.
+</p>
+</dd>
+<dt class="hdlist1">
+Micro pasos (Driver Microstepping)
+</dt>
+<dd>
+<p>
+    
+    El numero de micropasos producidos por el controlador por cada paso fisico completo del motor.
+    entre "2" para medio paso.
+    (ejemplo, si el controlador produce 1/10 de giro de un paso completo
+    en la flecha del motor por cada pulso de paso que recive, escriva 10 en la casilla.
+</p>
+</dd>
+<dt class="hdlist1">
+Relacion de Poleas (Pulley Ratio)
+</dt>
+<dd>
+<p>
+    
+    Si su maquina tiene poleas o engranes entre el motor y el tornillo,
+    escriva la relacion aqui. Si no, escriva "1:1".
+</p>
+</dd>
+<dt class="hdlist1">
+Paso del tornillo (Leadscrew Pitch)
+</dt>
+<dd>
+<p>
+    
+    Entre el paso del tornillo aqui.
+    Si se selecciono unidades en "Inch", entre el numero de
+    cuerdas por pulgada (ejemplo, entre 8 para 8 TPI).
+    Si se tiene un tornillo con multiples cuerdas se requiere saber
+    cuantas vueltas por pulgada se requieren para mover la "nues".
+    Si se selecciono <em>mm</em> como unidades, entre el numero de milimetros que la "nues"
+    se movera por revolucion (ejemplo, entre 2 para 2 mm/rev).
+    Si la maquina se mueve en la direccion opuesta a la esperada,
+    entre un valor negativo, o invierta la direccion del pin para el eje.
+</p>
+</dd>
+<dt class="hdlist1">
+Velocidad Maxima (Maximum Velocity)
+</dt>
+<dd>
+<p>
+    
+    Entre la velocidad maxima del eje en unidades por segundo.
+</p>
+</dd>
+<dt class="hdlist1">
+Aceleracion Maxima (Maximum Acceleration)
+</dt>
+<dd>
+<p>
+    
+    El valor correcto de esta casilla solo puede ser determinado
+    por experimentacion. Vea
+    <a href="#sub:Finding-Maximum-Velocity">[sub:Finding-Maximum-Velocity]</a> para ajustar la velocidad
+    <a href="#sub:Finding-Maximum-Acceleration">[sub:Finding-Maximum-Acceleration]</a> para ajustar la aceleracion.
+</p>
+</dd>
+<dt class="hdlist1">
+Posicion de Inicio (Home Location)
+</dt>
+<dd>
+<p>
+    
+    La posicion a la que la maquina se movera despues de completar
+    el procedimiento de inicio del eje.
+    Para maquinas sin interruptores de posicion de inicio,
+    esta es la posicion a la cual el operador devera mover la maquina
+    antes de precionar el boton de inicializanon del eje (Home).
+    Si se combinan los interruptores de inicio y de limite
+    se devera mover la maquina fuera del interruptor para inicializar el eje
+    o se recivira un error de limite en el eje.
+</p>
+</dd>
+<dt class="hdlist1">
+Area de la bancada (Table Travel)
+</dt>
+<dd>
+<p>
+    
+    El rango de viaje que el codigo g no podra sobrepasar.
+    La posicion de inicializacion del eje deve estar dentro del area de bancada.
+    En particular, tener la posicion de inicializacion (Home) de un eje exactamente
+    en un limite del area de bancada producira una configuracion invalida.
+</p>
+</dd>
+<dt class="hdlist1">
+Localizacionde los interruptores de inializacion(Home Switch Location)
+</dt>
+<dd>
+<p>
+    
+    La posicion en la cual el interruptor de inializacion se activa o desactiva
+    durante un proceso de inicializacion. Este apartado y los dos siguientes
+    solo apareceran cuando se seleccione la existencia de interruptores de limite
+    en la configuracion del los pines del puerto paralelo. Si se combinan los
+    interruptores de limite y de inicializacion la posicion del interruptor de inicializacion
+    no puede ser la misma que la posicoin de inicializacion o se producira un error de limite en el eje.
+</p>
+</dd>
+<dt class="hdlist1">
+Velocidad de inicializacion (Home Search Velocity)
+</dt>
+<dd>
+<p>
+    
+    La velocidad usada en la busqueda de los interruptores.
+    Si el interruptor se encuentra cercano al limite de viaje del eje,
+    esta velocidad deve ser seleccionada de tal forma que el eje tenga
+    suficiente tiempo para desacelerar hasta detenerse antes de llegar al
+    limite fisico de la bancada.
+    Si el interuptor se encuentra cercano por un rango de viaje corto
+    (En lugar de estar cercano desde el punto de inicio al final del viaje),
+    la velocidad devera ser seleccionada de tal forma que el eje pueda desacelerar
+    hasta detenerse antes de que el interruptor se habra otra vez, el procedimiento
+    de inicializacion devera ser comenzarse siempre del mismo lado del interruptor.
+    Si la maquina se mueve en la direccion contraria al inicio de la inicializacion,
+    cambie el signo a negativo del parametro <strong>Home Search Velocity</strong>.
+</p>
+</dd>
+<dt class="hdlist1">
+Direccion de busqueda de posicion de inicio (Home Latch Direction)
+</dt>
+<dd>
+<p>
+    
+    Seleccione "Igual (Same)" para que el interruptor sea liberado
+    y posteriormente la maquina se acerque a el a muy baja velocidad.
+    La segunda vez que el interruptor se cierre, se definira la posiocn de inializacion.
+    Seleccione "Opuesto (Opposite)" para realizar la inializacion moviendose despacio fuera del interruptor,
+    cuando el interruptor se habra la posiocion de inializacion sera marcada.
+</p>
+</dd>
+<dt class="hdlist1">
+Tiempo para acelerar a maxima velocidad (Time to accelerate to max speed)
+</dt>
+<dd>
+<p>
+    
+    Tiempo calculado.
+</p>
+</dd>
+<dt class="hdlist1">
+Distancia para acelerar a maxima velocidad (Distance to accelerate to max speed)
+</dt>
+<dd>
+<p>
+    
+    Distancia calculada.
+</p>
+</dd>
+<dt class="hdlist1">
+Taza de generacion de pulsos a maxima velocidad (Pulse rate at max speed)
+</dt>
+<dd>
+<p>
+    
+    Este dato se calcula en base a los valores anteriores.
+    El valor maximo de la <strong>Taza de generacion de pulsos a maxima velocidad</strong> determina el <strong>Periodo base</strong>.
+    Valores por encima de 20000Hz pueden producir tiempos de respuesta muy bajos o incluso bloqueos
+    (La taza de generacion maxima de pulsos varia entre computadoras)
+</p>
+</dd>
+<dt class="hdlist1">
+Escala del Eje (Axis SCALE)
+</dt>
+<dd>
+<p>
+    El numero que sera usado en el archivo ini en la seccion [SCALE].
+    Representa cuantos pasos se deven dar por unidad de usuario.
+</p>
+</dd>
+<dt class="hdlist1">
+Probar este Eje (Test this axis)
+</dt>
+<dd>
+<p>
+    
+    Esta opcion abre una ventana para permitir probar cada eje.
+    Esta opcion puede ser utilizada despues de llenar toda la informacion referente al eje.
+</p>
+</dd>
+</dl></div>
+<h3 id="_probar_este_eje">5.1. Probar este Eje</h3><div style="clear:left"></div>
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/stepconf-test.png" alt="images/stepconf-test.png" />
+</div>
+<div class="title">Figure 6. Probar este Eje<a id="cap:Test-This-Axis"></a></div>
+</div>
+<div class="paragraph"><p>Con Stepconf es sencillo probar diferentes valores de aceleracion y velocidad.</p></div>
+<h4 id="_busqueda_de_velocidad_maxima_a_id_finding_maximum_velocity_a">5.1.1. Busqueda de Velocidad Maxima<a id="finding-maximum-velocity"></a></h4>
+<div class="paragraph"><p>Comiense con una aceleracion baja
+
+
+(por ejemplo, <strong><tt>2 pulgadas/s<sup>2</sup></tt></strong> or <strong><tt>50 mm/s<sup>2</sup></tt></strong>)
+la velocidad que se desea obtener.
+Utilizando los botones disponibles, mueva el eje cerca al centro de su carrera.
+Tenga cuidado porque con un valor de aceleracion bajo,
+puede tomarle al eje una sorpendente distancia para desacelerar hasta detenerse.</p></div>
+<div class="paragraph"><p>Despues de medir la cantidad de espacio de movimiento disponible para el eje,
+introduca una distancia segura en el area de prueba, mantenga en mente que
+despues de un atoramiento, el motor puede acontinuacion comenzar a moverse en una direccion inesperada.
+Entonses haga click en la opcion Correr (Run).</p></div>
+<div class="paragraph"><p>La maquina comenzara a moverse hacia adelante y atras a lo largo del eje.
+En esta prueba, es importante que la combinacion de aceleracion y
+area de prueba permita a la maquina alcanzar la velocidad seleccionada y que la bancada viaje
+por almenos una distancia corta a esta velocidad&#8201;&#8212;&#8201;entre mas distancia mejor sera la prueba.
+La formula <strong><tt>d = 0.5 * v * v/a</tt></strong>
+
+proporciona la minima distancia requerida para alcanzar
+la velocidad especificada con la aceleracion seleccionada.
+Si es conveniente y seguro de hacer,
+precione la bancada contra la direcion del movimiento para simular las fuerzas de corte.
+si la maquina se detiene, redusca la velocidad y comiense la prueba de nuevo.</p></div>
+<div class="paragraph"><p>Si la maquina no se detiene de manera evidente, precione el boton <em>Run</em> de nuevo, para detener la prueba.
+La maquina regresara a la posicion donde comenso la prueba.
+Si la posicion es incorrecta, la maquina perdio pasos o se detubo durante la prueba.
+Redusca la velocidad y comienze la prueba de nuevo.</p></div>
+<div class="paragraph"><p>Si la maquina no se mueve, se detiene, o pierde pasos, sin importar cuan baja
+sea la velocidad seleccionada, verifique lo siguiente:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Valores correctos de la forma de pulsos de pasos
+</p>
+</li>
+<li>
+<p>
+Seleccion correcta de los pines de salida del puerto, incluyendo si es necesario la opcion de <em>Invertido</em>
+</p>
+</li>
+<li>
+<p>
+Cableado blindado para reducir interferencia
+</p>
+</li>
+<li>
+<p>
+Problemas fisicos con el motor, acoplamientos, tornillos embalados o de bolas, etc.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Una ves que se encuentre una velocidad a la cual el eje
+no se detenga o pierda pasos durante la prueba,
+redusca la velocidad un 10% y utilize esta nueva velocidad como velocidad Maxima.</p></div>
+<h4 id="_encontrando_la_maxima_aceleracion_a_id_finding_maximum_acceleration_a">5.1.2. Encontrando la maxima aceleracion<a id="finding-maximum-acceleration"></a></h4>
+<div class="paragraph"><p>Con la velocidad maxima que se encontro en el paso anterior,
+introduca un valor de aceleracion a probar.
+Utilizando el mismo procedimiento antes descrito,
+redusca la aceleracion si en necesario.
+En esta prueba, es importante que la combinacion de
+Aceleracion y area de prueba permita a la maquina alcanzar la velocidad seleccionada.
+Una ves que se encuentre un valor de aceleracion en el cual la maquina no pierda pasos o se detenga
+durante la prueba, redusca el valor encontrado un 10% y utilice este nuevo valor como el valor de Aceleracion Maxima.</p></div>
+</div>
+<h2 id="_configuracion_del_husillo_a_id_sec_spindle_configuration_a">6. Configuracion del Husillo<a id="sec:Spindle-Configuration"></a></h2>
+<div class="sectionbody">
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/stepconf-spindle.png" alt="images/stepconf-spindle.png" />
+</div>
+<div class="title">Figure 7. Pagina configuracion del Husillo<a id="cap:Spindle-Configuration-Page"></a></div>
+</div>
+<div class="paragraph"><p>Esta pagina solo aparece cuando la opcion <em>Spindle PWM</em> es seleccionada en la
+pagina de seleccion de las salidad 'Parallel Port Pinout</p></div>
+<h3 id="_control_de_la_velocidad_del_husillo_a_id_spindle_speed_control_a">6.1. Control de la velocidad del Husillo<a id="spindle-speed-control"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p>Si la opcion <em>Spindle PWM</em> fue seleccionada en el mapeo de salidas,
+la siguiente informacion deve ser proporcionada:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Taza de PWM (PWM Rate)
+</dt>
+<dd>
+<p>
+    
+    La frecuencia portadora de la señal PWM que controlara la velocidad del Husillo.
+    Introdusca un <em>0</em> para modo PDM,
+    El cual es util para generar un voltage de control.
+    Revisese la documentacion del controlador del husillo para el valor adecuado.
+</p>
+</dd>
+<dt class="hdlist1">
+Velocidad 1 y 2, PWM 1 y 2
+</dt>
+<dd>
+<p>
+    
+    Los archivos de configuracion generados usan una relacion lineal simple
+    para determinar el valor de PWM para un valor de RPM dado.
+    Si los valores son desconocidos, puedn ser determinados.
+    Para mas informacion vease la seccion: (<a href="stepconf_es.html#determining-spindle-calibration">Determining Spindle Calibration</a>)
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>===Sincronizacion de movimientos del Husillo (Cuerdas automaticas y uso de machuelo)<a id="sub:Spindle-synchronized-motion-lathe"></a></p></div>
+<div class="paragraph"><p>Cuando son proporcionadas las señales correctas desde un encoder conectado
+a LinuxCNC utilizando los componentes del HAL (Capa de abstraccionde Hardware),
+LinuxCNC soportara el roscado en torno.
+Las señales requeridas son:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Indice del Husillo
+</dt>
+<dd>
+<p>
+    
+    Es un pulso que ocurre una vez por revolucion del Husillo.
+</p>
+</dd>
+<dt class="hdlist1">
+Fase A del Husillo
+</dt>
+<dd>
+<p>
+    
+    Es un pulso que ocurre en varias ocaciones igualmente espaciadas
+    conforme el husillo gira.
+</p>
+</dd>
+<dt class="hdlist1">
+Fase B del Husillo (Opcional)
+</dt>
+<dd>
+<p>
+    
+    Este es un pulso secundario que ocurre en
+    desface con respecto al pulso de Fase A.
+    La ventaja de usar ambos pulsos A y B son
+    la capacidad de determinar la direccion del giro,
+    ahumento de la inmunidad al ruido y el aumento de la resolucion.
+</p>
+</dd>
+</dl></div>
+<div class="paragraph"><p>Si las opciones de <em>Fase A</em> e <em>Indice del Husillo</em> fueron seleccionadas
+en la configuracion del puerto, la siguiente informacion devera ser introducida:</p></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Ciclos por revolucion
+</dt>
+<dd>
+<p>
+    
+    El numero de ciclos de la señal fase A  que se producen durante una vuelta completa del husillo.
+    Esta opcion solo se encontrara disponible Si alguna de las entradas de configuracion
+    del puerto fue seleccionada como <em>Spindle Phase A</em>
+</p>
+</dd>
+<dt class="hdlist1">
+Velocidad Maxima al momento de hacer una cuerda
+</dt>
+<dd>
+<p>
+    Seleccionar la maxima velocidad permitida al momento de hacer una cuerda.
+    Para un husillo de altas RPM o un encoder con alta resolucion,
+    un valor bajo de <em>BASE_PERIOD</em> es requerido.
+</p>
+</dd>
+</dl></div>
+<h3 id="_determinacion_de_la_calibracion_del_husillo_a_id_determining_spindle_calibration_a">6.2. Determinacion de la Calibracion del Husillo<a id="determining-spindle-calibration"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Introdusca los siguientes valores en la pagina de configuracion del husillo:</p></div>
+<div class="tableblock">
+<table rules="all"
+width="100%"
+frame="border"
+cellspacing="0" cellpadding="4">
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<tbody>
+<tr>
+<td align="left" valign="top"><p class="table">Speed 1:</p></td>
+<td align="left" valign="top"><p class="table">0</p></td>
+<td align="left" valign="top"><p class="table">PWM 1:</p></td>
+<td align="left" valign="top"><p class="table">0</p></td>
+</tr>
+<tr>
+<td align="left" valign="top"><p class="table">Speed 2:</p></td>
+<td align="left" valign="top"><p class="table">1000</p></td>
+<td align="left" valign="top"><p class="table">PWM 2:</p></td>
+<td align="left" valign="top"><p class="table">1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="paragraph"><p>Termine los pasos restantes del proceso de configuracion,
+posteriormente inicie LinuxCNC con la configuracion recien creada.
+Encienda la maquina y seleccione la pestaña MDI.
+Encienda el husillo entrando el comando: <em>M3 S100</em>.
+Cambie la velocidad del husillo entrando un valor diferente de parametro S: <em>S800</em>.
+Valores validos en este momento van desde 1 hasta 1000.</p></div>
+<div class="paragraph"><p>Para dos valores de parametro S diferentes, mida las RPM que el husillo este proporcionando.
+Guarde los valores S utilizados en la prueba y los valores reales de RPM proporcionados por el husillo.
+Ejecute el programa Stepconf de nuevo.
+Para el parametro  <em>Speed</em> introdusca la velocidad en RPM medida, y
+para <em>PWM</em> introdusca el valor del parametro S dividido entre 1000.
+Recuerde que deve tener dos valores del parametro S y sus correspondientes
+RPM proporcionadas por el husillo para generar un ajuste de velocidad lineal.</p></div>
+<div class="paragraph"><p>Devido a que la mayoria de los controladores de husillo precentan nolinealidades en su respuesta
+es mejor hacer lo siguiente:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Asegurese que las dos calibraciones utilizadas no se encuentren cerca en los valores de RPM proporcionados.
+</p>
+</li>
+<li>
+<p>
+Asegurese que las dos calibraciones se encuentren en los rangos de RPM que usted normalmente
+   utilizara al maquinar.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Por lo tanto si el husillo deve de ir de las 0 RPM a las 8000 RPM,
+pero usted generalmente utiliza velocidades de las 400 RPM (10%) a las 4000 RPM (100%),
+vusque los valores de PWM que proporcionen 1600 RPM (40%) y 2800 RPM (70%).</p></div>
+</div>
+<h2 id="_opciones_de_configuracion_avanzada_a_id_sec_advanced_configuration_options_a">7. Opciones de configuracion avanzada<a id="sec:Advanced-Configuration-Options"></a></h2>
+<div class="sectionbody">
+<div class="imageblock" style="text-align:center;">
+<div class="content">
+<img src="images/stepconf-advanced.png" alt="images/stepconf-advanced.png" />
+</div>
+<div class="title">Figure 8. Configuracion avanzada<a id="cap:Advanced-Configuration"></a></div>
+</div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Incluir Halui
+</dt>
+<dd>
+<p>
+    Esta opcion incluira la interface de usuario Halui.
+    (Control remoto de los parametros de pantalla de la GUI)
+    Vea el manual del integrador para mas detalles.
+</p>
+</dd>
+<dt class="hdlist1">
+Incluir pyVCP
+</dt>
+<dd>
+<p>
+    Esta opcion agrega el pnel base de pyVCP y un archivo simple para comenzar a trabajar en el.
+    Vea el manual del integrador para mas detalles.
+</p>
+</dd>
+<dt class="hdlist1">
+Incluir ClassicLadder PLC
+</dt>
+<dd>
+<p>
+    Esta opcion agregara el ClassicLadder PLC (Programmable Logic Controller).
+    Vea el manual del integrador para mas detalles.
+</p>
+</dd>
+</dl></div>
+</div>
+<h2 id="_terminando_de_configurar_la_maquina_a_id_sub_machine_configuration_complete_a">8. Terminando de configurar la Maquina<a id="sub:Machine-Configuration-Complete"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Seleccione <em>Apply</em> para escrivir los archivos de configuracion.
+Mas tarde puede correrse el programa de configuracion Stepconf de nuevo
+y recuperar los valores que se introdugeron anteriormente.</p></div>
+</div>
+<h2 id="_carrera_de_eje_localizacion_de_los_interruptores_de_inicio_y_la_pocicion_inicial_a_id_sec_axis_travel_home_a">9. Carrera de Eje, Localizacion de los interruptores de inicio y la pocicion inicial<a id="sec:Axis-Travel-Home"></a></h2>
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Para cada eje, existe un rango limitado de carrera.
+El limite fisico de la carrera se conoce como <em>hard stop</em>.</p></div>
+<div class="paragraph"><p>ANtes de alcanzar el limite fisico <em>hard stop</em> existe un interruptor de limite <em>limit switch</em>.
+Si se encuentra el interruptor de limite durante la operacion normal,
+EMC apagara el controlador del eje.
+La distancia entre el limite fisico y el interruptor de limite
+Deve ser suficiente para permitir al eje sin energia detenerse.</p></div>
+<div class="paragraph"><p>Antes del interruptor de limite existe un limite suabe <em>soft limit</em>.
+Este es un limite determinado por programa despues de la rutina de inicializacion.
+Si un comando MDI o G exede el limite suabe, el comando no se ejecutara.
+Si un movimiento manual del eje exede el limite suabe, el movimiento es terminado en el
+limite suabe.</p></div>
+<div class="paragraph"><p>El interruptor de inicializacion <em>home switch</em> puede ser colocado en cualquier lugar de la
+carrera del eje entre los dos limites fisicos del eje.
+Mientras algun dispositivo externo no desactive los controladores de motor
+cuando el interruptor de limite es activado, uno de los interruptores de limite
+puede ser utilizado para la posicion de inicializacion.</p></div>
+<div class="paragraph"><p>La posicion cero <em>zero position</em> es la posicion en el eje que tienen el valor de 0
+en el sistema coordenado de la maquina.
+Usualmente la posicion cero se encontrara dentro de los limites suabes.
+En los tornos, la opcion de velocidad de superficie constante
+requiere que la posicion <em>X=0</em> corresponda al centro de rotacion del husillo
+cuando no exista alguna compensacion en la herramienta.</p></div>
+<div class="paragraph"><p>La posicion de inizializacion es la posicion a la que el eje sera desplazado
+al final de la secuencia de inizializacion.
+Este valor deve de encontrarse dentro de los limites suabes.
+En particular la posicion de inizializacion
+nunca deve ser igual a un limite suabe.</p></div>
+<h3 id="_operacion_sin_interruptores_de_limite_a_id_sub_operating_without_limit_a">9.1. Operacion sin interruptores de limite<a id="sub:Operating-without-Limit"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Una maquina puede ser operada sin interruptores de limite. En ese caso, solo
+los limites suabes detendran al eje de alcanzar el limite fisico.
+Los limites suabes solo operan despues de que se a ejecutado la rutina de inizializacion.</p></div>
+<h3 id="_operacion_sin_limites_de_inizializacion_a_id_sub_operating_without_home_a">9.2. Operacion sin limites de inizializacion<a id="sub:Operating-without-Home"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>Una maquina puede ser operada sin interruptores de inicializacion.
+Si la maquina tiene interruptores de limite pero no de inicializacion,
+es mejor utilizar un interruptor de limite como interruptor de inizializacion
+(ejemplo, seleccione la opcion <em>Minimum Limit + Home X</em> cuando configure el puerto en Stepconf).
+Si la maquina no tiene interruptores de ningun tipo, o si los interruptores
+no pueden ser utilizados como interruptores de inizializacion por cualquier otra razon,
+entonces la maquina devera ser inicializada a mano, o utilizando marcas en la bancada.
+la inicializacion a mano no es tan confiable como la inicializacion con interruptores,
+pero permite seguir utilizando los limites suabes.</p></div>
+<h3 id="_opciones_de_cableado_de_los_interruptores_de_inicializacion_y_limite_a_id_sub_home_and_limit_a">9.3. Opciones de cableado de los interruptores de inicializacion y limite<a id="sub:Home-and-Limit"></a></h3><div style="clear:left"></div>
+<div class="paragraph"><p></p></div>
+<div class="paragraph"><p>El cableado ideal deve de incluir un interruptor por señal.
+Sin embargo, el puerto paralelo del computador solo ofrece un total de 5 entradas,
+mientras que se necesitan 9 en una maquina de 3 ejes.
+Por lo tanto, Varios interruptores pueden ser cableados en conjunto
+en diversas formas para permitir utilizar menos entradas.</p></div>
+<div class="paragraph"><p>La siguiente figura muestra la idea general de cablear varios interruptores
+a una unica entrada.
+En el caso ilustrado, cuando un interruptor es precionado,
+El valor mandado atraves de la entrada va de un valor logico ALTO a BAJO.
+Sin embargo LinuxCNC espera un valor logico ALTO cuando un interruptor es precionado,
+Por lo tanto se devera seleccionar la opcion de invercion <em>Invert</em> cuando se configure la entrada
+del puerto paralelo en el Stepconf.</p></div>
+<div class="paragraph"><p>La resistencia de polarizacion mostrada en el diagrama fija la señal de entrada a ALTO
+Amenos que una conexion a tierra sea realizada, en tal caso la señal ira a BAJO.
+Sin la resistencia la entrada quedaria flotando y la entrada podria variar entre ALTO y BAJO
+cuando el circuito este abierto.
+Un balor tipoco de resistencia de polarizacion es de 47K.</p></div>
+<div class="paragraph"><div class="title">Interruptores normalmente cerrados<a id="cap:Normally-Closed-Switches"></a></div><p>Cableado de Interruptores Normalmente Cerrados en serie (diagrama simplificado)</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/switch-nc-series.png" alt="images/switch-nc-series.png" />
+</div>
+</div>
+<div class="paragraph"><div class="title">Interruptores normalmente abiertos<a id="cap:Normally-Open-Switches"></a></div><p>Cableado de interruptores normalmente abiertos en paralelo (diagrama simplificado)</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/switch-no-parallel.png" alt="images/switch-no-parallel.png" />
+</div>
+</div>
+<div class="paragraph"><p>Las siguientes configuraciones de interruptores estan permitidas en Stepconf:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Interruptores de inizializacion combinados para todos los ejes
+</p>
+</li>
+<li>
+<p>
+Interruptores de limite combinados para todos los ejes
+</p>
+</li>
+<li>
+<p>
+Combinar ambos interruptores de limite para un eje
+</p>
+</li>
+<li>
+<p>
+Combinar ambos interruptores de limite y el interruptor de inizializacion para un eje
+</p>
+</li>
+<li>
+<p>
+Combinar un interruptor de limite y el interruptor de inicializacion de un eje
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-03-31 07:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/config/stepconf_es.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:14 GMT -->
+</html>

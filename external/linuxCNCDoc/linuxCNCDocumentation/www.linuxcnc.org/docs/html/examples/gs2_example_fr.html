@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/examples/gs2_example_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Broche avec variateur GS2</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Broche avec variateur GS2</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p></p></div>
+</div>
+</div>
+<h2 id="_exemple">1. Exemple</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Cet exemple montre les connexions demandées pour utiliser un variateur de
+fréquence fourni par la société Automation Direct pour piloter une broche.
+<span class="footnote"><br />[En Europe on trouve une gamme de produits identiques sous la marque
+Omron.]<br /></span>
+La direction de la broche et sa vitesse seront contrôlées par LinuxCNC.</p></div>
+<div class="paragraph"><p>L&#8217;utilisation du composant GS2 est très simple à régler. Une configuration
+complète peut être réalisée par l&#8217;assistant Stepconf. Bien vérifier que les
+pins <em>Spindle CW</em> et <em>Spindle PWM</em> sont inutilisées sur la page de réglage du
+port parallèle.</p></div>
+<div class="paragraph"><p>Placer les lignes suivantes dans le fichier custom.hal pour connecter LinuxCNC au
+GS2 et avoir le contrôle de celui-ci depuis l&#8217;interface utilisateur.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt># Charger le composant utilisateur pour le variateur variateur
+loadusr -Wn spindle-vfd gs2_vfd -n spindle-vfd
+
+# connecter la pin de direction au variateur
+net gs2-fwd spindle-vfd.spindle-fwd &lt;= motion.spindle-forward
+
+# connecter la pin de Marche/Arrêt au variateur
+net gs2-run spindle-vfd.spindle-on &lt;= motion.spindle-on
+
+# connecter la pin indiquant que la consigne vitesse est atteinte
+net gs2-at-speed motion.spindle-at-speed &lt;= spindle-vfd.at-speed
+
+# connecter la commande de vitesse au variateur
+net gs2-RPM spindle-vfd.speed-command &lt;= motion.spindle-speed-out</tt></pre>
+</div></div>
+<div class="paragraph"><p>Sur le variateur de fréquence lui même, il est nécessaire de fixer quelques
+paramètres avant de pouvoir communiquer avec lui par Modbus. D&#8217;autres seront
+ajustés selon les caractéristiques demandées par le système. Ces réglages
+sortent, pour la plupart, du cadre de cet exemple, ils sont tous expliqués
+dans le manuel du variateur qu&#8217;il est impératif de consulter.</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+Les switches de communication doivent être positionnés sur RS-232C.
+</p>
+</li>
+<li>
+<p>
+Les paramètres moteur doivent être ajustés en fonction du moteur.
+</p>
+</li>
+<li>
+<p>
+P3.00 (Source des commandes de marche) doit être ajusté sur <em>Opérations
+   déterminées par l&#8217;interface RS-485</em>, <em>03</em> ou <em>04</em>
+</p>
+</li>
+<li>
+<p>
+P4.00 (Source des commandes de fréquence) doit être ajusté sur <em>Fréquence
+   déterminée par l&#8217;interface RS232C/RS485</em>, <em>05</em>
+</p>
+</li>
+<li>
+<p>
+P9.02 (Protocole de communication) doit être ajusté sur <em>Modbus RTU mode,
+   8 bits de donnée, pas de parity, 2 bits de stop</em>, <em>03</em>
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>Un panneau de commande virtuel PyVCP, basé sur cet exemple, est donné
+dans l'<a href="../hal/pyvcp_examples_fr.html#sec:Exemple-Compte-Tours-GS2">exemple avec un variateur</a>.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-31 07:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/examples/gs2_example_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+</html>

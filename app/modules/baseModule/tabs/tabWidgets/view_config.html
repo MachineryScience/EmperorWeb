@@ -10,7 +10,7 @@
             <li><a id="BackplotTab" href="#BackplotSettings" data-toggle="tab">{{nls.BackplotSettingsTabTitle}}</a></li>
             <li><a id="OffsetsTab" href="#OffsetSettings" data-toggle="tab">{{nls.OffsetsSettingsTabTitle}}</a></li>
             <li><a id="JogTab" href="#JogSettings" data-toggle="tab">{{nls.JogSettingsTabTitle}}</a></li>
-
+            <li><a id="ServerTab" href="#ServerSettings" data-toggle="tab">{{nls.ServerSettingsTabTitle}}</a></li>
         </ul>
 
         <div class="tab-content">
@@ -249,6 +249,32 @@
                         <div class="controls">
                             <button class="btn" data-bind="click: refreshJogSettings">{{nls.Refresh}}</button>
                             <button class="btn" data-bind="click: saveJogSettings">{{nls.Save}}</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <!--************************ OFFSET SETTINGS ************************-->
+            <div class="tab-pane" id="ServerSettings">
+
+                <legend>{{nls.ServerTabLegend}}</legend>
+
+                <form class="form-horizontal">
+
+                    <div class="control-group">
+                        <label class="control-label" for="launchServerConfigBtn">{{nls.ServerConfigLabel}}</label>
+                        <div class="controls">
+                            <button class="btn" id="launchServerConfigBtn" data-bind="click: launchServerConfig" >{{nls.Launch}}</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="launchServerHelpBtn">Server Help Website</label>
+                        <div class="controls">
+                            <button class="btn" id="launchServerHelpBtn" data-bind="click: launchServerHelp" >{{nls.Launch}}</button>
                         </div>
                     </div>
 

@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/drivers/AX5214H.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:14:30 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>AX5214H Driver</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>AX5214H Driver</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:ax5214-driver"></a> </p></div>
+<div class="paragraph"><p>The Axiom Measurement &amp; Control AX5214H is a 48 channel digital I/O
+board. It plugs into an ISA bus, and resembles a pair of 8255 chips. In
+fact it may be a pair of 8255 chips, but I&#8217;m not sure. If/when someone
+starts a driver for an 8255 they should look at the ax5214 code, much
+of the work is already done.</p></div>
+</div>
+</div>
+<h2 id="_installing">1. Installing</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt hal_ax5214h cfg="&lt;config-string&gt;"</tt></pre>
+</div></div>
+<div class="paragraph"><p>The config string consists of a hex port address, followed by an 8
+character string of "I" and "O" which sets groups of pins as inputs and
+outputs. The first two character set the direction of the first two 8
+bit blocks of pins (0-7 and 8-15). The next two set blocks of 4 pins
+(16-19 and 20-23). The pattern then repeats, two more blocks of 8 bits
+(24-31 and 32-39) and two blocks of 4 bits (40-43 and 44-47). If more
+than one board is installed, the data for the second board follows the
+first. As an example, the string <em>"0x220 IIIOIIOO 0x300 OIOOIOIO"</em>
+installs drivers for two boards. The first board is at address 0x220,
+and has 36 inputs (0-19 and 24-39) and 12 outputs (20-23 and 40-47).
+The second board is at address 0x300, and has 20 inputs (8-15, 24-31,
+and 40-43) and 28 outputs (0-7. 16-23, 32-39, and 44-47). Up to 8
+boards may be used in one system.</p></div>
+</div>
+<h2 id="_pins">2. Pins</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(bit) ax5214.&lt;boardnum&gt;.out-&lt;pinnum&gt;</em>&#8201;&#8212;&#8201;Drives a physical output pin.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) ax5214.&lt;boardnum&gt;.in-&lt;pinnum&gt;</em>&#8201;&#8212;&#8201;Tracks a physical input pin.
+</p>
+</li>
+<li>
+<p>
+<em>(bit) ax5214.&lt;boardnum&gt;.in-&lt;pinnum&gt;-not</em>&#8201;&#8212;&#8201;Tracks a physical input pin, inverted.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>For each pin, &lt;boardnum&gt; is the board number (starts at zero), and
+&lt;pinnum&gt; is the I/O channel number (0 to 47).</p></div>
+<div class="paragraph"><p>Note that the driver assumes active LOW signals. This is so that
+modules such as OPTO-22 will work correctly (TRUE means output ON, or
+input energized). If the signals are being used directly without
+buffering or isolation the inversion needs to be accounted for. The in-
+HAL pin is TRUE if the physical pin is low (OPTO-22 module energized),
+and FALSE if the physical pin is high (OPTO-22 module off). The
+in-&lt;pinnum&gt;-not HAL pin is inverted&#8201;&#8212;&#8201;it is FALSE if the physical pin
+is low (OPTO-22 module energized). By connecting a signal to one or the
+other, the user can determine the state of the input.</p></div>
+</div>
+<h2 id="_parameters">3. Parameters</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(bit) ax5214.&lt;boardnum&gt;.out-&lt;pinnum&gt;-invert</em>&#8201;&#8212;&#8201;Inverts an output pin.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>The -invert parameter determines whether an output pin is active high
+or active low. If -invert is FALSE, setting the HAL out- pin TRUE
+drives the physical pin low, turning ON an attached OPTO-22 module, and
+FALSE drives it high, turning OFF the OPTO-22 module. If -invert is
+TRUE, then setting the HAL out- pin TRUE will drive the physical pin
+high and turn the module OFF.</p></div>
+</div>
+<h2 id="_functions">4. Functions</h2>
+<div class="sectionbody">
+<div class="ulist"><ul>
+<li>
+<p>
+<em>(funct) ax5214.&lt;boardnum&gt;.read</em>&#8201;&#8212;&#8201;Reads all digital inputs on one board.
+</p>
+</li>
+<li>
+<p>
+<em>(funct) ax5214.&lt;boardnum&gt;.write</em>&#8201;&#8212;&#8201;Writes all digital outputs on one board.
+</p>
+</li>
+</ul></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-01-16 08:36:26 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/drivers/AX5214H.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:14:30 GMT -->
+</html>

@@ -1,0 +1,150 @@
+<!-- Creator     : groff version 1.20.1 -->
+<!-- CreationDate: Tue May 14 22:37:46 2013 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/message.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+<head>
+<meta name="generator" content="groff -Thtml, see www.gnu.org">
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<meta name="Content-Style" content="text/css">
+<style type="text/css">
+       p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       table   { margin-top: 0; margin-bottom: 0; vertical-align: top }
+       h1      { text-align: center }
+</style>
+<title>MESSAGE</title>
+
+</head>
+<body>
+
+<h1 align="center">MESSAGE</h1>
+
+<a href="#NAME">NAME</a><br>
+<a href="#SYNOPSIS">SYNOPSIS</a><br>
+<a href="#DESCRIPTION">DESCRIPTION</a><br>
+<a href="#FUNCTIONS">FUNCTIONS</a><br>
+<a href="#PINS">PINS</a><br>
+<a href="#PARAMETERS">PARAMETERS</a><br>
+<a href="#LICENSE">LICENSE</a><br>
+
+<hr>
+
+
+<h2>NAME
+<a name="NAME"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">message &minus;
+Display a message</p>
+
+<h2>SYNOPSIS
+<a name="SYNOPSIS"></a>
+</h2>
+
+
+<table width="100%" border="0" rules="none" frame="void"
+       cellspacing="0" cellpadding="0">
+<tr valign="top" align="left">
+<td width="11%"></td>
+<td width="89%">
+
+
+<p style="margin-top: 1em"><b>loadrt message
+[count=</b><i>N</i><b>|names=</b><i>name1</i><b>[,</b><i>name2...</i><b>]]
+[messages=</b><i>N</i><b>]</b></p> </td></tr>
+</table>
+
+<p style="margin-left:17%;"><b>messages</b></p>
+
+<p style="margin-left:28%;">The messages to display. These
+should be listed, comma-delimited, inside a single set of
+quotes. See the &quot;Description&quot; section for an
+example. If there are more messages than &quot;count&quot;
+or &quot;names&quot; then the excess will be ignored. If
+there are fewer messages than &quot;count&quot; or
+&quot;names&quot; then an error will be raised and the
+component will not load.</p>
+
+<h2>DESCRIPTION
+<a name="DESCRIPTION"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">Allows HAL pins
+to trigger a message. Example hal commands: <br>
+loadrt message names=oillow,oilpressure,inverterfail
+messages=&quot;Slideway oil low,No oil pressure,Spindle
+inverter fault&quot; <br>
+addf oillow servo-thread <br>
+addf oilpressure servo-thread <br>
+addf inverterfail servo-thread</p>
+
+<p style="margin-left:11%; margin-top: 1em">setp
+oillow.edge 0 #this pin should be active low <br>
+net no-oil classicladder.0.out-21 oillow.trigger <br>
+net no-pressure classicladder.0.out-22 oilpressure.trigger
+<br>
+net no-inverter classicladder.0.out-23
+inverterfail.trigger</p>
+
+<p style="margin-left:11%; margin-top: 1em">When any pin
+goes active, the corresponding message will be
+displayed.</p>
+
+<h2>FUNCTIONS
+<a name="FUNCTIONS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>message.</b><i>N</i></p>
+
+<p style="margin-left:22%;">Display a message</p>
+
+<h2>PINS
+<a name="PINS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>message.</b><i>N</i><b>.trigger</b>
+bit in (default: <i>FALSE</i>)</p>
+
+<p style="margin-left:22%;">signal that triggers the
+message</p>
+
+
+<p style="margin-left:11%;"><b>message.</b><i>N</i><b>.force</b>
+bit in (default: <i>FALSE</i>)</p>
+
+<p style="margin-left:22%;">A FALSE-&gt;TRUE transition
+forces the message to be displayed again if the trigger is
+active</p>
+
+<h2>PARAMETERS
+<a name="PARAMETERS"></a>
+</h2>
+
+
+
+<p style="margin-left:11%; margin-top: 1em"><b>message.</b><i>N</i><b>.edge</b>
+bit rw (default: <i>TRUE</i>)</p>
+
+<p style="margin-left:22%;">Selects the desired edge: TRUE
+means falling, FALSE means rising</p>
+
+<h2>LICENSE
+<a name="LICENSE"></a>
+</h2>
+
+
+<p style="margin-left:11%; margin-top: 1em">GPL v2</p>
+<hr>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/man/man9/message.9.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:13 GMT -->
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/hal-examples.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:02 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>HAL Examples</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>HAL Examples</h1>
+<div id="toc">
+  <div id="toctitle">Table of Contents</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p>All of these examples assume you are starting with a stepconf based
+configuration and have two threads base-thread and servo-thread. The
+stepconf wizard will create an empty custom.hal and a
+custom_postgui.hal file. The custom.hal file will be loaded after the
+configuration HAL file and the custom_postgui.hal file is loaded after
+the GUI has been loaded.</p></div>
+</div>
+</div>
+<h2 id="_manual_toolchange">1. Manual Toolchange</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>In this example it is assumed that you&#8217;re <em>rolling your own</em>
+configuration and wish to add the HAL Manual Toolchange window. The HAL
+Manual Toolchange is primarily useful if you have presettable tools and
+you store the offsets in the tool table. If you need to touch off for
+each tool change then it is best just to split up your g code. To use
+the HAL Manual Toolchange window you basically have to load the
+hal_manualtoolchange component then send the iocontrol <em>tool change</em> to
+the hal_manualtoolchange <em>change</em> and send the hal_manualtoolchange
+<em>changed</em> back to the iocontrol <em>tool changed</em>.</p></div>
+<div class="paragraph"><p>This is an example of manual toolchange <em>with</em>
+the HAL Manual Toolchange component:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadusr -W hal_manualtoolchange
+net tool-change iocontrol.0.tool-change =&gt; hal_manualtoolchange.change
+net tool-changed iocontrol.0.tool-changed &lt;= hal_manualtoolchange.changed
+net tool-number iocontrol.0.tool-prep-number =&gt; hal_manualtoolchange.number
+net tool-prepare-loopback iocontrol.0.tool-prepare =&gt; iocontrol.0.tool-prepared</tt></pre>
+</div></div>
+<div class="paragraph"><p>This is an example of manual toolchange <em>without</em>
+the HAL Manual Toolchange component:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>net tool-number &lt;= iocontrol.0.tool-prep-number
+net tool-change-loopback iocontrol.0.tool.-change =&gt; iocontrol.0.tool-changed
+net tool-prepare-loopback iocontrol.0.tool-prepare =&gt; iocontrol.0.tool-prepared</tt></pre>
+</div></div>
+</div>
+<h2 id="_compute_velocity">2. Compute Velocity</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This example uses <em>ddt</em>, <em>mult2</em> and <em>abs</em> to compute the velocity of
+a single axis. For more information on the real time components see the
+man pages or the Realtime Components section (<a href="components.html#sec:Realtime-Components">[sec:Realtime-Components]</a>).</p></div>
+<div class="paragraph"><p>The first thing is to check your configuration to make sure you are
+not using any of the real time components all ready. You can do this by
+opening up the HAL Configuration window and look for the components in
+the pin section. If you are then find the .hal file that they are being
+loaded in and increase the counts and adjust the instance to the
+correct value. Add the following to your custom.hal file.</p></div>
+<div class="paragraph"><p>Load the realtime components.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt ddt count=1
+loadrt mult2 count=1
+loadrt abs count=1</tt></pre>
+</div></div>
+<div class="paragraph"><p>Add the functions to a thread so it will get updated.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>addf ddt.0 servo-thread
+addf mult2.0 servo-thread
+addf abs.0 servo-thread</tt></pre>
+</div></div>
+<div class="paragraph"><p>Make the connections.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>setp mult2.in1 60
+net xpos-cmd ddt.0.in
+net X-IPS mult2.0.in0 &lt;= ddt.0.out
+net X-ABS abs.0.in &lt;= mult2.0.out
+net X-IPM abs.0.out</tt></pre>
+</div></div>
+<div class="paragraph"><p>In this last section we are setting the mult2.0.in1 to 60 to convert
+the inch per second to inch per minute that we get from the ddt.0.out.</p></div>
+<div class="paragraph"><p>The xpos-cmd sends the commanded position to the ddt.0.in. The ddt
+computes the derivative of the change of the input.</p></div>
+<div class="paragraph"><p>The ddt2.0.out is multiplied by 60 to give IPM.</p></div>
+<div class="paragraph"><p>The mult2.0.out is sent to the abs to get the absolute value.</p></div>
+<div class="paragraph"><p>The following figure shows the result when the X axis is moving at 15
+IPM in the minus direction. Notice that we can get the absolute value
+from either the abs.0.out pin or the X-IPM signal.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/velocity-01.png" alt="images/velocity-01.png" />
+</div>
+<div class="title">Figure 1. Velocity Example<a id="cap:Velocity-Example"></a></div>
+</div>
+</div>
+<h2 id="_soft_start">3. Soft Start</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>This example shows how the HAL components <em>lowpass</em>, <em>limit2</em> or
+<em>limit3</em> can be used to limit how fast a signal changes.</p></div>
+<div class="paragraph"><p>In this example we have a servo motor driving a lathe spindle. If we
+just used the commanded spindle speeds on the servo it will try to go
+from present speed to commanded speed as fast as it can. This could
+cause a problem or damage the drive. To slow the rate of change we can
+send the motion.spindle-speed-out through a limiter before the PID, so
+that the PID command value changes to new settings more slowly.</p></div>
+<div class="paragraph"><p>Three built-in components that limit a signal are:</p></div>
+<div class="ulist"><ul>
+<li>
+<p>
+<em>limit2</em> limits the range and first derivative of a signal.
+</p>
+</li>
+<li>
+<p>
+<em>limit3</em> limits the range, first and second derivatives of a signal.
+</p>
+</li>
+<li>
+<p>
+<em>lowpass</em> uses an exponentially-weighted moving average to track an input signal.
+</p>
+</li>
+</ul></div>
+<div class="paragraph"><p>To find more information on these HAL components check the man pages.</p></div>
+<div class="paragraph"><p>Place the following in a text file called softstart.hal. If you&#8217;re not
+familiar with Linux place the file in your home directory.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>loadrt threads period1=1000000 name1=thread
+loadrt siggen
+loadrt lowpass
+loadrt limit2
+loadrt limit3
+net square siggen.0.square =&gt; lowpass.0.in limit2.0.in limit3.0.in
+net lowpass &lt;= lowpass.0.out
+net limit2 &lt;= limit2.0.out
+net limit3 &lt;= limit3.0.out
+setp siggen.0.frequency .1
+setp lowpass.0.gain .01
+setp limit2.0.maxv 2
+setp limit3.0.maxv 2
+setp limit3.0.maxa 10
+addf siggen.0.update thread
+addf lowpass.0 thread
+addf limit2.0 thread
+addf limit3.0 thread
+start
+loadusr halscope</tt></pre>
+</div></div>
+<div class="paragraph"><p>Open a terminal window and run the file with the following command.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>halrun -I softstart.hal</tt></pre>
+</div></div>
+<div class="paragraph"><p>When the HAL Oscilloscope first starts up click <em>OK</em> to accept the
+default thread.</p></div>
+<div class="paragraph"><p>Next you have to add the signals to the channels. Click on channel 1
+then select <em>square</em> from the Signals tab. Repeat for channels 2-4 and
+add lowpass, limit2, and limit3.</p></div>
+<div class="paragraph"><p>Next to set up a trigger signal click on the Source None button and
+select square. The button will change to Source Chan 1.</p></div>
+<div class="paragraph"><p>Next click on Single in the Run Mode radio buttons box. This will
+start a run and when it finishes you will see your traces.</p></div>
+<div class="paragraph"><p>To separate the signals so you can see them better click on a channel
+then use the Pos slider in the Vertical box to set the positions.</p></div>
+<div class="imageblock">
+<div class="content">
+<img src="images/softstart-scope.png" alt="images/softstart-scope.png" />
+</div>
+<div class="title">Figure 2. Softstart<a id="cap:Softstart"></a></div>
+</div>
+<div class="paragraph"><p>To see the effect of changing the set point values of any of the
+components you can change them in the terminal window. To see what
+different gain settings do for lowpass just type the following in the
+terminal window and try different settings.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>setp lowpass.0.gain *.01</tt></pre>
+</div></div>
+<div class="paragraph"><p>After changing a setting run the oscilloscope again to see the change.</p></div>
+<div class="paragraph"><p>When you&#8217;re finished type <em>exit</em> in the terminal window to shut down
+halrun and close the halscope. Don&#8217;t close the terminal window with
+halrun running as it might leave some things in memory that could
+prevent EMC from loading.</p></div>
+<div class="paragraph"><p>For more information on Halscope see the HAL manual.</p></div>
+</div>
+<h2 id="_stand_alone_hal">4. Stand Alone HAL</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>In some cases you might want to run a GladeVCP screen with just HAL. For
+example say you had a stepper driven device that all you need is to run a
+stepper motor. A simple <em>Start/Stop</em> interface is all you need for your
+application so no need to load up and configure a full blown CNC application.</p></div>
+<div class="paragraph"><p>In the following example we have created a simple GladeVCP panel with one</p></div>
+<div class="listingblock">
+<div class="title">Basic Syntax</div>
+<div class="content">
+<pre><tt># load the winder.glade GUI and name it winder
+loadusr -Wn winder gladevcp -c winder -u handler.py winder.glade
+
+# load realtime components
+loadrt threads name1=fast period1=50000 fp1=0 name2=slow period2=1000000
+loadrt stepgen step_type=0 ctrl_type=v
+loadrt hal_parport cfg="0x378 out"
+
+# add functions to threads
+addf stepgen.make-pulses fast
+addf stepgen.update-freq slow
+addf stepgen.capture-position slow
+addf parport.0.read fast
+addf parport.0.write fast
+
+# make hal connections
+net winder-step parport.0.pin-02-out &lt;= stepgen.0.step
+net winder-dir parport.0.pin-03-out &lt;= stepgen.0.dir
+net run-stepgen stepgen.0.enable &lt;= winder.start_button
+
+
+
+# start the threads
+start
+
+# comment out the following lines while testing and use the interactive
+# option halrun -I -f start.hal to be able to show pins etc.
+
+# wait until the gladevcp GUI named winder terminates
+waitusr winder
+
+# stop HAL threads
+stop
+
+# unload HAL all components before exiting
+unloadrt all</tt></pre>
+</div></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-09-01 12:36:05 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/hal/hal-examples.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:16:05 GMT -->
+</html>

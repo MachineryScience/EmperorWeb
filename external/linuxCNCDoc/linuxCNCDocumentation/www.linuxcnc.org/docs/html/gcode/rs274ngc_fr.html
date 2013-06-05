@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gcode/rs274ngc_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:01 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Différences avec RS274/NGC</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Différences avec RS274/NGC</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:Programmation-rs274ngc"></a> </p></div>
+</div>
+</div>
+<h2 id="_changements_entre_rs274_ngc_et_linuxcnc">1. Changements entre RS274/NGC et LinuxCNC</h2>
+<div class="sectionbody">
+<h3 id="_position_apr_s_un_changement_d_8217_outil">1.1. Position après un changement d&#8217;outil</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Avec LinuxCNC, le mobile ne retourne pas sur la position de départ après un
+changement d&#8217;outil. Ce mode de fonctionnement est nécessaire, car un outil peut
+être plus long que l&#8217;outil précédent et dans ce cas un mouvement sur la position
+précédente placerait l&#8217;outil trop bas.</p></div>
+<h3 id="_les_param_tres_de_d_calage_sont_dans_l_8217_unit_du_fichier_ini">1.2. Les paramètres de décalage sont dans l&#8217;unité du fichier ini</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Dans LinuxCNC, les valeurs mémorisées dans les paramètres pour les positions
+d&#8217;origine des commandes G28 et G30, les systèmes de coordonnées P1 à P9 et le
+décalage G92 sont dans l&#8217;unité du fichier ini.
+Ce changement a été fait car la position d&#8217;un point change selon que G20 ou G21
+était actif lors de la programmation d&#8217;un G28, G30, G10 L2 ou G92.3.</p></div>
+<h3 id="_table_d_8217_outils_longueur_et_diam_tre_sont_dans_l_8217_unit_du_fichier_ini">1.3. Table d&#8217;outils, longueur et diamètre sont dans l&#8217;unité du fichier ini</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Dans LinuxCNC, les longueurs d&#8217;outil (compensation) et les diamètres sont spécifiés
+seulement dans l&#8217;unité du fichier ini. Cela est nécessaire, car la longueur et
+le diamètre de l&#8217;outil changent selon que G20 ou G21 étaient actifs à
+l&#8217;initialisation des modes G43, G41, G42. Il était donc impossible de lancer
+un G-code avec des unités machines non natives, ceci même lorsque le G-code est
+simple et bien formé (débutant par G20 ou G21 et sans changement d&#8217;unité tout au
+long  du programme) sans changer la table d&#8217;outils.</p></div>
+<h3 id="_g84_g87_ne_sont_pas_impl_ment_s">1.4. G84, G87 ne sont pas implémentés</h3><div style="clear:left"></div>
+<div class="paragraph"><p>G84 et G87 ne sont pour le moment pas implémentés. Ils le seront dans une
+version futur de LinuxCNC.</p></div>
+<h3 id="_g28_g30_avec_des_mots_d_8217_axe">1.5. G28, G30 avec des mots d&#8217;axe</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Lorsqu&#8217;un G28 ou un G30 est programmé avec seulement quelques mots d&#8217;axe présents,
+LinuxCNC déplace seulement les axes nommés. Ce comportement est commun aux
+contrôleurs de machine. Pour déplacer certains axes à un point intermédiaire,
+puis déplacer tous les axes à un point prédéfini, écrire deux lignes de G-code:<br /></p></div>
+<div class="listingblock">
+<div class="content">
+<pre><tt>G0 X- Y-   (déplace les axes au point intermédiaire)
+G28        (déplace tous les axes au point prédéfini)</tt></pre>
+</div></div>
+</div>
+<h2 id="_ajouts_rs274_ngc">2. Ajouts à RS274/NGC</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Différences qui ne changent pas le déroulement des programmes en RS274/NGC.</p></div>
+<h3 id="_codes_de_filetage_g33_et_g76">2.1. Codes de filetage G33 et G76</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Ces codes ne sont pas définis dans RS274/NGC.</p></div>
+<h3 id="_g38_2">2.2. G38.2</h3><div style="clear:left"></div>
+<div class="paragraph"><p>La pointe de touche n&#8217;est pas rétractée après un mouvement G38.2.
+Ce mouvement de retrait sera ajouté dans une version futur de LinuxCNC.</p></div>
+<h3 id="_g38_3_g38_5">2.3. G38.3 à G38.5</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Ces codes ne sont pas définis dans RS274/NGC.</p></div>
+<h3 id="_les_o_codes">2.4. Les O-codes</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Ces codes ne sont pas définis dans RS274/NGC</p></div>
+<h3 id="_m50_m53_correcteurs_de_vitesse">2.5. M50 à M53 Correcteurs de vitesse</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Ces codes ne sont pas définis dans RS274/NGC.</p></div>
+<h3 id="_m61_m66">2.6. M61 à M66</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Ces codes ne sont pas définis dans RS274/NGC.</p></div>
+<h3 id="_g43_g43_1">2.7. G43, G43.1</h3><div style="clear:left"></div>
+<div class="dlist"><dl>
+<dt class="hdlist1">
+Longueurs d&#8217;outil négatives
+</dt>
+<dd>
+<p>
+Les spécifications RS274/NGC précisent "il est prévu que" toutes les longueurs
+d&#8217;outils soient positives. Cependant, G43 fonctionne avec des longueurs d&#8217;outil
+négatives.
+</p>
+</dd>
+<dt class="hdlist1">
+Outils de tournage
+</dt>
+<dd>
+<p>
+La compensation de longueur d&#8217;outil G43 peut compenser l&#8217;outil à la fois en X et
+en Z. Cette fonctionnalité est surtout utile sur les tours.
+</p>
+</dd>
+<dt class="hdlist1">
+Longueurs d&#8217;Outil dynamiques
+</dt>
+<dd>
+<p>
+LinuxCNC permet la spécification d&#8217;une longueur d&#8217;outil calculée par G43.1 I K.
+</p>
+</dd>
+</dl></div>
+<h3 id="_g41_1_g42_1_compensation_dynamique">2.8. G41.1, G42.1 Compensation dynamique</h3><div style="clear:left"></div>
+<div class="paragraph"><p>LinuxCNC permet dans le G-code, la spécification d&#8217;un diamètre d&#8217;outil et en mode
+tour, l&#8217;orientation est également spécifiée. Le format est G41.1/G42.1 D L, où
+D est le diamètre et L (si spécifié) est l&#8217;orientation de l&#8217;outil de tournage.</p></div>
+<h3 id="_g43_sans_le_mot_h">2.9. G43 sans le mot H</h3><div style="clear:left"></div>
+<div class="paragraph"><p>Ce code n&#8217;est pas permis en NGC. Dans LinuxCNC, il fixe la compensation de longueur
+pour l&#8217;outil actuellement chargé. Si aucun outil n&#8217;est actuellement  chargé,
+c&#8217;est une erreur. Ceci a été fait afin que l&#8217;utilisateur n&#8217;ait pas à  spécifier,
+pour chaque changement d&#8217;outil, le numéro d&#8217;outil à deux endroits et c&#8217;est
+cohérent avec la manière de fonctionner de G41/G42 quand le mot D n&#8217;est pas
+spécifié.</p></div>
+<h3 id="_u_v_et_w_axes">2.10. U, V et W axes</h3><div style="clear:left"></div>
+<div class="paragraph"><p>LinuxCNC peut admettre des machines ayant jusqu'à 9 axes en définissant un
+ensemble supplémentaire de 3 axes linéaires, connus comme U, V et W.</p></div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-02-03 18:36:08 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/gcode/rs274ngc_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:01 GMT -->
+</html>

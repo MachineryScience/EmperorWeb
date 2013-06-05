@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr">
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/examples/mpg_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="AsciiDoc 8.5.2" />
+<title>Utilisation d&#8217;une manivelle</title>
+<link rel="stylesheet" href="../xhtml11.css" type="text/css" />
+<link rel="stylesheet" href="../xhtml11-quirks.css" type="text/css" />
+<link rel="stylesheet" href="../linuxcnc.css" type="text/css" />
+<script type="text/javascript">
+/*<![CDATA[*/
+window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
+/*]]>*/
+</script>
+<script type="text/javascript" src="../asciidoc-xhtml11.js"></script>
+</head>
+<body>
+<div id="header">
+<h1>Utilisation d&#8217;une manivelle</h1>
+<div id="toc">
+  <div id="toctitle">Table des matières</div>
+  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph"><p><a id="cha:Manivelle-Electronique"></a> </p></div>
+<div class="paragraph"><p>Cet exemple explique comment relier une manivelle, facile à trouver
+aujourd&#8217;hui sur le marché. Cet exemple utilisera la manivelle MPG3 avec
+une carte d&#8217;interface C22 de chez CNC4PC et un second port parallèle
+placé sur un slot PCI. Cet exemple fournira trois axes avec chacun
+trois incréments de pas: 0.1, 0.01, 0.001.</p></div>
+<div class="paragraph"><p>Dans le fichier <em>custom.hal</em> ou dans un fichier jog.hal, ajouter
+ce qui suit en vérifiant bien que les composants <em>mux4</em> ou <em>encoder</em> ne
+soient pas déjà utilisés. Si c'était le cas il faudrait en augmenter le nombre
+en incrémentant la valeur du <em>count</em> de la commande <em>loadrt</em>. Ajuster également
+le numéro de référence.
+Les composants mux4 et encoder sont décrits dans le manuel de HAL et dans les
+man pages.</p></div>
+<div class="listingblock">
+<div class="title">Manivelle de jog</div>
+<div class="content">
+<pre><tt>loadrt encoder num_chan=1
+loadrt mux4 count=1
+addf encoder.capture-position servo-thread
+addf encoder.update-counters base-thread
+addf mux4.0 servo-thread
+
+# Mode position
+# Chaque cran de manivelle provoque un pas calibré,
+# la durée du mouvement total peut dépasser la durée de rotation de la manivelle.
+# C'est le mode par défaut.
+
+setp axis.N.jog-vel-mode 0
+
+# Mode vitesse
+# L'axe s'arrête quand la manivelle s'arrête, même si la pas de jog est incomplet.
+# Décommenter la ligne suivante pour obtenir ce mode de fonctionnement,
+# et commenter le mode position.
+
+setp axis.N.jog-vel-mode 1
+
+# Chaque axe est ajusté indépendemment des autres.
+
+# Tailles des pas de jog
+
+setp mux4.0.in0 0.1
+setp mux4.0.in1 0.01
+setp mux4.0.in2 0.001
+
+# Sélecteur de taille des pas du jog
+
+net scale1 mux4.0.sel0 &lt;= parport.1.pin-09-in
+net scale2 mux4.0.sel1 &lt;= parport.1.pin-10-in
+
+net pend-scale axis.0.jog-scale &lt;= mux4.0.out
+net pend-scale axis.1.jog-scale
+net pend-scale axis.2.jog-scale
+
+# Signaux du codeur
+
+net mpg-a encoder.0.phase-A &lt;= parport.1.pin-02-in
+net mpg-b encoder.0.phase-B &lt;= parport.1.pin-03-in
+
+# Sélecteur d'axe
+
+net mpg-x axis.0.jog-enable &lt;= parport.1.pin-04-in
+net mpg-y axis.1.jog-enable &lt;= parport.1.pin-05-in
+net mpg-z axis.2.jog-enable &lt;= parport.1.pin-06-in
+
+net pend-counts axis.0.jog-counts &lt;= encoder.0.counts
+net pend-counts axis.1.jog-counts
+net pend-counts axis.2.jog-counts</tt></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div id="footnotes"><hr /></div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2012-10-16 12:36:06 CDT
+</div>
+</div>
+</body>
+
+<!-- Mirrored from www.linuxcnc.org/docs/html/examples/mpg_fr.html by HTTrack Website Copier/3.x [XR&CO'2013], Wed, 05 Jun 2013 19:17:29 GMT -->
+</html>
