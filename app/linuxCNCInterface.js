@@ -302,8 +302,8 @@ define(function (require) {
 
     lcncsvr.filename_short = ko.computed( function() {
         var str = lcncsvr.vars.file.data();
-        if (str.length > 35)
-            return "..." + str.substr( str.length - 32 );
+        if (str.length > 32)
+            return "..." + str.substr( str.length - 29 );
         return str;
     });
 

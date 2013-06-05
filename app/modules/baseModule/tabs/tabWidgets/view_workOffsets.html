@@ -57,7 +57,7 @@
                             <span class="dropdown" >
                                 <a class=" dropdown-toggle text-center act act-primary" id="woTLOTitleDrop" role="button" data-toggle="dropdown" href="#"><abbr class="text-center" title="{{nls.TLOFullName}}">{{nls.ToolLengthOffsetTitle}}</abbr>: <span data-bind="text: linuxCNCServer.vars.tool_in_spindle.data"></span></a>
                                 <ul class="dropdown-menu text-left" role="menu" aria-labelledby="woTLOTitleDrop" >
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="#SelectToolModal" data-toggle="modal">{{nls.SetToolNumber}}</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" data-bind="attr: {href: '#SelectToolModal' + settings.globals.nextUniqueElementID.toString()}" data-toggle="modal">{{nls.SetToolNumber}}</a></li>
                                 </ul>
                             </span>
                         </div>
@@ -96,7 +96,7 @@
                         <ul class="dropdown-menu text-left" role="menu" data-bind="attr:{'aria-labelledby':(($data).toString()+'woG5xDrop')}" >
                             <li role="presentation" data-bind="if: ($data < 2)"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(d,event){ $root.linuxCNCServer.touchoffCurrentDisplay(d, $root.linuxCNCServer.MachineUnitsToDisplayUnitsLinear( -1*$root.settings.persist.ProbeRadius()) ); }"><i class="icon-step-forward" data-bind="css:{rotate_text_90: ($data==1)}"></i> {{nls.SetG5xToRadius}}</a></li>
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(d){ $root.linuxCNCServer.touchoffCurrentDisplay(d,0);}">{{nls.ZeroG5x}}</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#SelectOffsetG5xModal" data-toggle="modal" data-bind="click: function(d){ $root.curIdx(d); $root.tempOffset($root.linuxCNCServer.RmtDRO()[d].toFixed($root.linuxCNCServer.DisplayPrecision())); }">{{nls.SetG5xToValue}}</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" data-bind="click: function(d){ $root.curIdx(d); $root.tempOffset($root.linuxCNCServer.RmtDRO()[d].toFixed($root.linuxCNCServer.DisplayPrecision())); }, attr: {href: '#SelectOffsetG5xModal' + $root.settings.globals.nextUniqueElementID.toString()}" data-toggle="modal" >{{nls.SetG5xToValue}}</a></li>
                             <li role="presentation" class="divider"></li>
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(d){ $root.linuxCNCServer.touchoffCurrentDisplay(d, $root.linuxCNCServer.RmtDRO()[d] + $root.linuxCNCServer.vars.g5x_offsetDisplay.data()[d]);}">{{nls.ClearG5x}}</a></li>
                         </ul>
@@ -114,7 +114,7 @@
                         <a class="btn span12 dropdown-toggle text-center" data-bind="text: ( $root.linuxCNCServer.vars.g92_offsetDisplay.data()[$data].toFixed($root.linuxCNCServer.DisplayPrecision())), attr:{id: (($data).toString()+'woTLOdrop') }" role="button" data-toggle="dropdown" href="#"></a>
                         <ul class="dropdown-menu text-left" role="menu" data-bind="attr:{'aria-labelledby':(($data).toString()+'woTLOdrop')}" >
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(d){ $root.linuxCNCServer.g92SetDisplay(d,0);}">{{nls.ZeroG92}}</a></li>
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#SelectOffsetG92Modal" data-toggle="modal" data-bind="click: function(d){ $root.curIdx(d); $root.tempOffset($root.linuxCNCServer.RmtDRO()[d].toFixed($root.linuxCNCServer.DisplayPrecision())); }">{{nls.SetG92ToValue}}</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" data-bind="click: function(d){ $root.curIdx(d); $root.tempOffset($root.linuxCNCServer.RmtDRO()[d].toFixed($root.linuxCNCServer.DisplayPrecision())); }, attr: {href: '#SelectOffsetG92Modal' + $root.settings.globals.nextUniqueElementID.toString()}" data-toggle="modal" >{{nls.SetG92ToValue}}</a></li>
                             <li role="presentation" class="divider"></li>
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="#" data-bind="click: function(d){ $root.linuxCNCServer.g92SetDisplay(d, $root.linuxCNCServer.RmtDRO()[d] + $root.linuxCNCServer.vars.g92_offsetDisplay.data()[d]);}">{{nls.ClearG92}}</a></li>
                         </ul>
@@ -154,7 +154,7 @@
 
 
 <!--TOOL NUMBER SELECT MODAL DIALOG-->
-<div id="SelectToolModal" class="modal hide " role="dialog" aria-hidden="true">
+<div data-bind="attr: {id: 'SelectToolModal' + settings.globals.nextUniqueElementID.toString()}" class="modal hide " role="dialog" aria-hidden="true">
     <div class="modal-header">
         <h3>{{nls.SelectToolDialogTitle}}</h3>
     </div>
@@ -174,8 +174,9 @@
     </div>
 </div>
 
+
 <!--OFFSET SET MODAL DIALOG -->
-<div id="SelectOffsetG92Modal" class="modal hide " role="dialog" aria-hidden="true">
+<div data-bind="attr: {id: 'SelectOffsetG92Modal' + settings.globals.nextUniqueElementID.toString()}" class="modal hide " role="dialog" aria-hidden="true" stye="z-index: 999999;">
     <div class="modal-header">
         <h3>{{nls.SetG92DialogTitle}}</h3>
     </div>
@@ -196,7 +197,7 @@
 </div>
 
 <!--OFFSET SET MODAL DIALOG -->
-<div id="SelectOffsetG5xModal" class="modal hide " role="dialog" aria-hidden="true">
+<div data-bind="attr: {id: 'SelectOffsetG5xModal' + settings.globals.nextUniqueElementID.toString()}" class="modal hide " role="dialog" aria-hidden="true">
     <div class="modal-header">
         <h3>{{nls.SetG5xDialogTitle}}<span data-bind="text: linuxCNCServer.RmtG5xString"></span></h3>
     </div>

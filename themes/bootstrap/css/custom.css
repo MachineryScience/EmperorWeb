@@ -483,8 +483,11 @@ body {
   font-size: 16px !important;
   line-height: 22px !important;
 }
-.form-inline {
-  line-height: 38.5px !important;
+legend {
+  margin-bottom: 11px;
+}
+form {
+  margin-bottom: 0px;
 }
 .has-switch {
   margin-bottom: -10px !important;

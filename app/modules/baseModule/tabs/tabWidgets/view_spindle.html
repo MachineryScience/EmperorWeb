@@ -1,0 +1,35 @@
+<div class="well well-with-label">
+
+        <span class="well-label"><span>{{nls.SpindleTitle}}</span></span>
+
+    <div class="row-fluid">
+        <div class="span12">
+            <form class="form-inline">
+            <!--<legend>{{nls.Spindle}}:</legend>-->
+                <label for="brake_toggle_cb"><h5>{{nls.Brake}}:</h5></label>
+                    <span id="brake_toggle" class="switch" data-on="success" data-off="primary" data-bind="event: { 'switch-change': setBrake }">
+                    <input id="brake_toggle_cb" type="checkbox"> </span>
+                <div class="btn-group">
+                <button class="btn xbtn-group " data-bind="click: linuxCNCServer.spindleForward">{{nls.SpindleForward}}</button>
+                <button class="btn xbtn-group" data-bind="click: linuxCNCServer.spindleOff">{{nls.SpindleOff}}</button>
+                <button class="btn xbtn-group" data-bind="click: linuxCNCServer.spindleReverse">{{nls.SpindleReverse}}</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <!--<div class="with-small-padding"> </div>-->
+
+    <!--<div class="row-fluid">-->
+        <!--<div class="span12">-->
+            <!--<legend>{{nls.Limits}}:</legend>-->
+                <!--<button id="limit_override_but" class="btn width-button-larger" data-bind="click: linuxCNCServer.overrideLimits">{{nls.OverrideLimits}}</button>-->
+        <!--</div>-->
+    <!--</div>-->
+
+
+
+        <div class="with-small-padding"> </div>
+
+</div>

@@ -1,7 +1,7 @@
 define(function(require) {
 
     var template = require('text!./view_workOffsets.html');
-    var nls = require('i18n!./nls/resources');
+    var nls = require('i18n!./nls/resources.js');
     var utils = require('/app/core/helpers/utility.js');
 
 	var ViewModel = function(moduleContext) {
@@ -17,6 +17,8 @@ define(function(require) {
         }
         this.getNls = function()
         {
+            nls.counter = nls.counter + 1;
+            console.log(nls.counter);
             return nls;
         }
 
@@ -24,8 +26,12 @@ define(function(require) {
             if (self.Panel == null)
             {
                 self.Panel = Panel;
-                $('[data-toggle="tooltip"]',self.Panel.getJQueryElement()).each(function(idx,elem){$(elem).tooltip({})});
+
+                // we use unique IDs in the view, so increment the counter so the next instance of t his view model will get a new ID
+                // The modal dialogs need unique IDs globally, so each instance of this view must have different IDs for the modals
+                self.settings.globals.nextUniqueElementID = self.settings.globals.nextUniqueElementID + 1;
             }
+
 		};
 
 
@@ -51,6 +57,8 @@ define(function(require) {
         this.G54ClearAll = function(){
             alert("G54ClearAll");
         };
+
+        return self;
 
 	};
 

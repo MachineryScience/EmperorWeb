@@ -1,7 +1,6 @@
 define({
+
     "root": {
-
-
         "DROTitle": "DRO",
         "Home": "Home",
         "Zero": "Zero",
@@ -13,6 +12,21 @@ define({
         "TopView" : "Top View",
         "PerspectiveView": "PerspectiveView",
         "Refresh": "Refresh",
+
+        "SpindleTitle" : "Spindle",
+        "CoolantTitle" : "Coolant",
+
+        "MCodesTitle": "Misc Controls",
+        "Coolant" : "Coolant",
+        "Mist": "Mist",
+        "Flood": "Flood Coolant",
+        "Limits": "Limits",
+        "OverrideLimits" : "Override Limits",
+        "Spindle" : "Spindle",
+        "Brake": "Spindle Brake",
+        "SpindleForward" : "Spindle Forward",
+        "SpindleOff" : "Spindle Off",
+        "SpindleReverse" : "Spindle Reverse",
 
         "RunTitle": "Run",
         "RunFrom": "Run From",

@@ -13,6 +13,9 @@ define(['/app/linuxCNCInterface.js', '/app/core/helpers/utility.js'], function(l
 
 	settings.appName =  "Emperor";
     settings.linuxCNCServer = linuxcnc;
+    settings.globals = {
+        nextUniqueElementID : 0
+    };
 
     // *** PERSISTENT SETTINGS ***
     // Settings that are stored on the remote server

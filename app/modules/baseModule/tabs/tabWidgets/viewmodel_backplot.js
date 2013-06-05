@@ -65,7 +65,7 @@ define(function(require) {
         {
             self.linuxCNCServer.vars.backplot_async.data.subscribe( function(){ self.refreshBackplot();  } );
 
-            self.linuxCNCServer.DisplayUnitsPerMM.subscribe( function(newval){ console.log("DISPLAY UNITS PER MM CHANGED TO " + newval); self.refreshBackplot();  } );
+            self.linuxCNCServer.DisplayUnitsPerMM.subscribe( function(newval){ self.refreshBackplot();  } );
             self.linuxCNCServer.ChangeDisplayUnitsToProgramUnits.subscribe( function(){ self.refreshBackplot();  } );
 
             self.linuxCNCServer.RmtDRO.subscribe( self.toolPositionChange );
@@ -303,9 +303,9 @@ define(function(require) {
             self.scene = new THREE.Scene();
             self.constructScene( self.scene, newData );
 
-            self.camera = new THREE.PerspectiveCamera( 25, $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).width() / $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).height(), 1, 1000 );
+            self.camera = new THREE.PerspectiveCamera( 25, $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).width() / $("#BACKPLOT_CONTENT",self.panel.getJQueryElement()).height(), 1, 10000 );
             var centerPos = self.feedGeometry.boundingBox.center();
-            centerPos.z = centerPos.z + self.span*2;
+            centerPos.z = centerPos.z + (self.span*2 > 5000 ? 5000 : self.span*2);
             self.camera.position.set( centerPos.x, centerPos.y, centerPos.z );
             self.camera.lookAt(self.feedGeometry.boundingBox.center() );
 
