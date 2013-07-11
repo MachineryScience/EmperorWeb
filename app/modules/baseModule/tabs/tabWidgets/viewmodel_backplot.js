@@ -3,11 +3,13 @@ define(function(require) {
     var template = require('text!./view_backplot.html');
     var nls = require('i18n!./nls/resources');
 
-    var ViewModel = function(moduleContext) {
+    var ViewModel = function(moduleContext, privateContext) {
 
         var self = this;
         self.panel = null;
-
+        self.privateContext = privateContext;
+        self.linuxCNCServer = moduleContext.getSettings().linuxCNCServer;
+        self.settings = moduleContext.getSettings();
 
         this.getTemplate = function()
         {
@@ -17,10 +19,6 @@ define(function(require) {
         {
             return nls;
         }
-
-        self.linuxCNCServer = moduleContext.getSettings().linuxCNCServer;
-        self.settings = moduleContext.getSettings();
-
 
         // utility function for connecting a color to persistent storage in settings
         var setupPersistColor = function(obs)
@@ -45,6 +43,7 @@ define(function(require) {
         self.TRAVERSE_COLOR = setupPersistColor(self.settings.persist.BPTraverseColor);
         self.EXECUTED_COLOR = setupPersistColor(self.settings.persist.BPFeedExecutedColor);
         self.EXECUTED_COLOR_TRAVERSE = setupPersistColor(self.settings.persist.BPTraverseExecutedColor);
+        self.FILE_VIEW_LINE_COLOR = new THREE.Color().setRGB(255/255, 0/255, 0/255);
 
         self.GRID_COLOR_Y = new THREE.Color().setRGB(150/255, 75/255, 75/255);
         self.GRID_COLOR_X = new THREE.Color().setRGB(75/255, 150/255, 75/255);
@@ -65,6 +64,9 @@ define(function(require) {
         self.infoText2 = ko.observable("");
         self.infoText3 = ko.observable("");
 
+        self.lastViewLine = -1;
+        self.lastMotionLine = -1;
+
         self.initSubscription = _.once(function()
         {
             self.linuxCNCServer.vars.backplot_async.data.subscribe( function(){ self.refreshBackplot();  } );
@@ -78,6 +80,8 @@ define(function(require) {
                 self.hilightMotionLine(newVal);
             } );
             self.linuxCNCServer.MachineUnitsToDisplayUnitsLinearScaleFactor.subscribe( function(){ self.refreshBackplot();  } );
+
+            self.privateContext.listen("FileViewLineSelected",self.UpdateViewLine);
         });
 
         self.initialize = function( backplotPanel ) {
@@ -92,6 +96,7 @@ define(function(require) {
                     {
                         self.refreshBackplot();
                     }
+
 
             }
 
@@ -130,7 +135,7 @@ define(function(require) {
                 if (_.isUndefined(self.motionVectorMap[newfname]))
                 {
                     newColor = new THREE.Color().copy(self.FEED_COLOR);
-                    self.motionVectorMap[newfname] = [newColor, self.feedGeometry];
+                    self.motionVectorMap[newfname] = [newColor, self.feedGeometry,false];
                 } else
                     newColor = self.motionVectorMap[newfname][0];
 
@@ -156,7 +161,7 @@ define(function(require) {
                 if (_.isUndefined(self.motionVectorMap[newfname]))
                 {
                     newColor = new THREE.Color().copy(self.FEED_COLOR);
-                    self.motionVectorMap[newfname] = [newColor, self.feedGeometry];
+                    self.motionVectorMap[newfname] = [newColor, self.feedGeometry,false];
                 } else
                     newColor = self.motionVectorMap[newfname][0];
 
@@ -168,7 +173,7 @@ define(function(require) {
             scene.add( new THREE.Line(self.feedGeometry, material, THREE.LinePieces) );
 
             // TRAVERSE
-            var materialTrav = new THREE.LineDashedMaterial( { vertexColors: THREE.VertexColors, dashSize: .3, gapSize: .1  } );
+            var materialTrav = new THREE.LineDashedMaterial( { vertexColors: THREE.VertexColors, dashSize: .03, gapSize: .01  } );
             materialTrav.opacity = forgroundopacity;
             self.traverseGeometry = new THREE.Geometry();
             data.traverse.forEach( function(element, index, array) {
@@ -186,7 +191,7 @@ define(function(require) {
                 if (_.isUndefined(self.motionVectorMap[newfname]))
                 {
                     newColor = new THREE.Color().copy(self.TRAVERSE_COLOR);
-                    self.motionVectorMap[newfname] = [newColor, self.traverseGeometry];
+                    self.motionVectorMap[newfname] = [newColor, self.traverseGeometry,false];
                 } else
                     newColor = self.motionVectorMap[newfname][0];
 
@@ -356,16 +361,72 @@ define(function(require) {
             } catch(ex) {};
         }
 
+        self.UpdateViewLine = function(lineNum)
+        {
+//            if (self.linuxCNCServer.RmtRunning())
+//                return;
+
+            try {
+                var idx = lineNum.toString();
+                self.restoreMotionLineColor(self.lastViewLine);
+                if (!_.isUndefined( self.motionVectorMap[idx]) )
+                {
+                    self.lastViewLine = lineNum;
+
+                    self.motionVectorMap[idx][0].copy(self.FILE_VIEW_LINE_COLOR );
+                    self.motionVectorMap[idx][1].colorsNeedUpdate = true;
+                    self.needRender=true;
+                    return;
+                } else {
+                }
+            } catch(ex) {}
+        }
+
+        self.restoreMotionLineColor = function(lineNum)
+        {
+            var idx = lineNum.toString();
+            try {
+                if (!_.isUndefined( self.motionVectorMap[idx]) )
+                {
+                    if (self.motionVectorMap[idx][2])
+                    {
+                        self.hilightMotionLineEx(lineNum);
+                        return;
+                    }
+
+                    if (self.motionVectorMap[idx][1] === self.feedGeometry)
+                        self.motionVectorMap[idx][0].copy(self.FEED_COLOR );
+                    else
+                        self.motionVectorMap[idx][0].copy(self.TRAVERSE_COLOR );
+
+                    self.motionVectorMap[idx][1].colorsNeedUpdate = true;
+
+                    self.needRender=true;
+                }
+            } catch(ex) {}
+        }
+
         self.hilightMotionLine = function(lineNum)
         {
-            if (!_.isUndefined( self.motionVectorMap[lineNum.toString()]) )
-            {
-                if (self.motionVectorMap[lineNum.toString()][1] === self.feedGeometry)
-                    self.motionVectorMap[lineNum.toString()][0].copy(self.EXECUTED_COLOR );
-                else
-                    self.motionVectorMap[lineNum.toString()][0].copy(self.EXECUTED_COLOR_TRAVERSE );
+            self.hilightMotionLineEx(self.lastMotionLine);
+            self.lastMotionLine = lineNum;
+        }
 
-                self.motionVectorMap[lineNum.toString()][1].colorsNeedUpdate = true;
+        self.hilightMotionLineEx = function(lineNum)
+        {
+            var idx = lineNum.toString();
+            if (!_.isUndefined( self.motionVectorMap[idx]) )
+            {
+                if (self.motionVectorMap[idx][1] === self.feedGeometry)
+                    self.motionVectorMap[idx][0].copy(self.EXECUTED_COLOR );
+                else
+                    self.motionVectorMap[idx][0].copy(self.EXECUTED_COLOR_TRAVERSE );
+
+                self.motionVectorMap[idx][1].colorsNeedUpdate = true;
+
+                self.motionVectorMap[idx][2] = true;
+
+                self.needRender=true;
 
                 return;
             } else {

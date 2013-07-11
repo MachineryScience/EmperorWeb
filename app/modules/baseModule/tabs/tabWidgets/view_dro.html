@@ -16,7 +16,7 @@
                 </td>
 
                 <td class="width-button">
-                    <button class="btn btn-block"
+                    <button class="btn btn-block xbtn-primary"
                             data-bind="click: function(){$root.onZeroDRO($data)}, attr:{id: ('bzdro'+($data).toString())}">
                         {{nls.Zero}}
                     </button>
@@ -24,7 +24,7 @@
 
                 <td class="width-button">
                     <!--Homing Button-->
-                    <button class="btn btn-block"
+                    <button class="btn btn-block xbtn-primary"
                             data-bind="click: function(){$root.onHome($data)}, attr:{id: ('bhdro'+($data).toString())}">
                         <span class=""
                               data-bind="visible: (!$root.linuxCNCServer.vars.homed.data()[$data]), css: {count: ! $root.linuxCNCServer.vars.homed.data()[$data] }"><i
@@ -38,7 +38,8 @@
     </table>
 
     <div class="btn-toolbar">
-        <button class="btn" data-bind="click: linuxCNCServer.homeAll">{{nls.HomeAll}}</button>
+        <button id="spindleRateBut" class="btn width-button-larger" style="text-align: center; " ><span data-bind="text: linuxCNCServer.vars.spindle_speed.data"></span> RPM</button>
+        <button class="btn xbtn-primary" data-bind="click: linuxCNCServer.homeAll">{{nls.HomeAll}}</button>
     </div>
 
 </div>

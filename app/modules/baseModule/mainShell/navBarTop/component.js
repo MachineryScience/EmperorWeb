@@ -9,11 +9,12 @@ define(function(require) {
 	var Component = function(moduleContext) {
 		var panel = null;
         var vm;
+        var privateContext = new Boiler.Context();
+
 		return {
 			activate : function(parent) {
 				if (!panel) {
-
-                    vm = new ViewModel(moduleContext);
+                    vm = new ViewModel(moduleContext, privateContext);
                     panel = new Boiler.ViewTemplate(parent, vm.getTemplate(), vm.getNls());
                     ko.applyBindings( vm, panel.getDomElement());
 					Boiler.ViewTemplate.setStyleLink(cssPath);

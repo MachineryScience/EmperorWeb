@@ -27,57 +27,57 @@ define(function(require) {
         var vm_coolant = null;
         var vm_backplot = null;
 
+        var privateContext = new Boiler.Context();
+
 		return {
 			activate : function(parent) {
 				if (!panel) {
-                    vm = new ViewModel(moduleContext);
+                    vm = new ViewModel(moduleContext, privateContext);
 					panel = new Boiler.ViewTemplate(parent, vm.getTemplate(), vm.getNls());
                     ko.applyBindings( vm, panel.getDomElement());
 				}
                 vm.initialize(panel);
 
                 if (!panel_dro) {
-                    vm_dro = new ViewModel_dro(moduleContext);
+                    vm_dro = new ViewModel_dro(moduleContext, privateContext);
                     panel_dro = new Boiler.ViewTemplate(panel.getJQueryElement().find("#DRO_PANEL"), vm_dro.getTemplate(), vm_dro.getNls());
                     ko.applyBindings( vm_dro, panel_dro.getDomElement());
                 }
                 vm_dro.initialize(panel_dro);
 
                 if (!panel_run) {
-                    vm_run = new ViewModel_run(moduleContext);
+                    vm_run = new ViewModel_run(moduleContext, privateContext);
                     panel_run = new Boiler.ViewTemplate(panel.getJQueryElement().find("#RUN_PANEL"), vm_run.getTemplate(), vm_run.getNls());
                     ko.applyBindings( vm_run, panel_run.getDomElement());
                 }
                 vm_run.initialize(panel_run);
 
                 if (!panel_spindle) {
-                    vm_spindle = new ViewModel_spindle(moduleContext);
+                    vm_spindle = new ViewModel_spindle(moduleContext, privateContext);
                     panel_spindle = new Boiler.ViewTemplate(panel.getJQueryElement().find("#SPINDLE_PANEL"), vm_spindle.getTemplate(), vm_spindle.getNls());
                     ko.applyBindings( vm_spindle, panel_spindle.getDomElement());
                 }
                 vm_spindle.initialize(panel_spindle);
 
                 if (!panel_coolant) {
-                    vm_coolant = new ViewModel_coolant(moduleContext);
+                    vm_coolant = new ViewModel_coolant(moduleContext, privateContext);
                     panel_coolant = new Boiler.ViewTemplate(panel.getJQueryElement().find("#COOLANT_PANEL"), vm_coolant.getTemplate(), vm_coolant.getNls());
                     ko.applyBindings( vm_coolant, panel_coolant.getDomElement());
                 }
                 vm_coolant.initialize(panel_coolant);
 
                 if (!panel_backplot) {
-                    vm_backplot = new ViewModel_backplot(moduleContext);
+                    vm_backplot = new ViewModel_backplot(moduleContext, privateContext);
                     panel_backplot = new Boiler.ViewTemplate(panel.getJQueryElement().find("#BACKPLOT_PANEL"), vm_backplot.getTemplate(), vm_backplot.getNls());
                     ko.applyBindings( vm_backplot, panel_backplot.getDomElement());
                 }
 
                 if (!panel_file) {
-                    vm_file = new ViewModel_file(moduleContext);
+                    vm_file = new ViewModel_file(moduleContext, privateContext);
                     panel_file = new Boiler.ViewTemplate(panel.getJQueryElement().find("#FILE_PANEL"), vm_file.getTemplate(), vm_file.getNls());
                     ko.applyBindings( vm_file, panel_file.getDomElement());
                 }
                 vm_file.initialize(panel_file);
-
-
 
                 panel.show();
 

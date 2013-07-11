@@ -1,8 +1,13 @@
 <div class="well well-with-label">
 
-        <span class="well-label"><span>{{nls.FileTitle}}</span></span>
+        <span class="well-label"><span>{{nls.FileTitle}} <i class="well-label-position-right icon-question-sign" data-bind="click: function(){
+        $.pnotify({
+            title:'Test',
+            text: 'this is a notify window this is a notify window this is a notify window this is a notify window  this is a notify window this is a notify window this is a notify window  this is a notify window this is a notify window this is a notify window this is a notify window  this is a notify window ',
+            type: 'info'
+        }); }"></i></span></span>
 
-        <div id="FileListTable"></div>
+        <div class="FileListTable"></div>
 
         <div class="with-small-padding"> </div>
 

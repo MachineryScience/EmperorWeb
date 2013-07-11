@@ -3,11 +3,13 @@ define(function(require) {
     var template = require('text!./view_file.html');
     var nls = require('i18n!./nls/resources');
 
-	var ViewModel = function(moduleContext) {
+	var ViewModel = function(moduleContext, privateContext) {
 
 		var self = this;
         self.Panel = null;
         self.linuxCNCServer = moduleContext.getSettings().linuxCNCServer;
+        self.context = moduleContext;
+        self.privateContext = privateContext;
 
         this.getTemplate = function()
         {
@@ -18,15 +20,24 @@ define(function(require) {
             return nls;
         }
 
+        self.fileListTableCallback = function (key, options) {
+            if (key === 'set_line') {
+                self.setMotionLineToSelected();
+            } else if (key === 'goto_line' )
+            {
+                self.updateDisplayLine(self.linuxCNCServer.vars.motion_line.data());
+            }
+        }
+
 		this.initialize = function( Panel ) {
             if (_.isNull( self.Panel ))
             {
                 self.Panel = Panel;
-
-                // var data = self.linuxCNCServer.vars.file_content.data().split('\n');
                 var data = [  ];
 
-                self.fileListTable = $("#FileListTable", self.Panel.getJQueryElement());
+                self.motionLineUpdateInProgress = false;
+
+                self.fileListTable = self.Panel.getJQueryElement().find(".FileListTable");
                 self.fileListTable.handsontable({
                     data: data,
                     stretchH: "last",
@@ -39,15 +50,17 @@ define(function(require) {
                             readOnly: true
                         }
                     ],
+
+                    afterSelectionEnd : function(r, c, r2, c2){
+                        if (self.motionLineUpdateInProgress)
+                            self.privateContext.notify("FileViewLineSelected",r);
+                        else
+                            self.privateContext.notify("FileViewLineSelected",r+1);
+                    },
+
                     contextMenu: {
-                        callback: function (key, options) {
-                            if (key === 'set_line') {
-                                self.setMotionLineToSelected();
-                            } else if (key === 'goto_line' )
-                            {
-                                self.updateDisplayLine(self.linuxCNCServer.vars.motion_line.data());
-                            }
-                        },
+                        callback: _.bind(self.fileListTableCallback,self),
+
                         items: {
                             "set_line": {
                                 name: nls.SetLine,
@@ -65,15 +78,16 @@ define(function(require) {
 
                 // monitor file contents
                 self.linuxCNCServer.vars.file_content.data.subscribe( self.updateData );
-                self.linuxCNCServer.vars.motion_line.data.subscribe( self.updateDisplayLine );
+                self.linuxCNCServer.vars.motion_line.data.subscribe( function(newval){ self.motionLineUpdateInProgress=true; self.updateDisplayLine(newval); self.motionLineUpdateInProgress=false; });
 
                 self.fileListTable.dblclick( function(){ self.setMotionLineToSelected(); } );
-            }
 
-            setTimeout( function() {
-                self.updateData(self.linuxCNCServer.vars.file_content.data());
-                self.updateDisplayLine(self.linuxCNCServer.vars.motion_line.data());
-            },2);
+                setTimeout( function() {
+                    self.updateData(self.linuxCNCServer.vars.file_content.data());
+                    self.updateDisplayLine(self.linuxCNCServer.vars.motion_line.data());
+                },2);
+
+            }
 
 		};
 

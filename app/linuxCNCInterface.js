@@ -206,6 +206,7 @@ define(function (require) {
     lcncsvr.vars.mist =  { data: ko.observable(false), watched: true };
     lcncsvr.vars.flood =  { data: ko.observable(false), watched: true };
     lcncsvr.vars.spindle_brake = { data: ko.observable(false), watched: true };
+    lcncsvr.vars.spindle_speed = { data: ko.observable(0), watched: true };
     lcncsvr.vars.tool_in_spindle = { data: ko.observable(0), watched: true };
     lcncsvr.vars.homed = { data: ko.observableArray([0, 0, 0, 0, 0, 0, 0, 0, 0]), watched: true };
     lcncsvr.vars.gcodes = { data: ko.observableArray([]), watched: true };

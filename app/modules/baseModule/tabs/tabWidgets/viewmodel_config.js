@@ -68,8 +68,8 @@ define(function(require) {
 
         this.saveDisplaySettings = function()
         {
-            self.settings.persist.DisplayUnitsPerMM.SaveScratch();
             self.settings.persist.ChangeDisplayUnitsToProgramUnits.SaveScratch();
+            self.settings.persist.DisplayUnitsPerMM.SaveScratch();
         }
 
         this.refreshBackplotSettings = function()
@@ -156,22 +156,34 @@ define(function(require) {
             write: function(newval){
                 switch (newval)
                 {
-                    case "PROGRAM": self.settings.persist.ChangeDisplayUnitsToProgramUnits.Scratch(true);  self.settings.persist.DisplayUnitsPerMM.Scratch(self.linuxCNCServer.ProgramUnitsPerMM()); break;
-                    case "MM": self.settings.persist.ChangeDisplayUnitsToProgramUnits.Scratch(false); self.settings.persist.DisplayUnitsPerMM.Scratch(1);  break;
-                    case "CM": self.settings.persist.ChangeDisplayUnitsToProgramUnits.Scratch(false); self.settings.persist.DisplayUnitsPerMM.Scratch(1/10); break;
-                    default:   self.settings.persist.ChangeDisplayUnitsToProgramUnits.Scratch(false); self.settings.persist.DisplayUnitsPerMM.Scratch(1/25.4); break;
+                    case "PROGRAM":
+                        self.settings.persist.ChangeDisplayUnitsToProgramUnits.Scratch(true);
+                        self.settings.persist.DisplayUnitsPerMM.Scratch(self.linuxCNCServer.ProgramUnitsPerMM());
+                        break;
+                    case "MM":
+                        self.settings.persist.ChangeDisplayUnitsToProgramUnits.Scratch(false);
+                        self.settings.persist.DisplayUnitsPerMM.Scratch(1);
+                        break;
+                    case "CM":
+                        self.settings.persist.ChangeDisplayUnitsToProgramUnits.Scratch(false);
+                        self.settings.persist.DisplayUnitsPerMM.Scratch(1/10);
+                        break;
+                    default:
+                        self.settings.persist.ChangeDisplayUnitsToProgramUnits.Scratch(false);
+                        self.settings.persist.DisplayUnitsPerMM.Scratch(1/25.4);
+                        break;
                 }
             }
         });
 
         this.launchServerConfig = function()
         {
-            window.open( "http://" + self.linuxCNCServer.server_address() + ":" + self.linuxCNCServer.server_port(), "Linux CNC Server Configuration Website", "height=700,width=1024,scrollbars=yes,resizable=1");
+            window.open( "http://" + self.linuxCNCServer.server_address() + ":" + self.linuxCNCServer.server_port(), "Linux CNC Server Configuration Website", "height=700,width=1024,scrollbars=yes,resizable=1,location=no,status=no,toolbar=no");
         }
 
         this.launchServerHelp = function()
         {
-            window.open( "/external/linuxCNCDoc//linuxCNCDocumentation/index.html", "Linux CNC Server Documentation", "height=700,width=1024,scrollbars=yes,resizable=1");
+            window.open( "/external/linuxCNCDoc//linuxCNCDocumentation/index.html", "Linux CNC Server Documentation", "height=700,width=1024,scrollbars=yes,resizable=1,location=no,status=no,toolbar=no");
         }
 
 	};
